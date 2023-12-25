@@ -10,10 +10,14 @@
   "author": "Vova Davidzon & Michael Ilkanayev",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^20.10.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
