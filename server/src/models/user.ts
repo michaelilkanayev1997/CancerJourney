@@ -1,3 +1,4 @@
+import { compare, hash } from "bcrypt";
 import { Model, ObjectId, Schema, model } from "mongoose";
 
 // interface (typescript)
@@ -13,7 +14,14 @@ interface UserDocument {
   followings: ObjectId[];
 }
 
-const userSchema = new Schema<UserDocument>(
+//Methods interface is used to define schema methods
+interface Methods {
+  comparePassword(password: string): Promise<boolean>;
+}
+
+// In Mongoose, second generic type argument in Schema is used to define any nested schemas or additional options for the schema.
+// The empty object {} signifies that there are no additional schema options or nested schemas to include in this instance.
+const userSchema = new Schema<UserDocument, {}, Methods>(
   {
     name: {
       type: String,
@@ -65,4 +73,18 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
-export default model("User", userSchema) as Model<UserDocument>;
+userSchema.pre("save", async function (next) {
+  // hash the password
+  if (this.isModified("password")) {
+    //Enter only if this password is changed
+    this.password = await hash(this.password, 10);
+  }
+  next();
+});
+
+userSchema.methods.comparePassword = async function (password) {
+  const result = await compare(password, this.password);
+  return result;
+};
+
+export default model("User", userSchema) as Model<UserDocument, {}, Methods>;
