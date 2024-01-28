@@ -12,7 +12,7 @@ export const create: RequestHandler = async (req: CreateUser, res) => {
   const user = await User.create({ email, password, name });
 
   // Generate Token
-  const token = generateToken(6);
+  const token = generateToken(4);
   // Send Verification Email
   sendVerificationMail(token, { name, email, userId: user._id.toString() });
 
