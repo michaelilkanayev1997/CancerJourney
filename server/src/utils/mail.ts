@@ -38,14 +38,14 @@ export const sendVerificationMail = async (token: string, profile: Profile) => {
     token,
   });
 
-  const welcomeMessage = `Hi ${name}, welcome to CancerJourny! There are so much thing that we do for verified users. Use the given OTP to verify your email.`;
+  const welcomeMessage = `Hi ${name}, welcome to CancerJourney! There are so much thing that we do for verified users. Use the given OTP to verify your email.`;
 
   transport.sendMail({
     to: email,
     from: VERIFICATION_EMAIL,
     subject: "Welcome Message",
     html: generateTemplate({
-      title: "Welcome to Cancer Journy",
+      title: "Welcome to CancerJourney",
       message: welcomeMessage,
       logo: "cid:logo",
       banner: "cid:welcome",
