@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
+import crypto from "crypto";
 
 import { CreateUser, VerifyEmailRequest } from "#/@types/user";
 import User from "#/models/user";
 import { generateToken } from "#/utils/helper";
 import { sendVerificationMail } from "#/utils/mail";
 import EmailVerificationToken from "#/models/emailVerificationToken";
-import emailVerificationToken from "#/models/emailVerificationToken";
 import { isValidObjectId } from "mongoose";
 
 export const create: RequestHandler = async (req: CreateUser, res) => {
@@ -70,4 +70,16 @@ export const sendReVerificationToken: RequestHandler = async (req, res) => {
   });
 
   res.json({ messgae: "please check your email." });
+};
+
+export const generateForgetPasswordLink: RequestHandler = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ error: "Account not found!" });
+
+  // generate the link
+  // https:/localhost:8000/reset-password?token=sad23432adsa4fr42wert0o546--4yk-54e25-2i
+
+  const token = crypto.randomBytes(36).toString("hex");
 };
