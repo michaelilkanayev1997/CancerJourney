@@ -7,6 +7,8 @@ import { generateToken } from "#/utils/helper";
 import { sendVerificationMail } from "#/utils/mail";
 import EmailVerificationToken from "#/models/emailVerificationToken";
 import { isValidObjectId } from "mongoose";
+import PasswordResetToken from "#/models/passwordResetToken";
+import { PASSWORD_RESET_LINK } from "#/utils/variables";
 
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;
@@ -79,7 +81,14 @@ export const generateForgetPasswordLink: RequestHandler = async (req, res) => {
   if (!user) return res.status(404).json({ error: "Account not found!" });
 
   // generate the link
-  // https:/localhost:8000/reset-password?token=sad23432adsa4fr42wert0o546--4yk-54e25-2i
-
   const token = crypto.randomBytes(36).toString("hex");
+
+  await PasswordResetToken.create({
+    owner: user._id,
+    token,
+  });
+
+  const resetLink = `${PASSWORD_RESET_LINK}?token=${token}&userId=${user._id}`;
+
+  res.json({ resetLink });
 };
