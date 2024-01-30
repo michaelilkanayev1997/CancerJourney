@@ -21,3 +21,9 @@ export interface UpdatePasswordRequest extends Request {
     password: string;
   };
 }
+
+export interface UserIdRequest extends Request {
+  body: {
+    userId: string;
+  };
+}

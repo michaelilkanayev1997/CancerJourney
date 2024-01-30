@@ -1,9 +1,11 @@
 import { RequestHandler } from "express";
 import crypto from "crypto";
+import { isValidObjectId } from "mongoose";
 
 import {
   CreateUser,
   UpdatePasswordRequest,
+  UserIdRequest,
   VerifyEmailRequest,
 } from "#/@types/user";
 import User from "#/models/user";
@@ -14,7 +16,7 @@ import {
   sendVerificationMail,
 } from "#/utils/mail";
 import EmailVerificationToken from "#/models/emailVerificationToken";
-import { isValidObjectId } from "mongoose";
+
 import PasswordResetToken from "#/models/passwordResetToken";
 import { PASSWORD_RESET_LINK } from "#/utils/variables";
 
@@ -57,7 +59,10 @@ export const verifyEmail: RequestHandler = async (
   res.json({ messgae: "Your email is verified!" });
 };
 
-export const sendReVerificationToken: RequestHandler = async (req, res) => {
+export const sendReVerificationToken: RequestHandler = async (
+  req: UserIdRequest,
+  res
+) => {
   const { userId } = req.body;
 
   if (!isValidObjectId(userId))
