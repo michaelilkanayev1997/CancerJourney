@@ -12,6 +12,7 @@ import {
 import Animated, {
   FadeIn,
   FadeInUp,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
@@ -21,7 +22,12 @@ const SignUp: FC<Props> = (props) => {
   const entering = () => {
     "worklet";
     const animations = {
-      translateY: withTiming(-30, { duration: 600 }),
+      //translateY: withTiming(-30, { duration: 600 }),
+      translateY: withSpring(-30, {
+        mass: 1,
+        damping: 7,
+        stiffness: 23,
+      }),
       // opacity: withTiming(1, { duration: 300 }),
     };
     const initialValues = {
