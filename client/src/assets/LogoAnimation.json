@@ -9,20 +9,1768 @@
     "ddd": 0,
     "assets": [
         {
-            "id": "image_0",
-            "w": 1080,
-            "h": 1920,
-            "u": "",
-            "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDgAAAeABAMAAADZT/o5AAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAD1BMVEVHcEw7yNw0xNpDy90futbPBanNAAAAA3RSTlMAtlrDV3UKAAAJGElEQVR42uzdW3LaQBAFUB5eABgtgCAWEGc2gKjZ/5pCjO3CMC1L/kq5z/nW13Cru2f0YLEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADJYHbZdraVsnw8Wg1uHSzAuhvLqeW9FeK8a12jUf5XjLR4WhVe/ar0PRymKB7dl46OtKB5cs1Fv3YSj/LE4slHblaOUF8sjG0HlUDtkYyQc0pFZd5eN4S4cptK8jvWLylHKxirltHzIxkPlKC/OOwwcUeUwdhg44nBoLJpK1FYuLFW+ptIqHK3KobHk81SnVg734EyjYeVQOhSOOBxKh8IRthWlQ+GIK4fSkUqdVTnKbyuW+4xjrHI460ikmxuOjTVLPo7GbcVDYXkc69zKYSTNPo6OVA4jafpxdKRy6Cvpu0ocDn0le1cZaSv6SvquMlI59JXsXWWkcugrKXTfqhz6Sgar+r1wuDWbfOQYayvur+QeObbb7c7QYeRouL76uNoaOowc9x3lozCsDB1Gjk/Ot/lx0pHU05fZCNNh6Eg5jw53v/vSEz8pNQvHw8/em0jNo62mEjYWE2nGebQxTPQmUvNou3BcOCMVjqBwtEuH7Uq6zcrQ7j+2K+k0Ds9P7St3wmEnW4Nm0dvL2skO0aX2ssJxiq4VDuEIB4neQUcujTOw8Nq1g47sxxxDHCThyB6Oc9yCnILlcpw+j7YmUuEQjjc74Ugejk18cS8cycOxFw6uujnhWLu5onIIB+1wLISDqK0IB8KBtoLKgd0K/2s4euFIHo7NnHDsraBwXLnxlj0cp/hit+xz8bAPM8LhMUHef/AZDxgLh3Dsp29WvJrwo815qWknHOnDcZ4+j3rj7Werk4eOtReps+kmvw+5E45sjlP7ysrHW4Qj2q+sffYpndY3wU4Tu4pjjnwHHc2RdOlTk/ay0UjqI7X2slHpWPq8tb1sVDp8GN9EGpWOpb/UEI6/7N3djRNBEIVRap2ATROAZRMA1oRg8o+JRQKJH19v9zy6znnieVz6prpXaFI6fAHQRprSUT7jZSNN6fABwK6+fpiOx+Gwj7ZdOv5Mh48OWzpSOsrHIS0dKR2+OWzpSOkoXytvrJ6nY7NyWDpCOsrHylv78iwdY3OQdZh9nI7yVvFeSekY3irOKyEdMRzeKt3PK9+PKRxuwPpIw3HfvFW8V1aH4+yZtV9JhYOUjrt1lJSOzTrKp8e3pMJBOs3ehYOUDuEgpkM4SOkQDlI6bBzEdAgHMR3CQUqHcJDSYeMgpkM4iOkQDlI6hIOUDhsHMR3CQUyHcJDSIRykdNg4iOkQDmI6hINk8/8RSOWIw+F/MrU38nB883SEQzpY2zgcV4Tj6XA4rwiHdLAcDukQDulgRzikQzikgx3hkA7hkA52hEM6hEM62BEO6RAO6WBHOKRDOKSDHeGQDuGQDnaEQzqEQzrYEQ7pEA7pYEc4pEM43gMxpEM4Uh9KOoQj5kE6hCPWQTqEI8dBOoQjtkE6hCOnQTqEI5ZBOoQjh0E6hCN2QTqEI2dBOoQjVkE6hCNHQTqEIzZBOoQjJ0E6hCMWQTqEIwdBOoQj9kA6hCPnQDqEI9ZAOoQjx0A6hCO2QDo6+ZWC02kyBf+m43Ya0vG64Th9vpz//9Vvk6X5OROXy/uESMfLeTv//td1cocY4fsaFw/zdV0nV4jy8ZV+DrOHj7/T4cG1O7bcps83Hly74ThOHHCcYButptM/efmQaOfhOE7djRiOPubfFeU7ot2M+b+TDMPRdTg+XjLL39uauS784MMdWM/hmDmdluHo5bDyphiGo5VaudYqF6Qdh2NyxRwuSDt5W/q5y3D0G47ps+lwQdrJWgrKcHQy1i61hgvSXsOxskOUC9JGros/9jAcnYZj7fBR7sD6OKyGYBiONmr11qJckPYZjuUN4uShAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/2oNDAgAAAABB/197wwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcBKSLkJMJBNKrAAAAAElFTkSuQmCC",
-            "e": 1
-        },
-        {
-            "id": "image_1",
-            "w": 1080,
-            "h": 1920,
-            "u": "",
-            "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDgAAAeAAgMAAABWDw+ZAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAACXBIWXMAAAABAAAAAQBPJcTWAAAACVBMVEVHcEyx5PSx5PRX871mAAAAAnRSTlMAwO33D4gAAAi2SURBVHja7dBBAQAgCASwK0EJ+1jSlD4hAo8twhKmurScR9OhQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnToQIcOHTp06NChQ4cOHTp06NChQ4cOHTrQoUOHDh06dOjQoUOHDh06dOjQoUOHDnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnToQIcOHTp06NChQ4cOHTp06NChQ4cOHTrQoUOHDh06dOjQoUOHDh06dOjQoUOHDgc6dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnToQIcOHTp06NChQ4cOHTp06NChQ4cOHTrQoUOHDh06dOjQoUOHDh06dOjQoUOHDh06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnToQIcOHTp06NChQ4cOHTp06NChQ4cOHToc6NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnToQIcOHTp06NChQ4cOHTp06NChQ4cOHTp06NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnTocKBDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoQMdOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQocOBDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOdOjQoUOHDh06dOjQoUOHDh06dOjQoUOHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOBzp06NChQ4cOHTp06NChQ4cOHTp06ECHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOtChQ4cOHTp06NChQ4cOHTp06NChQ4cOHTp06NChQ4cOHTp06NChQ4cOHTp06ECHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOhzo0KFDhw4dOnTo0KFDhw4dOnTo0KEDHTp06NChQ4cOHTp06NChQ4cOHTp06ECHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhAhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KFDhw4dOnTo0KEDHTp06NChQ4cOHTp06NChQ4cOHTp06ECHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dOjQoUOHDh06dOhwoEOHDh06dOjQoUOHDh06dOjQoUOHDnTo0KFDhw4dOnTo0KFDhw4dOnTo0KEDHTp06NChQ4cOHTp06NChQ4cOHTp06ECHDh06dOjQoUOHDh06dOjQoUOHDh060KFDhw4dOnTo0KFDhw4dOnTo0KFDhw506NChQ4cOHTp06NChQ4cOHTp06NChAx06dOjQoUOHDh06dKz1ASiqPFNHOVi1AAAAAElFTkSuQmCC",
-            "e": 1
+            "id": "comp_0",
+            "nm": "Pre-comp 1",
+            "fr": 60,
+            "layers": [
+                {
+                    "ddd": 0,
+                    "ind": 1,
+                    "ty": 4,
+                    "nm": "Shape Layer 1",
+                    "td": 1,
+                    "sr": 1,
+                    "ks": {
+                        "o": {
+                            "a": 0,
+                            "k": 100,
+                            "ix": 11
+                        },
+                        "r": {
+                            "a": 0,
+                            "k": 0,
+                            "ix": 10
+                        },
+                        "p": {
+                            "a": 0,
+                            "k": [
+                                549,
+                                902.981,
+                                0
+                            ],
+                            "ix": 2,
+                            "l": 2
+                        },
+                        "a": {
+                            "a": 0,
+                            "k": [
+                                9,
+                                -57.019,
+                                0
+                            ],
+                            "ix": 1,
+                            "l": 2
+                        },
+                        "s": {
+                            "a": 0,
+                            "k": [
+                                200,
+                                200,
+                                100
+                            ],
+                            "ix": 6,
+                            "l": 2
+                        }
+                    },
+                    "ao": 0,
+                    "shapes": [
+                        {
+                            "ty": "gr",
+                            "it": [
+                                {
+                                    "ind": 0,
+                                    "ty": "sh",
+                                    "ix": 1,
+                                    "ks": {
+                                        "a": 0,
+                                        "k": {
+                                            "i": [
+                                                [
+                                                    0,
+                                                    0
+                                                ],
+                                                [
+                                                    0,
+                                                    0
+                                                ],
+                                                [
+                                                    -63,
+                                                    -2
+                                                ],
+                                                [
+                                                    20,
+                                                    -20
+                                                ],
+                                                [
+                                                    0,
+                                                    0
+                                                ]
+                                            ],
+                                            "o": [
+                                                [
+                                                    0,
+                                                    0
+                                                ],
+                                                [
+                                                    0,
+                                                    0
+                                                ],
+                                                [
+                                                    63,
+                                                    2
+                                                ],
+                                                [
+                                                    -20,
+                                                    20
+                                                ],
+                                                [
+                                                    0,
+                                                    0
+                                                ]
+                                            ],
+                                            "v": [
+                                                [
+                                                    86,
+                                                    37
+                                                ],
+                                                [
+                                                    -27,
+                                                    -74
+                                                ],
+                                                [
+                                                    10,
+                                                    -151
+                                                ],
+                                                [
+                                                    50,
+                                                    -70
+                                                ],
+                                                [
+                                                    -68,
+                                                    34
+                                                ]
+                                            ],
+                                            "c": false
+                                        },
+                                        "ix": 2
+                                    },
+                                    "nm": "Path 1",
+                                    "mn": "ADBE Vector Shape - Group",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "st",
+                                    "c": {
+                                        "a": 0,
+                                        "k": [
+                                            0.218613254323,
+                                            0,
+                                            1,
+                                            1
+                                        ],
+                                        "ix": 3
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 4
+                                    },
+                                    "w": {
+                                        "a": 0,
+                                        "k": 48,
+                                        "ix": 5
+                                    },
+                                    "lc": 2,
+                                    "lj": 1,
+                                    "ml": 4,
+                                    "bm": 0,
+                                    "d": [
+                                        {
+                                            "n": "d",
+                                            "nm": "dash",
+                                            "v": {
+                                                "a": 0,
+                                                "k": 608,
+                                                "ix": 1
+                                            }
+                                        },
+                                        {
+                                            "n": "o",
+                                            "nm": "offset",
+                                            "v": {
+                                                "a": 1,
+                                                "k": [
+                                                    {
+                                                        "i": {
+                                                            "x": [
+                                                                0
+                                                            ],
+                                                            "y": [
+                                                                1
+                                                            ]
+                                                        },
+                                                        "o": {
+                                                            "x": [
+                                                                0.333
+                                                            ],
+                                                            "y": [
+                                                                0
+                                                            ]
+                                                        },
+                                                        "t": 0,
+                                                        "s": [
+                                                            612
+                                                        ]
+                                                    },
+                                                    {
+                                                        "t": 59,
+                                                        "s": [
+                                                            0
+                                                        ]
+                                                    }
+                                                ],
+                                                "ix": 7
+                                            }
+                                        }
+                                    ],
+                                    "nm": "Stroke 1",
+                                    "mn": "ADBE Vector Graphic - Stroke",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "tr",
+                                    "p": {
+                                        "a": 0,
+                                        "k": [
+                                            0,
+                                            0
+                                        ],
+                                        "ix": 2
+                                    },
+                                    "a": {
+                                        "a": 0,
+                                        "k": [
+                                            0,
+                                            0
+                                        ],
+                                        "ix": 1
+                                    },
+                                    "s": {
+                                        "a": 0,
+                                        "k": [
+                                            100,
+                                            100
+                                        ],
+                                        "ix": 3
+                                    },
+                                    "r": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 6
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 7
+                                    },
+                                    "sk": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 4
+                                    },
+                                    "sa": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 5
+                                    },
+                                    "nm": "Transform"
+                                }
+                            ],
+                            "nm": "Shape 1",
+                            "np": 3,
+                            "cix": 2,
+                            "bm": 0,
+                            "ix": 1,
+                            "mn": "ADBE Vector Group",
+                            "hd": false
+                        }
+                    ],
+                    "ip": 0,
+                    "op": 372,
+                    "st": 0,
+                    "ct": 1,
+                    "bm": 0
+                },
+                {
+                    "ddd": 0,
+                    "ind": 2,
+                    "ty": 4,
+                    "nm": "Layer 2 Outlines",
+                    "parent": 1,
+                    "tt": 1,
+                    "sr": 1,
+                    "ks": {
+                        "o": {
+                            "a": 0,
+                            "k": 100,
+                            "ix": 11
+                        },
+                        "r": {
+                            "a": 0,
+                            "k": 0,
+                            "ix": 10
+                        },
+                        "p": {
+                            "a": 0,
+                            "k": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "ix": 2,
+                            "l": 2
+                        },
+                        "a": {
+                            "a": 0,
+                            "k": [
+                                540,
+                                960,
+                                0
+                            ],
+                            "ix": 1,
+                            "l": 2
+                        },
+                        "s": {
+                            "a": 0,
+                            "k": [
+                                100,
+                                100,
+                                100
+                            ],
+                            "ix": 6,
+                            "l": 2
+                        }
+                    },
+                    "ao": 0,
+                    "shapes": [
+                        {
+                            "ty": "gr",
+                            "it": [
+                                {
+                                    "ind": 0,
+                                    "ty": "sh",
+                                    "ix": 1,
+                                    "ks": {
+                                        "a": 0,
+                                        "k": {
+                                            "i": [
+                                                [
+                                                    -6.424,
+                                                    -6.431
+                                                ],
+                                                [
+                                                    0.108,
+                                                    -0.105
+                                                ],
+                                                [
+                                                    0.145,
+                                                    -0.144
+                                                ],
+                                                [
+                                                    7.78,
+                                                    -7.782
+                                                ],
+                                                [
+                                                    0.113,
+                                                    -0.133
+                                                ],
+                                                [
+                                                    0.303,
+                                                    0
+                                                ],
+                                                [
+                                                    0.205,
+                                                    0.206
+                                                ],
+                                                [
+                                                    6.301,
+                                                    6.35
+                                                ],
+                                                [
+                                                    3.094,
+                                                    9.442
+                                                ],
+                                                [
+                                                    0.517,
+                                                    3.383
+                                                ],
+                                                [
+                                                    0.114,
+                                                    2.016
+                                                ],
+                                                [
+                                                    -0.045,
+                                                    1.636
+                                                ],
+                                                [
+                                                    -0.348,
+                                                    2.493
+                                                ],
+                                                [
+                                                    -3.335,
+                                                    6.408
+                                                ],
+                                                [
+                                                    -3.339,
+                                                    3.791
+                                                ],
+                                                [
+                                                    -7.45,
+                                                    3.698
+                                                ],
+                                                [
+                                                    -5.664,
+                                                    1.057
+                                                ],
+                                                [
+                                                    -2.182,
+                                                    0.207
+                                                ],
+                                                [
+                                                    -1.573,
+                                                    0.124
+                                                ],
+                                                [
+                                                    -0.192,
+                                                    -0.096
+                                                ],
+                                                [
+                                                    0,
+                                                    -0.145
+                                                ],
+                                                [
+                                                    0.001,
+                                                    -11.613
+                                                ],
+                                                [
+                                                    0.204,
+                                                    -0.005
+                                                ],
+                                                [
+                                                    1.628,
+                                                    -0.35
+                                                ],
+                                                [
+                                                    4.239,
+                                                    -6.355
+                                                ],
+                                                [
+                                                    0.04,
+                                                    -5.462
+                                                ],
+                                                [
+                                                    -0.112,
+                                                    -1.049
+                                                ],
+                                                [
+                                                    -0.694,
+                                                    -1.993
+                                                ],
+                                                [
+                                                    -3.052,
+                                                    -3.045
+                                                ]
+                                            ],
+                                            "o": [
+                                                [
+                                                    -0.023,
+                                                    0.149
+                                                ],
+                                                [
+                                                    -0.146,
+                                                    0.143
+                                                ],
+                                                [
+                                                    -7.78,
+                                                    7.782
+                                                ],
+                                                [
+                                                    -0.124,
+                                                    0.124
+                                                ],
+                                                [
+                                                    -0.209,
+                                                    0.244
+                                                ],
+                                                [
+                                                    -0.214,
+                                                    -0.198
+                                                ],
+                                                [
+                                                    -6.325,
+                                                    -6.326
+                                                ],
+                                                [
+                                                    -6.999,
+                                                    -7.051
+                                                ],
+                                                [
+                                                    -1.066,
+                                                    -3.255
+                                                ],
+                                                [
+                                                    -0.305,
+                                                    -1.992
+                                                ],
+                                                [
+                                                    -0.094,
+                                                    -1.636
+                                                ],
+                                                [
+                                                    0.069,
+                                                    -2.512
+                                                ],
+                                                [
+                                                    1,
+                                                    -7.159
+                                                ],
+                                                [
+                                                    2.332,
+                                                    -4.48
+                                                ],
+                                                [
+                                                    5.495,
+                                                    -6.24
+                                                ],
+                                                [
+                                                    5.158,
+                                                    -2.559
+                                                ],
+                                                [
+                                                    2.155,
+                                                    -0.403
+                                                ],
+                                                [
+                                                    1.575,
+                                                    -0.149
+                                                ],
+                                                [
+                                                    0.202,
+                                                    -0.016
+                                                ],
+                                                [
+                                                    0.004,
+                                                    0.146
+                                                ],
+                                                [
+                                                    0,
+                                                    11.613
+                                                ],
+                                                [
+                                                    -0.203,
+                                                    0.014
+                                                ],
+                                                [
+                                                    -1.668,
+                                                    0.037
+                                                ],
+                                                [
+                                                    -7.464,
+                                                    1.606
+                                                ],
+                                                [
+                                                    -3.031,
+                                                    4.543
+                                                ],
+                                                [
+                                                    -0.008,
+                                                    1.052
+                                                ],
+                                                [
+                                                    0.224,
+                                                    2.102
+                                                ],
+                                                [
+                                                    1.419,
+                                                    4.071
+                                                ],
+                                                [
+                                                    6.435,
+                                                    6.42
+                                                ]
+                                            ],
+                                            "v": [
+                                                [
+                                                    31.402,
+                                                    38.655
+                                                ],
+                                                [
+                                                    31.202,
+                                                    39.034
+                                                ],
+                                                [
+                                                    30.769,
+                                                    39.468
+                                                ],
+                                                [
+                                                    7.428,
+                                                    62.813
+                                                ],
+                                                [
+                                                    7.058,
+                                                    63.185
+                                                ],
+                                                [
+                                                    6.276,
+                                                    63.501
+                                                ],
+                                                [
+                                                    5.636,
+                                                    62.906
+                                                ],
+                                                [
+                                                    -13.331,
+                                                    43.92
+                                                ],
+                                                [
+                                                    -28.449,
+                                                    19.157
+                                                ],
+                                                [
+                                                    -30.816,
+                                                    9.196
+                                                ],
+                                                [
+                                                    -31.436,
+                                                    3.183
+                                                ],
+                                                [
+                                                    -31.535,
+                                                    -1.724
+                                                ],
+                                                [
+                                                    -30.917,
+                                                    -9.231
+                                                ],
+                                                [
+                                                    -24.406,
+                                                    -29.576
+                                                ],
+                                                [
+                                                    -15.893,
+                                                    -41.98
+                                                ],
+                                                [
+                                                    3.504,
+                                                    -56.918
+                                                ],
+                                                [
+                                                    19.735,
+                                                    -62.353
+                                                ],
+                                                [
+                                                    26.241,
+                                                    -63.244
+                                                ],
+                                                [
+                                                    30.968,
+                                                    -63.479
+                                                ],
+                                                [
+                                                    31.57,
+                                                    -63.405
+                                                ],
+                                                [
+                                                    31.58,
+                                                    -62.968
+                                                ],
+                                                [
+                                                    31.578,
+                                                    -28.129
+                                                ],
+                                                [
+                                                    30.967,
+                                                    -28.087
+                                                ],
+                                                [
+                                                    26.012,
+                                                    -27.529
+                                                ],
+                                                [
+                                                    8.407,
+                                                    -15.613
+                                                ],
+                                                [
+                                                    3.855,
+                                                    -0.566
+                                                ],
+                                                [
+                                                    4.008,
+                                                    2.583
+                                                ],
+                                                [
+                                                    5.384,
+                                                    8.723
+                                                ],
+                                                [
+                                                    12.126,
+                                                    19.366
+                                                ]
+                                            ],
+                                            "c": true
+                                        },
+                                        "ix": 2
+                                    },
+                                    "nm": "Path 1",
+                                    "mn": "ADBE Vector Shape - Group",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "fl",
+                                    "c": {
+                                        "a": 0,
+                                        "k": [
+                                            0.121568634931,
+                                            0.729411764706,
+                                            0.839215746113,
+                                            1
+                                        ],
+                                        "ix": 4
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 5
+                                    },
+                                    "r": 1,
+                                    "bm": 0,
+                                    "nm": "Fill 1",
+                                    "mn": "ADBE Vector Graphic - Fill",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "tr",
+                                    "p": {
+                                        "a": 0,
+                                        "k": [
+                                            520.051,
+                                            856.576
+                                        ],
+                                        "ix": 2
+                                    },
+                                    "a": {
+                                        "a": 0,
+                                        "k": [
+                                            0,
+                                            0
+                                        ],
+                                        "ix": 1
+                                    },
+                                    "s": {
+                                        "a": 0,
+                                        "k": [
+                                            100,
+                                            100
+                                        ],
+                                        "ix": 3
+                                    },
+                                    "r": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 6
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 7
+                                    },
+                                    "sk": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 4
+                                    },
+                                    "sa": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 5
+                                    },
+                                    "nm": "Transform"
+                                }
+                            ],
+                            "nm": "Group 1",
+                            "np": 2,
+                            "cix": 2,
+                            "bm": 0,
+                            "ix": 1,
+                            "mn": "ADBE Vector Group",
+                            "hd": false
+                        },
+                        {
+                            "ty": "gr",
+                            "it": [
+                                {
+                                    "ind": 0,
+                                    "ty": "sh",
+                                    "ix": 1,
+                                    "ks": {
+                                        "a": 0,
+                                        "k": {
+                                            "i": [
+                                                [
+                                                    0.003,
+                                                    0.146
+                                                ],
+                                                [
+                                                    -0.204,
+                                                    -0.009
+                                                ],
+                                                [
+                                                    -0.759,
+                                                    -0.024
+                                                ],
+                                                [
+                                                    -2.566,
+                                                    -0.428
+                                                ],
+                                                [
+                                                    -3.551,
+                                                    -1.279
+                                                ],
+                                                [
+                                                    -3.574,
+                                                    -2.19
+                                                ],
+                                                [
+                                                    -3.152,
+                                                    -2.943
+                                                ],
+                                                [
+                                                    -2.514,
+                                                    -3.537
+                                                ],
+                                                [
+                                                    -1.389,
+                                                    -2.773
+                                                ],
+                                                [
+                                                    -1.118,
+                                                    -4.682
+                                                ],
+                                                [
+                                                    -0.283,
+                                                    -2.053
+                                                ],
+                                                [
+                                                    -0.116,
+                                                    -1.457
+                                                ],
+                                                [
+                                                    0.057,
+                                                    -2.307
+                                                ],
+                                                [
+                                                    0.232,
+                                                    -1.827
+                                                ],
+                                                [
+                                                    0.854,
+                                                    -3.041
+                                                ],
+                                                [
+                                                    2.128,
+                                                    -3.982
+                                                ],
+                                                [
+                                                    2.621,
+                                                    -3.197
+                                                ],
+                                                [
+                                                    1.632,
+                                                    -1.635
+                                                ],
+                                                [
+                                                    6.095,
+                                                    -6.102
+                                                ],
+                                                [
+                                                    -0.882,
+                                                    -0.883
+                                                ],
+                                                [
+                                                    -16.058,
+                                                    -16.066
+                                                ],
+                                                [
+                                                    -0.282,
+                                                    -0.286
+                                                ],
+                                                [
+                                                    0.183,
+                                                    0.018
+                                                ],
+                                                [
+                                                    1.771,
+                                                    0.18
+                                                ],
+                                                [
+                                                    1.422,
+                                                    0.144
+                                                ],
+                                                [
+                                                    0.872,
+                                                    0.086
+                                                ],
+                                                [
+                                                    1.481,
+                                                    0.152
+                                                ],
+                                                [
+                                                    0.61,
+                                                    0.059
+                                                ],
+                                                [
+                                                    0.065,
+                                                    -0.315
+                                                ],
+                                                [
+                                                    0.182,
+                                                    -0.916
+                                                ],
+                                                [
+                                                    0.676,
+                                                    -3.407
+                                                ],
+                                                [
+                                                    0.611,
+                                                    -3.093
+                                                ],
+                                                [
+                                                    0.245,
+                                                    -1.231
+                                                ],
+                                                [
+                                                    0.051,
+                                                    -0.103
+                                                ],
+                                                [
+                                                    0.066,
+                                                    0.058
+                                                ],
+                                                [
+                                                    0.227,
+                                                    0.227
+                                                ],
+                                                [
+                                                    16.046,
+                                                    16.038
+                                                ],
+                                                [
+                                                    0.367,
+                                                    0.013
+                                                ],
+                                                [
+                                                    0.262,
+                                                    -0.262
+                                                ],
+                                                [
+                                                    16.04,
+                                                    -16.044
+                                                ],
+                                                [
+                                                    0.214,
+                                                    -0.198
+                                                ],
+                                                [
+                                                    0.053,
+                                                    0.229
+                                                ],
+                                                [
+                                                    0.097,
+                                                    0.486
+                                                ],
+                                                [
+                                                    0.919,
+                                                    4.638
+                                                ],
+                                                [
+                                                    0.67,
+                                                    3.409
+                                                ],
+                                                [
+                                                    0.02,
+                                                    0.085
+                                                ],
+                                                [
+                                                    0.74,
+                                                    -0.091
+                                                ],
+                                                [
+                                                    0.698,
+                                                    -0.066
+                                                ],
+                                                [
+                                                    2.091,
+                                                    -0.207
+                                                ],
+                                                [
+                                                    2.003,
+                                                    -0.205
+                                                ],
+                                                [
+                                                    1.308,
+                                                    -0.124
+                                                ],
+                                                [
+                                                    0.107,
+                                                    0
+                                                ],
+                                                [
+                                                    -0.095,
+                                                    0.099
+                                                ],
+                                                [
+                                                    -0.206,
+                                                    0.206
+                                                ],
+                                                [
+                                                    -15.978,
+                                                    15.981
+                                                ],
+                                                [
+                                                    -0.222,
+                                                    0.233
+                                                ],
+                                                [
+                                                    0.057,
+                                                    0.167
+                                                ],
+                                                [
+                                                    -0.208,
+                                                    0.244
+                                                ],
+                                                [
+                                                    -0.124,
+                                                    0.124
+                                                ],
+                                                [
+                                                    -7.78,
+                                                    7.782
+                                                ],
+                                                [
+                                                    -0.146,
+                                                    0.143
+                                                ],
+                                                [
+                                                    -0.023,
+                                                    0.149
+                                                ],
+                                                [
+                                                    -0.222,
+                                                    0.221
+                                                ],
+                                                [
+                                                    -6.266,
+                                                    6.261
+                                                ],
+                                                [
+                                                    -0.947,
+                                                    1.341
+                                                ],
+                                                [
+                                                    -0.432,
+                                                    4.93
+                                                ],
+                                                [
+                                                    0.724,
+                                                    2.957
+                                                ],
+                                                [
+                                                    2.924,
+                                                    3.369
+                                                ],
+                                                [
+                                                    3.785,
+                                                    1.662
+                                                ],
+                                                [
+                                                    3.121,
+                                                    0.221
+                                                ],
+                                                [
+                                                    0.756,
+                                                    0.056
+                                                ],
+                                                [
+                                                    0,
+                                                    11.613
+                                                ]
+                                            ],
+                                            "o": [
+                                                [
+                                                    0.19,
+                                                    -0.1
+                                                ],
+                                                [
+                                                    0.759,
+                                                    0.032
+                                                ],
+                                                [
+                                                    2.602,
+                                                    0.084
+                                                ],
+                                                [
+                                                    3.727,
+                                                    0.622
+                                                ],
+                                                [
+                                                    3.944,
+                                                    1.421
+                                                ],
+                                                [
+                                                    3.675,
+                                                    2.252
+                                                ],
+                                                [
+                                                    3.176,
+                                                    2.963
+                                                ],
+                                                [
+                                                    1.799,
+                                                    2.53
+                                                ],
+                                                [
+                                                    2.154,
+                                                    4.298
+                                                ],
+                                                [
+                                                    0.482,
+                                                    2.018
+                                                ],
+                                                [
+                                                    0.2,
+                                                    1.444
+                                                ],
+                                                [
+                                                    0.184,
+                                                    2.308
+                                                ],
+                                                [
+                                                    -0.046,
+                                                    1.838
+                                                ],
+                                                [
+                                                    -0.397,
+                                                    3.135
+                                                ],
+                                                [
+                                                    -1.22,
+                                                    4.351
+                                                ],
+                                                [
+                                                    -1.948,
+                                                    3.645
+                                                ],
+                                                [
+                                                    -1.466,
+                                                    1.788
+                                                ],
+                                                [
+                                                    -6.092,
+                                                    6.104
+                                                ],
+                                                [
+                                                    -0.844,
+                                                    0.845
+                                                ],
+                                                [
+                                                    16.057,
+                                                    16.067
+                                                ],
+                                                [
+                                                    0.244,
+                                                    0.244
+                                                ],
+                                                [
+                                                    -0.237,
+                                                    0.178
+                                                ],
+                                                [
+                                                    -1.772,
+                                                    -0.169
+                                                ],
+                                                [
+                                                    -1.423,
+                                                    -0.145
+                                                ],
+                                                [
+                                                    -0.872,
+                                                    -0.088
+                                                ],
+                                                [
+                                                    -1.481,
+                                                    -0.147
+                                                ],
+                                                [
+                                                    -0.61,
+                                                    -0.063
+                                                ],
+                                                [
+                                                    -0.297,
+                                                    -0.028
+                                                ],
+                                                [
+                                                    -0.186,
+                                                    0.915
+                                                ],
+                                                [
+                                                    -0.678,
+                                                    3.407
+                                                ],
+                                                [
+                                                    -0.614,
+                                                    3.092
+                                                ],
+                                                [
+                                                    -0.243,
+                                                    1.231
+                                                ],
+                                                [
+                                                    -0.022,
+                                                    0.113
+                                                ],
+                                                [
+                                                    -0.045,
+                                                    0.09
+                                                ],
+                                                [
+                                                    -0.239,
+                                                    -0.214
+                                                ],
+                                                [
+                                                    -16.044,
+                                                    -16.04
+                                                ],
+                                                [
+                                                    -0.265,
+                                                    -0.265
+                                                ],
+                                                [
+                                                    -0.375,
+                                                    -0.014
+                                                ],
+                                                [
+                                                    -16.043,
+                                                    16.04
+                                                ],
+                                                [
+                                                    -0.207,
+                                                    0.206
+                                                ],
+                                                [
+                                                    -0.182,
+                                                    0.168
+                                                ],
+                                                [
+                                                    -0.113,
+                                                    -0.483
+                                                ],
+                                                [
+                                                    -0.926,
+                                                    -4.637
+                                                ],
+                                                [
+                                                    -0.676,
+                                                    -3.407
+                                                ],
+                                                [
+                                                    -0.017,
+                                                    -0.085
+                                                ],
+                                                [
+                                                    -0.168,
+                                                    -0.739
+                                                ],
+                                                [
+                                                    -0.696,
+                                                    0.084
+                                                ],
+                                                [
+                                                    -2.093,
+                                                    0.197
+                                                ],
+                                                [
+                                                    -2.005,
+                                                    0.198
+                                                ],
+                                                [
+                                                    -1.307,
+                                                    0.134
+                                                ],
+                                                [
+                                                    -0.114,
+                                                    0.011
+                                                ],
+                                                [
+                                                    -0.074,
+                                                    -0.203
+                                                ],
+                                                [
+                                                    0.202,
+                                                    -0.21
+                                                ],
+                                                [
+                                                    15.979,
+                                                    -15.981
+                                                ],
+                                                [
+                                                    0.227,
+                                                    -0.227
+                                                ],
+                                                [
+                                                    0.153,
+                                                    -0.159
+                                                ],
+                                                [
+                                                    0.303,
+                                                    0
+                                                ],
+                                                [
+                                                    0.114,
+                                                    -0.132
+                                                ],
+                                                [
+                                                    7.78,
+                                                    -7.782
+                                                ],
+                                                [
+                                                    0.145,
+                                                    -0.144
+                                                ],
+                                                [
+                                                    0.108,
+                                                    -0.105
+                                                ],
+                                                [
+                                                    0.363,
+                                                    -0.031
+                                                ],
+                                                [
+                                                    6.265,
+                                                    -6.261
+                                                ],
+                                                [
+                                                    1.161,
+                                                    -1.16
+                                                ],
+                                                [
+                                                    2.864,
+                                                    -4.053
+                                                ],
+                                                [
+                                                    0.264,
+                                                    -3.009
+                                                ],
+                                                [
+                                                    -1.061,
+                                                    -4.339
+                                                ],
+                                                [
+                                                    -2.698,
+                                                    -3.11
+                                                ],
+                                                [
+                                                    -2.858,
+                                                    -1.256
+                                                ],
+                                                [
+                                                    -0.757,
+                                                    -0.054
+                                                ],
+                                                [
+                                                    0.001,
+                                                    -11.613
+                                                ],
+                                                [
+                                                    0,
+                                                    -0.145
+                                                ]
+                                            ],
+                                            "v": [
+                                                [
+                                                    0.036,
+                                                    -100.94
+                                                ],
+                                                [
+                                                    0.635,
+                                                    -101.022
+                                                ],
+                                                [
+                                                    2.911,
+                                                    -100.922
+                                                ],
+                                                [
+                                                    10.656,
+                                                    -100.091
+                                                ],
+                                                [
+                                                    21.563,
+                                                    -97.208
+                                                ],
+                                                [
+                                                    32.839,
+                                                    -91.784
+                                                ],
+                                                [
+                                                    43.07,
+                                                    -83.985
+                                                ],
+                                                [
+                                                    51.581,
+                                                    -74.22
+                                                ],
+                                                [
+                                                    56.357,
+                                                    -66.259
+                                                ],
+                                                [
+                                                    61.286,
+                                                    -52.794
+                                                ],
+                                                [
+                                                    62.451,
+                                                    -46.69
+                                                ],
+                                                [
+                                                    62.894,
+                                                    -42.333
+                                                ],
+                                                [
+                                                    63.001,
+                                                    -35.411
+                                                ],
+                                                [
+                                                    62.536,
+                                                    -29.915
+                                                ],
+                                                [
+                                                    60.648,
+                                                    -20.657
+                                                ],
+                                                [
+                                                    55.607,
+                                                    -8.166
+                                                ],
+                                                [
+                                                    48.738,
+                                                    2.088
+                                                ],
+                                                [
+                                                    44.065,
+                                                    7.198
+                                                ],
+                                                [
+                                                    25.776,
+                                                    25.497
+                                                ],
+                                                [
+                                                    25.79,
+                                                    27.015
+                                                ],
+                                                [
+                                                    73.966,
+                                                    75.213
+                                                ],
+                                                [
+                                                    74.734,
+                                                    75.99
+                                                ],
+                                                [
+                                                    74.11,
+                                                    76.088
+                                                ],
+                                                [
+                                                    68.794,
+                                                    75.567
+                                                ],
+                                                [
+                                                    64.529,
+                                                    75.112
+                                                ],
+                                                [
+                                                    61.911,
+                                                    74.88
+                                                ],
+                                                [
+                                                    57.469,
+                                                    74.422
+                                                ],
+                                                [
+                                                    55.638,
+                                                    74.24
+                                                ],
+                                                [
+                                                    55.156,
+                                                    74.615
+                                                ],
+                                                [
+                                                    54.612,
+                                                    77.364
+                                                ],
+                                                [
+                                                    52.578,
+                                                    87.585
+                                                ],
+                                                [
+                                                    50.742,
+                                                    96.862
+                                                ],
+                                                [
+                                                    50.016,
+                                                    100.555
+                                                ],
+                                                [
+                                                    49.904,
+                                                    100.885
+                                                ],
+                                                [
+                                                    49.686,
+                                                    100.932
+                                                ],
+                                                [
+                                                    48.988,
+                                                    100.268
+                                                ],
+                                                [
+                                                    0.857,
+                                                    52.148
+                                                ],
+                                                [
+                                                    0.008,
+                                                    51.438
+                                                ],
+                                                [
+                                                    -0.841,
+                                                    52.13
+                                                ],
+                                                [
+                                                    -48.962,
+                                                    100.258
+                                                ],
+                                                [
+                                                    -49.589,
+                                                    100.872
+                                                ],
+                                                [
+                                                    -49.956,
+                                                    100.778
+                                                ],
+                                                [
+                                                    -50.273,
+                                                    99.323
+                                                ],
+                                                [
+                                                    -53.046,
+                                                    85.411
+                                                ],
+                                                [
+                                                    -55.056,
+                                                    75.187
+                                                ],
+                                                [
+                                                    -55.113,
+                                                    74.93
+                                                ],
+                                                [
+                                                    -56.02,
+                                                    74.292
+                                                ],
+                                                [
+                                                    -58.111,
+                                                    74.508
+                                                ],
+                                                [
+                                                    -64.389,
+                                                    75.096
+                                                ],
+                                                [
+                                                    -70.398,
+                                                    75.724
+                                                ],
+                                                [
+                                                    -74.322,
+                                                    76.103
+                                                ],
+                                                [
+                                                    -74.659,
+                                                    76.104
+                                                ],
+                                                [
+                                                    -74.498,
+                                                    75.718
+                                                ],
+                                                [
+                                                    -73.88,
+                                                    75.096
+                                                ],
+                                                [
+                                                    -25.945,
+                                                    27.154
+                                                ],
+                                                [
+                                                    -25.271,
+                                                    26.464
+                                                ],
+                                                [
+                                                    -25.258,
+                                                    25.966
+                                                ],
+                                                [
+                                                    -24.477,
+                                                    25.651
+                                                ],
+                                                [
+                                                    -24.107,
+                                                    25.279
+                                                ],
+                                                [
+                                                    -0.766,
+                                                    1.934
+                                                ],
+                                                [
+                                                    -0.333,
+                                                    1.5
+                                                ],
+                                                [
+                                                    -0.133,
+                                                    1.121
+                                                ],
+                                                [
+                                                    0.63,
+                                                    0.572
+                                                ],
+                                                [
+                                                    19.422,
+                                                    -18.216
+                                                ],
+                                                [
+                                                    22.599,
+                                                    -21.951
+                                                ],
+                                                [
+                                                    27.552,
+                                                    -35.445
+                                                ],
+                                                [
+                                                    26.899,
+                                                    -44.41
+                                                ],
+                                                [
+                                                    20.961,
+                                                    -55.998
+                                                ],
+                                                [
+                                                    11.263,
+                                                    -63.211
+                                                ],
+                                                [
+                                                    2.312,
+                                                    -65.494
+                                                ],
+                                                [
+                                                    0.044,
+                                                    -65.664
+                                                ],
+                                                [
+                                                    0.045,
+                                                    -100.503
+                                                ]
+                                            ],
+                                            "c": true
+                                        },
+                                        "ix": 2
+                                    },
+                                    "nm": "Path 1",
+                                    "mn": "ADBE Vector Shape - Group",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "fl",
+                                    "c": {
+                                        "a": 0,
+                                        "k": [
+                                            0.262745098039,
+                                            0.796078491211,
+                                            0.866666726505,
+                                            1
+                                        ],
+                                        "ix": 4
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 5
+                                    },
+                                    "r": 1,
+                                    "bm": 0,
+                                    "nm": "Fill 1",
+                                    "mn": "ADBE Vector Graphic - Fill",
+                                    "hd": false
+                                },
+                                {
+                                    "ty": "tr",
+                                    "p": {
+                                        "a": 0,
+                                        "k": [
+                                            551.586,
+                                            894.11
+                                        ],
+                                        "ix": 2
+                                    },
+                                    "a": {
+                                        "a": 0,
+                                        "k": [
+                                            0,
+                                            0
+                                        ],
+                                        "ix": 1
+                                    },
+                                    "s": {
+                                        "a": 0,
+                                        "k": [
+                                            100,
+                                            100
+                                        ],
+                                        "ix": 3
+                                    },
+                                    "r": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 6
+                                    },
+                                    "o": {
+                                        "a": 0,
+                                        "k": 100,
+                                        "ix": 7
+                                    },
+                                    "sk": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 4
+                                    },
+                                    "sa": {
+                                        "a": 0,
+                                        "k": 0,
+                                        "ix": 5
+                                    },
+                                    "nm": "Transform"
+                                }
+                            ],
+                            "nm": "Group 2",
+                            "np": 2,
+                            "cix": 2,
+                            "bm": 0,
+                            "ix": 2,
+                            "mn": "ADBE Vector Group",
+                            "hd": false
+                        }
+                    ],
+                    "ip": 0,
+                    "op": 372,
+                    "st": 0,
+                    "ct": 1,
+                    "bm": 0
+                }
+            ]
         }
     ],
     "layers": [
@@ -114,10 +1862,10 @@
         {
             "ddd": 0,
             "ind": 2,
-            "ty": 4,
-            "nm": "Shape Layer 1",
+            "ty": 0,
+            "nm": "Pre-comp 1",
             "parent": 1,
-            "td": 1,
+            "refId": "comp_0",
             "sr": 1,
             "ks": {
                 "o": {
@@ -133,8 +1881,8 @@
                 "p": {
                     "a": 0,
                     "k": [
-                        9,
-                        -57.019,
+                        -3,
+                        -82,
                         0
                     ],
                     "ix": 2,
@@ -143,8 +1891,8 @@
                 "a": {
                     "a": 0,
                     "k": [
-                        9,
-                        -57.019,
+                        536,
+                        890.667,
                         0
                     ],
                     "ix": 1,
@@ -188,9 +1936,9 @@
                         {
                             "i": {
                                 "x": [
-                                    0.833,
-                                    0.833,
-                                    0.833
+                                    0,
+                                    0,
+                                    0.667
                                 ],
                                 "y": [
                                     1,
@@ -210,18 +1958,18 @@
                                     0
                                 ]
                             },
-                            "t": 59,
+                            "t": 76.5,
                             "s": [
-                                275,
-                                275,
+                                107,
+                                107,
                                 100
                             ]
                         },
                         {
-                            "t": 103,
+                            "t": 153,
                             "s": [
-                                100,
-                                100,
+                                50,
+                                50,
                                 100
                             ]
                         }
@@ -231,294 +1979,95 @@
                 }
             },
             "ao": 0,
-            "shapes": [
+            "hasMask": true,
+            "masksProperties": [
                 {
-                    "ty": "gr",
-                    "it": [
-                        {
-                            "ind": 0,
-                            "ty": "sh",
-                            "ix": 1,
-                            "ks": {
-                                "a": 0,
-                                "k": {
-                                    "i": [
-                                        [
-                                            0,
-                                            0
-                                        ],
-                                        [
-                                            0,
-                                            0
-                                        ],
-                                        [
-                                            -63,
-                                            -2
-                                        ],
-                                        [
-                                            20,
-                                            -20
-                                        ],
-                                        [
-                                            0,
-                                            0
-                                        ]
-                                    ],
-                                    "o": [
-                                        [
-                                            0,
-                                            0
-                                        ],
-                                        [
-                                            0,
-                                            0
-                                        ],
-                                        [
-                                            63,
-                                            2
-                                        ],
-                                        [
-                                            -20,
-                                            20
-                                        ],
-                                        [
-                                            0,
-                                            0
-                                        ]
-                                    ],
-                                    "v": [
-                                        [
-                                            86,
-                                            37
-                                        ],
-                                        [
-                                            -27,
-                                            -74
-                                        ],
-                                        [
-                                            10,
-                                            -151
-                                        ],
-                                        [
-                                            50,
-                                            -70
-                                        ],
-                                        [
-                                            -68,
-                                            34
-                                        ]
-                                    ],
-                                    "c": false
-                                },
-                                "ix": 2
-                            },
-                            "nm": "Path 1",
-                            "mn": "ADBE Vector Shape - Group",
-                            "hd": false
-                        },
-                        {
-                            "ty": "st",
-                            "c": {
-                                "a": 0,
-                                "k": [
-                                    0.218613254323,
+                    "inv": false,
+                    "mode": "a",
+                    "pt": {
+                        "a": 0,
+                        "k": {
+                            "i": [
+                                [
                                     0,
-                                    1,
-                                    1
+                                    0
                                 ],
-                                "ix": 3
-                            },
-                            "o": {
-                                "a": 0,
-                                "k": 100,
-                                "ix": 4
-                            },
-                            "w": {
-                                "a": 0,
-                                "k": 48,
-                                "ix": 5
-                            },
-                            "lc": 2,
-                            "lj": 1,
-                            "ml": 4,
-                            "bm": 0,
-                            "d": [
-                                {
-                                    "n": "d",
-                                    "nm": "dash",
-                                    "v": {
-                                        "a": 0,
-                                        "k": 608,
-                                        "ix": 1
-                                    }
-                                },
-                                {
-                                    "n": "o",
-                                    "nm": "offset",
-                                    "v": {
-                                        "a": 1,
-                                        "k": [
-                                            {
-                                                "i": {
-                                                    "x": [
-                                                        0
-                                                    ],
-                                                    "y": [
-                                                        1
-                                                    ]
-                                                },
-                                                "o": {
-                                                    "x": [
-                                                        0.333
-                                                    ],
-                                                    "y": [
-                                                        0
-                                                    ]
-                                                },
-                                                "t": 0,
-                                                "s": [
-                                                    612
-                                                ]
-                                            },
-                                            {
-                                                "t": 59,
-                                                "s": [
-                                                    0
-                                                ]
-                                            }
-                                        ],
-                                        "ix": 7
-                                    }
-                                }
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    0,
+                                    0
+                                ]
                             ],
-                            "nm": "Stroke 1",
-                            "mn": "ADBE Vector Graphic - Stroke",
-                            "hd": false
+                            "o": [
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    0,
+                                    0
+                                ]
+                            ],
+                            "v": [
+                                [
+                                    777.333,
+                                    629.333
+                                ],
+                                [
+                                    294.667,
+                                    629.333
+                                ],
+                                [
+                                    294.667,
+                                    1152
+                                ],
+                                [
+                                    777.333,
+                                    1152
+                                ]
+                            ],
+                            "c": true
                         },
-                        {
-                            "ty": "tr",
-                            "p": {
-                                "a": 0,
-                                "k": [
-                                    0,
-                                    0
-                                ],
-                                "ix": 2
-                            },
-                            "a": {
-                                "a": 0,
-                                "k": [
-                                    0,
-                                    0
-                                ],
-                                "ix": 1
-                            },
-                            "s": {
-                                "a": 0,
-                                "k": [
-                                    100,
-                                    100
-                                ],
-                                "ix": 3
-                            },
-                            "r": {
-                                "a": 0,
-                                "k": 0,
-                                "ix": 6
-                            },
-                            "o": {
-                                "a": 0,
-                                "k": 100,
-                                "ix": 7
-                            },
-                            "sk": {
-                                "a": 0,
-                                "k": 0,
-                                "ix": 4
-                            },
-                            "sa": {
-                                "a": 0,
-                                "k": 0,
-                                "ix": 5
-                            },
-                            "nm": "Transform"
-                        }
-                    ],
-                    "nm": "Shape 1",
-                    "np": 3,
-                    "cix": 2,
-                    "bm": 0,
-                    "ix": 1,
-                    "mn": "ADBE Vector Group",
-                    "hd": false
+                        "ix": 1
+                    },
+                    "o": {
+                        "a": 0,
+                        "k": 100,
+                        "ix": 3
+                    },
+                    "x": {
+                        "a": 0,
+                        "k": 0,
+                        "ix": 4
+                    },
+                    "nm": "Mask 1"
                 }
             ],
+            "w": 1080,
+            "h": 1920,
             "ip": 0,
             "op": 372,
             "st": 0,
-            "ct": 1,
             "bm": 0
         },
         {
             "ddd": 0,
             "ind": 3,
-            "ty": 2,
-            "nm": "Layer 2",
-            "parent": 2,
-            "tt": 1,
-            "refId": "image_0",
-            "sr": 1,
-            "ks": {
-                "o": {
-                    "a": 0,
-                    "k": 100,
-                    "ix": 11
-                },
-                "r": {
-                    "a": 0,
-                    "k": 0,
-                    "ix": 10
-                },
-                "p": {
-                    "a": 0,
-                    "k": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "ix": 2,
-                    "l": 2
-                },
-                "a": {
-                    "a": 0,
-                    "k": [
-                        540,
-                        960,
-                        0
-                    ],
-                    "ix": 1,
-                    "l": 2
-                },
-                "s": {
-                    "a": 0,
-                    "k": [
-                        100,
-                        100,
-                        100
-                    ],
-                    "ix": 6,
-                    "l": 2
-                }
-            },
-            "ao": 0,
-            "ip": 0,
-            "op": 372,
-            "st": 0,
-            "bm": 0
-        },
-        {
-            "ddd": 0,
-            "ind": 4,
             "ty": 4,
             "nm": "Text Outlines",
             "parent": 1,
@@ -5977,61 +7526,6 @@
             "op": 402,
             "st": 30,
             "ct": 1,
-            "bm": 0
-        },
-        {
-            "ddd": 0,
-            "ind": 6,
-            "ty": 2,
-            "nm": "Layer 1",
-            "refId": "image_1",
-            "sr": 1,
-            "ks": {
-                "o": {
-                    "a": 0,
-                    "k": 100,
-                    "ix": 11
-                },
-                "r": {
-                    "a": 0,
-                    "k": 0,
-                    "ix": 10
-                },
-                "p": {
-                    "a": 0,
-                    "k": [
-                        540,
-                        960,
-                        0
-                    ],
-                    "ix": 2,
-                    "l": 2
-                },
-                "a": {
-                    "a": 0,
-                    "k": [
-                        540,
-                        960,
-                        0
-                    ],
-                    "ix": 1,
-                    "l": 2
-                },
-                "s": {
-                    "a": 0,
-                    "k": [
-                        100,
-                        100,
-                        100
-                    ],
-                    "ix": 6,
-                    "l": 2
-                }
-            },
-            "ao": 0,
-            "ip": 0,
-            "op": 372,
-            "st": 0,
             "bm": 0
         }
     ],

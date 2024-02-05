@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import LottieView from "lottie-react-native";
 import colors from "@utils/colors";
@@ -21,11 +21,9 @@ const LottieAnimation: FC<Props> = ({ onAnimationFinish }) => {
   const exiting = () => {
     "worklet";
     const animations = {
-      translateY: withTiming(-200, { duration: 1000 }),
-      //opacity: withTiming(0, { duration: 3000 }),
+      opacity: withTiming(0, { duration: 400 }),
     };
     const initialValues = {
-      translateY: 0,
       opacity: 1,
     };
     return {
