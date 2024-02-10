@@ -6,7 +6,7 @@ import LottieAnimation from "@components/LottieAnimation";
 import Animated from "react-native-reanimated";
 import * as SplashScreen from "expo-splash-screen";
 
-export default function App() {
+const App = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const [splashAnimationFinished, setSplashAnimationFinished] = useState(false);
 
@@ -44,10 +44,12 @@ export default function App() {
       <StatusBar style="auto" />
     </Animated.View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
+
+export default App;
