@@ -1,3 +1,4 @@
+import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
 import { FC } from "react";
 import {
@@ -67,11 +68,7 @@ const SignUp: FC<Props> = (props) => {
       </View>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Name</Text>
-        <TextInput
-          placeholder="John Doe"
-          //placeholderTextColor={colors.INACTIVE_CONTRAST}
-          style={styles.input}
-        />
+        <AppInput placeholder="John Doe" />
         <Text style={styles.label}>Email</Text>
         <TextInput
           placeholder="john@email.com"
