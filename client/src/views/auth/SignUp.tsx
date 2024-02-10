@@ -1,3 +1,4 @@
+import AuthInputField from "@components/AuthInputField";
 import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
 import { FC } from "react";
@@ -67,21 +68,21 @@ const SignUp: FC<Props> = (props) => {
         />
       </View>
       <View style={styles.formContainer}>
-        <Text style={styles.label}>Name</Text>
-        <AppInput placeholder="John Doe" />
-        <Text style={styles.label}>Email</Text>
-        <TextInput
+        <AuthInputField
+          label="Name"
+          placeholder="John Doe"
+          containerStyle={styles.marginBottom}
+        />
+        <AuthInputField
+          label="Email"
           placeholder="john@email.com"
-          //placeholderTextColor={colors.INACTIVE_CONTRAST}
-          style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
+          containerStyle={styles.marginBottom}
         />
-        <Text style={styles.label}>Password</Text>
-        <TextInput
+        <AuthInputField
+          label="Password"
           placeholder="********"
-          //placeholderTextColor={colors.INACTIVE_CONTRAST}
-          style={styles.input}
           autoCapitalize="none"
           secureTextEntry
         />
@@ -97,21 +98,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.SECONDARY,
-    height: 45,
-    borderRadius: 25,
-    color: colors.CONTRAST,
-    padding: 10,
-  },
-  label: {
-    color: colors.CONTRAST,
-  },
   formContainer: {
     flex: 0.3,
     width: "100%",
     paddingHorizontal: 15, // padding in the x direction (left and the right)
+  },
+  marginBottom: {
+    marginBottom: 15,
   },
 });
 
