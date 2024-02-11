@@ -1,6 +1,7 @@
 import AuthInputField from "@components/AuthInputField";
 import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
+import { Formik } from "formik";
 import { FC, useState } from "react";
 import {
   Button,
@@ -21,6 +22,18 @@ import Animated, {
 } from "react-native-reanimated";
 
 interface Props {}
+
+interface NewUser {
+  name: string;
+  email: string;
+  password: string;
+}
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 const SignUp: FC<Props> = (props) => {
   const entering = () => {
@@ -43,11 +56,6 @@ const SignUp: FC<Props> = (props) => {
       animations,
     };
   };
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
 
   return (
     <ImageBackground
@@ -87,41 +95,45 @@ const SignUp: FC<Props> = (props) => {
             source={require("@assets/Welcome!.png")}
           />
         </View>
-        <View style={styles.formContainer}>
-          <AuthInputField
-            label="Name"
-            placeholder="John Doe"
-            containerStyle={styles.marginBottom}
-            onChange={(text) => {
-              setUserInfo({ ...userInfo, name: text });
-            }}
-          />
-          <AuthInputField
-            label="Email"
-            placeholder="john@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            containerStyle={styles.marginBottom}
-            onChange={(text) => {
-              setUserInfo({ ...userInfo, email: text });
-            }}
-          />
-          <AuthInputField
-            label="Password"
-            placeholder="********"
-            autoCapitalize="none"
-            secureTextEntry
-            onChange={(text) => {
-              setUserInfo({ ...userInfo, password: text });
-            }}
-          />
-          <Button
-            onPress={() => {
-              console.log(userInfo);
-            }}
-            title="Sign up"
-          />
-        </View>
+        <Formik
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+          initialValues={initialValues}
+          //validationSchema={}
+        >
+          {({ handleSubmit, handleChange, values }) => {
+            return (
+              <View style={styles.formContainer}>
+                <AuthInputField
+                  label="Name"
+                  placeholder="John Doe"
+                  containerStyle={styles.marginBottom}
+                  onChange={handleChange("name")}
+                  value={values.name}
+                />
+                <AuthInputField
+                  label="Email"
+                  placeholder="john@email.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  containerStyle={styles.marginBottom}
+                  onChange={handleChange("email")}
+                  value={values.email}
+                />
+                <AuthInputField
+                  label="Password"
+                  placeholder="********"
+                  autoCapitalize="none"
+                  secureTextEntry
+                  onChange={handleChange("password")}
+                  value={values.password}
+                />
+                <Button onPress={handleSubmit} title="Sign up" />
+              </View>
+            );
+          }}
+        </Formik>
       </SafeAreaView>
     </ImageBackground>
   );
@@ -130,7 +142,7 @@ const SignUp: FC<Props> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.PRIMARY,
+    //backgroundColor: colors.PRIMARY,
     alignItems: "center",
     justifyContent: "center",
   },
