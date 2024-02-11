@@ -20,6 +20,29 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import * as yup from "yup";
+
+const signupSchema = yup.object({
+  name: yup
+    .string()
+    .trim("Name is missing!")
+    .min(3, "Invalid name!")
+    .required("Name is required!"),
+  email: yup
+    .string()
+    .trim("Email is missing!")
+    .email("Invalid email!")
+    .required("Email is required!"),
+  password: yup
+    .string()
+    .trim("Password is missing!")
+    .min(8, "Password is too short!")
+    .matches(
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[a-zA-Z\d!@#\$%\^&\*]+$/,
+      "Password is too simple!"
+    )
+    .required("Password is required!"),
+});
 
 interface Props {}
 
@@ -100,9 +123,9 @@ const SignUp: FC<Props> = (props) => {
             console.log(values);
           }}
           initialValues={initialValues}
-          //validationSchema={}
+          validationSchema={signupSchema}
         >
-          {({ handleSubmit, handleChange, values }) => {
+          {({ handleSubmit, handleChange, errors, values }) => {
             return (
               <View style={styles.formContainer}>
                 <AuthInputField
