@@ -1,10 +1,12 @@
 import AuthInputField from "@components/AuthInputField";
 import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
+  Button,
   Dimensions,
   Image,
+  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -41,53 +43,87 @@ const SignUp: FC<Props> = (props) => {
       animations,
     };
   };
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          alignItems: "center",
-          paddingTop: 30,
-        }}
-      >
-        <Animated.Image
-          entering={entering}
-          source={require("@assets/Logo.png")}
+    <ImageBackground
+      source={require("../../assets/4.jpeg")}
+      resizeMode="cover"
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <View
           style={{
-            resizeMode: "contain",
-            width: "80%",
+            ...StyleSheet.absoluteFillObject,
+            alignItems: "center",
+            paddingTop: 30,
           }}
-        />
-      </View>
-      <View style={{ height: 100, width: 150 }}>
-        <Animated.Image
-          entering={FadeInUp.delay(1000).duration(1000).springify().damping(3)}
-          style={{ flex: 1, width: null, height: null, resizeMode: "contain" }}
-          source={require("@assets/Welcome!.png")}
-        />
-      </View>
-      <View style={styles.formContainer}>
-        <AuthInputField
-          label="Name"
-          placeholder="John Doe"
-          containerStyle={styles.marginBottom}
-        />
-        <AuthInputField
-          label="Email"
-          placeholder="john@email.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          containerStyle={styles.marginBottom}
-        />
-        <AuthInputField
-          label="Password"
-          placeholder="********"
-          autoCapitalize="none"
-          secureTextEntry
-        />
-      </View>
-    </SafeAreaView>
+        >
+          <Animated.Image
+            entering={entering}
+            source={require("@assets/Logo.png")}
+            style={{
+              resizeMode: "contain",
+              width: "80%",
+            }}
+          />
+        </View>
+        <View style={{ height: 100, width: 150 }}>
+          <Animated.Image
+            entering={FadeInUp.delay(1000)
+              .duration(1000)
+              .springify()
+              .damping(3)}
+            style={{
+              flex: 1,
+              width: null,
+              height: null,
+              resizeMode: "contain",
+            }}
+            source={require("@assets/Welcome!.png")}
+          />
+        </View>
+        <View style={styles.formContainer}>
+          <AuthInputField
+            label="Name"
+            placeholder="John Doe"
+            containerStyle={styles.marginBottom}
+            onChange={(text) => {
+              setUserInfo({ ...userInfo, name: text });
+            }}
+          />
+          <AuthInputField
+            label="Email"
+            placeholder="john@email.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            containerStyle={styles.marginBottom}
+            onChange={(text) => {
+              setUserInfo({ ...userInfo, email: text });
+            }}
+          />
+          <AuthInputField
+            label="Password"
+            placeholder="********"
+            autoCapitalize="none"
+            secureTextEntry
+            onChange={(text) => {
+              setUserInfo({ ...userInfo, password: text });
+            }}
+          />
+          <Button
+            onPress={() => {
+              console.log(userInfo);
+            }}
+            title="Sign up"
+          />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
