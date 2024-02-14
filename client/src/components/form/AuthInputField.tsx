@@ -1,7 +1,7 @@
 import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
 import { useFormikContext } from "formik";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -9,7 +9,15 @@ import {
   TextInputProps,
   StyleProp,
   ViewStyle,
+  Vibration,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
 interface Props {
   name: string;
@@ -32,6 +40,9 @@ const AuthInputField: FC<Props> = ({
   containerStyle,
   name,
 }) => {
+  const inputTransformValue = useSharedValue(0);
+  const inputOpacityValue = useSharedValue(1);
+
   const { handleChange, values, errors, handleBlur, touched } =
     useFormikContext<{
       [key: string]: string;
@@ -39,11 +50,59 @@ const AuthInputField: FC<Props> = ({
 
   const errorMsg = touched[name] && errors[name] ? errors[name] : "";
 
+  const shakeUI = () => {
+    inputTransformValue.value = withSequence(
+      withTiming(-6, { duration: 50 }),
+      withSpring(0, {
+        damping: 8,
+        mass: 0.5,
+        stiffness: 1000,
+        restDisplacementThreshold: 0.1,
+      })
+    );
+    inputOpacityValue.value = withSequence(
+      withTiming(0.5, { duration: 50 }),
+      withTiming(1, { duration: 100 })
+    );
+  };
+
+  const inputStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: inputTransformValue.value }],
+      opacity: inputOpacityValue.value,
+    };
+  });
+
+  const errorMessageStyle = useAnimatedStyle(() => {
+    return {
+      opacity: errorMsg
+        ? withTiming(1, { duration: 300 })
+        : withTiming(0, { duration: 300 }),
+      transform: [
+        {
+          translateY: errorMsg
+            ? withTiming(0, { duration: 300 })
+            : withTiming(-10, { duration: 300 }),
+        },
+      ],
+    };
+  });
+
+  useEffect(() => {
+    // Vibrate for 50ms when the Button is pressed
+    if (errorMsg) {
+      shakeUI();
+      Vibration.vibrate(40);
+    }
+  }, [errorMsg]);
+
   return (
-    <View style={[styles.container, containerStyle]}>
+    <Animated.View style={[containerStyle, inputStyle]}>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.errorMsg}>{errorMsg}</Text>
+        <Animated.View style={[errorMessageStyle]}>
+          <Text style={styles.errorMsg}>{errorMsg}</Text>
+        </Animated.View>
       </View>
       <AppInput
         placeholder={placeholder}
@@ -54,12 +113,11 @@ const AuthInputField: FC<Props> = ({
         value={values[name]}
         onBlur={handleBlur(name)}
       />
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
   labelContainer: {
     flexDirection: "row",
     alignItems: "center",

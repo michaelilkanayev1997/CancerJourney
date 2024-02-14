@@ -16,7 +16,7 @@ const AppButton: FC<Props> = ({ title, busy, onPress, borderRadius }) => {
 
   const handlePressIn = () => {
     setIsPressed(true);
-    // Vibrate for 50ms when the link is pressed
+    // Vibrate for 50ms when the Button is pressed
     Vibration.vibrate(50);
   };
 
