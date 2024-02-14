@@ -1,5 +1,6 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
+import { FontAwesome } from "@expo/vector-icons";
 import colors from "@utils/colors";
 import { FC } from "react";
 import {
@@ -7,6 +8,7 @@ import {
   ImageBackground,
   SafeAreaView,
   StyleSheet,
+  Vibration,
   View,
 } from "react-native";
 import Animated, {
@@ -143,6 +145,17 @@ const SignUp: FC<Props> = (props) => {
               autoCapitalize="none"
               secureTextEntry
               containerStyle={styles.marginBottom}
+              rightIcon={
+                <FontAwesome
+                  name="eye-slash"
+                  size={19}
+                  color={colors.PRIMARY_BTN}
+                />
+              }
+              onRightIconPress={() => {
+                Vibration.vibrate(30);
+                console.log("pressed");
+              }}
             />
             <SubmitBtn title="Sign up" />
           </View>
