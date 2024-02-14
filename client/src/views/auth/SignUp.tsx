@@ -19,6 +19,7 @@ import Animated, {
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
+import AppLink from "@ui/AppLink";
 
 const signupSchema = yup.object({
   name: yup
@@ -156,6 +157,21 @@ const SignUp: FC<Props> = (props) => {
               onRightIconPress={togglePasswordView}
             />
             <SubmitBtn title="Sign up" />
+
+            <View style={styles.linkContainer}>
+              <AppLink
+                title="Forgot Password"
+                onPress={() => {
+                  //navigation.navigate("LostPassword");
+                }}
+              />
+              <AppLink
+                title="Sign In"
+                onPress={() => {
+                  //navigation.navigate("SignIn");
+                }}
+              />
+            </View>
           </View>
         </Form>
       </SafeAreaView>
@@ -177,6 +193,13 @@ const styles = StyleSheet.create({
   },
   marginBottom: {
     marginBottom: 15,
+  },
+  linkContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 8,
   },
 });
 
