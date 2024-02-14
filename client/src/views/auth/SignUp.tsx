@@ -1,8 +1,7 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
-import { FontAwesome } from "@expo/vector-icons";
 import colors from "@utils/colors";
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Button,
   ImageBackground,
@@ -19,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
+import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 
 const signupSchema = yup.object({
   name: yup
@@ -57,6 +57,13 @@ const initialValues = {
 };
 
 const SignUp: FC<Props> = (props) => {
+  const [secureEntry, setSecureEntry] = useState(true);
+
+  const togglePasswordView = () => {
+    Vibration.vibrate(30);
+    setSecureEntry(!secureEntry);
+  };
+
   const entering = () => {
     "worklet";
     const animations = {
@@ -143,19 +150,10 @@ const SignUp: FC<Props> = (props) => {
               label="Password"
               placeholder="********"
               autoCapitalize="none"
-              secureTextEntry
+              secureTextEntry={secureEntry}
               containerStyle={styles.marginBottom}
-              rightIcon={
-                <FontAwesome
-                  name="eye-slash"
-                  size={19}
-                  color={colors.PRIMARY_BTN}
-                />
-              }
-              onRightIconPress={() => {
-                Vibration.vibrate(30);
-                console.log("pressed");
-              }}
+              rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
+              onRightIconPress={togglePasswordView}
             />
             <SubmitBtn title="Sign up" />
           </View>
