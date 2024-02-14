@@ -1,7 +1,7 @@
 import AppInput from "@ui/AppInput";
 import colors from "@utils/colors";
 import { useFormikContext } from "formik";
-import { FC, useEffect } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
   StyleProp,
   ViewStyle,
   Vibration,
+  Pressable,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -22,13 +23,13 @@ import Animated, {
 interface Props {
   name: string;
   label?: string;
-  value?: string;
   placeholder?: string;
   keyboardType?: TextInputProps["keyboardType"];
   autoCapitalize?: TextInputProps["autoCapitalize"];
   secureTextEntry?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
-  onChange?: (text: string) => void;
+  rightIcon?: ReactNode;
+  onRightIconPress?(): void;
 }
 
 const AuthInputField: FC<Props> = ({
@@ -39,6 +40,8 @@ const AuthInputField: FC<Props> = ({
   secureTextEntry,
   containerStyle,
   name,
+  rightIcon,
+  onRightIconPress,
 }) => {
   const inputTransformValue = useSharedValue(0);
   const inputOpacityValue = useSharedValue(1);
@@ -89,9 +92,9 @@ const AuthInputField: FC<Props> = ({
   });
 
   useEffect(() => {
-    // Vibrate for 50ms when the Button is pressed
     if (errorMsg) {
       shakeUI();
+      // Vibrate for 40ms when the Button is pressed
       Vibration.vibrate(40);
     }
   }, [errorMsg]);
@@ -104,15 +107,23 @@ const AuthInputField: FC<Props> = ({
           <Text style={styles.errorMsg}>{errorMsg}</Text>
         </Animated.View>
       </View>
-      <AppInput
-        placeholder={placeholder}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
-        secureTextEntry={secureTextEntry}
-        onChangeText={handleChange(name)}
-        value={values[name]}
-        onBlur={handleBlur(name)}
-      />
+      <View>
+        <AppInput
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+          secureTextEntry={secureTextEntry}
+          onChangeText={handleChange(name)}
+          value={values[name]}
+          onBlur={handleBlur(name)}
+        />
+
+        {rightIcon ? (
+          <Pressable onPress={onRightIconPress} style={styles.rightIcon}>
+            {rightIcon}
+          </Pressable>
+        ) : null}
+      </View>
     </Animated.View>
   );
 };
@@ -129,6 +140,15 @@ const styles = StyleSheet.create({
   },
   errorMsg: {
     color: colors.ERROR,
+  },
+  rightIcon: {
+    width: 45,
+    height: 45,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
