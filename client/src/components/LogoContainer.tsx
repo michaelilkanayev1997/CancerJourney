@@ -49,7 +49,7 @@ const LogoContainer: FC<Props> = (props) => {
         <Animated.Image
           entering={FadeInUp.delay(1000).duration(1000).springify().damping(3)}
           style={{
-            flex: 1,
+            flex: 0.2,
             width: null,
             height: null,
             resizeMode: "contain",

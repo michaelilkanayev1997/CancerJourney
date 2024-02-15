@@ -127,14 +127,14 @@ const SignUp: FC<Props> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: colors.PRIMARY,
+    //backgroundColor: colors.PRIMARY_DARK2,
     alignItems: "center",
     justifyContent: "center",
   },
   formContainer: {
     flex: 0.3,
     width: "100%",
-    paddingHorizontal: 15, // padding in the x direction (left and the right)
+    paddingHorizontal: 15,
   },
   marginBottom: {
     marginBottom: 15,
