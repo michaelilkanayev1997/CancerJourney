@@ -2,18 +2,13 @@ import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
 import colors from "@utils/colors";
 import { FC, useState } from "react";
-import {
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
-  Vibration,
-  View,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Text, Vibration, View } from "react-native";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const signupSchema = yup.object({
   email: yup
@@ -75,18 +70,21 @@ const SignIn: FC<Props> = (props) => {
             rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
             onRightIconPress={togglePasswordView}
           />
+          <View style={styles.forgotPasswordLink}>
+            <AppLink
+              title="Forgot Password ?"
+              onPress={() => {
+                //navigation.navigate("SignUp");
+              }}
+            />
+          </View>
           <SubmitBtn
             title="Sign In"
             defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
             pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
           />
           <View style={styles.linkContainer}>
-            <AppLink
-              title="Forgot Password"
-              onPress={() => {
-                //navigation.navigate("LostPassword");
-              }}
-            />
+            <Text>Don't have an account ? </Text>
             <AppLink
               title="Sign Up"
               onPress={() => {
@@ -94,6 +92,21 @@ const SignIn: FC<Props> = (props) => {
               }}
             />
           </View>
+          <View style={styles.separator} />
+
+          <SubmitBtn
+            title="Sign up with Google"
+            pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+            defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+            icon={
+              <MaterialCommunityIcons
+                name="google"
+                size={24}
+                color="white"
+                style={{ marginRight: 10 }}
+              />
+            }
+          />
         </View>
       </Form>
     </SafeAreaView>
@@ -107,6 +120,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  separator: {
+    borderBottomColor: "#D3D3D3", // Light gray color
+    borderBottomWidth: 2,
+    marginVertical: 16,
+  },
   formContainer: {
     width: "100%",
     paddingHorizontal: 15,
@@ -116,10 +134,15 @@ const styles = StyleSheet.create({
   },
   linkContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingHorizontal: 8,
+    justifyContent: "center",
+    marginTop: 15,
+    paddingHorizontal: 25,
+  },
+  forgotPasswordLink: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingTop: 55,
+    paddingBottom: 15,
   },
 });
 
