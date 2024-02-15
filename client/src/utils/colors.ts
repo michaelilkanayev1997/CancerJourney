@@ -12,9 +12,12 @@ const SUCCESS = "#26A81F";
 const OVERLAY = "rgba(45, 35, 35, 0.5)";
 const INFO = "#20639B";
 const FULLY_TRANSPARENT_OVERLAY = "rgba(0, 0, 0, 0)";
+const Google_BTN_PRESSED = ["#4285F4", "#3578E5", "#2A6ACF"];
 
 const colors = {
   PRIMARY,
+  Google_BTN_PRESSED,
+
   PRIMARY_BTN,
   SECONDARY,
   THIRD,

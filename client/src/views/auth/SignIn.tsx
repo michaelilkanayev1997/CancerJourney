@@ -46,77 +46,73 @@ const SignIn: FC<Props> = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/4.jpeg")}
-      resizeMode="cover"
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView style={styles.container}>
-        <LogoContainer />
+    <SafeAreaView style={styles.container}>
+      <LogoContainer />
 
-        <Form
-          onSubmit={(values, helper) => {
-            console.log(values);
-          }}
-          initialValues={initialValues}
-          validationSchema={signupSchema}
-        >
-          <View style={styles.formContainer}>
-            <AuthInputField
-              name="email"
-              label="Email"
-              placeholder="john@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              containerStyle={styles.marginBottom}
+      <Form
+        onSubmit={(values, helper) => {
+          console.log(values);
+        }}
+        initialValues={initialValues}
+        validationSchema={signupSchema}
+      >
+        <View style={styles.formContainer}>
+          <AuthInputField
+            name="email"
+            label="Email"
+            placeholder="john@email.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            containerStyle={styles.marginBottom}
+          />
+          <AuthInputField
+            name="password"
+            label="Password"
+            placeholder="********"
+            autoCapitalize="none"
+            secureTextEntry={secureEntry}
+            containerStyle={styles.marginBottom}
+            rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
+            onRightIconPress={togglePasswordView}
+          />
+          <SubmitBtn
+            title="Sign In"
+            defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+            pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+          />
+          <View style={styles.linkContainer}>
+            <AppLink
+              title="Forgot Password"
+              onPress={() => {
+                //navigation.navigate("LostPassword");
+              }}
             />
-            <AuthInputField
-              name="password"
-              label="Password"
-              placeholder="********"
-              autoCapitalize="none"
-              secureTextEntry={secureEntry}
-              containerStyle={styles.marginBottom}
-              rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
-              onRightIconPress={togglePasswordView}
+            <AppLink
+              title="Sign Up"
+              onPress={() => {
+                //navigation.navigate("SignUp");
+              }}
             />
-            <SubmitBtn title="Sign In" />
-
-            <View style={styles.linkContainer}>
-              <AppLink
-                title="Forgot Password"
-                onPress={() => {
-                  //navigation.navigate("LostPassword");
-                }}
-              />
-              <AppLink
-                title="Sign Up"
-                onPress={() => {
-                  //navigation.navigate("SignUp");
-                }}
-              />
-            </View>
           </View>
-        </Form>
-      </SafeAreaView>
-    </ImageBackground>
+        </View>
+      </Form>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: colors.PRIMARY,
+    backgroundColor: colors.PRIMARY,
     alignItems: "center",
     justifyContent: "center",
   },
   formContainer: {
-    flex: 0.3,
     width: "100%",
     paddingHorizontal: 15,
   },
   marginBottom: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   linkContainer: {
     flexDirection: "row",

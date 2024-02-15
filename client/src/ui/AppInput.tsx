@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: colors.SECONDARY,
+    backgroundColor: colors.INACTIVE_CONTRAST,
     height: 45,
     borderRadius: 25,
     color: colors.CONTRAST,

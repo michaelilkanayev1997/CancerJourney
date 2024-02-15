@@ -45,7 +45,7 @@ const App = () => {
           }}
         />
       ) : (
-        <SignUp />
+        <SignIn />
       )}
       <StatusBar style="auto" />
     </Animated.View>

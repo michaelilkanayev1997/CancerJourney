@@ -52,6 +52,7 @@ const AppLink: React.FC<Props> = ({ title, active = true, onPress, style }) => {
 const styles = StyleSheet.create({
   title: {
     color: colors.SECONDARY,
+    fontWeight: "bold",
   },
   titlePressed: {
     color: colors.OVERLAY,
