@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 0.3,
     width: "100%",
-    paddingHorizontal: 15, // padding in the x direction (left and the right)
+    paddingHorizontal: 15,
   },
   marginBottom: {
     marginBottom: 15,
