@@ -3,23 +3,18 @@ import Form from "@components/form";
 import colors from "@utils/colors";
 import { FC, useState } from "react";
 import {
-  Button,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
   Vibration,
   View,
 } from "react-native";
-import Animated, {
-  FadeIn,
-  FadeInUp,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { FadeInUp, withSpring } from "react-native-reanimated";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
+import LogoContainer from "@components/LogoContainer";
 
 const signupSchema = yup.object({
   name: yup
@@ -93,37 +88,8 @@ const SignUp: FC<Props> = (props) => {
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
-        <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            alignItems: "center",
-            paddingTop: 30,
-          }}
-        >
-          <Animated.Image
-            entering={entering}
-            source={require("@assets/Logo.png")}
-            style={{
-              resizeMode: "contain",
-              width: "80%",
-            }}
-          />
-        </View>
-        <View style={{ height: 100, width: 150 }}>
-          <Animated.Image
-            entering={FadeInUp.delay(1000)
-              .duration(1000)
-              .springify()
-              .damping(3)}
-            style={{
-              flex: 1,
-              width: null,
-              height: null,
-              resizeMode: "contain",
-            }}
-            source={require("@assets/Welcome!.png")}
-          />
-        </View>
+        <LogoContainer />
+
         <Form
           onSubmit={(values, helper) => {
             console.log(values);
