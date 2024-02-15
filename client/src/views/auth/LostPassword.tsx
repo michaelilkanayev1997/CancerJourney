@@ -1,7 +1,15 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
 import { FC } from "react";
-import { ImageBackground, SafeAreaView, StyleSheet, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import AppLink from "@ui/AppLink";
@@ -30,42 +38,64 @@ const initialValues = {
 const LostPassword: FC<Props> = (props) => {
   return (
     <SafeAreaView style={styles.container}>
-      <LogoContainer />
-      <Form
-        onSubmit={() => {
-          console.log("lol");
-        }}
-        initialValues={initialValues}
-        validationSchema={lostPasswordSchema}
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.formContainer}>
-          <AuthInputField
-            name="email"
-            placeholder="Enter"
-            label="Enter Your Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            containerStyle={styles.marginBottom}
+        <View style={styles.logoContainer}>
+          <Image source={require("@assets/lock 1.png")} style={styles.logo} />
+
+          <Image
+            source={require("@assets/Forgot Password.png")}
+            style={styles.forgotPassword}
           />
 
-          <SubmitBtn title="Send link" />
-
-          <View style={styles.linkContainer}>
-            <AppLink
-              title="Sign in"
-              onPress={() => {
-                //navigation.navigate("SignIn");
-              }}
-            />
-            <AppLink
-              title="Sign Up"
-              onPress={() => {
-                //navigation.navigate("SignUp");
-              }}
-            />
-          </View>
+          <Text style={styles.instructionText}>
+            Don’t worry! It happens, please enter the address associated with
+            your account
+          </Text>
         </View>
-      </Form>
+
+        <Form
+          onSubmit={() => {
+            console.log("lol");
+          }}
+          initialValues={initialValues}
+          validationSchema={lostPasswordSchema}
+        >
+          <View style={styles.formContainer}>
+            <AuthInputField
+              name="email"
+              placeholder="michael@example.com"
+              label="Enter Your Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              containerStyle={styles.marginBottom}
+            />
+
+            <SubmitBtn
+              title="Submit"
+              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+            />
+
+            <View style={styles.linkContainer}>
+              <AppLink
+                title="Sign in"
+                onPress={() => {
+                  //navigation.navigate("SignIn");
+                }}
+              />
+              <AppLink
+                title="Sign Up"
+                onPress={() => {
+                  //navigation.navigate("SignUp");
+                }}
+              />
+            </View>
+          </View>
+        </Form>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -74,13 +104,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.PRIMARY,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  logoContainer: {
     alignItems: "center",
-    justifyContent: "center",
+    width: "100%",
+    paddingTop: 60,
+    paddingBottom: 10,
   },
   formContainer: {
-    flex: 0.2,
-    width: "100%",
     paddingHorizontal: 15,
+  },
+  logo: {
+    resizeMode: "contain",
+    width: "60%",
+  },
+  forgotPassword: {
+    resizeMode: "contain",
+    width: "60%",
+    marginTop: 20,
   },
   marginBottom: {
     marginBottom: 20,
@@ -91,6 +135,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 20,
     paddingHorizontal: 8,
+  },
+  instructionText: {
+    textAlign: "center",
+    fontSize: 14,
+    marginTop: 20,
+    marginHorizontal: 20,
   },
 });
 

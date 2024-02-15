@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   welcome: {
     resizeMode: "contain",
     width: "35%",
-    marginTop: -60,
+    marginTop: -70,
   },
 });
 

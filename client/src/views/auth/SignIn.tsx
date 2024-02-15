@@ -2,7 +2,14 @@ import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
 import colors from "@utils/colors";
 import { FC, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, Vibration, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Vibration,
+  View,
+} from "react-native";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
@@ -42,73 +49,78 @@ const SignIn: FC<Props> = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LogoContainer />
-
-      <Form
-        onSubmit={(values, helper) => {
-          console.log(values);
-        }}
-        initialValues={initialValues}
-        validationSchema={signupSchema}
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.formContainer}>
-          <AuthInputField
-            name="email"
-            label="Email"
-            placeholder="john@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            containerStyle={styles.marginBottom}
-          />
-          <AuthInputField
-            name="password"
-            label="Password"
-            placeholder="********"
-            autoCapitalize="none"
-            secureTextEntry={secureEntry}
-            containerStyle={styles.marginBottom}
-            rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
-            onRightIconPress={togglePasswordView}
-          />
-          <View style={styles.forgotPasswordLink}>
-            <AppLink
-              title="Forgot Password ?"
-              onPress={() => {
-                //navigation.navigate("SignUp");
-              }}
-            />
-          </View>
-          <SubmitBtn
-            title="Sign In"
-            defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
-            pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-          />
-          <View style={styles.linkContainer}>
-            <Text>Don't have an account ? </Text>
-            <AppLink
-              title="Sign Up"
-              onPress={() => {
-                //navigation.navigate("SignUp");
-              }}
-            />
-          </View>
-          <View style={styles.separator} />
+        <LogoContainer />
 
-          <SubmitBtn
-            title="Sign up with Google"
-            pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
-            defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-            icon={
-              <MaterialCommunityIcons
-                name="google"
-                size={24}
-                color="white"
-                style={{ marginRight: 10 }}
+        <Form
+          onSubmit={(values, helper) => {
+            console.log(values);
+          }}
+          initialValues={initialValues}
+          validationSchema={signupSchema}
+        >
+          <View style={styles.formContainer}>
+            <AuthInputField
+              name="email"
+              label="Email"
+              placeholder="john@email.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              containerStyle={styles.marginBottom}
+            />
+            <AuthInputField
+              name="password"
+              label="Password"
+              placeholder="********"
+              autoCapitalize="none"
+              secureTextEntry={secureEntry}
+              containerStyle={styles.marginBottom}
+              rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
+              onRightIconPress={togglePasswordView}
+            />
+            <View style={styles.forgotPasswordLink}>
+              <AppLink
+                title="Forgot Password ?"
+                onPress={() => {
+                  //navigation.navigate("SignUp");
+                }}
               />
-            }
-          />
-        </View>
-      </Form>
+            </View>
+            <SubmitBtn
+              title="Sign In"
+              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+            />
+            <View style={styles.linkContainer}>
+              <Text>Don't have an account ? </Text>
+              <AppLink
+                title="Sign Up"
+                onPress={() => {
+                  //navigation.navigate("SignUp");
+                }}
+              />
+            </View>
+            <View style={styles.separator} />
+
+            <SubmitBtn
+              title="Sign up with Google"
+              pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+              defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+              icon={
+                <MaterialCommunityIcons
+                  name="google"
+                  size={24}
+                  color="white"
+                  style={{ marginRight: 10 }}
+                />
+              }
+            />
+          </View>
+        </Form>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -117,8 +129,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.PRIMARY,
-    alignItems: "center",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: "center",
+    alignItems: "center",
   },
   separator: {
     borderBottomColor: "#D3D3D3", // Light gray color
