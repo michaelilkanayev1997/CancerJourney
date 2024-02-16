@@ -18,6 +18,8 @@ import LogoContainer from "@components/LogoContainer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
+import { FormikHelpers } from "formik";
+import axios from "axios";
 
 const signupSchema = yup.object({
   name: yup
@@ -64,6 +66,24 @@ const SignUp: FC<Props> = (props) => {
     setSecureEntry(!secureEntry);
   };
 
+  const handleSubmit = async (
+    values: NewUser,
+    actions: FormikHelpers<NewUser>
+  ) => {
+    actions.setSubmitting(true); // Activate busy for loader
+
+    try {
+      const response = await axios.post("http://10.0.0.9:8000/auth/create", {
+        ...values,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+    actions.setSubmitting(false); // Deactivate busy for loader
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -72,9 +92,7 @@ const SignUp: FC<Props> = (props) => {
       >
         <LogoContainer />
         <Form
-          onSubmit={(values, helper) => {
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={signupSchema}
         >
