@@ -3,7 +3,6 @@ import Form from "@components/form";
 import { FC } from "react";
 import {
   Image,
-  ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,9 +12,9 @@ import {
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import AppLink from "@ui/AppLink";
-import { FormikHelpers } from "formik";
-import LogoContainer from "@components/LogoContainer";
 import colors from "@utils/colors";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AuthStackParamList } from "src/@types/navigation";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -36,6 +35,8 @@ const initialValues = {
 };
 
 const LostPassword: FC<Props> = (props) => {
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -83,13 +84,13 @@ const LostPassword: FC<Props> = (props) => {
               <AppLink
                 title="Sign in"
                 onPress={() => {
-                  //navigation.navigate("SignIn");
+                  navigation.navigate("SignIn");
                 }}
               />
               <AppLink
                 title="Sign Up"
                 onPress={() => {
-                  //navigation.navigate("SignUp");
+                  navigation.navigate("SignUp");
                 }}
               />
             </View>
