@@ -16,8 +16,8 @@ const AuthNavigator = () => {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="LostPassword" component={LostPassword} />
       <Stack.Screen name="Verification" component={Verification} />
     </Stack.Navigator>
