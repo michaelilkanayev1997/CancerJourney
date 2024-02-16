@@ -1,10 +1,11 @@
-import { FC } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import AppLink from "@ui/AppLink";
@@ -17,6 +18,16 @@ interface Props {}
 const otpFields = new Array(4).fill("");
 
 const Verification: FC<Props> = (props) => {
+  const [otp, setOtp] = useState([...otpFields]);
+  const [activeOtpIndex, setActiveOtpIndex] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+
+  const inputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [activeOtpIndex]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -42,7 +53,15 @@ const Verification: FC<Props> = (props) => {
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             {otpFields.map((_, index) => {
-              return <OTPField key={index} placeholder="*" />;
+              return (
+                <OTPField
+                  ref={activeOtpIndex === index ? inputRef : null}
+                  key={index}
+                  placeholder="*"
+                  keyboardType="numeric"
+                  maxLength={1}
+                />
+              );
             })}
           </View>
         </View>
