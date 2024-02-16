@@ -1,6 +1,6 @@
 import colors from "@utils/colors";
-import { FC, useState } from "react";
-import { Pressable, StyleSheet, Text, Vibration } from "react-native";
+import { FC, ReactNode, useState } from "react";
+import { Pressable, StyleSheet, Text, Vibration, View } from "react-native";
 import Loader from "./Loader";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -9,9 +9,20 @@ interface Props {
   onPress?(): void;
   busy?: boolean;
   borderRadius?: number;
+  pressedColor: [string, string, string];
+  defaultColor: [string, string, string];
+  icon?: ReactNode;
 }
 
-const AppButton: FC<Props> = ({ title, busy, onPress, borderRadius }) => {
+const AppButton: FC<Props> = ({
+  title,
+  busy,
+  onPress,
+  borderRadius,
+  pressedColor,
+  defaultColor,
+  icon,
+}) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePressIn = () => {
@@ -28,10 +39,10 @@ const AppButton: FC<Props> = ({ title, busy, onPress, borderRadius }) => {
     <LinearGradient
       colors={
         isPressed
-          ? ["#0DA2BE", "#0FBDD5", "#12C7E0"] // Pressed State Gradient
-          : ["#12C7E0", "#0FABCD", "#0E95B7"] // Default State Gradient
+          ? pressedColor // Pressed State Gradient
+          : defaultColor // Default State Gradient
       }
-      style={{ borderRadius: borderRadius || 5 }}
+      style={{ borderRadius: borderRadius || 5, width: "90%" }}
     >
       <Pressable
         disabled={busy}
@@ -40,7 +51,11 @@ const AppButton: FC<Props> = ({ title, busy, onPress, borderRadius }) => {
         onPressOut={handlePressOut}
         style={[styles.container, { borderRadius: borderRadius || 5 }]}
       >
-        {!busy ? <Text style={styles.title}>{title}</Text> : <Loader />}
+        <View style={styles.btnContainer}>
+          {icon ? icon : null}
+
+          {!busy ? <Text style={styles.title}>{title}</Text> : <Loader />}
+        </View>
       </Pressable>
     </LinearGradient>
   );
@@ -49,7 +64,7 @@ const AppButton: FC<Props> = ({ title, busy, onPress, borderRadius }) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 45,
+    height: 50,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -57,6 +72,12 @@ const styles = StyleSheet.create({
     color: colors.INACTIVE_CONTRAST,
     fontSize: 20,
     fontWeight: "600",
+  },
+  btnContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
 });
 

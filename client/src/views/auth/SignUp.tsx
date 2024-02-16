@@ -3,18 +3,19 @@ import Form from "@components/form";
 import colors from "@utils/colors";
 import { FC, useState } from "react";
 import {
-  ImageBackground,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Vibration,
   View,
+  Text,
 } from "react-native";
-import Animated, { FadeInUp, withSpring } from "react-native-reanimated";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const signupSchema = yup.object({
   name: yup
@@ -61,14 +62,12 @@ const SignUp: FC<Props> = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/4.jpeg")}
-      resizeMode="cover"
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
+      >
         <LogoContainer />
-
         <Form
           onSubmit={(values, helper) => {
             console.log(values);
@@ -101,15 +100,14 @@ const SignUp: FC<Props> = (props) => {
               rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
               onRightIconPress={togglePasswordView}
             />
-            <SubmitBtn title="Sign up" />
+            <SubmitBtn
+              title="Sign up"
+              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+            />
 
             <View style={styles.linkContainer}>
-              <AppLink
-                title="Forgot Password"
-                onPress={() => {
-                  //navigation.navigate("LostPassword");
-                }}
-              />
+              <Text>Already have an account ? </Text>
               <AppLink
                 title="Sign In"
                 onPress={() => {
@@ -117,34 +115,55 @@ const SignUp: FC<Props> = (props) => {
                 }}
               />
             </View>
+            <View style={styles.separator} />
+
+            <SubmitBtn
+              title="Sign up with Google"
+              pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+              defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+              icon={
+                <MaterialCommunityIcons
+                  name="google"
+                  size={24}
+                  color="white"
+                  style={{ marginRight: 10 }}
+                />
+              }
+            />
           </View>
         </Form>
-      </SafeAreaView>
-    </ImageBackground>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: colors.PRIMARY_DARK2,
-    alignItems: "center",
+    backgroundColor: colors.PRIMARY,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  separator: {
+    borderBottomColor: "#D3D3D3", // Light gray color
+    borderBottomWidth: 2,
+    marginVertical: 16,
   },
   formContainer: {
-    flex: 0.3,
     width: "100%",
     paddingHorizontal: 15,
   },
   marginBottom: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   linkContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingHorizontal: 8,
+    justifyContent: "center",
+    marginTop: 15,
+    paddingHorizontal: 25,
   },
 });
 
