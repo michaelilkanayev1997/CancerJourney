@@ -7,6 +7,7 @@ import Animated from "react-native-reanimated";
 import * as SplashScreen from "expo-splash-screen";
 import SignIn from "@views/auth/SignIn";
 import LostPassword from "@views/auth/LostPassword";
+import Verification from "@views/auth/Verification";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -45,7 +46,7 @@ const App = () => {
           }}
         />
       ) : (
-        <LostPassword />
+        <Verification />
       )}
       <StatusBar style="auto" />
     </Animated.View>
