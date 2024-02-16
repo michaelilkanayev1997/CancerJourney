@@ -16,6 +16,8 @@ import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AuthStackParamList } from "src/@types/navigation";
 
 const signupSchema = yup.object({
   name: yup
@@ -55,6 +57,7 @@ const initialValues = {
 
 const SignUp: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -111,7 +114,7 @@ const SignUp: FC<Props> = (props) => {
               <AppLink
                 title="Sign In"
                 onPress={() => {
-                  //navigation.navigate("SignIn");
+                  navigation.navigate("SignIn");
                 }}
               />
             </View>

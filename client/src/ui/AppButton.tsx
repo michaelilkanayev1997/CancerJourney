@@ -52,7 +52,7 @@ const AppButton: FC<Props> = ({
         style={[styles.container, { borderRadius: borderRadius || 5 }]}
       >
         <View style={styles.btnContainer}>
-          {icon ? icon : null}
+          {icon && !busy ? icon : null}
 
           {!busy ? <Text style={styles.title}>{title}</Text> : <Loader />}
         </View>

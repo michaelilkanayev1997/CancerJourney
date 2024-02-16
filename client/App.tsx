@@ -1,13 +1,10 @@
-import SignUp from "@views/auth/SignUp";
 import { StatusBar } from "expo-status-bar";
 import { I18nManager, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import LottieAnimation from "@components/LottieAnimation";
 import Animated from "react-native-reanimated";
-import * as SplashScreen from "expo-splash-screen";
-import SignIn from "@views/auth/SignIn";
-import LostPassword from "@views/auth/LostPassword";
-import Verification from "@views/auth/Verification";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthNavigator from "./src/navigation/AuthNavigator";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -46,7 +43,9 @@ const App = () => {
           }}
         />
       ) : (
-        <Verification />
+        <NavigationContainer>
+          <AuthNavigator />
+        </NavigationContainer>
       )}
       <StatusBar style="auto" />
     </Animated.View>

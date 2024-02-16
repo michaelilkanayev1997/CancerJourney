@@ -1,22 +1,35 @@
 import colors from "@utils/colors";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TextInputProps, StyleSheet, TextInput } from "react-native";
 
 interface Props extends TextInputProps {}
 
 const AppInput: FC<Props> = (props) => {
-  return <TextInput {...props} style={[styles.input, props.style]} />;
+  const [isFocused, setFocused] = useState(false);
+
+  return (
+    <TextInput
+      {...props}
+      style={[styles.input, isFocused && styles.focusedInput, props.style]}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
   input: {
-    borderWidth: 1,
-    borderColor: colors.SECONDARY,
-    backgroundColor: colors.INACTIVE_CONTRAST,
+    borderWidth: 2,
+    borderColor: colors.PRIMARY_DARK3,
+    backgroundColor: "white",
     height: 45,
     borderRadius: 25,
     color: colors.CONTRAST,
     padding: 10,
+  },
+  focusedInput: {
+    borderWidth: 2,
+    borderColor: colors.PRIMARY_BTN,
   },
 });
 

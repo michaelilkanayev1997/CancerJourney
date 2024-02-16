@@ -16,6 +16,8 @@ import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AuthStackParamList } from "src/@types/navigation";
 
 const signupSchema = yup.object({
   email: yup
@@ -41,6 +43,7 @@ const initialValues = {
 
 const SignIn: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -85,7 +88,7 @@ const SignIn: FC<Props> = (props) => {
               <AppLink
                 title="Forgot Password ?"
                 onPress={() => {
-                  //navigation.navigate("SignUp");
+                  navigation.navigate("LostPassword");
                 }}
               />
             </View>
@@ -99,7 +102,7 @@ const SignIn: FC<Props> = (props) => {
               <AppLink
                 title="Sign Up"
                 onPress={() => {
-                  //navigation.navigate("SignUp");
+                  navigation.navigate("SignUp");
                 }}
               />
             </View>
