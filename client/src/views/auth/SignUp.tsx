@@ -20,6 +20,11 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
 import { FormikHelpers } from "formik";
 import axios from "axios";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInLeft,
+} from "react-native-reanimated";
 
 const signupSchema = yup.object({
   name: yup
@@ -86,74 +91,103 @@ const SignUp: FC<Props> = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        keyboardShouldPersistTaps="handled"
-      >
-        <LogoContainer />
-        <Form
-          onSubmit={handleSubmit}
-          initialValues={initialValues}
-          validationSchema={signupSchema}
+      <Animated.View entering={FadeIn.duration(400)}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.formContainer}>
-            <AuthInputField
-              name="name"
-              label="Name"
-              placeholder="John Doe"
-              containerStyle={styles.marginBottom}
-            />
-            <AuthInputField
-              name="email"
-              label="Email"
-              placeholder="john@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              containerStyle={styles.marginBottom}
-            />
-            <AuthInputField
-              name="password"
-              label="Password"
-              placeholder="********"
-              autoCapitalize="none"
-              secureTextEntry={secureEntry}
-              containerStyle={styles.marginBottom}
-              rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
-              onRightIconPress={togglePasswordView}
-            />
-            <SubmitBtn
-              title="Sign up"
-              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
-              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-            />
-
-            <View style={styles.linkContainer}>
-              <Text>Already have an account ? </Text>
-              <AppLink
-                title="Sign In"
-                onPress={() => {
-                  navigation.navigate("SignIn");
-                }}
-              />
-            </View>
-            <View style={styles.separator} />
-
-            <SubmitBtn
-              title="Sign up with Google"
-              pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
-              defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-              icon={
-                <MaterialCommunityIcons
-                  name="google"
-                  size={24}
-                  color="white"
-                  style={{ marginRight: 10 }}
+          <LogoContainer />
+          <Form
+            onSubmit={handleSubmit}
+            initialValues={initialValues}
+            validationSchema={signupSchema}
+          >
+            <View style={styles.formContainer}>
+              <Animated.View entering={FadeInDown.duration(1000).springify()}>
+                <AuthInputField
+                  name="name"
+                  label="Name"
+                  placeholder="John Doe"
+                  containerStyle={styles.marginBottom}
                 />
-              }
-            />
-          </View>
-        </Form>
-      </ScrollView>
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(1000).springify()}
+              >
+                <AuthInputField
+                  name="email"
+                  label="Email"
+                  placeholder="john@email.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  containerStyle={styles.marginBottom}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+              >
+                <AuthInputField
+                  name="password"
+                  label="Password"
+                  placeholder="********"
+                  autoCapitalize="none"
+                  secureTextEntry={secureEntry}
+                  containerStyle={styles.marginBottom}
+                  rightIcon={
+                    <PasswordVisibilityIcon privateIcon={secureEntry} />
+                  }
+                  onRightIconPress={togglePasswordView}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(1000).springify()}
+              >
+                <SubmitBtn
+                  title="Sign up"
+                  defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+                  pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+                />
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInLeft.delay(600).duration(1000).springify()}
+                style={styles.linkContainer}
+              >
+                <Text>Already have an account ? </Text>
+                <AppLink
+                  title="Sign In"
+                  onPress={() => {
+                    navigation.navigate("SignIn");
+                  }}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInLeft.delay(600).duration(1000).springify()}
+                style={styles.separator}
+              />
+
+              <Animated.View
+                entering={FadeInDown.delay(800).duration(1000).springify()}
+              >
+                <SubmitBtn
+                  title="Sign up with Google"
+                  pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+                  defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+                  icon={
+                    <MaterialCommunityIcons
+                      name="google"
+                      size={24}
+                      color="white"
+                      style={{ marginRight: 10 }}
+                    />
+                  }
+                />
+              </Animated.View>
+            </View>
+          </Form>
+        </ScrollView>
+      </Animated.View>
     </SafeAreaView>
   );
 };
