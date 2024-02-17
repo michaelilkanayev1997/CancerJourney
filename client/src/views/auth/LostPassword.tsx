@@ -1,6 +1,6 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   Image,
   SafeAreaView,
@@ -15,6 +15,12 @@ import AppLink from "@ui/AppLink";
 import colors from "@utils/colors";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeInUp,
+} from "react-native-reanimated";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -44,17 +50,25 @@ const LostPassword: FC<Props> = (props) => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.logoContainer}>
-          <Image source={require("@assets/lock 1.png")} style={styles.logo} />
+          <Animated.Image
+            entering={FadeInUp.delay(200).duration(1000).springify()}
+            source={require("@assets/lock 1.png")}
+            style={styles.logo}
+          />
 
-          <Image
+          <Animated.Image
+            entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
             source={require("@assets/Forgot Password.png")}
             style={styles.forgotPassword}
           />
 
-          <Text style={styles.instructionText}>
+          <Animated.Text
+            entering={FadeInLeft.delay(200).duration(1000).springify()}
+            style={styles.instructionText}
+          >
             Don’t worry! It happens, please enter the address associated with
             your account
-          </Text>
+          </Animated.Text>
         </View>
 
         <Form
@@ -65,34 +79,51 @@ const LostPassword: FC<Props> = (props) => {
           validationSchema={lostPasswordSchema}
         >
           <View style={styles.formContainer}>
-            <AuthInputField
-              name="email"
-              placeholder="michael@example.com"
-              label="Enter Your Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              containerStyle={styles.marginBottom}
-            />
+            <Animated.View
+              entering={FadeInDown.delay(200).duration(1000).springify()}
+            >
+              <AuthInputField
+                name="email"
+                placeholder="michael@example.com"
+                label="Enter Your Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                containerStyle={styles.marginBottom}
+              />
+            </Animated.View>
 
-            <SubmitBtn
-              title="Submit"
-              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
-              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-            />
+            <Animated.View
+              entering={FadeInDown.delay(400).duration(1000).springify()}
+            >
+              <SubmitBtn
+                title="Submit"
+                defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+                pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+              />
+            </Animated.View>
 
             <View style={styles.linkContainer}>
-              <AppLink
-                title="Sign in"
-                onPress={() => {
-                  navigation.navigate("SignIn");
-                }}
-              />
-              <AppLink
-                title="Sign Up"
-                onPress={() => {
-                  navigation.navigate("SignUp");
-                }}
-              />
+              <Animated.View
+                entering={FadeInLeft.delay(600).duration(1000).springify()}
+              >
+                <AppLink
+                  title="Sign in"
+                  onPress={() => {
+                    navigation.navigate("SignIn");
+                  }}
+                />
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInRight.delay(600).duration(1000).springify()}
+              >
+                <AppLink
+                  title="Sign Up"
+                  onPress={() => {
+                    navigation.navigate("SignUp");
+                  }}
+                />
+              </Animated.View>
             </View>
           </View>
         </Form>

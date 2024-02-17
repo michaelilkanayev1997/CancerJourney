@@ -1,7 +1,7 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
 import colors from "@utils/colors";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -16,7 +16,11 @@ import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
 import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
 import { FormikHelpers } from "formik";
 import axios from "axios";
@@ -65,6 +69,7 @@ const initialValues = {
 const SignUp: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const [focusKey, setFocusKey] = useState(0);
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -88,10 +93,18 @@ const SignUp: FC<Props> = (props) => {
 
     actions.setSubmitting(false); // Deactivate busy for loader
   };
+  4;
+
+  useFocusEffect(
+    useCallback(() => {
+      // Toggle key to force remount and thus re-trigger animation
+      setFocusKey((prevKey) => prevKey + 1);
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View entering={FadeIn.duration(400)}>
+      <Animated.View key={focusKey} entering={FadeIn.duration(400)}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
           keyboardShouldPersistTaps="handled"
