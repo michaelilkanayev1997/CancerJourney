@@ -23,12 +23,13 @@ import {
 } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
 import { FormikHelpers } from "formik";
-import axios from "axios";
+
 import Animated, {
   FadeIn,
   FadeInDown,
   FadeInLeft,
 } from "react-native-reanimated";
+import client from "src/api/client";
 
 const signupSchema = yup.object({
   name: yup
@@ -83,17 +84,16 @@ const SignUp: FC<Props> = (props) => {
     actions.setSubmitting(true); // Activate busy for loader
 
     try {
-      const response = await axios.post("http://10.0.0.9:8000/auth/create", {
+      const { data } = await client.post("/auth/create", {
         ...values,
       });
-      console.log(response);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader
   };
-  4;
 
   useFocusEffect(
     useCallback(() => {
