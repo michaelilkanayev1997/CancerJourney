@@ -87,7 +87,8 @@ const SignUp: FC<Props> = (props) => {
       const { data } = await client.post("/auth/create", {
         ...values,
       });
-      console.log(data);
+
+      navigation.navigate("Verification", { userInfo: data.user });
     } catch (error) {
       console.log(error);
     }
