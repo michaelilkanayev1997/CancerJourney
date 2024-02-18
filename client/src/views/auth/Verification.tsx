@@ -1,6 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
