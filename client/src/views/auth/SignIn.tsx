@@ -23,6 +23,8 @@ import {
 } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
 import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
+import { FormikHelpers } from "formik";
+import client from "src/api/client";
 
 const signupSchema = yup.object({
   email: yup
@@ -39,6 +41,11 @@ const signupSchema = yup.object({
 
 interface Props {
   navigation: any;
+}
+
+interface SignInUserInfo {
+  email: string;
+  password: string;
 }
 
 const initialValues = {
@@ -63,6 +70,25 @@ const SignIn: FC<Props> = (props) => {
     }, [])
   );
 
+  const handleSubmit = async (
+    values: SignInUserInfo,
+    actions: FormikHelpers<SignInUserInfo>
+  ) => {
+    try {
+      actions.setSubmitting(true); // Activate busy for loader
+
+      const { data } = await client.post("/auth/sign-in", {
+        ...values,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    actions.setSubmitting(false); // Deactivate busy for loader
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -73,9 +99,7 @@ const SignIn: FC<Props> = (props) => {
         <LogoContainer />
 
         <Form
-          onSubmit={(values, helper) => {
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={signupSchema}
         >
