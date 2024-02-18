@@ -17,6 +17,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInUp,
+} from "react-native-reanimated";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
@@ -29,7 +34,6 @@ const Verification: FC<Props> = ({ route }) => {
   const [submitting, setSubmitting] = useState(false);
 
   const { userInfo } = route.params;
-
   const inputRef = useRef<TextInput>(null);
 
   const handleChange = (value: string, index: number) => {
@@ -80,41 +84,55 @@ const Verification: FC<Props> = ({ route }) => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.logoContainer}>
-          <Image
+          <Animated.Image
+            entering={FadeInUp.delay(200).duration(1000).springify()}
             source={require("@assets/VerificationLogo.png")}
             style={styles.logo}
           />
 
-          <Image
+          <Animated.Image
+            entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
             source={require("@assets/AccountVerification.png")}
             style={styles.accountVerification}
           />
-          <Text style={styles.instructionText}>
+          <Animated.Text
+            style={styles.instructionText}
+            entering={FadeInLeft.delay(200).duration(1000).springify()}
+          >
             Please enter the 4-digit code sent to{" "}
             <Text style={styles.boldText}>{userInfo.email}</Text>
-          </Text>
+          </Animated.Text>
         </View>
 
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             {otpFields.map((_, index) => {
               return (
-                <OTPField
-                  ref={activeOtpIndex === index ? inputRef : null}
+                <Animated.View
                   key={index}
-                  placeholder="*"
-                  onKeyPress={({ nativeEvent }) => {
-                    handleChange(nativeEvent.key, index);
-                  }}
-                  keyboardType="numeric"
-                  maxLength={1}
-                />
+                  entering={FadeInDown.delay(200 * (index + 1))
+                    .duration(1000)
+                    .springify()}
+                >
+                  <OTPField
+                    ref={activeOtpIndex === index ? inputRef : null}
+                    placeholder="*"
+                    onKeyPress={({ nativeEvent }) => {
+                      handleChange(nativeEvent.key, index);
+                    }}
+                    keyboardType="numeric"
+                    maxLength={1}
+                  />
+                </Animated.View>
               );
             })}
           </View>
         </View>
 
-        <View style={styles.btnContainer}>
+        <Animated.View
+          style={styles.btnContainer}
+          entering={FadeInDown.delay(400).duration(1000).springify()}
+        >
           <AppButton
             title="Verify"
             onPress={handleSubmit}
@@ -129,9 +147,12 @@ const Verification: FC<Props> = ({ route }) => {
             defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
             pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
           />
-        </View>
+        </Animated.View>
 
-        <View style={styles.linkContainer}>
+        <Animated.View
+          entering={FadeInLeft.delay(600).duration(1000).springify()}
+          style={styles.linkContainer}
+        >
           <Text>Didn’t receive the email ? </Text>
           <AppLink
             title="Resend OTP"
@@ -139,8 +160,12 @@ const Verification: FC<Props> = ({ route }) => {
               //navigation.navigate("SignUp");
             }}
           />
-        </View>
-        <Text>in 14 second(s) </Text>
+        </Animated.View>
+        <Animated.Text
+          entering={FadeInLeft.delay(600).duration(1000).springify()}
+        >
+          in 14 second(s)
+        </Animated.Text>
       </ScrollView>
     </SafeAreaView>
   );
