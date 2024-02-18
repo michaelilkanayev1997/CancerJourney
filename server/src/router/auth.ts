@@ -16,7 +16,7 @@ import {
   TokenAndIdValidation,
   UpdatePasswordSchema,
 } from "#/utils/validationSchema";
-import { isValidPassResetToken } from "#/middleware/auth";
+import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
 
 const router = Router();
 
@@ -37,5 +37,10 @@ router.post(
   updatePassword
 );
 router.post("/sign-in", validate(SignInValidationSchema), signIn);
+router.get("/is-auth", mustAuth, (req, res) => {
+  res.json({
+    profile: req.user,
+  });
+});
 
 export default router;
