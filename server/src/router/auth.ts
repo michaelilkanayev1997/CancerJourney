@@ -4,6 +4,7 @@ import {
   create,
   generateForgetPasswordLink,
   grantValid,
+  logOut,
   sendReVerificationToken,
   signIn,
   updatePassword,
@@ -42,5 +43,6 @@ router.get("/is-auth", mustAuth, (req, res) => {
     profile: req.user,
   });
 });
+router.post("/log-out", mustAuth, logOut);
 
 export default router;
