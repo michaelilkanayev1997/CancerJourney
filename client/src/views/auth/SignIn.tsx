@@ -25,6 +25,9 @@ import { AuthStackParamList } from "src/@types/navigation";
 import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
 import client from "src/api/client";
+import { updateLoggedInState, updateProfile } from "src/store/auth";
+import { useDispatch } from "react-redux";
+import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 
 const signupSchema = yup.object({
   email: yup
@@ -57,6 +60,7 @@ const SignIn: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [focusKey, setFocusKey] = useState(0);
+  const dispatch = useDispatch();
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -81,7 +85,10 @@ const SignIn: FC<Props> = (props) => {
         ...values,
       });
 
-      console.log(data);
+      await saveToAsyncStorage(Keys.AUTH_TOKEN, data.token);
+
+      dispatch(updateProfile(data.profile));
+      dispatch(updateLoggedInState(true));
     } catch (error) {
       console.log(error);
     }
