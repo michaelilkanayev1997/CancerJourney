@@ -58,7 +58,7 @@ const Verification: FC<Props> = ({ route }) => {
 
   const handleSubmit = async () => {
     if (!isValidOtp) return;
-
+    setSubmitting(true);
     try {
       const { data } = await client.post("/auth/verify-email", {
         userId: userInfo.id,
@@ -70,6 +70,7 @@ const Verification: FC<Props> = ({ route }) => {
     } catch (error) {
       console.log(error);
     }
+    setSubmitting(false);
   };
 
   useEffect(() => {
@@ -135,6 +136,7 @@ const Verification: FC<Props> = ({ route }) => {
           <AppButton
             title="Verify"
             onPress={handleSubmit}
+            busy={submitting}
             icon={
               <AntDesign
                 name="checkcircle"
