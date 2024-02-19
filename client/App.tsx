@@ -5,9 +5,8 @@ import Animated from "react-native-reanimated";
 import { Provider } from "react-redux";
 
 import LottieAnimation from "@components/LottieAnimation";
-import { NavigationContainer } from "@react-navigation/native";
-import AuthNavigator from "./src/navigation/AuthNavigator";
 import store from "./src/store";
+import AppNavigator from "src/navigation";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -47,9 +46,7 @@ const App = () => {
         />
       ) : (
         <Provider store={store}>
-          <NavigationContainer>
-            <AuthNavigator />
-          </NavigationContainer>
+          <AppNavigator />
         </Provider>
       )}
       <StatusBar style="auto" />
