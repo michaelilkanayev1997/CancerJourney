@@ -44,10 +44,14 @@ export const verifyEmail: RequestHandler = async (
     owner: userId,
   });
 
+  console.log(verificationToken);
+
   if (!verificationToken)
     return res.status(403).json({ error: "Invalid token!" });
 
   const matched = await verificationToken.compareToken(token);
+
+  console.log(matched);
 
   if (!matched) return res.status(403).json({ error: "Invalid token!" });
 
