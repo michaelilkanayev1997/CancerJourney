@@ -16,6 +16,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
 import client from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { updateNotification } from "src/store/notification";
+import { useDispatch } from "react-redux";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -37,6 +40,7 @@ const initialValues = {
 
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (
     values: InitialValue,
@@ -49,9 +53,10 @@ const LostPassword: FC<Props> = (props) => {
         ...values,
       });
 
-      console.log(data);
+      dispatch(updateNotification({ message: data.message, type: "info" }));
     } catch (error) {
-      console.log(error);
+      const errorMessage = catchAsyncError(error);
+      dispatch(updateNotification({ message: errorMessage, type: "error" }));
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader
