@@ -205,13 +205,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   separator: {
-    borderBottomColor: "#D3D3D3", // Light gray color
+    borderBottomColor: colors.LIGHT_GRAY,
     borderBottomWidth: 2,
     marginVertical: 16,
   },
   formContainer: {
     width: "100%",
     paddingHorizontal: 15,
+    marginBottom: 25,
   },
   marginBottom: {
     marginBottom: 12,
@@ -225,7 +226,8 @@ const styles = StyleSheet.create({
   forgotPasswordLink: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingTop: 55,
+    paddingHorizontal: 25,
+    paddingTop: 50,
     paddingBottom: 15,
   },
 });

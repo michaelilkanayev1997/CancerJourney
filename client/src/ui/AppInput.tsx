@@ -6,6 +6,7 @@ import {
   TextInput,
   NativeSyntheticEvent,
   TextInputFocusEventData,
+  Platform,
 } from "react-native";
 
 interface Props extends TextInputProps {}
@@ -38,6 +39,17 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     color: colors.CONTRAST,
     padding: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   focusedInput: {
     borderWidth: 2,

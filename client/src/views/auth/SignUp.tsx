@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   separator: {
-    borderBottomColor: "#D3D3D3", // Light gray color
+    borderBottomColor: colors.LIGHT_GRAY,
     borderBottomWidth: 2,
     marginVertical: 16,
   },
