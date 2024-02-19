@@ -21,6 +21,8 @@ import Animated, {
   FadeInRight,
   FadeInUp,
 } from "react-native-reanimated";
+import { FormikHelpers } from "formik";
+import client from "src/api/client";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -42,6 +44,25 @@ const initialValues = {
 
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+
+  const handleSubmit = async (
+    values: InitialValue,
+    actions: FormikHelpers<InitialValue>
+  ) => {
+    try {
+      actions.setSubmitting(true); // Activate busy for loader
+
+      const { data } = await client.post("/auth/forget-password", {
+        ...values,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    actions.setSubmitting(false); // Deactivate busy for loader
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,9 +93,7 @@ const LostPassword: FC<Props> = (props) => {
         </View>
 
         <Form
-          onSubmit={() => {
-            console.log("lol");
-          }}
+          onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={lostPasswordSchema}
         >
