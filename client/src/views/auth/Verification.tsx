@@ -31,6 +31,8 @@ const Verification: FC<Props> = ({ route }) => {
   const [otp, setOtp] = useState([...otpFields]);
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [coundDown, setCoundDown] = useState(60);
+  const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
 
   const { userInfo } = route.params;
   const inputRef = useRef<TextInput>(null);
@@ -73,9 +75,39 @@ const Verification: FC<Props> = ({ route }) => {
     setSubmitting(false);
   };
 
+  const requestForOTP = async () => {
+    setCoundDown(60);
+    setCanSendNewOtpRequest(false);
+    try {
+      await client.post("/auth/re-verify-email", { userId: userInfo.id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOtpIndex]);
+
+  useEffect(() => {
+    if (canSendNewOtpRequest) return;
+
+    const intervalId = setInterval(() => {
+      setCoundDown((oldCountDown) => {
+        if (oldCountDown <= 0) {
+          setCanSendNewOtpRequest(true);
+          clearInterval(intervalId);
+
+          return 0;
+        }
+        return oldCountDown - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [canSendNewOtpRequest]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -156,17 +188,18 @@ const Verification: FC<Props> = ({ route }) => {
         >
           <Text>Didn’t receive the email ? </Text>
           <AppLink
+            active={canSendNewOtpRequest}
             title="Resend OTP"
-            onPress={() => {
-              //navigation.navigate("SignUp");
-            }}
+            onPress={requestForOTP}
           />
         </Animated.View>
-        <Animated.Text
-          entering={FadeInLeft.delay(600).duration(1000).springify()}
-        >
-          in 14 second(s)
-        </Animated.Text>
+        {coundDown > 0 ? (
+          <Animated.Text
+            entering={FadeInLeft.delay(600).duration(1000).springify()}
+          >
+            in {coundDown} second(s)
+          </Animated.Text>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );

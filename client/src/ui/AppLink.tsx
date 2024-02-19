@@ -32,7 +32,7 @@ const AppLink: React.FC<Props> = ({ title, active = true, onPress, style }) => {
   return (
     <Pressable
       onPress={active ? onPress : null}
-      onPressIn={handlePressIn}
+      onPressIn={active ? handlePressIn : null}
       onPressOut={handlePressOut}
       style={{ opacity: active ? 1 : 0.4 }}
     >
