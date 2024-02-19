@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1,
+    zIndex: 1000,
   },
   notification: {
     top: 10,

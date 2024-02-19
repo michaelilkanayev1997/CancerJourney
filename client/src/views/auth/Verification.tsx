@@ -22,6 +22,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import catchAsyncError from "src/api/catchError";
+import { updateNotification } from "src/store/notification";
+import { useDispatch } from "react-redux";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
@@ -34,6 +37,7 @@ const Verification: FC<Props> = ({ route }) => {
   const [submitting, setSubmitting] = useState(false);
   const [coundDown, setCoundDown] = useState(60);
   const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
+  const dispatch = useDispatch();
 
   const { userInfo } = route.params;
   const inputRef = useRef<TextInput>(null);
@@ -67,11 +71,13 @@ const Verification: FC<Props> = ({ route }) => {
         userId: userInfo.id,
         token: otp.join(""),
       });
-
+      dispatch(
+        updateNotification({ message: "You are Verified !", type: "success" })
+      );
       navigation.navigate("SignIn");
-      console.log(data);
     } catch (error) {
-      console.log(error);
+      const errorMessage = catchAsyncError(error);
+      dispatch(updateNotification({ message: errorMessage, type: "error" }));
     }
     setSubmitting(false);
   };

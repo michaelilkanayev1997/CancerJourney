@@ -23,6 +23,9 @@ import AppLink from "@ui/AppLink";
 import LogoContainer from "@components/LogoContainer";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { updateNotification } from "src/store/notification";
+import { useDispatch } from "react-redux";
 
 const signupSchema = yup.object({
   name: yup
@@ -64,6 +67,7 @@ const SignUp: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [focusKey, setFocusKey] = useState(0);
+  const dispatch = useDispatch();
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -83,7 +87,8 @@ const SignUp: FC<Props> = (props) => {
 
       navigation.navigate("Verification", { userInfo: data.user });
     } catch (error) {
-      console.log(error);
+      const errorMessage = catchAsyncError(error);
+      dispatch(updateNotification({ message: errorMessage, type: "error" }));
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader
