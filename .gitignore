@@ -1,6 +1,9 @@
 # Ignore node_modules directory in both server and client
 node_modules/
 
+# Expo
+.expo
+
 # Ignore environment-specific files
 .env
 .env.local
@@ -12,6 +15,7 @@ node_modules/
 /build/
 /dist/
 /out/w
+
 
 # Ignore OS-generated files
 .DS_Store
