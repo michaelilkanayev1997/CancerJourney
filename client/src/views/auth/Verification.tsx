@@ -111,106 +111,100 @@ const Verification: FC<Props> = ({ route }) => {
   }, [canSendNewOtpRequest]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        keyboardShouldPersistTaps="handled"
+    <ScrollView
+      contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
+      keyboardShouldPersistTaps="handled"
+    >
+      <View style={styles.logoContainer}>
+        <Animated.Image
+          entering={FadeInUp.delay(200).duration(1000).springify()}
+          source={require("@assets/VerificationLogo.png")}
+          style={styles.logo}
+        />
+
+        <Animated.Image
+          entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
+          source={require("@assets/AccountVerification.png")}
+          style={styles.accountVerification}
+        />
+        <Animated.Text
+          style={styles.instructionText}
+          entering={FadeInLeft.delay(200).duration(1000).springify()}
+        >
+          Please enter the 4-digit code sent to{" "}
+          <Text style={styles.boldText}>{userInfo.email}</Text>
+        </Animated.Text>
+      </View>
+
+      <View style={styles.formContainer}>
+        <View style={styles.inputContainer}>
+          {otpFields.map((_, index) => {
+            return (
+              <Animated.View
+                key={index}
+                entering={FadeInDown.delay(200 * (index + 1))
+                  .duration(1000)
+                  .springify()}
+              >
+                <OTPField
+                  ref={activeOtpIndex === index ? inputRef : null}
+                  placeholder="*"
+                  onKeyPress={({ nativeEvent }) => {
+                    handleChange(nativeEvent.key, index);
+                  }}
+                  keyboardType="numeric"
+                  maxLength={1}
+                />
+              </Animated.View>
+            );
+          })}
+        </View>
+      </View>
+
+      <Animated.View
+        style={styles.btnContainer}
+        entering={FadeInDown.delay(400).duration(1000).springify()}
       >
-        <View style={styles.logoContainer}>
-          <Animated.Image
-            entering={FadeInUp.delay(200).duration(1000).springify()}
-            source={require("@assets/VerificationLogo.png")}
-            style={styles.logo}
-          />
+        <AppButton
+          title="Verify"
+          onPress={handleSubmit}
+          busy={submitting}
+          icon={
+            <AntDesign
+              name="checkcircle"
+              size={20}
+              color="white"
+              style={{ marginRight: 10 }}
+            />
+          }
+          defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+          pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+        />
+      </Animated.View>
 
-          <Animated.Image
-            entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
-            source={require("@assets/AccountVerification.png")}
-            style={styles.accountVerification}
-          />
-          <Animated.Text
-            style={styles.instructionText}
-            entering={FadeInLeft.delay(200).duration(1000).springify()}
-          >
-            Please enter the 4-digit code sent to{" "}
-            <Text style={styles.boldText}>{userInfo.email}</Text>
-          </Animated.Text>
-        </View>
-
-        <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            {otpFields.map((_, index) => {
-              return (
-                <Animated.View
-                  key={index}
-                  entering={FadeInDown.delay(200 * (index + 1))
-                    .duration(1000)
-                    .springify()}
-                >
-                  <OTPField
-                    ref={activeOtpIndex === index ? inputRef : null}
-                    placeholder="*"
-                    onKeyPress={({ nativeEvent }) => {
-                      handleChange(nativeEvent.key, index);
-                    }}
-                    keyboardType="numeric"
-                    maxLength={1}
-                  />
-                </Animated.View>
-              );
-            })}
-          </View>
-        </View>
-
-        <Animated.View
-          style={styles.btnContainer}
-          entering={FadeInDown.delay(400).duration(1000).springify()}
-        >
-          <AppButton
-            title="Verify"
-            onPress={handleSubmit}
-            busy={submitting}
-            icon={
-              <AntDesign
-                name="checkcircle"
-                size={20}
-                color="white"
-                style={{ marginRight: 10 }}
-              />
-            }
-            defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
-            pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-          />
-        </Animated.View>
-
-        <Animated.View
+      <Animated.View
+        entering={FadeInLeft.delay(600).duration(1000).springify()}
+        style={styles.linkContainer}
+      >
+        <Text>Didn’t receive the email ? </Text>
+        <AppLink
+          active={canSendNewOtpRequest}
+          title="Resend OTP"
+          onPress={requestForOTP}
+        />
+      </Animated.View>
+      {coundDown > 0 ? (
+        <Animated.Text
           entering={FadeInLeft.delay(600).duration(1000).springify()}
-          style={styles.linkContainer}
         >
-          <Text>Didn’t receive the email ? </Text>
-          <AppLink
-            active={canSendNewOtpRequest}
-            title="Resend OTP"
-            onPress={requestForOTP}
-          />
-        </Animated.View>
-        {coundDown > 0 ? (
-          <Animated.Text
-            entering={FadeInLeft.delay(600).duration(1000).springify()}
-          >
-            in {coundDown} second(s)
-          </Animated.Text>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+          in {coundDown} second(s)
+        </Animated.Text>
+      ) : null}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.PRIMARY,
-  },
   scrollViewContent: {
     flexGrow: 1,
     alignItems: "center",
