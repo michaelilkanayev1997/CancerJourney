@@ -1,6 +1,7 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { StyleSheet, View } from "react-native";
 
 import {
   getAuthState,
@@ -16,7 +17,6 @@ import {
   getFromAsyncStorage,
 } from "@utils/asyncStorage";
 import client from "src/api/client";
-import { StyleSheet, View } from "react-native";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 
@@ -34,7 +34,7 @@ const AppTheme = {
 const AppNavigator: FC<Props> = (props) => {
   const { loggedIn, busy } = useSelector(getAuthState);
   const dispatch = useDispatch();
-
+  //clearAsyncStorage();
   useEffect(() => {
     const fetchAuthInfo = async () => {
       dispatch(updateBusyState(true));
@@ -56,9 +56,7 @@ const AppNavigator: FC<Props> = (props) => {
         console.log(error);
       }
 
-      setTimeout(() => {
-        dispatch(updateBusyState(false));
-      }, 4000);
+      dispatch(updateBusyState(false));
     };
 
     fetchAuthInfo();
@@ -70,9 +68,11 @@ const AppNavigator: FC<Props> = (props) => {
         <View style={styles.loaderContainer}>
           <Loader />
         </View>
-      ) : null}
-
-      {loggedIn ? <TabNavigator /> : <AuthNavigator />}
+      ) : loggedIn ? (
+        <TabNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };

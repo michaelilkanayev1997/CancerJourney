@@ -1,34 +1,27 @@
-import AuthInputField from "@components/form/AuthInputField";
-import Form from "@components/form";
-import colors from "@utils/colors";
 import { FC, useCallback, useState } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Vibration,
-  View,
-  Text,
-} from "react-native";
+import { FormikHelpers } from "formik";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInLeft,
+} from "react-native-reanimated";
 import * as yup from "yup";
-import SubmitBtn from "@components/form/SubmitBtn";
-import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
-import AppLink from "@ui/AppLink";
-import LogoContainer from "@components/LogoContainer";
+import { ScrollView, StyleSheet, Vibration, View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   NavigationProp,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { AuthStackParamList } from "src/@types/navigation";
-import { FormikHelpers } from "formik";
 
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInLeft,
-} from "react-native-reanimated";
+import AuthInputField from "@components/form/AuthInputField";
+import Form from "@components/form";
+import colors from "@utils/colors";
+import SubmitBtn from "@components/form/SubmitBtn";
+import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
+import AppLink from "@ui/AppLink";
+import LogoContainer from "@components/LogoContainer";
+import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 
 const signupSchema = yup.object({
@@ -104,7 +97,7 @@ const SignUp: FC<Props> = (props) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Animated.View key={focusKey} entering={FadeIn.duration(400)}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
@@ -202,7 +195,7 @@ const SignUp: FC<Props> = (props) => {
           </Form>
         </ScrollView>
       </Animated.View>
-    </SafeAreaView>
+    </View>
   );
 };
 

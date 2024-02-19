@@ -1,32 +1,26 @@
-import AuthInputField from "@components/form/AuthInputField";
-import Form from "@components/form";
-import colors from "@utils/colors";
+import { useDispatch } from "react-redux";
 import { FC, useCallback, useState } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Vibration,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, Vibration, View } from "react-native";
 import * as yup from "yup";
-import SubmitBtn from "@components/form/SubmitBtn";
-import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
-import AppLink from "@ui/AppLink";
-import LogoContainer from "@components/LogoContainer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   NavigationProp,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { AuthStackParamList } from "src/@types/navigation";
 import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
+
+import AuthInputField from "@components/form/AuthInputField";
+import Form from "@components/form";
+import colors from "@utils/colors";
+import SubmitBtn from "@components/form/SubmitBtn";
+import PasswordVisibilityIcon from "@ui/PasswordVisibilityIcon";
+import AppLink from "@ui/AppLink";
+import LogoContainer from "@components/LogoContainer";
+import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import { updateLoggedInState, updateProfile } from "src/store/auth";
-import { useDispatch } from "react-redux";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 
 const signupSchema = yup.object({
@@ -97,7 +91,7 @@ const SignIn: FC<Props> = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         key={focusKey}
         contentContainerStyle={styles.scrollViewContent}
@@ -197,7 +191,7 @@ const SignIn: FC<Props> = (props) => {
           </View>
         </Form>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

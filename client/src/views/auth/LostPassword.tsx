@@ -1,14 +1,7 @@
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
-import { FC, useEffect } from "react";
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FC } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import * as yup from "yup";
 import SubmitBtn from "@components/form/SubmitBtn";
 import AppLink from "@ui/AppLink";
@@ -65,7 +58,7 @@ const LostPassword: FC<Props> = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="handled"
@@ -147,7 +140,7 @@ const LostPassword: FC<Props> = (props) => {
           </View>
         </Form>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
