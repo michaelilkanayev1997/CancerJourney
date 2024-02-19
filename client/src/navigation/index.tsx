@@ -1,4 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,6 +21,15 @@ import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 
 interface Props {}
+
+const AppTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.PRIMARY,
+    primary: colors.SECONDARY,
+  },
+};
 
 const AppNavigator: FC<Props> = (props) => {
   const { loggedIn, busy } = useSelector(getAuthState);
@@ -56,7 +65,7 @@ const AppNavigator: FC<Props> = (props) => {
   }, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={AppTheme}>
       {busy ? (
         <View style={styles.loaderContainer}>
           <Loader />
