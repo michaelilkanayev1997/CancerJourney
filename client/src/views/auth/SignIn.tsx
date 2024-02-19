@@ -1,6 +1,13 @@
 import { useDispatch } from "react-redux";
-import { FC, useCallback, useState } from "react";
-import { ScrollView, StyleSheet, Text, Vibration, View } from "react-native";
+import { FC, useCallback, useRef, useState } from "react";
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Vibration,
+  View,
+} from "react-native";
 import * as yup from "yup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
@@ -57,6 +64,7 @@ const SignIn: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [focusKey, setFocusKey] = useState(0);
   const dispatch = useDispatch();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -67,6 +75,17 @@ const SignIn: FC<Props> = (props) => {
     useCallback(() => {
       // Toggle key to force remount and thus re-trigger animation
       setFocusKey((prevKey) => prevKey + 1);
+      const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+        console.log("Keyboard hidden");
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+        }
+      });
+
+      return () => {
+        // Cleanup
+        hideSubscription.remove();
+      };
     }, [])
   );
 
@@ -96,8 +115,10 @@ const SignIn: FC<Props> = (props) => {
   return (
     <ScrollView
       key={focusKey}
+      ref={scrollViewRef}
       contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
       keyboardShouldPersistTaps="handled"
+      overScrollMode="never"
     >
       <LogoContainer />
 

@@ -1,13 +1,11 @@
-import AuthInputField from "@components/form/AuthInputField";
-import Form from "@components/form";
-import { FC } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { FC, useCallback, useRef } from "react";
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
 import * as yup from "yup";
-import SubmitBtn from "@components/form/SubmitBtn";
-import AppLink from "@ui/AppLink";
-import colors from "@utils/colors";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { AuthStackParamList } from "src/@types/navigation";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import Animated, {
   FadeInDown,
   FadeInLeft,
@@ -15,10 +13,16 @@ import Animated, {
   FadeInUp,
 } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
+import { useDispatch } from "react-redux";
+
+import AuthInputField from "@components/form/AuthInputField";
+import Form from "@components/form";
+import SubmitBtn from "@components/form/SubmitBtn";
+import AppLink from "@ui/AppLink";
+import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
-import { useDispatch } from "react-redux";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -40,6 +44,7 @@ const initialValues = {
 
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const scrollViewRef = useRef<ScrollView>(null);
   const dispatch = useDispatch();
 
   const handleSubmit = async (
@@ -62,10 +67,28 @@ const LostPassword: FC<Props> = (props) => {
     actions.setSubmitting(false); // Deactivate busy for loader
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+        console.log("Keyboard hidden");
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+        }
+      });
+
+      return () => {
+        // Cleanup
+        hideSubscription.remove();
+      };
+    }, [])
+  );
+
   return (
     <ScrollView
+      ref={scrollViewRef}
       contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
       keyboardShouldPersistTaps="handled"
+      overScrollMode="never"
     >
       <View style={styles.logoContainer}>
         <Animated.Image

@@ -1,5 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -12,19 +13,22 @@ import Animated, {
   FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
+import { useDispatch } from "react-redux";
 
 import AppLink from "@ui/AppLink";
 import OTPField from "@ui/OTPField";
 import AppButton from "@ui/AppButton";
-import colors from "@utils/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
-import { useDispatch } from "react-redux";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
@@ -37,6 +41,7 @@ const Verification: FC<Props> = ({ route }) => {
   const [submitting, setSubmitting] = useState(false);
   const [coundDown, setCoundDown] = useState(60);
   const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
   const dispatch = useDispatch();
 
   const { userInfo } = route.params;
@@ -116,8 +121,24 @@ const Verification: FC<Props> = ({ route }) => {
     };
   }, [canSendNewOtpRequest]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+        }
+      });
+
+      return () => {
+        // Cleanup
+        hideSubscription.remove();
+      };
+    }, [])
+  );
+
   return (
     <ScrollView
+      ref={scrollViewRef}
       contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
       keyboardShouldPersistTaps="handled"
     >
@@ -126,6 +147,7 @@ const Verification: FC<Props> = ({ route }) => {
           entering={FadeInUp.delay(200).duration(1000).springify()}
           source={require("@assets/VerificationLogo.png")}
           style={styles.logo}
+          overScrollMode="never"
         />
 
         <Animated.Image
