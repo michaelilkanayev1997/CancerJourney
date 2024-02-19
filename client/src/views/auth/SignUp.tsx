@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { FormikHelpers } from "formik";
 import Animated, {
   FadeIn,
@@ -6,13 +6,21 @@ import Animated, {
   FadeInLeft,
 } from "react-native-reanimated";
 import * as yup from "yup";
-import { ScrollView, StyleSheet, Vibration, View, Text } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Vibration,
+  View,
+  Text,
+  Keyboard,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   NavigationProp,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
@@ -25,7 +33,6 @@ import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
-import { useDispatch } from "react-redux";
 
 const signupSchema = yup.object({
   name: yup
@@ -68,6 +75,7 @@ const SignUp: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [focusKey, setFocusKey] = useState(0);
   const dispatch = useDispatch();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -98,14 +106,27 @@ const SignUp: FC<Props> = (props) => {
     useCallback(() => {
       // Toggle key to force remount and thus re-trigger animation
       setFocusKey((prevKey) => prevKey + 1);
+      const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+        console.log("Keyboard hidden");
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+        }
+      });
+
+      return () => {
+        // Cleanup
+        hideSubscription.remove();
+      };
     }, [])
   );
 
   return (
     <Animated.View key={focusKey} entering={FadeIn.duration(400)}>
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
         keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
       >
         <LogoContainer />
         <Form
