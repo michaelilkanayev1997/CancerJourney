@@ -21,6 +21,8 @@ import Animated, {
   FadeInRight,
   FadeInUp,
 } from "react-native-reanimated";
+import { FormikHelpers } from "formik";
+import client from "src/api/client";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -43,6 +45,25 @@ const initialValues = {
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
+  const handleSubmit = async (
+    values: InitialValue,
+    actions: FormikHelpers<InitialValue>
+  ) => {
+    try {
+      actions.setSubmitting(true); // Activate busy for loader
+
+      const { data } = await client.post("/auth/forget-password", {
+        ...values,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    actions.setSubmitting(false); // Deactivate busy for loader
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -52,7 +73,7 @@ const LostPassword: FC<Props> = (props) => {
         <View style={styles.logoContainer}>
           <Animated.Image
             entering={FadeInUp.delay(200).duration(1000).springify()}
-            source={require("@assets/lock 1.png")}
+            source={require("@assets/lock.png")}
             style={styles.logo}
           />
 
@@ -72,9 +93,7 @@ const LostPassword: FC<Props> = (props) => {
         </View>
 
         <Form
-          onSubmit={() => {
-            console.log("lol");
-          }}
+          onSubmit={handleSubmit}
           initialValues={initialValues}
           validationSchema={lostPasswordSchema}
         >

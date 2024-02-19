@@ -1,10 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { I18nManager, StyleSheet, Text, View } from "react-native";
+import { I18nManager, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import LottieAnimation from "@components/LottieAnimation";
 import Animated from "react-native-reanimated";
+import { Provider } from "react-redux";
+
+import LottieAnimation from "@components/LottieAnimation";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./src/navigation/AuthNavigator";
+import store from "./src/store";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -43,9 +46,11 @@ const App = () => {
           }}
         />
       ) : (
-        <NavigationContainer>
-          <AuthNavigator />
-        </NavigationContainer>
+        <Provider store={store}>
+          <NavigationContainer>
+            <AuthNavigator />
+          </NavigationContainer>
+        </Provider>
       )}
       <StatusBar style="auto" />
     </Animated.View>
