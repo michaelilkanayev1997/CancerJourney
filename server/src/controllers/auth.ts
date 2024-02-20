@@ -24,6 +24,10 @@ import { JWT_SECRET, PASSWORD_RESET_LINK } from "#/utils/variables";
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;
 
+  const oldUser = await User.findOne({ email });
+  if (oldUser)
+    return res.status(403).json({ error: "Email is already in use!" });
+
   const user = await User.create({ email, password, name });
 
   // Generate Token
