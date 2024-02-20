@@ -27,11 +27,4 @@ export default [
       "Keep up to date and connect to others going through similar experiences.",
     image: require("./Community.webp"),
   },
-  {
-    id: "5",
-    title: "Putting you in control",
-    description:
-      "Support For Cancer Patients - CancerJourney simplifies cancer management, offering control over care, appointments, medications, and contacts. Our goal is to ease the challenges of living with cancer.",
-    image: require("../Logo.png"),
-  },
 ];
