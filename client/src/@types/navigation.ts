@@ -9,4 +9,6 @@ export type AuthStackParamList = {
   SignUp: undefined;
   LostPassword: undefined;
   Verification: { userInfo: NewUserResponse };
+  OnBoarding: undefined;
+  Welcome: undefined;
 };

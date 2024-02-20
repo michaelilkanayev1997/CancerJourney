@@ -42,7 +42,10 @@ const AppButton: FC<Props> = ({
           ? pressedColor // Pressed State Gradient
           : defaultColor // Default State Gradient
       }
-      style={{ borderRadius: borderRadius || 5, width: "90%" }}
+      style={{
+        borderRadius: borderRadius || 5,
+        width: "90%",
+      }}
     >
       <Pressable
         disabled={busy}
