@@ -22,10 +22,9 @@ const OnBoardingItem: FC<Props> = ({ item }) => {
 
   return (
     <View style={[styles.container, { width }]}>
-      <Image
-        source={item.image}
-        style={[styles.image, { width: width * 0.8, resizeMode: "contain" }]}
-      />
+      <View style={styles.imageContainer}>
+        <Image source={item.image} style={styles.image} />
+      </View>
 
       <View style={{ flex: 0.3 }}>
         <Text style={styles.title}>{item.title}</Text>
@@ -41,9 +40,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  image: {
-    flex: 0.7,
+  imageContainer: {
+    width: "80%",
+    height: undefined,
+    aspectRatio: 1,
+    borderRadius: 50,
+    overflow: "hidden",
+    alignItems: "center",
     justifyContent: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
   title: {
     fontWeight: "800",
