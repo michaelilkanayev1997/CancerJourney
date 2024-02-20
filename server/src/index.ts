@@ -1,8 +1,10 @@
 import express from "express";
 import "dotenv/config";
+import "express-async-errors";
 import "./db";
 
 import authRouter from "./router/auth";
+import { errorHandler } from "./middleware/error";
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static("src/public"));
 
 app.use("/auth", authRouter);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 8000;
 
