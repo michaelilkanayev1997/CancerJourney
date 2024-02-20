@@ -9,6 +9,7 @@ import Animated, {
   FadeIn,
   FadeInLeft,
   FadeInRight,
+  FadeInUp,
   FadeOut,
   FadeOutLeft,
   FadeOutRight,
@@ -40,7 +41,7 @@ const OnBoarding: FC<Props> = (props) => {
   }).current;
   console.log(currentIndex);
 
-  const animatedStyles = useAnimatedStyle(() => {
+  const SkipLinkAnim = useAnimatedStyle(() => {
     // Calculate the opacity
     const opacity = withTiming(currentIndex < slidesData.length - 1 ? 1 : 0, {
       duration: 400,
@@ -60,12 +61,31 @@ const OnBoarding: FC<Props> = (props) => {
     };
   });
 
+  const NextBtnAnim = useAnimatedStyle(() => {
+    // Opacity transition to smoothly fade in/out
+    const opacity = withTiming(currentIndex === slidesData.length - 1 ? 1 : 0, {
+      duration: 400, // Adjust duration as needed
+    });
+
+    // Scale transition for the ZoomIn effect
+    // When the currentIndex is the last one, scale up; otherwise, scale down to 0
+    const scale = withTiming(currentIndex === slidesData.length - 1 ? 1 : 0, {
+      duration: 500, // Adjust duration as needed for a smoother zoom-in effect
+    });
+
+    return {
+      opacity: opacity,
+      transform: [{ scale: scale }], // Apply the scale transformation
+    };
+  });
+
   return (
-    <Animated.View style={styles.container} entering={FadeIn.duration(400)}>
+    <Animated.View style={styles.container} entering={FadeIn.duration(1000)}>
       <View style={styles.topBar}>
-        <Animated.View style={animatedStyles}>
+        <Animated.View style={SkipLinkAnim}>
           <AppLink
             style={styles.skipButtonText}
+            active={currentIndex < slidesData.length - 1}
             title="Skip"
             onPress={() => {
               slidesRef.current?.scrollToIndex({
@@ -100,7 +120,7 @@ const OnBoarding: FC<Props> = (props) => {
 
       <Animated.View
         style={[
-          animatedStyles,
+          NextBtnAnim,
           {
             marginBottom: 40,
             width: "80%",
@@ -111,6 +131,7 @@ const OnBoarding: FC<Props> = (props) => {
       >
         <AppButton
           title="Next"
+          disabled={currentIndex < slidesData.length - 1}
           defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
           pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
           onPress={() => {

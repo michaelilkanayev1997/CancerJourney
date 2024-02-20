@@ -31,6 +31,7 @@ import { updateLoggedInState, updateProfile } from "src/store/auth";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
+import AppButton from "@ui/AppButton";
 
 const signupSchema = yup.object({
   email: yup
@@ -196,11 +197,15 @@ const SignIn: FC<Props> = (props) => {
 
           <Animated.View
             entering={FadeInDown.delay(800).duration(1000).springify()}
+            style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <SubmitBtn
+            <AppButton
               title="Sign up with Google"
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+              onPress={() => {
+                navigation.navigate("OnBoarding");
+              }}
               icon={
                 <MaterialCommunityIcons
                   name="google"
