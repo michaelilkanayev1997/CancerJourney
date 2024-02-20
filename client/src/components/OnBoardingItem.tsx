@@ -1,3 +1,4 @@
+import colors from "@utils/colors";
 import { FC } from "react";
 import {
   View,
@@ -26,7 +27,7 @@ const OnBoardingItem: FC<Props> = ({ item }) => {
         <Image source={item.image} style={styles.image} />
       </View>
 
-      <View style={{ flex: 0.3 }}>
+      <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.description}</Text>
       </View>
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    width: "80%",
+    width: "70%",
     height: undefined,
     aspectRatio: 1,
     borderRadius: 50,
@@ -54,18 +55,18 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "contain",
   },
+  infoContainer: { flex: 0.3, paddingTop: 30 },
   title: {
     fontWeight: "800",
-    fontSize: 28,
+    fontSize: 30,
     marginBottom: 10,
-    color: "#493d8a",
+    color: colors.PRIMARY_BTN,
     textAlign: "center",
   },
   description: {
-    fontWeight: "300",
-    color: "#62656b",
+    fontWeight: "400",
     textAlign: "center",
-    paddingHorizontal: 64,
+    paddingHorizontal: 26,
   },
 });
 
