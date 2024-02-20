@@ -19,7 +19,6 @@ import {
 import client from "src/api/client";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
-import OnBoarding from "@views/OnBoarding";
 
 interface Props {}
 
@@ -72,7 +71,7 @@ const AppNavigator: FC<Props> = (props) => {
       ) : loggedIn ? (
         <TabNavigator />
       ) : (
-        <OnBoarding />
+        <AuthNavigator />
       )}
     </NavigationContainer>
   );

@@ -16,9 +16,10 @@ interface Props {
     description: string;
     image?: ImageSourcePropType;
   };
+  currentIndex: number;
 }
 
-const OnBoardingItem: FC<Props> = ({ item }) => {
+const OnBoardingItem: FC<Props> = ({ item, currentIndex }) => {
   const { width } = useWindowDimensions();
 
   return (

@@ -1,4 +1,6 @@
+import Welcome from "@components/Welcome";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import OnBoarding from "@views/OnBoarding";
 import LostPassword from "@views/auth/LostPassword";
 import SignIn from "@views/auth/SignIn";
 import SignUp from "@views/auth/SignUp";
@@ -25,6 +27,8 @@ const AuthNavigator = () => {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="LostPassword" component={LostPassword} />
       <Stack.Screen name="Verification" component={Verification} />
+      <Stack.Screen name="OnBoarding" component={OnBoarding} />
+      <Stack.Screen name="Welcome" component={Welcome} />
     </Stack.Navigator>
   );
 };

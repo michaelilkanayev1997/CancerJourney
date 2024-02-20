@@ -15,10 +15,10 @@ const OnBoarding: FC<Props> = (props) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef<FlatList<any>>(null);
 
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
+  const viewableItemsChanged = useRef(({ viewableItems }: any) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
-
+  console.log(currentIndex);
   return (
     <View style={styles.container}>
       <View style={styles.skipButton}>
@@ -36,7 +36,9 @@ const OnBoarding: FC<Props> = (props) => {
       <View style={{ flex: 3 }}>
         <FlatList
           data={slidesData}
-          renderItem={({ item }) => <OnBoardingItem item={item} />}
+          renderItem={({ item }) => (
+            <OnBoardingItem item={item} currentIndex={currentIndex} />
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -49,11 +51,11 @@ const OnBoarding: FC<Props> = (props) => {
               useNativeDriver: false,
             }
           )}
-          scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
           ref={slidesRef}
         />
       </View>
+
       <View style={{ flex: 0.5 }}>
         <Paginator data={slidesData} scrollX={scrollX} />
       </View>
