@@ -14,7 +14,13 @@ const Home: FC<Props> = (props) => {
       <Button
         title="Success"
         onPress={() => {
-          dispatch(updateNotification({ message: "Test", type: "success" }));
+          dispatch(
+            updateNotification({
+              message:
+                "ttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+              type: "success",
+            })
+          );
         }}
       />
       <Button

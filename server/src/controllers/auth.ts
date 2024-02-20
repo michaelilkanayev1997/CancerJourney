@@ -24,6 +24,10 @@ import { JWT_SECRET, PASSWORD_RESET_LINK } from "#/utils/variables";
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;
 
+  const oldUser = await User.findOne({ email });
+  if (oldUser)
+    return res.status(403).json({ error: "Email is already in use!" });
+
   const user = await User.create({ email, password, name });
 
   // Generate Token
@@ -75,6 +79,9 @@ export const sendReVerificationToken: RequestHandler = async (
 
   const user = await User.findById(userId);
   if (!user) return res.status(403).json({ error: "Invalid Request !" });
+
+  if (user.verified)
+    return res.status(422).json({ error: "Your account is verified already!" });
 
   await EmailVerificationToken.findOneAndDelete({ owner: userId });
 

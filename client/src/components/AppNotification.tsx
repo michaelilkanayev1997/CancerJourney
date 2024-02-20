@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet, Platform, Modal } from "react-native";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
@@ -57,68 +57,59 @@ const AppNotification: React.FC = () => {
   }, [message]);
 
   return (
-    <View style={styles.container}>
-      {showToast && (
+    <Modal visible={showToast} transparent={true} animationType="fade">
+      <View style={styles.centeredView}>
         <Animated.View
           entering={FadeInUp.duration(400)}
-          exiting={FadeOutUp.duration(400)}
           style={[styles.notification, { backgroundColor }]}
         >
           <Entypo name={iconName} size={24} color={colors.INACTIVE_CONTRAST} />
-          <View>
-            <Text
-              style={{
-                color: colors.INACTIVE_CONTRAST,
-                fontWeight: "bold",
-                marginLeft: 10,
-                fontSize: 16,
-              }}
-            >
-              {title}
-            </Text>
-            <Text
-              style={{
-                color: colors.INACTIVE_CONTRAST,
-                fontWeight: "500",
-                marginLeft: 10,
-                fontSize: 14,
-              }}
-            >
-              {message}
-            </Text>
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageTitle}>{title}</Text>
+            <Text style={styles.messageText}>{message}</Text>
           </View>
         </Animated.View>
-      )}
-    </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
+  centeredView: {
+    flex: 1,
     alignItems: "center",
-    zIndex: 1000,
+    top: 0,
   },
   notification: {
-    top: 10,
     width: "80%",
-    position: "absolute",
+    margin: 20,
     borderRadius: 5,
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
-
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  messageContainer: {
+    flexShrink: 1,
+    marginLeft: 15,
+  },
+  messageTitle: {
+    color: colors.INACTIVE_CONTRAST,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  messageText: {
+    color: colors.INACTIVE_CONTRAST,
+    fontWeight: "500",
+    fontSize: 14,
+    flexWrap: "wrap",
   },
 });
 
