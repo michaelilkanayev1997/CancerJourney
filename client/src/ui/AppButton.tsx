@@ -12,11 +12,13 @@ interface Props {
   pressedColor: [string, string, string];
   defaultColor: [string, string, string];
   icon?: ReactNode;
+  disabled?: boolean;
 }
 
 const AppButton: FC<Props> = ({
   title,
   busy,
+  disabled = false,
   onPress,
   borderRadius,
   pressedColor,
@@ -48,7 +50,7 @@ const AppButton: FC<Props> = ({
       }}
     >
       <Pressable
-        disabled={busy}
+        disabled={busy || disabled}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

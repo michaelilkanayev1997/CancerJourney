@@ -8,6 +8,7 @@ import {
   Text,
   ImageSourcePropType,
 } from "react-native";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 interface Props {
   item: {
@@ -23,13 +24,26 @@ const OnBoardingItem: FC<Props> = ({ item }) => {
 
   return (
     <View style={[styles.container, { width }]}>
-      <View style={styles.imageContainer}>
+      <Animated.View
+        style={styles.imageContainer}
+        entering={FadeInUp.delay(200).duration(1000).springify()}
+      >
         <Image source={item.image} style={styles.image} />
-      </View>
+      </Animated.View>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Animated.Text
+          entering={FadeInDown.delay(200).duration(1000).springify()}
+          style={styles.title}
+        >
+          {item.title}
+        </Animated.Text>
+        <Animated.Text
+          entering={FadeInDown.delay(400).duration(1000).springify()}
+          style={styles.description}
+        >
+          {item.description}
+        </Animated.Text>
       </View>
     </View>
   );
