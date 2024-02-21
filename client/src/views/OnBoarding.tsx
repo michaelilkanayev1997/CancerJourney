@@ -7,12 +7,6 @@ import {
 } from "react-native";
 import Animated, {
   FadeIn,
-  FadeInLeft,
-  FadeInRight,
-  FadeInUp,
-  FadeOut,
-  FadeOutLeft,
-  FadeOutRight,
   ZoomIn,
   useAnimatedStyle,
   withTiming,
@@ -39,7 +33,6 @@ const OnBoarding: FC<Props> = (props) => {
   const viewableItemsChanged = useRef(({ viewableItems }: any) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
-  console.log(currentIndex);
 
   const SkipLinkAnim = useAnimatedStyle(() => {
     // Calculate the opacity
@@ -50,9 +43,7 @@ const OnBoarding: FC<Props> = (props) => {
     // Calculate the translation from the right
     const translateX = withTiming(
       currentIndex < slidesData.length - 1 ? 0 : 10,
-      {
-        duration: 400,
-      }
+      { duration: 400 }
     );
 
     return {
@@ -68,19 +59,18 @@ const OnBoarding: FC<Props> = (props) => {
     });
 
     // Scale transition for the ZoomIn effect
-    // When the currentIndex is the last one, scale up; otherwise, scale down to 0
     const scale = withTiming(currentIndex === slidesData.length - 1 ? 1 : 0, {
-      duration: 500, // Adjust duration as needed for a smoother zoom-in effect
+      duration: 400,
     });
 
     return {
       opacity: opacity,
-      transform: [{ scale: scale }], // Apply the scale transformation
+      transform: [{ scale: scale }],
     };
   });
 
   return (
-    <Animated.View style={styles.container} entering={FadeIn.duration(1000)}>
+    <Animated.View style={styles.container} entering={FadeIn.duration(400)}>
       <View style={styles.topBar}>
         <Animated.View style={SkipLinkAnim}>
           <AppLink

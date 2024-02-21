@@ -1,5 +1,5 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
 import AppButton from "@ui/AppButton";
+import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import colors from "@utils/colors";
 import { FC } from "react";
 import {
@@ -10,13 +10,24 @@ import {
   Text,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { AuthStackParamList } from "src/@types/navigation";
+import { useDispatch } from "react-redux";
+import { updateViewedOnBoardingState } from "src/store/auth";
 
 interface Props {}
 
 const Welcome: FC<Props> = (props) => {
   const { width } = useWindowDimensions();
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+
+  const dispatch = useDispatch();
+
+  const handleLetsGetStarted = async () => {
+    try {
+      await saveToAsyncStorage(Keys.VIEWED_ON_BOARDING, "true");
+      dispatch(updateViewedOnBoardingState(true));
+    } catch (error) {
+      console.log("Error @setItem: ", error);
+    }
+  };
 
   return (
     <View style={[styles.container, { width }]}>
@@ -58,9 +69,7 @@ const Welcome: FC<Props> = (props) => {
           title="Let’s Get Started!"
           defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
           pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-          onPress={() => {
-            navigation.navigate("SignUp");
-          }}
+          onPress={handleLetsGetStarted}
         />
       </Animated.View>
     </View>
