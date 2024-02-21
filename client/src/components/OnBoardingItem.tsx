@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   useWindowDimensions,
-  Text,
   ImageSourcePropType,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";

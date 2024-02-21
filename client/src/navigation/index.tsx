@@ -8,6 +8,7 @@ import {
   updateBusyState,
   updateLoggedInState,
   updateProfile,
+  updateViewedOnBoardingState,
 } from "src/store/auth";
 import AuthNavigator from "./AuthNavigator";
 import TabNavigator from "./TabNavigator";
@@ -19,8 +20,11 @@ import {
 import client from "src/api/client";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
+import OnboardingNavigator from "./OnboardingNavigator";
 
-interface Props {}
+interface Props {
+  setSafeAreaColor?: (color: string) => void;
+}
 
 const AppTheme = {
   ...DefaultTheme,
@@ -31,14 +35,21 @@ const AppTheme = {
   },
 };
 
-const AppNavigator: FC<Props> = (props) => {
-  const { loggedIn, busy } = useSelector(getAuthState);
+const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
+  const { loggedIn, busy, viewedOnBoarding } = useSelector(getAuthState);
   const dispatch = useDispatch();
   //clearAsyncStorage();
   useEffect(() => {
     const fetchAuthInfo = async () => {
       dispatch(updateBusyState(true));
       try {
+        const viewedOnBoarding = await getFromAsyncStorage(
+          Keys.VIEWED_ON_BOARDING
+        );
+        if (viewedOnBoarding) {
+          dispatch(updateViewedOnBoardingState(true));
+        }
+
         const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
         if (!token) {
           return dispatch(updateBusyState(false));
@@ -70,6 +81,8 @@ const AppNavigator: FC<Props> = (props) => {
         </View>
       ) : loggedIn ? (
         <TabNavigator />
+      ) : !viewedOnBoarding ? (
+        <OnboardingNavigator setSafeAreaColor={setSafeAreaColor} />
       ) : (
         <AuthNavigator />
       )}
