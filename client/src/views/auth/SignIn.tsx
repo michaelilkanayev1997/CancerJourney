@@ -32,6 +32,7 @@ import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
 import AppButton from "@ui/AppButton";
+import useGoogleSignIn from "@components/useGoogleSignIn";
 
 const signupSchema = yup.object({
   email: yup
@@ -65,6 +66,8 @@ const SignIn: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [focusKey, setFocusKey] = useState(0);
   const dispatch = useDispatch();
+  const { promptGoogleSignIn, request } = useGoogleSignIn();
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   const togglePasswordView = () => {
@@ -203,9 +206,7 @@ const SignIn: FC<Props> = (props) => {
               title="Sign up with Google"
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-              onPress={() => {
-                navigation.navigate("OnBoarding");
-              }}
+              onPress={() => request && promptGoogleSignIn()}
               icon={
                 <MaterialCommunityIcons
                   name="google"

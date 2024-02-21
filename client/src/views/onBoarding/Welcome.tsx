@@ -1,6 +1,3 @@
-import AppButton from "@ui/AppButton";
-import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
-import colors from "@utils/colors";
 import { FC } from "react";
 import {
   View,
@@ -11,6 +8,10 @@ import {
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
+
+import AppButton from "@ui/AppButton";
+import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
+import colors from "@utils/colors";
 import { updateViewedOnBoardingState } from "src/store/auth";
 
 interface Props {}
@@ -35,7 +36,7 @@ const Welcome: FC<Props> = (props) => {
         entering={FadeInUp.delay(200).duration(1000).springify()}
         style={styles.imageContainer}
       >
-        <Image source={require("../assets/Logo.png")} style={styles.image} />
+        <Image source={require("@assets/Logo.png")} style={styles.image} />
         <Text style={styles.Logotitle}>Putting you in control</Text>
       </Animated.View>
 

@@ -21,6 +21,7 @@ import client from "src/api/client";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
+import { getUserInfo } from "@components/useGoogleSignIn";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;
@@ -51,18 +52,28 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
         }
 
         const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
-        if (!token) {
-          return dispatch(updateBusyState(false));
+        if (token) {
+          const { data } = await client.get("/auth/is-auth", {
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          dispatch(updateProfile(data.profile));
+          dispatch(updateLoggedInState(true));
+          console.log("my auth : ", data);
+        } else {
+          const googleToken = await getFromAsyncStorage(Keys.GOOGLE_AUTH_TOKEN);
+          if (!googleToken) {
+            return dispatch(updateBusyState(false));
+          }
+
+          const data = await getUserInfo(googleToken);
+
+          dispatch(updateProfile(data));
+          dispatch(updateLoggedInState(true));
+          console.log("my auth : ", data);
         }
 
-        const { data } = await client.get("/auth/is-auth", {
-          headers: { Authorization: "Bearer " + token },
-        });
-
-        dispatch(updateProfile(data.profile));
-        dispatch(updateLoggedInState(true));
-
-        console.log("my auth : ", data);
+        dispatch(updateBusyState(false));
       } catch (error) {
         console.log(error);
       }

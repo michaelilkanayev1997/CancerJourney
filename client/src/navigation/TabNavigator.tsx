@@ -2,9 +2,9 @@ import { Feather } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import colors from "@utils/colors";
-import Home from "@views/Home";
-import Profile from "@views/Profile";
-import Upload from "@views/Upload";
+import Home from "@views/bottonTab/Home";
+import Profile from "@views/bottonTab/Profile";
+import Upload from "@views/bottonTab/Upload";
 
 const Tab = createBottomTabNavigator();
 
