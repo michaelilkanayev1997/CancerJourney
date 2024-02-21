@@ -14,16 +14,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.michaelilkanayev.client"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.michaelilkanayev.client"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "659d5dcf-f970-42c1-af82-cf8c0ded5f9e"
+      }
+    },
+    "scheme": "com.michaelilkanayev.client"
   }
 }
