@@ -60,20 +60,7 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
           dispatch(updateProfile(data.profile));
           dispatch(updateLoggedInState(true));
           console.log("my auth : ", data);
-        } else {
-          const googleToken = await getFromAsyncStorage(Keys.GOOGLE_AUTH_TOKEN);
-          if (!googleToken) {
-            return dispatch(updateBusyState(false));
-          }
-
-          const data = await getUserInfo(googleToken);
-
-          dispatch(updateProfile(data));
-          dispatch(updateLoggedInState(true));
-          console.log("my auth : ", data);
         }
-
-        dispatch(updateBusyState(false));
       } catch (error) {
         console.log(error);
       }
