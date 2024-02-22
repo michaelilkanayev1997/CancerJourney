@@ -21,7 +21,7 @@ import client from "src/api/client";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
-import { getUserInfo } from "@components/useGoogleSignIn";
+import { getUserInfo } from "src/api/useGoogleSignIn";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;

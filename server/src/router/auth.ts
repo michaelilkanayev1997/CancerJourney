@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import {
+  GoogleSignIn,
   create,
   generateForgetPasswordLink,
   grantValid,
@@ -22,6 +23,7 @@ import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
 const router = Router();
 
 router.post("/create", validate(CreateUserSchema), create);
+router.post("/google-sign-in", GoogleSignIn);
 router.post("/verify-email", validate(TokenAndIdValidation), verifyEmail);
 router.post("/re-verify-email", sendReVerificationToken);
 router.post("/forget-password", generateForgetPasswordLink);

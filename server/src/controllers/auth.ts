@@ -188,6 +188,36 @@ export const signIn: RequestHandler = async (req, res) => {
   });
 };
 
+export const GoogleSignIn: RequestHandler = async (req, res) => {
+  const { name, email, avatar, token, verified_email: verified } = req.body;
+
+  const oldUser = await User.findOne({ email });
+  if (oldUser)
+    return res.status(403).json({ error: "Email is already in use!" });
+
+  const user = await User.create({ email, name, avatar, verified });
+
+  if (!user)
+    return res.status(403).json({ error: "Email/Password not found!" });
+
+  user.tokens.push(token);
+
+  await user.save();
+
+  return res.json({
+    profile: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      verified: user.verified,
+      avatar: user.avatar?.url,
+      followers: user.followers.length,
+      followings: user.followings.length,
+    },
+    token,
+  });
+};
+
 export const logOut: RequestHandler = async (req, res) => {
   const { fromAll } = req.query;
 
