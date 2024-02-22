@@ -34,7 +34,7 @@ import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
 import AppButton from "@ui/AppButton";
-import useGoogleSignIn from "@components/useGoogleSignIn";
+import useGoogleSignIn from "src/api/useGoogleSignIn";
 
 const signupSchema = yup.object({
   name: yup

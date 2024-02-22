@@ -36,8 +36,8 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
     },
     password: {
       type: String,
-      required: true,
       trim: true,
+      default: "Google",
     },
     avatar: {
       type: Object,
