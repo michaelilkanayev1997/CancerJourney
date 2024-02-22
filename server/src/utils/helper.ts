@@ -7,3 +7,17 @@ export const generateToken = (lenght: number) => {
   }
   return otp;
 };
+
+export const verifyGoogleToken = async (token: string) => {
+  try {
+    const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const user = await response.json();
+
+    return user;
+  } catch (error) {
+    return error;
+  }
+};

@@ -9,30 +9,15 @@ import {
   updateProfile,
 } from "src/store/auth";
 import { useDispatch } from "react-redux";
+import client from "./client";
+import catchAsyncError from "./catchError";
+import { updateNotification } from "src/store/notification";
 
 WebBrowser.maybeCompleteAuthSession();
 
 // Google Client IDs
 const androidClientId = ANDROID_CLIENT_ID;
 const iosClientId = IOS_CLIENT_ID;
-
-export const getUserInfo = async (token: string) => {
-  if (!token) return;
-  try {
-    const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const user = await response.json();
-
-    if (user) {
-      await saveToAsyncStorage(Keys.GOOGLE_AUTH_TOKEN, token);
-      return user;
-    }
-  } catch (error) {
-    // error handler here
-  }
-};
 
 const useGoogleSignIn = () => {
   const dispatch = useDispatch();
@@ -46,14 +31,32 @@ const useGoogleSignIn = () => {
     handleSignInWithGoogle();
   }, [response]);
 
+  const getUserInfo = async (googleToken: string) => {
+    if (!googleToken) return;
+
+    try {
+      const { data } = await client.post("/auth/google-sign-in", {
+        googleToken,
+      });
+
+      if (data) {
+        await saveToAsyncStorage(Keys.AUTH_TOKEN, data.token);
+        return data.profile;
+      }
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+    }
+  };
+
   const handleSignInWithGoogle = async () => {
     if (response?.type === "success" && response.authentication?.accessToken) {
       dispatch(updateBusyState(true));
       const accessToken = response.authentication.accessToken;
-      const user = await getUserInfo(accessToken);
+      const profile = await getUserInfo(accessToken);
 
-      if (user) {
-        dispatch(updateProfile(user));
+      if (profile) {
+        dispatch(updateProfile(profile));
         dispatch(updateLoggedInState(true));
       }
       dispatch(updateBusyState(false));

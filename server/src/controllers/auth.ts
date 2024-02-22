@@ -10,7 +10,7 @@ import {
   VerifyEmailRequest,
 } from "#/@types/user";
 import User from "#/models/user";
-import { generateToken } from "#/utils/helper";
+import { generateToken, verifyGoogleToken } from "#/utils/helper";
 import {
   sendForgetPasswordLink,
   sendPassResetSuccessEmail,
@@ -189,33 +189,79 @@ export const signIn: RequestHandler = async (req, res) => {
 };
 
 export const GoogleSignIn: RequestHandler = async (req, res) => {
-  const { name, email, avatar, token, verified_email: verified } = req.body;
+  const { googleToken } = req.body;
 
-  const oldUser = await User.findOne({ email });
-  if (oldUser)
-    return res.status(403).json({ error: "Email is already in use!" });
+  try {
+    const googleUser = await verifyGoogleToken(googleToken);
+    const oldUser = await User.findOne({ email: googleUser.email });
 
-  const user = await User.create({ email, name, avatar, verified });
+    if (oldUser) {
+      if (oldUser.password !== "Google") {
+        return res
+          .status(403)
+          .json({ error: "Email is already in use with regular sign-in!" });
+      }
+      // Generate the token
+      const token = jwt.sign({ userId: oldUser._id }, JWT_SECRET);
 
-  if (!user)
-    return res.status(403).json({ error: "Email/Password not found!" });
+      oldUser.tokens.push(token);
 
-  user.tokens.push(token);
+      await oldUser.save();
 
-  await user.save();
+      return res.json({
+        profile: {
+          id: oldUser._id,
+          name: oldUser.name,
+          email: oldUser.email,
+          verified: oldUser.verified,
+          avatar: oldUser.avatar?.url,
+          followers: oldUser.followers.length,
+          followings: oldUser.followings.length,
+        },
+        token: token,
+      });
+    }
 
-  return res.json({
-    profile: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      verified: user.verified,
-      avatar: user.avatar?.url,
-      followers: user.followers.length,
-      followings: user.followings.length,
-    },
-    token,
-  });
+    if (googleUser) {
+      const createdUser = await User.create({
+        email: googleUser.email,
+        name: googleUser.name,
+        avatar: { url: googleUser.picture, publicId: "Google" },
+        verified: googleUser.verified_email,
+      });
+
+      if (!createdUser) {
+        return res
+          .status(500)
+          .json({ error: "Failed to create user. Please try again later." });
+      }
+
+      // Generate the token
+      const token = jwt.sign({ userId: createdUser._id }, JWT_SECRET);
+
+      createdUser.tokens.push(token);
+
+      await createdUser.save();
+
+      return res.json({
+        profile: {
+          id: createdUser._id,
+          name: createdUser.name,
+          email: createdUser.email,
+          verified: createdUser.verified,
+          avatar: createdUser.avatar?.url,
+          followers: createdUser.followers.length,
+          followings: createdUser.followings.length,
+        },
+        token,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred. Please try again later." });
+  }
 };
 
 export const logOut: RequestHandler = async (req, res) => {
