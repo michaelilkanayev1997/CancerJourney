@@ -1,7 +1,6 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   Keyboard,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,7 +12,6 @@ import Animated, {
   FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
-import { useDispatch } from "react-redux";
 
 import AppLink from "@ui/AppLink";
 import OTPField from "@ui/OTPField";
@@ -28,7 +26,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import catchAsyncError from "src/api/catchError";
-import { updateNotification } from "src/store/notification";
+import { ToastNotification } from "@utils/toastConfig";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
@@ -42,7 +40,6 @@ const Verification: FC<Props> = ({ route }) => {
   const [coundDown, setCoundDown] = useState(60);
   const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  const dispatch = useDispatch();
 
   const { userInfo } = route.params;
   const inputRef = useRef<TextInput>(null);
@@ -72,17 +69,22 @@ const Verification: FC<Props> = ({ route }) => {
     if (!isValidOtp) return;
     setSubmitting(true);
     try {
-      const { data } = await client.post("/auth/verify-email", {
+      await client.post("/auth/verify-email", {
         userId: userInfo.id,
         token: otp.join(""),
       });
-      dispatch(
-        updateNotification({ message: "You are Verified !", type: "success" })
-      );
+
+      ToastNotification({
+        message: "You are Verified !",
+      });
+
       navigation.navigate("SignIn");
     } catch (error) {
       const errorMessage = catchAsyncError(error);
-      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
     setSubmitting(false);
   };

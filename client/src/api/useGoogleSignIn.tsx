@@ -11,7 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import client from "./client";
 import catchAsyncError from "./catchError";
-import { updateNotification } from "src/store/notification";
+import { ToastNotification } from "@utils/toastConfig";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -45,7 +45,10 @@ const useGoogleSignIn = () => {
       }
     } catch (error) {
       const errorMessage = catchAsyncError(error);
-      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
   };
 

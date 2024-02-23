@@ -2,21 +2,13 @@ import { FC, useCallback, useRef, useState } from "react";
 import { FormikHelpers } from "formik";
 import Animated, { FadeIn } from "react-native-reanimated";
 import * as yup from "yup";
-import {
-  ScrollView,
-  StyleSheet,
-  Vibration,
-  View,
-  Text,
-  Keyboard,
-} from "react-native";
+import { StyleSheet, Vibration, View, Text, Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   NavigationProp,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
@@ -28,10 +20,10 @@ import LogoContainer from "@components/LogoContainer";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import { updateNotification } from "src/store/notification";
 import AppButton from "@ui/AppButton";
 import useGoogleSignIn from "src/api/useGoogleSignIn";
 import { useFadeInDown, useFadeInLeft } from "@utils/animated";
+import { ToastNotification } from "@utils/toastConfig";
 
 const signupSchema = yup.object({
   name: yup
@@ -72,7 +64,6 @@ const initialValues = {
 const SignUp: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
-  const dispatch = useDispatch();
   const { promptGoogleSignIn, request } = useGoogleSignIn();
 
   const scrollViewRef = useRef<Animated.ScrollView>(null);
@@ -96,7 +87,10 @@ const SignUp: FC<Props> = (props) => {
       navigation.navigate("Verification", { userInfo: data.user });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
-      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader

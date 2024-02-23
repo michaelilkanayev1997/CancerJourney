@@ -30,9 +30,9 @@ import client from "src/api/client";
 import { updateLoggedInState, updateProfile } from "src/store/auth";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
-import { updateNotification } from "src/store/notification";
 import AppButton from "@ui/AppButton";
 import useGoogleSignIn from "src/api/useGoogleSignIn";
+import { ToastNotification } from "@utils/toastConfig";
 
 const signupSchema = yup.object({
   email: yup
@@ -110,7 +110,10 @@ const SignIn: FC<Props> = (props) => {
       dispatch(updateLoggedInState(true));
     } catch (error) {
       const errorMessage = catchAsyncError(error);
-      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader
