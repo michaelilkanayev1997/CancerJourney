@@ -1,7 +1,8 @@
+import { ToastNotification } from "@utils/toastConfig";
 import { FC } from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
+import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
-import { updateNotification } from "src/store/notification";
 
 interface Props {}
 
@@ -14,25 +15,25 @@ const Home: FC<Props> = (props) => {
       <Button
         title="Success"
         onPress={() => {
-          dispatch(
-            updateNotification({
-              message:
-                "ttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
-              type: "success",
-            })
-          );
+          ToastNotification({ message: "asdasdasdasd asdasa asdas asd as" });
         }}
       />
       <Button
         title="Error"
         onPress={() => {
-          dispatch(updateNotification({ message: "Test", type: "error" }));
+          ToastNotification({
+            type: "Error",
+            message: "asdasdasdasd asdasa asdas asd as",
+          });
         }}
       />
       <Button
         title="Info"
         onPress={() => {
-          dispatch(updateNotification({ message: "Test", type: "info" }));
+          ToastNotification({
+            type: "Info",
+            message: "asdasdasdasd asdasa asdas asd as",
+          });
         }}
       />
     </View>
