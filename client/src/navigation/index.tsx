@@ -33,7 +33,7 @@ const AppTheme = {
   colors: {
     ...DefaultTheme.colors,
     background: colors.PRIMARY,
-    primary: colors.SECONDARY,
+    primary: colors.ICON,
   },
 };
 
