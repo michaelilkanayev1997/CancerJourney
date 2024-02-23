@@ -11,7 +11,6 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import colors from "@utils/colors";
-import AppNotification from "./AppNotification";
 
 interface Props {
   children: ReactNode;
@@ -27,7 +26,6 @@ const AppContainer: FC<Props> = ({ children }) => {
     <SafeAreaView
       style={[styles.container, { backgroundColor: safeAreaColor }]}
     >
-      <AppNotification />
       {/* Clone each child to inject the handleColorChange method as a prop */}
       {Children.map(children, (child) => {
         if (isValidElement<SafeAreaColorChangeable>(child)) {

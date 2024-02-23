@@ -2,6 +2,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import {
   getAuthState,
@@ -21,6 +22,7 @@ import client from "src/api/client";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
+import { toastConfig } from "@utils/toastConfig";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;
@@ -38,6 +40,7 @@ const AppTheme = {
 const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
   const { loggedIn, busy, viewedOnBoarding } = useSelector(getAuthState);
   const dispatch = useDispatch();
+
   //clearAsyncStorage();
   useEffect(() => {
     const fetchAuthInfo = async () => {
@@ -71,19 +74,22 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
   }, []);
 
   return (
-    <NavigationContainer theme={AppTheme}>
-      {busy ? (
-        <View style={styles.loaderContainer}>
-          <Loader />
-        </View>
-      ) : loggedIn ? (
-        <TabNavigator />
-      ) : !viewedOnBoarding ? (
-        <OnboardingNavigator setSafeAreaColor={setSafeAreaColor} />
-      ) : (
-        <AuthNavigator />
-      )}
-    </NavigationContainer>
+    <>
+      <NavigationContainer theme={AppTheme}>
+        {busy ? (
+          <View style={styles.loaderContainer}>
+            <Loader />
+          </View>
+        ) : loggedIn ? (
+          <TabNavigator />
+        ) : !viewedOnBoarding ? (
+          <OnboardingNavigator setSafeAreaColor={setSafeAreaColor} />
+        ) : (
+          <AuthNavigator />
+        )}
+      </NavigationContainer>
+      <Toast config={toastConfig} />
+    </>
   );
 };
 
@@ -95,6 +101,37 @@ const styles = StyleSheet.create({
     zIndex: 1,
     transform: [{ scale: 1.5 }],
     backgroundColor: colors.PRIMARY_DARK2,
+  },
+  notification: {
+    width: "80%",
+    margin: 20,
+    borderRadius: 5,
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  messageContainer: {
+    flexShrink: 1,
+    marginLeft: 15,
+  },
+  messageTitle: {
+    color: colors.INACTIVE_CONTRAST,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  messageText: {
+    color: colors.INACTIVE_CONTRAST,
+    fontWeight: "500",
+    fontSize: 14,
+    flexWrap: "wrap",
   },
 });
 
