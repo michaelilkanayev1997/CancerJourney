@@ -33,7 +33,7 @@ const Welcome: FC<Props> = (props) => {
   return (
     <View style={[styles.container, { width }]}>
       <Animated.View
-        entering={FadeInUp.delay(200).duration(1000).springify()}
+        entering={FadeInUp.delay(200).duration(1000)}
         style={styles.imageContainer}
       >
         <Image source={require("@assets/Logo.png")} style={styles.image} />
@@ -59,12 +59,7 @@ const Welcome: FC<Props> = (props) => {
 
       <Animated.View
         entering={FadeInDown.delay(600).duration(1000).springify()}
-        style={{
-          paddingTop: 35,
-          width: "80%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.button}
       >
         <AppButton
           title="Let’s Get Started!"
@@ -95,19 +90,19 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   Logotitle: {
-    fontWeight: "500",
-    fontSize: 18,
+    fontWeight: "400",
+    fontSize: 17,
     marginTop: -70,
     marginBottom: 10,
     color: colors.PRIMARY_BTN,
     textAlign: "center",
   },
-  infoContainer: {},
+  infoContainer: { paddingBottom: 25 },
   title: {
     fontWeight: "600",
     fontSize: 20,
     marginBottom: 8,
-    color: "black",
+    color: colors.CONTRAST,
     textAlign: "center",
   },
   description: {
@@ -115,6 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     paddingHorizontal: 26,
+  },
+  button: {
+    paddingTop: 35,
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

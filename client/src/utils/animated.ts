@@ -64,3 +64,33 @@ export const useFadeInLeft = (delay: number) => {
   };
   return { animatedStyle, startAnimation };
 };
+
+// Custom hook for FadeInUp animated entry
+export const useFadeInUp = (delay: number, damping: number) => {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(-25);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
+  // Function to start animation
+  const startAnimation = () => {
+    opacity.value = 0;
+    translateY.value = -25;
+
+    opacity.value = withDelay(delay, withSpring(1));
+    translateY.value = withDelay(
+      delay,
+      withSpring(0, {
+        damping,
+        stiffness: 58,
+        mass: 1,
+      })
+    );
+  };
+  return { animatedStyle, startAnimation };
+};

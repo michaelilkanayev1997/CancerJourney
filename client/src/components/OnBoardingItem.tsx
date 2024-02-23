@@ -25,20 +25,20 @@ const OnBoardingItem: FC<Props> = ({ item }) => {
     <View style={[styles.container, { width }]}>
       <Animated.View
         style={styles.imageContainer}
-        entering={FadeInUp.delay(200).duration(1000).springify()}
+        entering={FadeInUp.delay(200).duration(1000)}
       >
         <Image source={item.image} style={styles.image} />
       </Animated.View>
 
       <View style={styles.infoContainer}>
         <Animated.Text
-          entering={FadeInDown.delay(200).duration(1000).springify()}
+          entering={FadeInDown.delay(200).duration(1200).springify()}
           style={styles.title}
         >
           {item.title}
         </Animated.Text>
         <Animated.Text
-          entering={FadeInDown.delay(400).duration(1000).springify()}
+          entering={FadeInDown.delay(600).duration(1200).springify()}
           style={styles.description}
         >
           {item.description}

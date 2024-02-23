@@ -111,6 +111,8 @@ const SignUp: FC<Props> = (props) => {
           scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
         }
       });
+
+      // Reset Animations
       startNameAnimation();
       startEmailAnimation();
       startPasswordAnimation();
@@ -154,7 +156,7 @@ const SignUp: FC<Props> = (props) => {
   return (
     <Animated.ScrollView
       ref={scrollViewRef}
-      contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
+      contentContainerStyle={[styles.scrollViewContent, { marginTop: -45 }]}
       keyboardShouldPersistTaps="handled"
       overScrollMode="never"
       entering={FadeIn}
