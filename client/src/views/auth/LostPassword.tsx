@@ -13,7 +13,6 @@ import Animated, {
   FadeInUp,
 } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
-import { useDispatch } from "react-redux";
 
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
@@ -22,7 +21,7 @@ import AppLink from "@ui/AppLink";
 import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import { updateNotification } from "src/store/notification";
+import { ToastNotification } from "@utils/toastConfig";
 
 const lostPasswordSchema = yup.object({
   email: yup
@@ -45,7 +44,6 @@ const initialValues = {
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const scrollViewRef = useRef<ScrollView>(null);
-  const dispatch = useDispatch();
 
   const handleSubmit = async (
     values: InitialValue,
@@ -58,10 +56,16 @@ const LostPassword: FC<Props> = (props) => {
         ...values,
       });
 
-      dispatch(updateNotification({ message: data.message, type: "info" }));
+      ToastNotification({
+        type: "Info",
+        message: data.message,
+      });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
-      dispatch(updateNotification({ message: errorMessage, type: "error" }));
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
 
     actions.setSubmitting(false); // Deactivate busy for loader

@@ -61,7 +61,6 @@ export const toastConfig = {
 const styles = StyleSheet.create({
   notification: {
     width: "80%",
-    margin: 20,
     borderRadius: 5,
     padding: 10,
     flexDirection: "row",
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     flexShrink: 1,
-    marginLeft: 10,
+    marginLeft: 12,
   },
   messageTitle: {
     color: colors.INACTIVE_CONTRAST,
