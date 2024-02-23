@@ -1,6 +1,8 @@
-import { FC } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useFadeInUp } from "@utils/animated";
+import { FC, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import Animated, { FadeInUp, withSpring } from "react-native-reanimated";
+import Animated, { withSpring } from "react-native-reanimated";
 
 interface Props {}
 
@@ -21,18 +23,35 @@ const LogoContainer: FC<Props> = (props) => {
     };
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      // Reset Animations
+      startLogoAnimation();
+      startLogo2Animation();
+    }, [])
+  );
+
+  // Initialization of custom hooks for animations
+  const {
+    animatedStyle: LogoAnimatedStyle,
+    startAnimation: startLogoAnimation,
+  } = useFadeInUp(200, 7);
+
+  const {
+    animatedStyle: Logo2AnimatedStyle,
+    startAnimation: startLogo2Animation,
+  } = useFadeInUp(600, 5);
+
   return (
     <View style={styles.logoContainer}>
       <Animated.Image
-        entering={entering}
         source={require("@assets/Logo.png")}
-        style={styles.logo}
+        style={[styles.logo, LogoAnimatedStyle]}
       />
 
       <Animated.Image
-        entering={FadeInUp.delay(1000).duration(1000).springify().damping(3)}
         source={require("@assets/Welcome!.png")}
-        style={styles.welcome}
+        style={[styles.welcome, Logo2AnimatedStyle]}
       />
     </View>
   );

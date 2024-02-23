@@ -141,13 +141,13 @@ const Verification: FC<Props> = ({ route }) => {
       ref={scrollViewRef}
       contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
       keyboardShouldPersistTaps="handled"
+      overScrollMode="never"
     >
       <View style={styles.logoContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
           source={require("@assets/VerificationLogo.png")}
           style={styles.logo}
-          overScrollMode="never"
         />
 
         <Animated.Image

@@ -1,10 +1,6 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { FormikHelpers } from "formik";
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInLeft,
-} from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 import * as yup from "yup";
 import {
   ScrollView,
@@ -35,6 +31,7 @@ import catchAsyncError from "src/api/catchError";
 import { updateNotification } from "src/store/notification";
 import AppButton from "@ui/AppButton";
 import useGoogleSignIn from "src/api/useGoogleSignIn";
+import { useFadeInDown, useFadeInLeft } from "@utils/animated";
 
 const signupSchema = yup.object({
   name: yup
@@ -75,11 +72,10 @@ const initialValues = {
 const SignUp: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
-  const [focusKey, setFocusKey] = useState(0);
   const dispatch = useDispatch();
   const { promptGoogleSignIn, request } = useGoogleSignIn();
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
 
   const togglePasswordView = () => {
     Vibration.vibrate(30);
@@ -109,13 +105,20 @@ const SignUp: FC<Props> = (props) => {
   useFocusEffect(
     useCallback(() => {
       // Toggle key to force remount and thus re-trigger animation
-      setFocusKey((prevKey) => prevKey + 1);
       const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
         console.log("Keyboard hidden");
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
         }
       });
+
+      // Reset Animations
+      startNameAnimation();
+      startEmailAnimation();
+      startPasswordAnimation();
+      startSignupAnimation();
+      startLinkAnimation();
+      startSignupWithGoogleAnimation();
 
       return () => {
         // Cleanup
@@ -124,106 +127,121 @@ const SignUp: FC<Props> = (props) => {
     }, [])
   );
 
+  // Initialization of custom hooks for animations
+  const {
+    animatedStyle: nameAnimatedStyle,
+    startAnimation: startNameAnimation,
+  } = useFadeInDown(0);
+  const {
+    animatedStyle: emailAnimatedStyle,
+    startAnimation: startEmailAnimation,
+  } = useFadeInDown(200);
+  const {
+    animatedStyle: passwordAnimatedStyle,
+    startAnimation: startPasswordAnimation,
+  } = useFadeInDown(400);
+  const {
+    animatedStyle: SignupAnimatedStyle,
+    startAnimation: startSignupAnimation,
+  } = useFadeInDown(600);
+  const {
+    animatedStyle: LinkAnimatedStyle,
+    startAnimation: startLinkAnimation,
+  } = useFadeInLeft(600);
+  const {
+    animatedStyle: SignupWithGoogleAnimatedStyle,
+    startAnimation: startSignupWithGoogleAnimation,
+  } = useFadeInDown(800);
+
   return (
-    <Animated.View key={focusKey} entering={FadeIn.duration(400)}>
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
-        keyboardShouldPersistTaps="handled"
-        overScrollMode="never"
+    <Animated.ScrollView
+      ref={scrollViewRef}
+      contentContainerStyle={[styles.scrollViewContent, { marginTop: -45 }]}
+      keyboardShouldPersistTaps="handled"
+      overScrollMode="never"
+      entering={FadeIn}
+    >
+      <LogoContainer />
+      <Form
+        onSubmit={handleSubmit}
+        initialValues={initialValues}
+        validationSchema={signupSchema}
       >
-        <LogoContainer />
-        <Form
-          onSubmit={handleSubmit}
-          initialValues={initialValues}
-          validationSchema={signupSchema}
-        >
-          <View style={styles.formContainer}>
-            <Animated.View entering={FadeInDown.duration(1000).springify()}>
-              <AuthInputField
-                name="name"
-                label="Name"
-                placeholder="John Doe"
-                containerStyle={styles.marginBottom}
-              />
-            </Animated.View>
-
-            <Animated.View
-              entering={FadeInDown.delay(200).duration(1000).springify()}
-            >
-              <AuthInputField
-                name="email"
-                label="Email"
-                placeholder="john@email.com"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                containerStyle={styles.marginBottom}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInDown.delay(400).duration(1000).springify()}
-            >
-              <AuthInputField
-                name="password"
-                label="Password"
-                placeholder="********"
-                autoCapitalize="none"
-                secureTextEntry={secureEntry}
-                containerStyle={styles.marginBottom}
-                rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
-                onRightIconPress={togglePasswordView}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInDown.delay(600).duration(1000).springify()}
-            >
-              <SubmitBtn
-                title="Sign up"
-                defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
-                pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
-              />
-            </Animated.View>
-
-            <Animated.View
-              entering={FadeInLeft.delay(600).duration(1000).springify()}
-              style={styles.linkContainer}
-            >
-              <Text>Already have an account ? </Text>
-              <AppLink
-                title="Sign In"
-                onPress={() => {
-                  navigation.navigate("SignIn");
-                }}
-              />
-            </Animated.View>
-            <Animated.View
-              entering={FadeInLeft.delay(600).duration(1000).springify()}
-              style={styles.separator}
+        <View style={styles.formContainer}>
+          <Animated.View style={nameAnimatedStyle}>
+            <AuthInputField
+              name="name"
+              label="Name"
+              placeholder="John Doe"
+              containerStyle={styles.marginBottom}
             />
+          </Animated.View>
 
-            <Animated.View
-              entering={FadeInDown.delay(800).duration(1000).springify()}
-              style={{ justifyContent: "center", alignItems: "center" }}
-            >
-              <AppButton
-                title="Sign up with Google"
-                pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
-                defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-                onPress={() => request && promptGoogleSignIn()}
-                icon={
-                  <MaterialCommunityIcons
-                    name="google"
-                    size={24}
-                    color="white"
-                    style={{ marginRight: 10 }}
-                  />
-                }
-              />
-            </Animated.View>
-          </View>
-        </Form>
-      </ScrollView>
-    </Animated.View>
+          <Animated.View style={emailAnimatedStyle}>
+            <AuthInputField
+              name="email"
+              label="Email"
+              placeholder="john@email.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              containerStyle={styles.marginBottom}
+            />
+          </Animated.View>
+          <Animated.View style={passwordAnimatedStyle}>
+            <AuthInputField
+              name="password"
+              label="Password"
+              placeholder="********"
+              autoCapitalize="none"
+              secureTextEntry={secureEntry}
+              containerStyle={styles.marginBottom}
+              rightIcon={<PasswordVisibilityIcon privateIcon={secureEntry} />}
+              onRightIconPress={togglePasswordView}
+            />
+          </Animated.View>
+          <Animated.View style={SignupAnimatedStyle}>
+            <SubmitBtn
+              title="Sign up"
+              defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
+              pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
+            />
+          </Animated.View>
+
+          <Animated.View style={[styles.linkContainer, LinkAnimatedStyle]}>
+            <Text>Already have an account ? </Text>
+            <AppLink
+              title="Sign In"
+              onPress={() => {
+                navigation.navigate("SignIn");
+              }}
+            />
+          </Animated.View>
+          <Animated.View style={[styles.separator, LinkAnimatedStyle]} />
+
+          <Animated.View
+            style={[
+              { justifyContent: "center", alignItems: "center" },
+              SignupWithGoogleAnimatedStyle,
+            ]}
+          >
+            <AppButton
+              title="Sign up with Google"
+              pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+              defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+              onPress={() => request && promptGoogleSignIn()}
+              icon={
+                <MaterialCommunityIcons
+                  name="google"
+                  size={24}
+                  color="white"
+                  style={{ marginRight: 10 }}
+                />
+              }
+            />
+          </Animated.View>
+        </View>
+      </Form>
+    </Animated.ScrollView>
   );
 };
 
