@@ -4,7 +4,7 @@ const PRIMARY_DARK1 = "#b4ecfb";
 const PRIMARY_DARK2 = "#ccf3fb";
 const PRIMARY_DARK3 = "#B1E4F4";
 const SECONDARY = "#3186EA";
-const THIRD = "#fde1fb";
+const GREEN = "#85c4b4";
 const CONTRAST = "#202444";
 const INACTIVE_CONTRAST = "#F4F4F4";
 const ERROR = "#db3125";
@@ -23,7 +23,7 @@ const colors = {
   LIGHT_GRAY,
   PRIMARY_BTN,
   SECONDARY,
-  THIRD,
+  GREEN,
   CONTRAST,
   INACTIVE_CONTRAST,
   ERROR,
