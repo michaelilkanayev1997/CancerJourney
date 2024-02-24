@@ -148,13 +148,13 @@ const Verification: FC<Props> = ({ route }) => {
       <View style={styles.logoContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
-          source={require("@assets/VerificationLogo.png")}
+          source={require("@assets/Authentication/VerificationLogo.png")}
           style={styles.logo}
         />
 
         <Animated.Image
           entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
-          source={require("@assets/AccountVerification.png")}
+          source={require("@assets/Authentication/AccountVerification.png")}
           style={styles.accountVerification}
         />
         <Animated.Text

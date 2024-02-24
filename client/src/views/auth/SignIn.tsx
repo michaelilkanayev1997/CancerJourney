@@ -15,7 +15,7 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { FormikHelpers } from "formik";
 
 import AuthInputField from "@components/form/AuthInputField";
@@ -33,6 +33,7 @@ import catchAsyncError from "src/api/catchError";
 import AppButton from "@ui/AppButton";
 import useGoogleSignIn from "src/api/useGoogleSignIn";
 import { ToastNotification } from "@utils/toastConfig";
+import { useFadeInDown, useFadeInLeft } from "@utils/animated";
 
 const signupSchema = yup.object({
   email: yup
@@ -64,7 +65,6 @@ const initialValues = {
 const SignIn: FC<Props> = (props) => {
   const [secureEntry, setSecureEntry] = useState(true);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
-  const [focusKey, setFocusKey] = useState(0);
   const dispatch = useDispatch();
   const { promptGoogleSignIn, request } = useGoogleSignIn();
 
@@ -77,14 +77,20 @@ const SignIn: FC<Props> = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Toggle key to force remount and thus re-trigger animation
-      setFocusKey((prevKey) => prevKey + 1);
       const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
         console.log("Keyboard hidden");
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
         }
       });
+
+      // Reset Animations
+      startEmailAnimation();
+      startPasswordAnimation();
+      startForgotPasswordAnimatedStyleAnimation();
+      startSignupAnimation();
+      startLinkAnimation();
+      startSignupWithGoogleAnimation();
 
       return () => {
         // Cleanup
@@ -119,9 +125,34 @@ const SignIn: FC<Props> = (props) => {
     actions.setSubmitting(false); // Deactivate busy for loader
   };
 
+  // Initialization of custom hooks for animations
+  const {
+    animatedStyle: emailAnimatedStyle,
+    startAnimation: startEmailAnimation,
+  } = useFadeInDown(0);
+  const {
+    animatedStyle: passwordAnimatedStyle,
+    startAnimation: startPasswordAnimation,
+  } = useFadeInDown(200);
+  const {
+    animatedStyle: ForgotPasswordAnimatedStyle,
+    startAnimation: startForgotPasswordAnimatedStyleAnimation,
+  } = useFadeInLeft(400);
+  const {
+    animatedStyle: SignupAnimatedStyle,
+    startAnimation: startSignupAnimation,
+  } = useFadeInDown(600);
+  const {
+    animatedStyle: LinkAnimatedStyle,
+    startAnimation: startLinkAnimation,
+  } = useFadeInLeft(700);
+  const {
+    animatedStyle: SignupWithGoogleAnimatedStyle,
+    startAnimation: startSignupWithGoogleAnimation,
+  } = useFadeInDown(800);
+
   return (
     <ScrollView
-      key={focusKey}
       ref={scrollViewRef}
       contentContainerStyle={[styles.scrollViewContent, { marginTop: -25 }]}
       keyboardShouldPersistTaps="handled"
@@ -135,7 +166,7 @@ const SignIn: FC<Props> = (props) => {
         validationSchema={signupSchema}
       >
         <View style={styles.formContainer}>
-          <Animated.View entering={FadeInDown.duration(1000).springify()}>
+          <Animated.View style={emailAnimatedStyle}>
             <AuthInputField
               name="email"
               label="Email"
@@ -145,9 +176,7 @@ const SignIn: FC<Props> = (props) => {
               containerStyle={styles.marginBottom}
             />
           </Animated.View>
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(1000).springify()}
-          >
+          <Animated.View style={passwordAnimatedStyle}>
             <AuthInputField
               name="password"
               label="Password"
@@ -161,8 +190,7 @@ const SignIn: FC<Props> = (props) => {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInLeft.delay(400).duration(1000).springify()}
-            style={styles.forgotPasswordLink}
+            style={[styles.forgotPasswordLink, ForgotPasswordAnimatedStyle]}
           >
             <AppLink
               title="Forgot Password ?"
@@ -172,9 +200,7 @@ const SignIn: FC<Props> = (props) => {
             />
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(600).duration(1000).springify()}
-          >
+          <Animated.View style={SignupAnimatedStyle}>
             <SubmitBtn
               title="Sign In"
               defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
@@ -182,9 +208,7 @@ const SignIn: FC<Props> = (props) => {
             />
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInLeft.delay(700).duration(1000).springify()}
-          >
+          <Animated.View style={LinkAnimatedStyle}>
             <View style={styles.linkContainer}>
               <Text>Don't have an account ? </Text>
               <AppLink
@@ -196,14 +220,13 @@ const SignIn: FC<Props> = (props) => {
             </View>
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInLeft.delay(800).duration(1000).springify()}
-            style={styles.separator}
-          />
+          <Animated.View style={[styles.separator, LinkAnimatedStyle]} />
 
           <Animated.View
-            entering={FadeInDown.delay(800).duration(1000).springify()}
-            style={{ justifyContent: "center", alignItems: "center" }}
+            style={[
+              { justifyContent: "center", alignItems: "center" },
+              SignupWithGoogleAnimatedStyle,
+            ]}
           >
             <AppButton
               title="Sign up with Google"

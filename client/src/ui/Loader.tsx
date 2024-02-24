@@ -18,8 +18,8 @@ const Loader: FC<Props> = ({ blackLoading = false, loaderStyle }) => {
         resizeMode="contain"
         source={
           blackLoading
-            ? require("../assets/Loading.json")
-            : require("../assets/Loading.json")
+            ? require("../assets/Animations/Loading.json")
+            : require("../assets/Animations/Loading.json")
         }
       />
     </View>

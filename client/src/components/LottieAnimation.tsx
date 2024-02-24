@@ -1,17 +1,8 @@
-import { FC, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { FC } from "react";
+import { StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 import colors from "@utils/colors";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  FadeOutUp,
-  SlideOutUp,
-  ZoomOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { withTiming } from "react-native-reanimated";
 
 interface Props {
   onAnimationFinish?: (isCancelled: boolean) => void;
@@ -42,7 +33,7 @@ const LottieAnimation: FC<Props> = ({ onAnimationFinish }) => {
           width: "100%",
           height: "100%",
         }}
-        source={require("@assets/LogoAnimation.json")}
+        source={require("@assets/Animations/LogoAnimation.json")}
       />
     </Animated.View>
   );

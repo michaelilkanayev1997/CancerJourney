@@ -8,83 +8,60 @@ import {
   TouchableOpacity,
 } from "react-native";
 import {
+  DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
+import { getAuthState } from "src/store/auth";
 
-interface Props {}
+const CustomDrawer: FC<DrawerContentComponentProps> = (drawerItemListProps) => {
+  const { profile } = useSelector(getAuthState);
 
-const CustomDrawer: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={{ backgroundColor: colors.PRIMARY_DARK1 }}
+        {...drawerItemListProps}
+        contentContainerStyle={styles.drawerContentScrollView}
       >
         <ImageBackground
-          resizeMode="contain"
-          source={require("@assets/Logo.png")}
-          style={{ padding: 20 }}
+          source={require("@assets/green-gradient.jpg")}
+          style={styles.userInfo}
+          resizeMode="cover"
         >
           <Image
             source={require("@assets/user_profile.png")}
-            style={{
-              height: 80,
-              width: 80,
-              borderRadius: 40,
-              marginBottom: 10,
-            }}
+            style={styles.profileImage}
           />
-          <Text style={{ color: "#fff", fontSize: 18, fontWeight: "500" }}>
-            Michael Ilkanayev
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "#fff" }}>Michaelilkanayev@gmail.com</Text>
+          <Text style={styles.userName}>{profile?.name}</Text>
+          <View style={styles.emailContainer}>
+            <Text style={styles.emailText}>{profile?.email}</Text>
             <Entypo
               name="mail"
               size={17}
-              color="#fff"
-              style={{ marginLeft: 10 }}
+              color={colors.INFO}
+              style={styles.emailIcon}
             />
           </View>
         </ImageBackground>
-        <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
-          <DrawerItemList {...props} />
+        <View style={styles.drawerItemListContainer}>
+          <DrawerItemList {...drawerItemListProps} />
         </View>
       </DrawerContentScrollView>
-      <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons
-              name="share-social-outline"
-              size={22}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>
-              Share with Friends
-            </Text>
+      <View style={styles.footerContainer}>
+        <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
+          <View style={styles.footerButtonContent}>
+            <Ionicons name="share-social-outline" size={22} color="black" />
+            <Text style={styles.footerButtonText}>Share with Friends</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons
-              name="exit-outline"
-              size={22}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>Sign Out</Text>
+        <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
+          <View style={styles.footerButtonContent}>
+            <Ionicons name="exit-outline" size={22} color="black" />
+            <Text style={styles.footerButtonText}>Sign Out</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -93,7 +70,58 @@ const CustomDrawer: FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {
+    flex: 1,
+  },
+  drawerContentScrollView: {
+    backgroundColor: colors.PRIMARY_DARK2,
+  },
+  userInfo: {
+    padding: 20,
+  },
+  profileImage: {
+    height: 80,
+    width: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+  },
+  userName: {
+    color: colors.INFO,
+    fontSize: 18,
+    fontWeight: "500",
+  },
+  emailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  emailText: {
+    color: colors.INFO,
+  },
+  emailIcon: {
+    marginLeft: 10,
+  },
+  drawerItemListContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 10,
+  },
+  footerContainer: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  footerButton: {
+    paddingVertical: 15,
+  },
+  footerButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
+  },
+  footerButtonText: {
+    fontSize: 15,
+    marginLeft: 5,
+  },
 });
 
 export default CustomDrawer;

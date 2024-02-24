@@ -17,7 +17,7 @@ const DrawerNavigator = () => {
       screenOptions={{
         headerShown: false,
         drawerActiveBackgroundColor: colors.PRIMARY,
-        drawerActiveTintColor: colors.ICON,
+        drawerActiveTintColor: colors.INFO,
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: { marginLeft: -25, fontSize: 15 },
       }}
