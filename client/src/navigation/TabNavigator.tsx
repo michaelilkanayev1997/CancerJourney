@@ -6,7 +6,7 @@ import Profile from "@views/bottonTab/Profile";
 import Upload from "@views/bottonTab/Upload";
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
-import DrawerNavigator from "./DrawerNavigator";
+import Settings from "@views/bottonTab/Settings";
 
 const Tab = createBottomTabNavigator();
 
@@ -77,7 +77,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="SettingsScreen"
-        component={Upload}
+        component={Settings}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon

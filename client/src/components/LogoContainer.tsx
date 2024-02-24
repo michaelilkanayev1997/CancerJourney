@@ -45,12 +45,12 @@ const LogoContainer: FC<Props> = (props) => {
   return (
     <View style={styles.logoContainer}>
       <Animated.Image
-        source={require("@assets/Logo.png")}
+        source={require("@assets/Icons/Logo.png")}
         style={[styles.logo, LogoAnimatedStyle]}
       />
 
       <Animated.Image
-        source={require("@assets/Welcome!.png")}
+        source={require("@assets/Authentication/Welcome!.png")}
         style={[styles.welcome, Logo2AnimatedStyle]}
       />
     </View>

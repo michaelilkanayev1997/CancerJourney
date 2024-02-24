@@ -36,7 +36,10 @@ const Welcome: FC<Props> = (props) => {
         entering={FadeInUp.delay(200).duration(1000)}
         style={styles.imageContainer}
       >
-        <Image source={require("@assets/Logo.png")} style={styles.image} />
+        <Image
+          source={require("@assets/Icons/Logo.png")}
+          style={styles.image}
+        />
         <Text style={styles.Logotitle}>Putting you in control</Text>
       </Animated.View>
 

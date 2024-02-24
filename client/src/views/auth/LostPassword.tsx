@@ -97,13 +97,13 @@ const LostPassword: FC<Props> = (props) => {
       <View style={styles.logoContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
-          source={require("@assets/lock.png")}
+          source={require("@assets/Authentication/Lock.png")}
           style={styles.logo}
         />
 
         <Animated.Image
           entering={FadeInUp.delay(700).duration(1000).springify().damping(3)}
-          source={require("@assets/Forgot Password.png")}
+          source={require("@assets/Authentication/Forgot-Password.png")}
           style={styles.forgotPassword}
         />
 
