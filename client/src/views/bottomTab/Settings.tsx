@@ -3,10 +3,10 @@ import { View, StyleSheet, Text } from "react-native";
 
 interface Props {}
 
-const Upload: FC<Props> = (props) => {
+const Settings: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
-      <Text>Upload</Text>
+      <Text>Settings</Text>
     </View>
   );
 };
@@ -15,4 +15,4 @@ const styles = StyleSheet.create({
   container: {},
 });
 
-export default Upload;
+export default Settings;

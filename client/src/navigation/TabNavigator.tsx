@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet } from "react-native";
 
-import Home from "@views/bottonTab/Home";
-import Profile from "@views/bottonTab/Profile";
-import Upload from "@views/bottonTab/Upload";
+import Home from "@views/bottomTab/Home";
+import Profile from "@views/bottomTab/Profile";
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
-import Settings from "@views/bottonTab/Settings";
+import Settings from "@views/bottomTab/Settings";
+import UploadFileNavigator from "./UploadFileNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -63,7 +63,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="UploadScreen"
-        component={Upload}
+        component={UploadFileNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
