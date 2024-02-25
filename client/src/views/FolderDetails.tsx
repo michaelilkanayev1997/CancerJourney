@@ -11,6 +11,9 @@ import {
   Modal,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { UploadStackParamList } from "src/@types/navigation";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 // Placeholder images for demonstration
 const images = [
@@ -88,19 +91,25 @@ const images = [
   },
 ];
 
-interface Props {
-  route: {
-    params: {
-      folderName: string;
-    };
-  };
-}
+type ImageType = {
+  id: string;
+  uri: string;
+  title: string;
+  date: string;
+};
 
-const FolderDetails: FC<Props> = ({ route, navigation }) => {
+type FolderDetailsProps = NativeStackScreenProps<
+  UploadStackParamList,
+  "FolderDetails"
+>;
+
+const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   const { folderName } = route.params;
-  const [numColumns, setNumColumns] = useState(2); // Default to 2 columns
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [numColumns, setNumColumns] = useState<number>(2);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
 
   // Function to toggle grid layout
   const toggleGridLayout = () => {
@@ -114,13 +123,14 @@ const FolderDetails: FC<Props> = ({ route, navigation }) => {
 
   //i have to add loading logic + animation
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item, index }: { item: ImageType; index: number }) => {
     return (
       <TouchableOpacity
         onPress={() => {
           setSelectedImageIndex(index);
           setModalVisible(true);
         }}
+        activeOpacity={0.7}
         style={styles.cardContainer}
       >
         <View style={styles.imageContainer}>
@@ -153,7 +163,7 @@ const FolderDetails: FC<Props> = ({ route, navigation }) => {
   };
 
   // Custom Header
-  const renderHeader = (currentIndex: number) => (
+  const renderHeader = (currentIndex: number = 0) => (
     <View style={styles.headerContainer}>
       <TouchableOpacity
         style={styles.arrowLeftContainer}
@@ -173,7 +183,7 @@ const FolderDetails: FC<Props> = ({ route, navigation }) => {
     if (route.params?.toggleLayout) {
       setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
       // Reset the parameter after handling
-      navigation.setParams({ toggleLayout: undefined });
+      navigation.setParams({ toggleLayout: false });
     }
   }, [route.params?.toggleLayout, navigation]);
 
@@ -194,6 +204,8 @@ const FolderDetails: FC<Props> = ({ route, navigation }) => {
           visible={modalVisible}
           transparent={true}
           onRequestClose={() => setModalVisible(false)}
+          hardwareAccelerated={true}
+          animationType="fade"
         >
           <ImageZoomViewer
             imageUrls={images.map((img) => ({ url: img.uri }))}
