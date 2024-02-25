@@ -15,5 +15,8 @@ export type AuthStackParamList = {
 
 export type UploadStackParamList = {
   FolderGrid: undefined;
-  FolderDetails: { folderName: string };
+  FolderDetails: {
+    folderName: string;
+    toggleLayout?: boolean;
+  };
 };

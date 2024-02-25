@@ -1,11 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import FolderDetails from "@views/FolderDetails";
 import Upload from "@views/bottomTab/Upload";
 import { UploadStackParamList } from "src/@types/navigation";
-import colors from "@utils/colors";
 
 const Stack = createNativeStackNavigator<UploadStackParamList>();
 
