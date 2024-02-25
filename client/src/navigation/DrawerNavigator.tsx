@@ -1,10 +1,10 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Entypo } from "@expo/vector-icons";
 
-import Home from "@views/bottonTab/Home";
-import Profile from "@views/bottonTab/Profile";
+import Home from "@views/bottomTab/Home";
+import Profile from "@views/bottomTab/Profile";
 import TabNavigator from "./TabNavigator";
-import Upload from "@views/bottonTab/Upload";
+import Upload from "@views/bottomTab/Upload";
 import CustomDrawer from "@components/CustomDrawer";
 import colors from "@utils/colors";
 

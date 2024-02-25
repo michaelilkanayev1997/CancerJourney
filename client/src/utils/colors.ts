@@ -16,6 +16,8 @@ const Google_BTN_PRESSED = ["#4285F4", "#3578E5", "#2A6ACF"];
 const LIGHT_GRAY = "#D3D3D3";
 const RELAX = "rgb(245, 235, 226)";
 const ICON = "#43cbdd";
+const LIGHT_BLUE = "#5DADE2";
+const LIGHT_GREEN = "#E8F8F5";
 
 const colors = {
   PRIMARY,
@@ -36,6 +38,8 @@ const colors = {
   FULLY_TRANSPARENT_OVERLAY,
   RELAX,
   ICON,
+  LIGHT_BLUE,
+  LIGHT_GREEN
 };
 
 export default colors;

@@ -12,3 +12,8 @@ export type AuthStackParamList = {
   OnBoarding: undefined;
   Welcome: undefined;
 };
+
+export type UploadStackParamList = {
+  FolderGrid: undefined;
+  FolderDetails: { folderName: string };
+};
