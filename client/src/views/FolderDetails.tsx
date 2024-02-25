@@ -1,5 +1,6 @@
 import colors from "@utils/colors";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   View,
   Text,
@@ -15,13 +16,13 @@ import ImageZoomViewer from "react-native-image-zoom-viewer";
 const images = [
   {
     id: "1",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Image 1",
+    uri: "https://images.template.net/115163/acknowledgement-for-school-project-report-a6i6u.png",
+    title: "Image 1 asdas asd asdas dasd asdsa d asdas",
     date: "2023-01-01",
   },
   {
     id: "2",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    uri: "https://assets-global.website-files.com/5ebb0930dd82631397ddca92/61bb9a7943343e03bb9fcd1b_documents-product-template-software.png",
     title: "Image 2",
     date: "2023-01-02",
   },
@@ -49,6 +50,42 @@ const images = [
     title: "Image 6",
     date: "2023-01-06",
   },
+  {
+    id: "7",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 1",
+    date: "2023-01-01",
+  },
+  {
+    id: "8",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 2",
+    date: "2023-01-02",
+  },
+  {
+    id: "9",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 3",
+    date: "2023-01-03",
+  },
+  {
+    id: "10",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 4",
+    date: "2023-01-04",
+  },
+  {
+    id: "11",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 5",
+    date: "2023-01-05",
+  },
+  {
+    id: "12",
+    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
+    title: "Image 6",
+    date: "2023-01-06",
+  },
 ];
 
 interface Props {
@@ -59,7 +96,7 @@ interface Props {
   };
 }
 
-const FolderDetails: FC<Props> = ({ route }) => {
+const FolderDetails: FC<Props> = ({ route, navigation }) => {
   const { folderName } = route.params;
   const [numColumns, setNumColumns] = useState(2); // Default to 2 columns
   const [modalVisible, setModalVisible] = useState(false);
@@ -84,56 +121,66 @@ const FolderDetails: FC<Props> = ({ route }) => {
           setSelectedImageIndex(index);
           setModalVisible(true);
         }}
-        style={{
-          width: `${100 / numColumns}%`, // Calculate width dynamically based on numColumns
-          alignItems: "center", // Center content
-        }}
+        style={styles.cardContainer}
       >
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.uri }} style={styles.image} />
-          <Text style={styles.imageTitle}>{item.title}</Text>
-          <Text style={styles.imageDate}>{item.date}</Text>
+          <View style={styles.textContainer}>
+            <Text
+              style={styles.imageTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {item.title}
+            </Text>
+            <Text style={styles.imageDate}>{item.date}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.moreIcon}
+            onPress={() => {
+              /* Handle more options */
+            }}
+          >
+            <MaterialCommunityIcons
+              name="dots-vertical"
+              size={numColumns === 3 ? 24 : 30}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
   };
+
   // Custom Header
-  const renderHeader = (currentIndex) => (
+  const renderHeader = (currentIndex: number) => (
     <View style={styles.headerContainer}>
       <TouchableOpacity
         style={styles.arrowLeftContainer}
         onPress={() => setModalVisible(false)}
       >
-        <Text style={styles.arrowText}>{"< Back"}</Text>
+        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
-      <Text style={styles.headerText}>
-        {images[currentIndex].title} - {images[currentIndex].date}
+      <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">
+        {images[currentIndex].title.substring(0, 16)} -{" "}
+        {images[currentIndex].date}
       </Text>
-      {/* Placeholder view to balance the header and make the text truly centered */}
       <View style={styles.placeholderView}></View>
     </View>
   );
 
-  // Custom Footer
-  const renderFooter = (currentIndex) => (
-    <View style={styles.footerContainer}>
-      <Text style={styles.footerText}>
-        {images[currentIndex].title} - {images[currentIndex].date}
-      </Text>
-    </View>
-  );
+  useEffect(() => {
+    if (route.params?.toggleLayout) {
+      setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
+      // Reset the parameter after handling
+      navigation.setParams({ toggleLayout: undefined });
+    }
+  }, [route.params?.toggleLayout, navigation]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{folderName}</Text>
-      <View style={styles.actionContainer}>
-        <TouchableOpacity onPress={toggleGridLayout}>
-          <Text style={styles.actionText}>Change Layout</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleUploadPress}>
-          <Text style={styles.actionText}>Upload</Text>
-        </TouchableOpacity>
-      </View>
+
       <FlatList
         data={images}
         renderItem={renderItem}
@@ -157,16 +204,6 @@ const FolderDetails: FC<Props> = ({ route }) => {
             renderHeader={(index) => renderHeader(index)}
             useNativeDriver={true}
           />
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => {
-              // Logic to delete the image goes here
-              console.log("Delete Image:", images[selectedImageIndex].id);
-              setModalVisible(false);
-            }}
-          >
-            <Text style={styles.deleteButtonText}>Delete Image</Text>
-          </TouchableOpacity>
         </Modal>
       )}
     </View>
@@ -187,68 +224,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#333",
   },
-  actionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 20,
-  },
-  actionText: {
-    fontSize: 18,
-    color: "#007BFF",
-    fontWeight: "500",
-  },
+
   imagesContainer: {
     paddingHorizontal: 10,
   },
-
-  imageContainer: {
-    margin: 10,
-    alignItems: "center",
-  },
-  image: {
-    width: "100%",
-    aspectRatio: 1,
-    marginBottom: 5,
-  },
-  imageTitle: {
-    fontWeight: "bold",
-  },
-  imageDate: {
-    color: "grey",
-  },
-  deleteButton: {
-    position: "absolute",
-    bottom: 50,
-    left: "50%",
-    marginLeft: -50, // Adjust based on the button's width to center it
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 20,
-  },
-  deleteButtonText: {
-    color: "#FFFFFF",
-    textAlign: "center",
-  },
   headerContainer: {
     padding: 28,
-    backgroundColor: "gray",
+    backgroundColor: "white",
     flexDirection: "row",
-    justifyContent: "center", // Ensure the children are centered
-    alignItems: "center", // Vertically center the content
-    position: "relative", // Required for absolute positioning of children
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   headerText: {
     color: "black",
     fontSize: 18,
-    position: "absolute", // Position the text absolutely to ensure it's centered
+    position: "absolute",
     left: 0,
     right: 0,
-    textAlign: "center", // Ensure the text itself is centered within its space
+    textAlign: "center",
   },
   arrowLeftContainer: {
-    position: "absolute", // Position the arrow absolutely
-    left: 6, // Align it to the left
-    zIndex: 1, // Ensure it's above the centered text
+    position: "absolute",
+    left: 6,
+    zIndex: 1,
   },
   arrowText: {
     fontSize: 18,
@@ -256,9 +255,49 @@ const styles = StyleSheet.create({
   },
   placeholderView: {
     position: "absolute",
-    right: 0, // Align it to the right to balance the arrow on the left
-    width: 50, // The approximate width of the arrow container
+    right: 0,
+    width: 50,
     height: "100%",
+  },
+  cardContainer: {
+    flex: 1,
+    padding: 8,
+    paddingBottom: 20,
+    width: "100%",
+  },
+  imageContainer: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5, // for Android
+    flexDirection: "column",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  image: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 8,
+  },
+  textContainer: {
+    padding: 8,
+  },
+  imageTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  imageDate: {
+    fontSize: 14,
+    color: "gray",
+  },
+  moreIcon: {
+    position: "absolute",
+    right: 0,
+    top: 5,
   },
 });
 
