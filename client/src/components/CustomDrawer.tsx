@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawerContentScrollView: {
-    backgroundColor: colors.PRIMARY_DARK2,
+    backgroundColor: "#d6ede7",
   },
   userInfo: {
     padding: 20,

@@ -1,12 +1,11 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Entypo } from "@expo/vector-icons";
 
-import Home from "@views/bottomTab/Home";
 import Profile from "@views/bottomTab/Profile";
-import TabNavigator from "./TabNavigator";
 import Upload from "@views/bottomTab/Upload";
 import CustomDrawer from "@components/CustomDrawer";
 import colors from "@utils/colors";
+import TabNavigator from "./TabNavigator";
 
 const Drawer = createDrawerNavigator();
 
@@ -20,20 +19,12 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: colors.INFO,
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: { marginLeft: -25, fontSize: 15 },
+        swipeEnabled: false,
       }}
     >
       <Drawer.Screen
-        name="Main"
-        component={TabNavigator}
-        options={{
-          drawerIcon: (props) => (
-            <Entypo name="home" size={22} color={props.color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Home"
-        component={Home}
+        component={TabNavigator}
         options={{
           drawerIcon: (props) => (
             <Entypo name="home" size={22} color={props.color} />
@@ -60,6 +51,42 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Settings"
+        component={Upload}
+        options={{
+          drawerIcon: (props) => (
+            <Entypo name="home" size={22} color={props.color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="sd"
+        component={Upload}
+        options={{
+          drawerIcon: (props) => (
+            <Entypo name="home" size={22} color={props.color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="gs"
+        component={Upload}
+        options={{
+          drawerIcon: (props) => (
+            <Entypo name="home" size={22} color={props.color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="as"
+        component={Upload}
+        options={{
+          drawerIcon: (props) => (
+            <Entypo name="home" size={22} color={props.color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="asd"
         component={Upload}
         options={{
           drawerIcon: (props) => (

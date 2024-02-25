@@ -1,13 +1,26 @@
-import { ToastNotification } from "@utils/toastConfig";
-import { FC } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { FC, useCallback } from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
-import Toast from "react-native-toast-message";
-import { useDispatch } from "react-redux";
+
+import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {}
 
 const Home: FC<Props> = (props) => {
-  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  useFocusEffect(
+    useCallback(() => {
+      // Enable the drawer gesture and header when HomeScreen is focused
+      const parent = navigation.getParent();
+      parent?.setOptions({ swipeEnabled: true, headerShown: true });
+
+      return () => {
+        // Disable the drawer gesture and header when HomeScreen is not focused
+        parent?.setOptions({ swipeEnabled: false, headerShown: false });
+      };
+    }, [navigation])
+  );
 
   return (
     <View style={styles.container}>
