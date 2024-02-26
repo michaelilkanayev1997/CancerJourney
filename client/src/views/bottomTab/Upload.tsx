@@ -1,5 +1,10 @@
-import React, { FC, useCallback } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import React, { FC, useCallback, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Vibration,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,7 +12,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useFocusEffect } from "@react-navigation/native";
 
-import Folder, { IconName } from "@ui/Folder";
+import { FolderList, Folder, IconName } from "@ui/Folder";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -21,9 +27,11 @@ const folders: Array<{ name: string; icon: IconName; key: string }> = [
 
 interface Props {}
 
-const Upload: FC<Props> = (props) => {
+const Upload: FC<Props> = ({ navigation }) => {
   const scale = useSharedValue(0.8); // Start from a smaller scale
   const paddingBottom = useSharedValue(0); // Initial paddingBottom
+
+  const [numColumns, setNumColumns] = useState<number>(2);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,14 +53,41 @@ const Upload: FC<Props> = (props) => {
     };
   });
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            setNumColumns((currentColumns) => (currentColumns === 2 ? 1 : 2));
+            Vibration.vibrate(50);
+          }}
+          style={{ marginRight: 10 }}
+        >
+          <MaterialCommunityIcons
+            name={numColumns === 2 ? "view-grid-outline" : "view-list-outline"}
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, numColumns]);
+
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
       <FlatList
         data={folders}
-        renderItem={({ item }) => <Folder name={item.name} icon={item.icon} />}
+        renderItem={({ item }) =>
+          numColumns === 2 ? (
+            <Folder name={item.name} icon={item.icon} />
+          ) : (
+            <FolderList name={item.name} icon={item.icon} />
+          )
+        }
         keyExtractor={(item) => item.key}
-        numColumns={2}
+        numColumns={numColumns}
         showsVerticalScrollIndicator={false}
+        key={numColumns}
       />
     </Animated.View>
   );

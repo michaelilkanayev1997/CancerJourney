@@ -1,4 +1,3 @@
-import colors from "@utils/colors";
 import React, { FC, useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
@@ -11,7 +10,7 @@ import {
   Modal,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 

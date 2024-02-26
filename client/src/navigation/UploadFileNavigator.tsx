@@ -18,7 +18,9 @@ const UploadFileNavigator = () => {
       <Stack.Screen
         name="FolderGrid"
         component={Upload}
-        options={{ title: "Folders" }}
+        options={{
+          title: "Folders",
+        }}
       />
       <Stack.Screen
         name="FolderDetails"
