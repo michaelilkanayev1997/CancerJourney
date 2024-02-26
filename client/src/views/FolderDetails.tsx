@@ -22,6 +22,8 @@ const images = [
     id: "1",
     uri: "https://images.template.net/115163/acknowledgement-for-school-project-report-a6i6u.png",
     title: "Image 1 asdas asd asdas dasd asdsa d asdas",
+    description:
+      "this is my medication for my blood pressare asdasdas dasd asda sdas asd asda sdas das das dasd asd asda sd afwertg retekmerjnghoerog ergfdnbkfdm wrfwjbef skmdvc fbewkfn lrkwgokerh gnsdvf mklsdbhthenklfn",
     date: "2023-01-01",
   },
   {
