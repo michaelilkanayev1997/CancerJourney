@@ -8,11 +8,13 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Vibration,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ImageCard from "@components/ImageCard";
 
 // Placeholder images for demonstration
 const images = [
@@ -90,13 +92,6 @@ const images = [
   },
 ];
 
-type ImageType = {
-  id: string;
-  uri: string;
-  title: string;
-  date: string;
-};
-
 type FolderDetailsProps = NativeStackScreenProps<
   UploadStackParamList,
   "FolderDetails"
@@ -110,56 +105,12 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     null
   );
 
-  // Function to toggle grid layout
-  const toggleGridLayout = () => {
-    setNumColumns((current) => (current === 2 ? 3 : 2));
-  };
-
   const handleUploadPress = () => {
     // Placeholder for your upload logic
     console.log("Upload functionality to be implemented");
   };
 
   //i have to add loading logic + animation
-
-  const renderItem = ({ item, index }: { item: ImageType; index: number }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedImageIndex(index);
-          setModalVisible(true);
-        }}
-        activeOpacity={0.7}
-        style={styles.cardContainer}
-      >
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: item.uri }} style={styles.image} />
-          <View style={styles.textContainer}>
-            <Text
-              style={styles.imageTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {item.title}
-            </Text>
-            <Text style={styles.imageDate}>{item.date}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.moreIcon}
-            onPress={() => {
-              /* Handle more options */
-            }}
-          >
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={numColumns === 3 ? 24 : 30}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   // Custom Header
   const renderHeader = (currentIndex: number = 0) => (
@@ -179,20 +130,54 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   );
 
   useEffect(() => {
-    if (route.params?.toggleLayout) {
-      setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
-      // Reset the parameter after handling
-      navigation.setParams({ toggleLayout: false });
-    }
-  }, [route.params?.toggleLayout, navigation]);
+    navigation.setOptions({
+      headerRight: () => (
+        <>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("lol");
+              Vibration.vibrate(50);
+            }}
+            style={{ marginRight: 20 }}
+          >
+            <MaterialCommunityIcons
+              name="upload-outline"
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
+              Vibration.vibrate(50);
+            }}
+            style={{ marginRight: 10 }}
+          >
+            <MaterialCommunityIcons
+              name={numColumns === 2 ? "view-grid-outline" : "grid"}
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
+        </>
+      ),
+    });
+  }, [navigation, numColumns]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{folderName}</Text>
-
       <FlatList
         data={images}
-        renderItem={renderItem}
+        renderItem={({ item, index }) => (
+          <ImageCard
+            item={item}
+            index={index}
+            setSelectedImageIndex={setSelectedImageIndex}
+            setModalVisible={setModalVisible}
+            numColumns={numColumns}
+          />
+        )}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         contentContainerStyle={styles.imagesContainer}
@@ -235,7 +220,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#333",
   },
-
   imagesContainer: {
     paddingHorizontal: 10,
   },
@@ -269,46 +253,6 @@ const styles = StyleSheet.create({
     right: 0,
     width: 50,
     height: "100%",
-  },
-  cardContainer: {
-    flex: 1,
-    padding: 8,
-    paddingBottom: 20,
-    width: "100%",
-  },
-  imageContainer: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5, // for Android
-    flexDirection: "column",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    aspectRatio: 1,
-    borderRadius: 8,
-  },
-  textContainer: {
-    padding: 8,
-  },
-  imageTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  imageDate: {
-    fontSize: 14,
-    color: "gray",
-  },
-  moreIcon: {
-    position: "absolute",
-    right: 0,
-    top: 5,
   },
 });
 
