@@ -13,7 +13,7 @@ const Home: FC<Props> = (props) => {
     useCallback(() => {
       // Enable the drawer gesture and header when HomeScreen is focused
       const parent = navigation.getParent();
-      parent?.setOptions({ swipeEnabled: true, headerShown: true });
+      //parent?.setOptions({ swipeEnabled: true, headerShown: true });
 
       return () => {
         // Disable the drawer gesture and header when HomeScreen is not focused
