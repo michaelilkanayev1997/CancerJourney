@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-type ImageType = {
+export type ImageType = {
   id: string;
   uri: string;
   title: string;

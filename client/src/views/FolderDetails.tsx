@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
   TouchableOpacity,
   Modal,
   Vibration,
@@ -15,6 +14,7 @@ import ImageZoomViewer from "react-native-image-zoom-viewer";
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ImageCard from "@components/ImageCard";
+import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
 
 // Placeholder images for demonstration
 const images = [
@@ -112,23 +112,6 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
 
   //i have to add loading logic + animation
 
-  // Custom Header
-  const renderHeader = (currentIndex: number = 0) => (
-    <View style={styles.headerContainer}>
-      <TouchableOpacity
-        style={styles.arrowLeftContainer}
-        onPress={() => setModalVisible(false)}
-      >
-        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
-      </TouchableOpacity>
-      <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">
-        {images[currentIndex].title.substring(0, 16)} -{" "}
-        {images[currentIndex].date}
-      </Text>
-      <View style={styles.placeholderView}></View>
-    </View>
-  );
-
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -197,7 +180,13 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             onSwipeDown={() => setModalVisible(false)}
             enableSwipeDown={true}
             backgroundColor="white"
-            renderHeader={(index) => renderHeader(index)}
+            renderHeader={(index) => (
+              <ImageZoomCustomHeader
+                currentIndex={index || 0}
+                setModalVisible={setModalVisible}
+                images={images}
+              />
+            )}
             useNativeDriver={true}
           />
         </Modal>
@@ -222,37 +211,6 @@ const styles = StyleSheet.create({
   },
   imagesContainer: {
     paddingHorizontal: 10,
-  },
-  headerContainer: {
-    padding: 28,
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  headerText: {
-    color: "black",
-    fontSize: 18,
-    position: "absolute",
-    left: 0,
-    right: 0,
-    textAlign: "center",
-  },
-  arrowLeftContainer: {
-    position: "absolute",
-    left: 6,
-    zIndex: 1,
-  },
-  arrowText: {
-    fontSize: 18,
-    color: "black",
-  },
-  placeholderView: {
-    position: "absolute",
-    right: 0,
-    width: 50,
-    height: "100%",
   },
 });
 
