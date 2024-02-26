@@ -12,7 +12,9 @@ const Settings: FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
 });
 
 export default Settings;
