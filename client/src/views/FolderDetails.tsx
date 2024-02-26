@@ -5,14 +5,16 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
   TouchableOpacity,
   Modal,
+  Vibration,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ImageCard from "@components/ImageCard";
+import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
 
 // Placeholder images for demonstration
 const images = [
@@ -90,13 +92,6 @@ const images = [
   },
 ];
 
-type ImageType = {
-  id: string;
-  uri: string;
-  title: string;
-  date: string;
-};
-
 type FolderDetailsProps = NativeStackScreenProps<
   UploadStackParamList,
   "FolderDetails"
@@ -110,11 +105,6 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     null
   );
 
-  // Function to toggle grid layout
-  const toggleGridLayout = () => {
-    setNumColumns((current) => (current === 2 ? 3 : 2));
-  };
-
   const handleUploadPress = () => {
     // Placeholder for your upload logic
     console.log("Upload functionality to be implemented");
@@ -122,77 +112,55 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
 
   //i have to add loading logic + animation
 
-  const renderItem = ({ item, index }: { item: ImageType; index: number }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedImageIndex(index);
-          setModalVisible(true);
-        }}
-        activeOpacity={0.7}
-        style={styles.cardContainer}
-      >
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: item.uri }} style={styles.image} />
-          <View style={styles.textContainer}>
-            <Text
-              style={styles.imageTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {item.title}
-            </Text>
-            <Text style={styles.imageDate}>{item.date}</Text>
-          </View>
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <>
           <TouchableOpacity
-            style={styles.moreIcon}
             onPress={() => {
-              /* Handle more options */
+              console.log("lol");
+              Vibration.vibrate(50);
             }}
+            style={{ marginRight: 20 }}
           >
             <MaterialCommunityIcons
-              name="dots-vertical"
-              size={numColumns === 3 ? 24 : 30}
+              name="upload-outline"
+              size={24}
               color="black"
             />
           </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  // Custom Header
-  const renderHeader = (currentIndex: number = 0) => (
-    <View style={styles.headerContainer}>
-      <TouchableOpacity
-        style={styles.arrowLeftContainer}
-        onPress={() => setModalVisible(false)}
-      >
-        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
-      </TouchableOpacity>
-      <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">
-        {images[currentIndex].title.substring(0, 16)} -{" "}
-        {images[currentIndex].date}
-      </Text>
-      <View style={styles.placeholderView}></View>
-    </View>
-  );
-
-  useEffect(() => {
-    if (route.params?.toggleLayout) {
-      setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
-      // Reset the parameter after handling
-      navigation.setParams({ toggleLayout: false });
-    }
-  }, [route.params?.toggleLayout, navigation]);
+          <TouchableOpacity
+            onPress={() => {
+              setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
+              Vibration.vibrate(50);
+            }}
+            style={{ marginRight: 10 }}
+          >
+            <MaterialCommunityIcons
+              name={numColumns === 2 ? "view-grid-outline" : "grid"}
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
+        </>
+      ),
+    });
+  }, [navigation, numColumns]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{folderName}</Text>
-
       <FlatList
         data={images}
-        renderItem={renderItem}
+        renderItem={({ item, index }) => (
+          <ImageCard
+            item={item}
+            index={index}
+            setSelectedImageIndex={setSelectedImageIndex}
+            setModalVisible={setModalVisible}
+            numColumns={numColumns}
+          />
+        )}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         contentContainerStyle={styles.imagesContainer}
@@ -212,7 +180,13 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             onSwipeDown={() => setModalVisible(false)}
             enableSwipeDown={true}
             backgroundColor="white"
-            renderHeader={(index) => renderHeader(index)}
+            renderHeader={(index) => (
+              <ImageZoomCustomHeader
+                currentIndex={index || 0}
+                setModalVisible={setModalVisible}
+                images={images}
+              />
+            )}
             useNativeDriver={true}
           />
         </Modal>
@@ -235,80 +209,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#333",
   },
-
   imagesContainer: {
     paddingHorizontal: 10,
-  },
-  headerContainer: {
-    padding: 28,
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  headerText: {
-    color: "black",
-    fontSize: 18,
-    position: "absolute",
-    left: 0,
-    right: 0,
-    textAlign: "center",
-  },
-  arrowLeftContainer: {
-    position: "absolute",
-    left: 6,
-    zIndex: 1,
-  },
-  arrowText: {
-    fontSize: 18,
-    color: "black",
-  },
-  placeholderView: {
-    position: "absolute",
-    right: 0,
-    width: 50,
-    height: "100%",
-  },
-  cardContainer: {
-    flex: 1,
-    padding: 8,
-    paddingBottom: 20,
-    width: "100%",
-  },
-  imageContainer: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5, // for Android
-    flexDirection: "column",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    aspectRatio: 1,
-    borderRadius: 8,
-  },
-  textContainer: {
-    padding: 8,
-  },
-  imageTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  imageDate: {
-    fontSize: 14,
-    color: "gray",
-  },
-  moreIcon: {
-    position: "absolute",
-    right: 0,
-    top: 5,
   },
 });
 

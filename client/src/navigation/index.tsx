@@ -12,7 +12,6 @@ import {
   updateViewedOnBoardingState,
 } from "src/store/auth";
 import AuthNavigator from "./AuthNavigator";
-import TabNavigator from "./TabNavigator";
 import {
   Keys,
   clearAsyncStorage,

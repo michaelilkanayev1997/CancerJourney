@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 
 import FolderDetails from "@views/FolderDetails";
 import Upload from "@views/bottomTab/Upload";
@@ -25,42 +24,13 @@ const UploadFileNavigator = () => {
       <Stack.Screen
         name="FolderDetails"
         component={FolderDetails}
-        options={({ navigation }) => ({
+        options={{
           headerTitle: () => (
             <View style={{ marginLeft: -25 }}>
               <Text style={{ fontSize: 20 }}>Folder Details</Text>
             </View>
           ),
-
-          headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("SomeUploadScreen");
-                }}
-                style={{ marginRight: 15 }}
-              >
-                <MaterialCommunityIcons
-                  name="upload-outline"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.setParams({ toggleLayout: true });
-                }}
-                style={{ marginRight: 10 }}
-              >
-                <MaterialCommunityIcons
-                  name="view-grid-outline"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-            </View>
-          ),
-        })}
+        }}
       />
     </Stack.Navigator>
   );
