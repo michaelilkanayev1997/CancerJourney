@@ -6,7 +6,6 @@ import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
 import Settings from "@views/bottomTab/Settings";
 import UploadFileNavigator from "./UploadFileNavigator";
-import DrawerNavigator from "./DrawerNavigator";
 import Home from "@views/bottomTab/Home";
 
 const Tab = createBottomTabNavigator();

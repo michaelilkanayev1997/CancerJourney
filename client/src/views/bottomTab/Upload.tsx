@@ -10,10 +10,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { FolderList, Folder, IconName } from "@ui/Folder";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { UploadStackParamList } from "src/@types/navigation";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -27,10 +29,11 @@ const folders: Array<{ name: string; icon: IconName; key: string }> = [
 
 interface Props {}
 
-const Upload: FC<Props> = ({ navigation }) => {
+const Upload: FC<Props> = (props) => {
   const scale = useSharedValue(0.8); // Start from a smaller scale
   const paddingBottom = useSharedValue(0); // Initial paddingBottom
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
   const [numColumns, setNumColumns] = useState<number>(2);
 
   useFocusEffect(
