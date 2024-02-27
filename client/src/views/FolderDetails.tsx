@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   View,
@@ -10,11 +10,13 @@ import {
   Vibration,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ImageCard from "@components/ImageCard";
 import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
+import CustomBottomSheet from "@components/CustomBottomSheet";
 
 // Placeholder images for demonstration
 const images = [
@@ -106,10 +108,11 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
+  const bottomSheetModalRef = useRef<BottomSheet>(null);
 
   const handleUploadPress = () => {
-    // Placeholder for your upload logic
-    console.log("Upload functionality to be implemented");
+    Vibration.vibrate(50);
+    bottomSheetModalRef.current?.expand();
   };
 
   //i have to add loading logic + animation
@@ -119,10 +122,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
       headerRight: () => (
         <>
           <TouchableOpacity
-            onPress={() => {
-              console.log("lol");
-              Vibration.vibrate(50);
-            }}
+            onPress={handleUploadPress}
             style={{ marginRight: 20 }}
           >
             <MaterialCommunityIcons
@@ -193,6 +193,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
           />
         </Modal>
       )}
+      <CustomBottomSheet ref={bottomSheetModalRef} title="So cool much sheet" />
     </View>
   );
 };

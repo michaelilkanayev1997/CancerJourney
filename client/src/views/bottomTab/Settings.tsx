@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 interface Props {}
 
 const Settings: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
+      <Text>Settings 🎉</Text>
     </View>
   );
 };

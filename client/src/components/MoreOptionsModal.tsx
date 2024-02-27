@@ -9,6 +9,7 @@ import {
   Vibration,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
 

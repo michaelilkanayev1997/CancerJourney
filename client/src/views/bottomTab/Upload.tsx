@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -17,6 +17,7 @@ import { FolderList, Folder, IconName } from "@ui/Folder";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
+import CustomBottomSheet from "@components/CustomBottomSheet";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -110,7 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    backgroundColor: colors.PRIMARY_LIGHT,
   },
 });
 
