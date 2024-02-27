@@ -9,6 +9,7 @@ import LottieAnimation from "@components/LottieAnimation";
 import store from "./src/store";
 import AppNavigator from "src/navigation";
 import AppContainer from "@components/AppContainer";
+import PreloadIcons from "@components/PreloadIcons";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -38,6 +39,7 @@ const App = () => {
 
   return (
     <Animated.View style={styles.container}>
+      <PreloadIcons />
       {showAnimatedSplash ? (
         <LottieAnimation
           onAnimationFinish={(isCancelled) => {

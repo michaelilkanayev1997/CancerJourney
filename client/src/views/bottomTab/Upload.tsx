@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   FlatList,
@@ -16,6 +16,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FolderList, Folder, IconName } from "@ui/Folder";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { UploadStackParamList } from "src/@types/navigation";
+import colors from "@utils/colors";
+import CustomBottomSheet from "@components/CustomBottomSheet";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -32,6 +34,8 @@ interface Props {}
 const Upload: FC<Props> = (props) => {
   const scale = useSharedValue(0.8); // Start from a smaller scale
   const paddingBottom = useSharedValue(0); // Initial paddingBottom
+  const backgroundColor = useSharedValue(colors.PRIMARY);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
   const [numColumns, setNumColumns] = useState<number>(2);
@@ -41,10 +45,14 @@ const Upload: FC<Props> = (props) => {
       // Animate in when the component is focused
       scale.value = withTiming(1, { duration: 300 }); // Scale to normal size
       paddingBottom.value = withTiming(80, { duration: 300 }); // Animate paddingBottom to 80
+      backgroundColor.value = withTiming(colors.PRIMARY_LIGHT, {
+        duration: 600,
+      });
       return () => {
         // Animate out when the component loses focus
         scale.value = withTiming(0.5, { duration: 300 }); // Scale down a bit
         paddingBottom.value = withTiming(0, { duration: 300 }); // Animate back to 0 on exit
+        backgroundColor.value = withTiming(colors.PRIMARY, { duration: 600 });
       };
     }, [])
   );
@@ -53,6 +61,7 @@ const Upload: FC<Props> = (props) => {
     return {
       transform: [{ scale: scale.value }],
       paddingBottom: paddingBottom.value,
+      backgroundColor: backgroundColor.value,
     };
   });
 
@@ -102,7 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#F5FCFF",
   },
 });
 

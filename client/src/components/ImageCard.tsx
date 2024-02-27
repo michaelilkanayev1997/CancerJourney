@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   Vibration,
   Image,
-  Modal,
-  TextInput,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "@utils/colors";
+
+import MoreOptionsModal from "./MoreOptionsModal";
 
 export type ImageType = {
   id: string;
@@ -36,11 +35,11 @@ const ImageCard = ({
   setModalVisible,
   numColumns,
 }: Props) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isOptionModalVisible, setOptionModalVisible] = useState(false);
 
   const handleMoreOptionsPress = () => {
-    setIsModalVisible(true);
-    Vibration.vibrate(50);
+    setOptionModalVisible(true);
+    Vibration.vibrate(60);
   };
 
   return (
@@ -50,6 +49,7 @@ const ImageCard = ({
           setSelectedImageIndex(index);
           setModalVisible(true);
         }}
+        onLongPress={handleMoreOptionsPress}
         activeOpacity={0.6}
         style={styles.cardContainer}
       >
@@ -79,84 +79,11 @@ const ImageCard = ({
       </TouchableOpacity>
 
       {/* Custom Modal for More Options */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsModalVisible(false)} // This is for Android's back button
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPressOut={() => setIsModalVisible(false)} // Dismiss modal on outside press
-        >
-          <View
-            style={styles.modalContent}
-            onStartShouldSetResponder={() => true}
-          >
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setIsModalVisible(false)}
-            >
-              <MaterialCommunityIcons name="close" size={24} color="#333" />
-            </TouchableOpacity>
-
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => {
-                console.log("lol");
-              }}
-              value={item.title}
-              placeholder="Title"
-            />
-
-            <TextInput
-              style={[styles.input, styles.descriptionInput]}
-              onChangeText={(text) => {
-                console.log("lol");
-              }}
-              value={item.description ? item.description : ""}
-              placeholder="Description"
-              multiline={true}
-              maxLength={200}
-            />
-
-            <View style={styles.dateContainer}>
-              <MaterialCommunityIcons
-                name="calendar-clock"
-                size={16}
-                color={colors.LIGHT_BLUE}
-              />
-              <Text style={styles.modalText}>{item.date}</Text>
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => console.log("Delete")}
-                style={styles.modalActionButton}
-              >
-                <MaterialCommunityIcons
-                  name="delete"
-                  size={20}
-                  color={colors.ERROR}
-                />
-                <Text style={styles.actionButtonText}>Delete</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => console.log("Update")}
-                style={styles.modalActionButton}
-              >
-                <MaterialCommunityIcons
-                  name="update"
-                  size={20}
-                  color={colors.INFO}
-                />
-                <Text style={styles.actionButtonText}>Update</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <MoreOptionsModal
+        item={item}
+        isOptionModalVisible={isOptionModalVisible}
+        setOptionModalVisible={setOptionModalVisible}
+      />
     </>
   );
 };
@@ -201,85 +128,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.3)",
-  },
-  closeButton: {
-    alignSelf: "flex-end",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 15,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  modalText: {
-    marginLeft: 5,
-    fontSize: 14,
-    color: "black",
-  },
-  buttonContainer: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "100%",
-  },
-  modalActionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
-    padding: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    elevation: 2, // for Android
-    shadowColor: "#000", // for iOS
-    shadowOffset: { width: 0, height: 1 }, // for iOS
-    shadowOpacity: 0.22, // for iOS
-    shadowRadius: 2.22, // for iOS
-  },
-  actionButtonText: {
-    marginLeft: 5,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: "85%",
-    borderRadius: 5,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
-  },
-  descriptionInput: {
-    height: 100, // Larger height for the description field
-    textAlignVertical: "top", // Align text to the top for multiline input
-  },
-  dateContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 5,
-    marginBottom: 15,
   },
 });
 

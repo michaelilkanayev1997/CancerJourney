@@ -1,4 +1,5 @@
 const PRIMARY = "#eefcfc";
+const PRIMARY_LIGHT = "#F5FCFF";
 const PRIMARY_BTN = "#0FABCD";
 const PRIMARY_DARK1 = "#b4ecfb";
 const PRIMARY_DARK2 = "#ccf3fb";
@@ -21,6 +22,7 @@ const LIGHT_GREEN = "#E8F8F5";
 
 const colors = {
   PRIMARY,
+  PRIMARY_LIGHT,
   Google_BTN_PRESSED,
   LIGHT_GRAY,
   PRIMARY_BTN,
@@ -39,7 +41,7 @@ const colors = {
   RELAX,
   ICON,
   LIGHT_BLUE,
-  LIGHT_GREEN
+  LIGHT_GREEN,
 };
 
 export default colors;
