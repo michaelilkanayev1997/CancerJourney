@@ -1,5 +1,13 @@
 import { JSX, forwardRef, useCallback, useMemo, useState } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Alert,
+  Linking,
+  Button,
+  Image,
+} from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
@@ -17,6 +25,10 @@ interface Props {
 
 const CustomBottomSheet = forwardRef<BottomSheet, Props>(({ title }, ref) => {
   const snapPoints = useMemo(() => ["60%"], []);
+  const [cameraPermissonInformation, requestPermission] =
+    ImagePicker.useCameraPermissions();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const renderBackdrop = useCallback(
     (
@@ -31,14 +43,28 @@ const CustomBottomSheet = forwardRef<BottomSheet, Props>(({ title }, ref) => {
     []
   );
 
-  const [selectedImage, setSelectedImage] = useState(null);
-
   const takeImage = async () => {
     // Request camera permissions
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    console.log(permissionResult);
+    if (permissionResult.status === "denied" && !permissionResult.canAskAgain) {
+      // Alert the user that they need to manually allow camera access
+      Alert.alert(
+        "Camera Permission Required",
+        "Please go to your settings and allow camera access for this app.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          // Open device settings to allow the user to change permission
+          { text: "Open Settings", onPress: () => Linking.openSettings() },
+        ]
+      );
+      return;
+    }
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this app to access your camera!");
       return;
     }
 
@@ -57,8 +83,15 @@ const CustomBottomSheet = forwardRef<BottomSheet, Props>(({ title }, ref) => {
 
   const pickDocument = async () => {
     try {
-      const docRes = await DocumentPicker.getDocumentAsync({});
-      console.log(docRes);
+      const docRes = await DocumentPicker.getDocumentAsync({
+        type: [
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "image/*",
+        ],
+        multiple: false,
+      });
 
       const formData = new FormData();
       const assets = docRes.assets;
@@ -72,6 +105,8 @@ const CustomBottomSheet = forwardRef<BottomSheet, Props>(({ title }, ref) => {
         type: file.mimeType,
         size: file.size,
       };
+
+      setSelectedFile(File);
       console.log(File);
     } catch (error) {
       console.log(error);
@@ -111,6 +146,28 @@ const CustomBottomSheet = forwardRef<BottomSheet, Props>(({ title }, ref) => {
             onPress={() => ref?.current?.close()}
           />
         </View>
+        <View style={styles.container}>
+          {selectedFile && (
+            <>
+              {selectedFile.type.includes("image/") ? (
+                <>
+                  <Image
+                    source={{ uri: selectedFile.uri }}
+                    style={styles.preview}
+                  />
+                </>
+              ) : (
+                <>
+                  <Text>Preview not available for this file type.</Text>
+                  <Button
+                    title="Open File"
+                    onPress={() => Linking.openURL(selectedFile.uri)}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
@@ -136,6 +193,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     gap: 10,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  preview: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+    marginTop: 20,
   },
 });
 

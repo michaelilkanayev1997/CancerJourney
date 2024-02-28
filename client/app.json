@@ -32,6 +32,14 @@
         "projectId": "659d5dcf-f970-42c1-af82-cf8c0ded5f9e"
       }
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app needs access to your camera in order to take photos."
+        }
+      ]
+    ],
     "scheme": "com.michaelilkanayev.client"
   }
 }
