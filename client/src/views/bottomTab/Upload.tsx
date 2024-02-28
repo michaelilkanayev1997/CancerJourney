@@ -32,7 +32,7 @@ const folders: Array<{ name: string; icon: IconName; key: string }> = [
 interface Props {}
 
 const Upload: FC<Props> = (props) => {
-  const scale = useSharedValue(0.8); // Start from a smaller scale
+  const scale = useSharedValue(0.5); // Start from a smaller scale
   const paddingBottom = useSharedValue(0); // Initial paddingBottom
   const backgroundColor = useSharedValue(colors.PRIMARY);
 

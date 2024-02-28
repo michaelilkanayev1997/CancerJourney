@@ -125,11 +125,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             onPress={handleUploadPress}
             style={{ marginRight: 20 }}
           >
-            <MaterialCommunityIcons
-              name="upload-outline"
-              size={24}
-              color="black"
-            />
+            <MaterialCommunityIcons name="plus" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {

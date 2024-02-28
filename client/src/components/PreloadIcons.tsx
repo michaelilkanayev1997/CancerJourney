@@ -13,7 +13,7 @@ const PreloadIcons: FC<Props> = (props) => {
     "file-image",
     "calendar-clock",
     "file-document-edit-outline",
-    "upload-outline",
+    "plus",
     "view-grid-outline",
     "view-list-outline",
     "file-outline",
