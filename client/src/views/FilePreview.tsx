@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,28 +7,56 @@ import {
   TextInput,
   Button,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import * as Linking from "expo-linking";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { UploadStackParamList } from "src/@types/navigation";
+import AppButton from "@ui/AppButton";
 
 interface Props {}
 
-const FilePreview: FC<Props> = (props) => {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { fileUri, fileType } = route.params;
+type FilePreviewRouteType = NativeStackScreenProps<
+  UploadStackParamList,
+  "FilePreview"
+>;
 
+const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
+  const navigation = useNavigation();
+  const { fileUri, fileType } = route.params;
+  const scrollViewRef = useRef<ScrollView>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const handleSave = () => {
-    // Process the title, description, and fileUri as needed
     console.log({ title, description, fileUri });
     navigation.goBack(); // Or navigate elsewhere
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+        console.log("Keyboard hidden");
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+        }
+      });
+
+      return () => {
+        // Cleanup
+        hideSubscription.remove();
+      };
+    }, [])
+  );
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      ref={scrollViewRef}
+      contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
+      overScrollMode="never"
+    >
       {fileType.includes("image/") && (
         <Image
           source={{ uri: fileUri }}
@@ -41,9 +69,10 @@ const FilePreview: FC<Props> = (props) => {
           Open PDF
         </Text>
       )}
+
       <TextInput
         style={styles.input}
-        placeholder="Title"
+        placeholder="Title*"
         value={title}
         onChangeText={setTitle}
       />
@@ -54,7 +83,13 @@ const FilePreview: FC<Props> = (props) => {
         onChangeText={setDescription}
         multiline
       />
-      <Button title="Save" onPress={handleSave} />
+
+      <AppButton
+        title="Save"
+        pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+        defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+        onPress={() => console.log("Save")}
+      />
     </ScrollView>
   );
 };
@@ -65,8 +100,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   preview: {
-    width: 300,
-    height: 300,
+    width: 250,
+    height: 250,
     marginBottom: 20,
   },
   link: {
@@ -84,6 +119,7 @@ const styles = StyleSheet.create({
   descriptionInput: {
     height: 100,
     textAlignVertical: "top",
+    marginBottom: 15,
   },
 });
 

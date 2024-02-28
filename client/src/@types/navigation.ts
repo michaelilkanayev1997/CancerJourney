@@ -19,4 +19,8 @@ export type UploadStackParamList = {
     folderName: string;
     toggleLayout?: boolean;
   };
+  FilePreview: {
+    fileUri: string;
+    fileType: string;
+  };
 };
