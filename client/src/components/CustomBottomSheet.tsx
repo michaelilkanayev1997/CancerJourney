@@ -1,13 +1,5 @@
-import { JSX, forwardRef, useCallback, useMemo, useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  Alert,
-  Linking,
-  Button,
-  Image,
-} from "react-native";
+import { JSX, forwardRef, useCallback, useMemo } from "react";
+import { Text, StyleSheet, View, Alert, Linking } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
@@ -16,22 +8,21 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import colors from "@utils/colors";
 import AppButton from "@ui/AppButton";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { UploadStackParamList } from "src/@types/navigation";
 
 interface Props {}
 
 const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
   (props, ref) => {
     const snapPoints = useMemo(() => ["60%"], []);
-    const [cameraPermissonInformation, requestPermission] =
-      ImagePicker.useCameraPermissions();
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const navigation = useNavigation();
+    const navigation =
+      useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
 
     const renderBackdrop = useCallback(
       (
@@ -46,41 +37,43 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       []
     );
 
-    const takeImage = async () => {
-      // Request camera permissions
-      const permissionResult =
+    const requestPermissionsAsync = async () => {
+      const { status, canAskAgain } =
         await ImagePicker.requestCameraPermissionsAsync();
 
-      if (
-        permissionResult.status === "denied" &&
-        !permissionResult.canAskAgain
-      ) {
-        // Alert the user that they need to manually allow camera access
+      if (status === "granted") {
+        return true;
+      } else if (status === "denied" && !canAskAgain) {
+        // User has denied permissions and cannot ask again. Prompt them to manually enable it.
         Alert.alert(
           "Camera Permission Required",
           "Please go to your settings and allow camera access for this app.",
           [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            // Open device settings to allow the user to change permission
+            { text: "Cancel", style: "cancel" },
             { text: "Open Settings", onPress: () => Linking.openSettings() },
           ]
         );
-        return;
+      } else {
+        // General denial without restriction to ask again
+        Alert.alert(
+          "Permissions required",
+          "Camera access is needed to take photos."
+        );
       }
+      return false;
+    };
 
-      if (permissionResult.granted === false) {
-        return;
-      }
+    const takeImage = async () => {
+      // Request camera permissions
+      const hasPermission = await requestPermissionsAsync();
+      if (!hasPermission) return;
 
       // Open the camera with ImagePicker
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true, // Allows editing the picture
         quality: 1, // Highest quality
       });
-      console.log(result);
+
       // If the user doesn't cancel, set the selected image
       if (!result.canceled) {
         const file = result.assets[0];
@@ -89,7 +82,13 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           uri: file.uri,
           type: file.mimeType,
         };
-        setSelectedImage(File);
+
+        if (File.type) {
+          navigation.navigate("FilePreview", {
+            fileUri: File.uri,
+            fileType: File.type,
+          });
+        }
       }
     };
 
@@ -117,14 +116,12 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           size: file.size,
         };
 
-        setSelectedFile(File);
-
-        navigation.navigate("FilePreview", {
-          fileUri: File.uri,
-          fileType: File.type,
-        });
-
-        console.log(File);
+        if (File.type) {
+          navigation.navigate("FilePreview", {
+            fileUri: File.uri,
+            fileType: File.type,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -188,28 +185,6 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
               onPress={handleCanecl}
             />
           </View>
-          <View style={styles.container}>
-            {selectedImage && (
-              <>
-                {selectedImage.type.includes("image/") ? (
-                  <>
-                    <Image
-                      source={{ uri: selectedImage.uri }}
-                      style={styles.preview}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Text>Preview not available for this file type.</Text>
-                    <Button
-                      title="Open File"
-                      onPress={() => Linking.openURL(selectedImage.uri)}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </View>
         </BottomSheetView>
       </BottomSheet>
     );
@@ -236,18 +211,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     gap: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  preview: {
-    width: 300,
-    height: 300,
-    resizeMode: "contain",
-    marginTop: 20,
   },
 });
 

@@ -19,6 +19,7 @@ const TabNavigator = () => {
         tabBarStyle: {
           ...styles.tabBarStyle,
         },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
