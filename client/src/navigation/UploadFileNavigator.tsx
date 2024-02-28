@@ -4,6 +4,7 @@ import { Text, View } from "react-native";
 import FolderDetails from "@views/FolderDetails";
 import Upload from "@views/bottomTab/Upload";
 import { UploadStackParamList } from "src/@types/navigation";
+import FilePreview from "@views/FilePreview";
 
 const Stack = createNativeStackNavigator<UploadStackParamList>();
 
@@ -32,6 +33,7 @@ const UploadFileNavigator = () => {
           ),
         }}
       />
+      <Stack.Screen name="FilePreview" component={FilePreview} />
     </Stack.Navigator>
   );
 };
