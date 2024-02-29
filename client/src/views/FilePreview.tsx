@@ -1,19 +1,19 @@
 import { FC, useCallback, useRef, useState } from "react";
 import {
-  View,
   Text,
   StyleSheet,
   Image,
   TextInput,
-  Button,
   ScrollView,
   Keyboard,
 } from "react-native";
 import * as Linking from "expo-linking";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
+import { insertFile } from "@utils/localDatabase";
 
 interface Props {}
 
@@ -29,9 +29,10 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSave = () => {
-    console.log({ title, description, fileUri });
-    navigation.goBack(); // Or navigate elsewhere
+  const handleSave = async () => {
+    const result = await insertFile({ title, fileUri });
+    console.log(result);
+    //navigation.goBack(); // Or navigate elsewhere
   };
 
   useFocusEffect(
@@ -88,7 +89,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         title="Save"
         pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
         defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-        onPress={() => console.log("Save")}
+        onPress={handleSave}
       />
     </ScrollView>
   );
