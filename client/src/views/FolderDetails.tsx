@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   Vibration,
+  Image,
 } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -17,6 +18,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ImageCard from "@components/ImageCard";
 import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
 import CustomBottomSheet from "@components/CustomBottomSheet";
+import { fetchFiles } from "@utils/localDatabase";
 
 // Placeholder images for demonstration
 const images = [
@@ -109,7 +111,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     null
   );
   const bottomSheetModalRef = useRef<BottomSheet>(null);
-
+  const [folderFiles, setFolderFiles] = useState([]);
   const handleUploadPress = () => {
     Vibration.vibrate(50);
     bottomSheetModalRef.current?.expand();
@@ -143,11 +145,26 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         </>
       ),
     });
+
+    const fetchFilesData = async () => {
+      const folderFiles = await fetchFiles();
+      setFolderFiles(folderFiles);
+    };
+    fetchFilesData();
   }, [navigation, numColumns]);
 
   return (
     <View style={styles.container}>
+      {folderFiles.length !== 0 &&
+        folderFiles.map((file) => (
+          <Image
+            key={file.fileUri}
+            source={{ uri: file.fileUri }}
+            style={{ width: 100, height: 100 }}
+          />
+        ))}
       <Text style={styles.title}>{folderName}</Text>
+
       <FlatList
         data={images}
         renderItem={({ item, index }) => (

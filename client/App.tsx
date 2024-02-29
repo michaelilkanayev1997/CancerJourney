@@ -10,6 +10,7 @@ import store from "./src/store";
 import AppNavigator from "src/navigation";
 import AppContainer from "@components/AppContainer";
 import PreloadIcons from "@components/PreloadIcons";
+import { dropTable, init } from "@utils/localDatabase";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -23,6 +24,8 @@ const App = () => {
     async function prepare() {
       try {
         // Pre-load fonts, make any API calls you need to do here
+        // const res = await dropTable();
+        const res1 = await init();
       } catch (e) {
         console.warn(e);
       } finally {
