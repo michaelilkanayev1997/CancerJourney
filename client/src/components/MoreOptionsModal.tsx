@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,8 +7,13 @@ import {
   TextInput,
   Text,
   Vibration,
+  Button,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as MailComposer from "expo-mail-composer";
+import * as FileSystem from "expo-file-system";
+import ProgressBar from "react-native-progress/Bar";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
@@ -24,6 +29,90 @@ const MoreOptionsModal: FC<Props> = ({
   isOptionModalVisible,
   setOptionModalVisible,
 }) => {
+  const [mailIsAviliable, setMailIsAviliable] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+  console.log(downloadProgress / 100);
+
+  const getFileExtensionFromUrl = (url: string) => {
+    // Use a regular expression to match the file extension
+    const match = url.match(/\.([0-9a-z]+)([\?#]|$)/i);
+    if (match && match.length > 1) {
+      // Return the file extension
+      return match[1];
+    }
+    // Return null if no extension found
+    return null;
+  };
+
+  useEffect(() => {
+    const checkMailAvilability = async () => {
+      const isMailAvilable = await MailComposer.isAvailableAsync();
+      setMailIsAviliable(isMailAvilable);
+    };
+    checkMailAvilability();
+  }, []);
+
+  const progressCallback = (progress: {
+    totalBytesWritten: number;
+    totalBytesExpectedToWrite: number;
+  }) => {
+    const percentProgress = (
+      (progress.totalBytesWritten / progress.totalBytesExpectedToWrite) *
+      100
+    ).toFixed(2);
+    setDownloadProgress(Number(percentProgress));
+  };
+
+  const downloadFileAndSendEmail = async () => {
+    setIsDownloading(true);
+    const imageUrl =
+      "https://wallpapers.com/images/featured/4k-nature-ztbad1qj8vdjqe0p.jpg";
+    const extension = getFileExtensionFromUrl(imageUrl);
+
+    let fileUri = "";
+    if (extension) {
+      const fileName = `File.${extension}`; // Extract filename from URL
+      fileUri = `${FileSystem.documentDirectory}${fileName}`; // Local URI to download the file to
+      console.log(fileUri);
+    } else {
+      Alert.alert("Error", "Could not attach file.");
+      return;
+    }
+
+    try {
+      // Download the file with progress callback
+      const downloadResumable = FileSystem.createDownloadResumable(
+        imageUrl,
+        fileUri,
+        {},
+        progressCallback
+      );
+
+      const downloadResult = await downloadResumable.downloadAsync();
+
+      if (!downloadResult) {
+        Alert.alert("Error", "Could not Download file.");
+        return;
+      }
+
+      setTimeout(async () => {
+        // Send the email with the downloaded file as attachment
+        await MailComposer.composeAsync({
+          subject: "Cancer Journey",
+          body: `Hi something,\n\nThanks for your interest in Cancer Journey!\n\nYou can find more information about the project here: https://cancerjourney.com\n\nBest regards,\n<NAME>`,
+          attachments: [downloadResult.uri],
+        });
+
+        // delete the downloaded file from the cache
+        await FileSystem.deleteAsync(fileUri);
+      }, 350);
+    } catch (error) {
+      console.error("An error occurred:", error);
+      Alert.alert("Error", "Failed to send email.");
+    }
+  };
+
   const handleCloseMoreOptionsPress = () => {
     setOptionModalVisible(false);
     Vibration.vibrate(40);
@@ -71,6 +160,42 @@ const MoreOptionsModal: FC<Props> = ({
             multiline={true}
             maxLength={200}
           />
+
+          {mailIsAviliable ? (
+            <>
+              <TouchableOpacity
+                onPress={downloadFileAndSendEmail}
+                style={styles.iconButton}
+              >
+                <MaterialCommunityIcons
+                  name="email-outline"
+                  size={24}
+                  color="#fff"
+                />
+                <Text style={styles.iconButtonText}>Send Email</Text>
+              </TouchableOpacity>
+
+              <View
+                style={[
+                  styles.progressContainer,
+                  { opacity: isDownloading ? 1 : 0 },
+                ]}
+              >
+                <ProgressBar
+                  progress={downloadProgress / 100}
+                  width={200}
+                  color={colors.LIGHT_BLUE}
+                  animated={true}
+                  useNativeDriver={true}
+                />
+                <Text style={styles.progressText}>
+                  Progress: {downloadProgress}%
+                </Text>
+              </View>
+            </>
+          ) : (
+            <Text>Email not available</Text>
+          )}
 
           <View style={styles.dateContainer}>
             <MaterialCommunityIcons
@@ -185,6 +310,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
     marginBottom: 15,
+  },
+  iconButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.LIGHT_BLUE,
+    padding: 10,
+    borderRadius: 5,
+  },
+  iconButtonText: {
+    color: "#fff",
+    marginLeft: 8,
+  },
+  progressContainer: {
+    padding: 10,
+  },
+  progressText: {
+    textAlign: "center",
+    marginTop: 4,
   },
 });
 
