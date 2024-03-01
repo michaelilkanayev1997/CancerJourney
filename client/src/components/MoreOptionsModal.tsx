@@ -35,76 +35,70 @@ const MoreOptionsModal: FC<Props> = ({
       visible={isOptionModalVisible}
       transparent={true}
       animationType="fade"
-      onRequestClose={handleCloseMoreOptionsPress} // for Android's back button
+      onRequestClose={handleCloseMoreOptionsPress} // Android back button
     >
       <TouchableOpacity
         style={styles.modalOverlay}
         activeOpacity={1}
-        onPressOut={handleCloseMoreOptionsPress} // Dismiss modal on outside press
+        onPressOut={handleCloseMoreOptionsPress}
       >
         <View
           style={styles.modalContent}
           onStartShouldSetResponder={() => true}
         >
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={handleCloseMoreOptionsPress}
-          >
-            <MaterialCommunityIcons name="close" size={24} color="#333" />
-          </TouchableOpacity>
+          <View style={styles.header}>
+            <View style={styles.dateHeader}>
+              <MaterialCommunityIcons
+                name="calendar-clock"
+                size={20}
+                color={colors.LIGHT_BLUE}
+              />
+              <Text style={styles.dateText}>{item.date}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={handleCloseMoreOptionsPress}
+            >
+              <MaterialCommunityIcons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
 
+          <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => {
-              console.log("lol");
+            onChangeText={() => {
+              console.log("Enter Name here");
             }}
             value={item.title}
-            placeholder="Title"
+            placeholder="Enter Name here"
           />
 
+          <Text style={styles.label}>Description</Text>
           <TextInput
             style={[styles.input, styles.descriptionInput]}
-            onChangeText={(text) => {
-              console.log("lol");
+            onChangeText={() => {
+              console.log("Enter description here");
             }}
-            value={item.description ? item.description : ""}
-            placeholder="Description"
-            multiline={true}
-            maxLength={200}
+            value={item.description || ""}
+            placeholder="Enter description here"
+            multiline
           />
 
           <CustomMailComposer />
-
-          <View style={styles.dateContainer}>
-            <MaterialCommunityIcons
-              name="calendar-clock"
-              size={16}
-              color={colors.LIGHT_BLUE}
-            />
-            <Text style={styles.modalText}>{item.date}</Text>
-          </View>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => console.log("Delete")}
               style={styles.modalActionButton}
             >
-              <MaterialCommunityIcons
-                name="delete"
-                size={20}
-                color={colors.ERROR}
-              />
+              <MaterialCommunityIcons name="delete" size={20} color="#FF5C5C" />
               <Text style={styles.actionButtonText}>Delete</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => console.log("Update")}
               style={styles.modalActionButton}
             >
-              <MaterialCommunityIcons
-                name="update"
-                size={20}
-                color={colors.INFO}
-              />
+              <MaterialCommunityIcons name="update" size={20} color="#4A90E2" />
               <Text style={styles.actionButtonText}>Update</Text>
             </TouchableOpacity>
           </View>
@@ -123,11 +117,12 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: "flex-end",
+    marginBottom: 20,
   },
   modalContent: {
     backgroundColor: "white",
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 20,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -138,14 +133,43 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-
-  modalText: {
-    marginLeft: 5,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
+  dateHeader: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  dateText: {
+    marginLeft: 10,
+    fontSize: 15,
+  },
+  label: {
     fontSize: 14,
-    color: "black",
+    alignSelf: "flex-start",
+    marginLeft: 12,
+  },
+  input: {
+    height: 40,
+    margin: 8,
+    borderWidth: 1,
+    padding: 10,
+    width: "90%",
+    borderRadius: 5,
+    borderColor: "#ddd",
+    alignSelf: "center",
+  },
+  descriptionInput: {
+    height: 100,
+    textAlignVertical: "top",
   },
   buttonContainer: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
@@ -157,37 +181,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    elevation: 2, // for Android
-    shadowColor: "#000", // for iOS
-    shadowOffset: { width: 0, height: 1 }, // for iOS
-    shadowOpacity: 0.22, // for iOS
-    shadowRadius: 2.22, // for iOS
+    elevation: 2,
   },
   actionButtonText: {
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: "85%",
-    borderRadius: 5,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
-  },
-  descriptionInput: {
-    height: 100,
-    textAlignVertical: "top",
-  },
-  dateContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 5,
-    marginBottom: 15,
   },
 });
 

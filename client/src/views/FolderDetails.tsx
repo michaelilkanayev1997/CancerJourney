@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   View,
@@ -6,19 +6,15 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Modal,
   Vibration,
-  Image,
 } from "react-native";
-import ImageZoomViewer from "react-native-image-zoom-viewer";
 import BottomSheet from "@gorhom/bottom-sheet";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import ImageCard from "@components/ImageCard";
-import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
 import CustomBottomSheet from "@components/CustomBottomSheet";
-import { fetchFiles } from "@utils/localDatabase";
+import ImageCard from "@components/ImageCard";
+import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
 
 // Placeholder images for demonstration
 const images = [
@@ -107,21 +103,37 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   const { folderName } = route.params;
   const [numColumns, setNumColumns] = useState<number>(2);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
-  );
+  const [selectedImageIndex, setSelectedImageIndex] = useState<
+    number | undefined
+  >(undefined);
+
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [folderFiles, setFolderFiles] = useState([]);
 
-  const handleUploadPress = () => {
+  const toggleModalVisible = useCallback(() => {
+    setModalVisible((prevVisible) => !prevVisible);
+  }, []);
+
+  const handleUploadPress = useCallback(() => {
     Vibration.vibrate(50);
     bottomSheetModalRef.current?.expand();
-  };
+  }, []);
+
+  const toggleNumColumns = useCallback(() => {
+    setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
+    Vibration.vibrate(50);
+  }, []);
 
   //i have to add loading logic + animation
 
   useEffect(() => {
+    console.log("lol");
     navigation.setOptions({
+      headerTitle: () => (
+        <View style={{ marginLeft: -25 }}>
+          <Text style={{ fontSize: 20 }}>{folderName}</Text>
+        </View>
+      ),
       headerRight: () => (
         <>
           <TouchableOpacity
@@ -131,10 +143,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             <MaterialCommunityIcons name="plus" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
-              Vibration.vibrate(50);
-            }}
+            onPress={toggleNumColumns}
             style={{ marginRight: 10 }}
           >
             <MaterialCommunityIcons
@@ -150,8 +159,6 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{folderName}</Text>
-
       <FlatList
         data={images}
         renderItem={({ item, index }) => (
@@ -159,7 +166,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             item={item}
             index={index}
             setSelectedImageIndex={setSelectedImageIndex}
-            setModalVisible={setModalVisible}
+            setModalVisible={toggleModalVisible}
             numColumns={numColumns}
           />
         )}
@@ -169,31 +176,14 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         key={numColumns}
       />
       {selectedImageIndex !== null && (
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          onRequestClose={() => setModalVisible(false)}
-          hardwareAccelerated={true}
-          animationType="fade"
-        >
-          <ImageZoomViewer
-            imageUrls={images.map((img) => ({ url: img.uri }))}
-            index={selectedImageIndex}
-            onSwipeDown={() => setModalVisible(false)}
-            enableSwipeDown={true}
-            backgroundColor="white"
-            renderHeader={(index) => (
-              <ImageZoomCustomHeader
-                currentIndex={index || 0}
-                setModalVisible={setModalVisible}
-                images={images}
-              />
-            )}
-            useNativeDriver={true}
-          />
-        </Modal>
+        <CustomImageZoomViewer
+          modalVisible={modalVisible}
+          toggleModalVisible={toggleModalVisible}
+          selectedImageIndex={selectedImageIndex}
+          images={images}
+        />
       )}
-      <CustomBottomSheet ref={bottomSheetModalRef} title="So cool much sheet" />
+      <CustomBottomSheet ref={bottomSheetModalRef} />
     </View>
   );
 };
@@ -204,13 +194,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: "#FFF",
     paddingBottom: 80,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 10,
-    color: "#333",
   },
   imagesContainer: {
     paddingHorizontal: 10,
