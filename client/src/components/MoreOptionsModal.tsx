@@ -7,7 +7,6 @@ import {
   TextInput,
   Text,
   Vibration,
-  Button,
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -65,6 +64,19 @@ const MoreOptionsModal: FC<Props> = ({
   };
 
   const downloadFileAndSendEmail = async () => {
+    if (!mailIsAviliable) {
+      Alert.alert(
+        "Set Up Email Account",
+        "To send an email, please ensure you have a default email account set up. You can do this in your device's settings under 'Accounts' or 'Mail'.",
+        [
+          {
+            text: "OK",
+          },
+        ]
+      );
+      return;
+    }
+
     setIsDownloading(true);
     const imageUrl =
       "https://wallpapers.com/images/featured/4k-nature-ztbad1qj8vdjqe0p.jpg";
@@ -161,41 +173,35 @@ const MoreOptionsModal: FC<Props> = ({
             maxLength={200}
           />
 
-          {mailIsAviliable ? (
-            <>
-              <TouchableOpacity
-                onPress={downloadFileAndSendEmail}
-                style={styles.iconButton}
-              >
-                <MaterialCommunityIcons
-                  name="email-outline"
-                  size={24}
-                  color="#fff"
-                />
-                <Text style={styles.iconButtonText}>Send Email</Text>
-              </TouchableOpacity>
+          <TouchableOpacity
+            onPress={downloadFileAndSendEmail}
+            style={styles.iconButton}
+          >
+            <MaterialCommunityIcons
+              name="email-outline"
+              size={24}
+              color="#fff"
+            />
+            <Text style={styles.iconButtonText}>Send Email</Text>
+          </TouchableOpacity>
 
-              <View
-                style={[
-                  styles.progressContainer,
-                  { opacity: isDownloading ? 1 : 0 },
-                ]}
-              >
-                <ProgressBar
-                  progress={downloadProgress / 100}
-                  width={200}
-                  color={colors.LIGHT_BLUE}
-                  animated={true}
-                  useNativeDriver={true}
-                />
-                <Text style={styles.progressText}>
-                  Progress: {downloadProgress}%
-                </Text>
-              </View>
-            </>
-          ) : (
-            <Text>Email not available</Text>
-          )}
+          <View
+            style={[
+              styles.progressContainer,
+              { opacity: isDownloading ? 1 : 0 },
+            ]}
+          >
+            <ProgressBar
+              progress={downloadProgress / 100}
+              width={200}
+              color={colors.LIGHT_BLUE}
+              animated={true}
+              useNativeDriver={true}
+            />
+            <Text style={styles.progressText}>
+              Progress: {downloadProgress}%
+            </Text>
+          </View>
 
           <View style={styles.dateContainer}>
             <MaterialCommunityIcons
