@@ -112,6 +112,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   );
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [folderFiles, setFolderFiles] = useState([]);
+
   const handleUploadPress = () => {
     Vibration.vibrate(50);
     bottomSheetModalRef.current?.expand();
@@ -145,24 +146,10 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         </>
       ),
     });
-
-    const fetchFilesData = async () => {
-      const folderFiles = await fetchFiles();
-      setFolderFiles(folderFiles);
-    };
-    fetchFilesData();
   }, [navigation, numColumns]);
 
   return (
     <View style={styles.container}>
-      {folderFiles.length !== 0 &&
-        folderFiles.map((file) => (
-          <Image
-            key={file.fileUri}
-            source={{ uri: file.fileUri }}
-            style={{ width: 100, height: 100 }}
-          />
-        ))}
       <Text style={styles.title}>{folderName}</Text>
 
       <FlatList
