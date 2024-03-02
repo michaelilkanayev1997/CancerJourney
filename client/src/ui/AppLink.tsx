@@ -21,7 +21,6 @@ const AppLink: React.FC<Props> = ({ title, active = true, onPress, style }) => {
 
   const handlePressIn = () => {
     setIsPressed(true);
-    // Vibrate for 50ms when the link is pressed
     Vibration.vibrate(40);
   };
 

@@ -13,7 +13,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
-import { insertFile } from "@utils/localDatabase";
 
 interface Props {}
 
@@ -30,8 +29,6 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const [description, setDescription] = useState("");
 
   const handleSave = async () => {
-    const result = await insertFile({ title, fileUri });
-    console.log(result);
     //navigation.goBack(); // Or navigate elsewhere
   };
 
