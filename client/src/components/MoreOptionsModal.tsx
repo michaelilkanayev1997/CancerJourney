@@ -95,7 +95,7 @@ const MoreOptionsModal: FC<Props> = ({
             multiline
           />
 
-          <ExportAndSendEmail />
+          <ExportAndSendEmail item={item} />
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
