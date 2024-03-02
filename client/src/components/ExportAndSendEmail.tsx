@@ -6,6 +6,7 @@ import {
   Vibration,
   TouchableOpacity,
   Text,
+  Platform,
 } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 import * as FileSystem from "expo-file-system";
@@ -106,7 +107,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     }
   };
 
-  const downloadFileAndSendEmail = async () => {
+  const sendEmail = async () => {
     setBusy(true);
     Vibration.vibrate(50);
     if (!mailIsAvailable) {
@@ -151,7 +152,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     }
   };
 
-  const downloadFileAndExport = async () => {
+  const exportAndShare = async () => {
     setBusy(true);
     Vibration.vibrate(50);
 
@@ -177,25 +178,114 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     }
   };
 
-  return (
+  const androidExportFile = async () => {
+    setBusy(true);
+    Vibration.vibrate(50);
+
+    if (await Sharing.isAvailableAsync()) {
+      const downloadResult = await downloadFile(); // Download the file
+
+      if (!downloadResult) {
+        Alert.alert("Download Error", "Failed to download the file.");
+        setBusy(false);
+        return;
+      }
+
+      setTimeout(async () => {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync(
+            "content://com.android.externalstorage.documents"
+          );
+
+        if (permissions.granted) {
+          // Check if the directoryUri contains 'externalstorage'
+          if (!permissions.directoryUri.includes("externalstorage")) {
+            // Inform the user to select a different directory
+            Alert.alert(
+              "Access Denied",
+              "Due to privacy restrictions. Please choose a different directory, preferably in your device's external storage, where the app has permission to save files."
+            );
+            setBusy(false);
+            return; // Exit the function as we do not proceed with saving
+          }
+
+          // Read the file content to be saved
+          const fileContent = await FileSystem.readAsStringAsync(
+            downloadResult.uri,
+            {
+              encoding: FileSystem.EncodingType.Base64,
+            }
+          );
+
+          const extension = getFileExtensionFromUrl(downloadResult.uri);
+          const fileName = `${item.title}.${extension}`; // Extract filename from URL
+
+          // Use the directory URI directly as obtained from permissions
+          try {
+            const newFileUri =
+              await FileSystem.StorageAccessFramework.createFileAsync(
+                permissions.directoryUri,
+                fileName,
+                downloadResult.headers["content-type"]
+              );
+            await FileSystem.writeAsStringAsync(newFileUri, fileContent, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+          } catch (e) {
+            console.error("Error creating or writing to the file:", e);
+          }
+        }
+
+        setBusy(false);
+      }, 350);
+    } else {
+      // Sharing is not available, show an alert
+      Alert.alert(
+        "Unable to Export",
+        "Exporting is not available on your device."
+      );
+      setBusy(false);
+    }
+  };
+
+  // Render buttons method
+  const renderButtons = () => (
     <>
-      <View style={styles.buttonContainer}>
-        {/* Export or Share Link */}
+      {Platform.OS === "ios" ? (
         <LinkButton
-          onPress={downloadFileAndExport}
+          onPress={exportAndShare}
           iconName="share-outline"
           buttonText="Export/Share"
           disabled={busy}
         />
+      ) : (
+        <>
+          <LinkButton
+            onPress={androidExportFile}
+            iconName="download-outline"
+            buttonText="Export"
+            disabled={busy}
+          />
+          <LinkButton
+            onPress={exportAndShare}
+            iconName="share-outline"
+            buttonText="Share"
+            disabled={busy}
+          />
+        </>
+      )}
+      <LinkButton
+        onPress={sendEmail}
+        iconName="email-outline"
+        buttonText="Send Email"
+        disabled={busy}
+      />
+    </>
+  );
 
-        {/* Send Email Link */}
-        <LinkButton
-          onPress={downloadFileAndSendEmail}
-          iconName="email-outline"
-          buttonText="Send Email"
-          disabled={busy}
-        />
-      </View>
+  return (
+    <>
+      <View style={styles.buttonContainer}>{renderButtons()}</View>
 
       <View
         style={[styles.progressContainer, { opacity: isDownloading ? 1 : 0 }]}
