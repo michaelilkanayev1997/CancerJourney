@@ -12,7 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
-import CustomMailComposer from "./CustomMailComposer";
+import ExportAndSendEmail from "./ExportAndSendEmail";
 
 interface Props {
   item: ImageType;
@@ -95,7 +95,7 @@ const MoreOptionsModal: FC<Props> = ({
             multiline
           />
 
-          <CustomMailComposer />
+          <ExportAndSendEmail />
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
