@@ -4,20 +4,18 @@ import {
   StyleSheet,
   Alert,
   Vibration,
-  TouchableOpacity,
   Text,
   Platform,
 } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 import * as FileSystem from "expo-file-system";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ProgressBar from "react-native-progress/Bar";
 import * as Sharing from "expo-sharing";
 import { FileSystemDownloadResult } from "expo-file-system";
+import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
-import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
 import LinkButton from "@ui/LinkButton";
 
