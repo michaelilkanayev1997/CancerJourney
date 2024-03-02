@@ -112,6 +112,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
+    Vibration.vibrate(50);
   }, []);
 
   const handleUploadPress = useCallback(() => {
@@ -127,7 +128,6 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   //i have to add loading logic + animation
 
   useEffect(() => {
-    console.log("lol");
     navigation.setOptions({
       headerTitle: () => (
         <View style={{ marginLeft: -25 }}>
@@ -160,6 +160,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
+        removeClippedSubviews={false} // Fixing InputText Bug
         data={images}
         renderItem={({ item, index }) => (
           <ImageCard
@@ -175,6 +176,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         contentContainerStyle={styles.imagesContainer}
         key={numColumns}
       />
+
       {selectedImageIndex !== null && (
         <CustomImageZoomViewer
           modalVisible={modalVisible}
@@ -183,6 +185,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
           images={images}
         />
       )}
+
       <CustomBottomSheet ref={bottomSheetModalRef} />
     </View>
   );

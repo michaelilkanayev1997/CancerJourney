@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   View,
   StyleSheet,
@@ -22,7 +28,7 @@ export type ImageType = {
 interface Props {
   item: ImageType;
   index: number;
-  setSelectedImageIndex: Dispatch<SetStateAction<number | null>>;
+  setSelectedImageIndex: Dispatch<SetStateAction<number | undefined>>;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
   numColumns: number;
   description?: string;
@@ -36,12 +42,15 @@ const ImageCard = React.memo(
     setModalVisible,
     numColumns,
   }: Props) => {
-    const [isOptionModalVisible, setOptionModalVisible] = useState(false);
+    const [isOptionModalVisible, setOptionModalVisible] =
+      useState<boolean>(false);
 
-    const handleMoreOptionsPress = () => {
+    const handleMoreOptionsPress = useCallback(() => {
       setOptionModalVisible(true);
       Vibration.vibrate(60);
-    };
+    }, []);
+
+    const iconSize = useMemo(() => (numColumns === 3 ? 24 : 30), [numColumns]);
 
     return (
       <>
@@ -72,7 +81,7 @@ const ImageCard = React.memo(
             >
               <MaterialCommunityIcons
                 name="dots-vertical"
-                size={numColumns === 3 ? 24 : 30}
+                size={iconSize}
                 color="black"
               />
             </TouchableOpacity>

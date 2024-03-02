@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -25,10 +25,25 @@ const MoreOptionsModal: FC<Props> = ({
   isOptionModalVisible,
   setOptionModalVisible,
 }) => {
-  const handleCloseMoreOptionsPress = () => {
+  const [name, setName] = useState<string>(item.title);
+  const [description, setDescription] = useState<string>(
+    item.description || ""
+  );
+
+  const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
     Vibration.vibrate(40);
-  };
+    setDescription(item.description || "");
+    setName(item.title);
+  }, [setOptionModalVisible]);
+
+  const handleNameChange = useCallback((text: string) => {
+    setName(text);
+  }, []);
+
+  const handleDescriptionChange = useCallback((text: string) => {
+    setDescription(text);
+  }, []);
 
   return (
     <Modal
@@ -66,20 +81,16 @@ const MoreOptionsModal: FC<Props> = ({
           <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
-            onChangeText={() => {
-              console.log("Enter Name here");
-            }}
-            value={item.title}
+            onChangeText={handleNameChange}
+            value={name}
             placeholder="Enter Name here"
           />
 
           <Text style={styles.label}>Description</Text>
           <TextInput
             style={[styles.input, styles.descriptionInput]}
-            onChangeText={() => {
-              console.log("Enter description here");
-            }}
-            value={item.description || ""}
+            onChangeText={handleDescriptionChange}
+            value={description}
             placeholder="Enter description here"
             multiline
           />

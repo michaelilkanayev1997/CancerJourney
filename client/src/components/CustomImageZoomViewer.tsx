@@ -21,20 +21,20 @@ const CustomImageZoomViewer: FC<Props> = ({
     <Modal
       visible={modalVisible}
       transparent={true}
-      onRequestClose={() => toggleModalVisible()}
+      onRequestClose={toggleModalVisible}
       hardwareAccelerated={true}
       animationType="fade"
     >
       <ImageZoomViewer
         imageUrls={images.map((img) => ({ url: img.uri }))}
         index={selectedImageIndex}
-        onSwipeDown={() => toggleModalVisible()}
+        onSwipeDown={toggleModalVisible}
         enableSwipeDown={true}
         backgroundColor="white"
         renderHeader={(index) => (
           <ImageZoomCustomHeader
             currentIndex={index || 0}
-            setModalVisible={toggleModalVisible}
+            toggleModalVisible={toggleModalVisible}
             images={images}
           />
         )}

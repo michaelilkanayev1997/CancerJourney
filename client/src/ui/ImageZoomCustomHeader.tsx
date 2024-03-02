@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -6,22 +6,27 @@ import { ImageType } from "@components/ImageCard";
 
 interface Props {
   currentIndex: number;
-  setModalVisible: Dispatch<SetStateAction<boolean>>;
+  toggleModalVisible: () => void;
   images: ImageType[];
 }
 
 const ImageZoomCustomHeader: FC<Props> = ({
   currentIndex,
-  setModalVisible,
+  toggleModalVisible,
   images,
 }) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity
         style={styles.arrowLeftContainer}
-        onPress={() => setModalVisible(false)}
+        onPress={toggleModalVisible}
       >
-        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
+        <MaterialCommunityIcons
+          name="arrow-left"
+          size={24}
+          color="black"
+          style={{ marginLeft: 10 }}
+        />
       </TouchableOpacity>
       <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">
         {images[currentIndex].title.substring(0, 16)} -{" "}
