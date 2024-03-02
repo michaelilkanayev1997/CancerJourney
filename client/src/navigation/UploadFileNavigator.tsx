@@ -22,17 +22,7 @@ const UploadFileNavigator = () => {
           title: "Folders",
         }}
       />
-      <Stack.Screen
-        name="FolderDetails"
-        component={FolderDetails}
-        options={{
-          headerTitle: () => (
-            <View style={{ marginLeft: -25 }}>
-              <Text style={{ fontSize: 20 }}>Folder Details</Text>
-            </View>
-          ),
-        }}
-      />
+      <Stack.Screen name="FolderDetails" component={FolderDetails} />
       <Stack.Screen name="FilePreview" component={FilePreview} />
     </Stack.Navigator>
   );

@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   View,
   StyleSheet,
@@ -22,71 +28,76 @@ export type ImageType = {
 interface Props {
   item: ImageType;
   index: number;
-  setSelectedImageIndex: Dispatch<SetStateAction<number | null>>;
+  setSelectedImageIndex: Dispatch<SetStateAction<number | undefined>>;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
   numColumns: number;
   description?: string;
 }
 
-const ImageCard = ({
-  item,
-  index,
-  setSelectedImageIndex,
-  setModalVisible,
-  numColumns,
-}: Props) => {
-  const [isOptionModalVisible, setOptionModalVisible] = useState(false);
+const ImageCard = React.memo(
+  ({
+    item,
+    index,
+    setSelectedImageIndex,
+    setModalVisible,
+    numColumns,
+  }: Props) => {
+    const [isOptionModalVisible, setOptionModalVisible] =
+      useState<boolean>(false);
 
-  const handleMoreOptionsPress = () => {
-    setOptionModalVisible(true);
-    Vibration.vibrate(60);
-  };
+    const handleMoreOptionsPress = useCallback(() => {
+      setOptionModalVisible(true);
+      Vibration.vibrate(60);
+    }, []);
 
-  return (
-    <>
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedImageIndex(index);
-          setModalVisible(true);
-        }}
-        onLongPress={handleMoreOptionsPress}
-        activeOpacity={0.6}
-        style={styles.cardContainer}
-      >
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: item.uri }} style={styles.image} />
-          <View style={styles.textContainer}>
-            <Text
-              style={styles.imageTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+    const iconSize = useMemo(() => (numColumns === 3 ? 24 : 30), [numColumns]);
+
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedImageIndex(index);
+            setModalVisible(true);
+          }}
+          onLongPress={handleMoreOptionsPress}
+          activeOpacity={0.6}
+          style={styles.cardContainer}
+        >
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: item.uri }} style={styles.image} />
+            <View style={styles.textContainer}>
+              <Text
+                style={styles.imageTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.title}
+              </Text>
+              <Text style={styles.imageDate}>{item.date}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.moreIcon}
+              onPress={handleMoreOptionsPress}
             >
-              {item.title}
-            </Text>
-            <Text style={styles.imageDate}>{item.date}</Text>
+              <MaterialCommunityIcons
+                name="dots-vertical"
+                size={iconSize}
+                color="black"
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.moreIcon}
-            onPress={handleMoreOptionsPress}
-          >
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={numColumns === 3 ? 24 : 30}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
 
-      {/* Custom Modal for More Options */}
-      <MoreOptionsModal
-        item={item}
-        isOptionModalVisible={isOptionModalVisible}
-        setOptionModalVisible={setOptionModalVisible}
-      />
-    </>
-  );
-};
+        {/* Custom Modal for More Options */}
+        <MoreOptionsModal
+          item={item}
+          isOptionModalVisible={isOptionModalVisible}
+          setOptionModalVisible={setOptionModalVisible}
+        />
+      </>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   cardContainer: {
