@@ -1,12 +1,5 @@
 import { JSX, forwardRef, useCallback, useMemo } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  Alert,
-  Linking,
-  Dimensions,
-} from "react-native";
+import { Text, StyleSheet, View, Dimensions } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
@@ -22,6 +15,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import colors from "@utils/colors";
 import AppButton from "@ui/AppButton";
 import { UploadStackParamList } from "src/@types/navigation";
+import { requestCameraPermissionsAsync } from "@utils/permissions";
 
 interface Props {}
 
@@ -47,35 +41,9 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       []
     );
 
-    const requestPermissionsAsync = async () => {
-      const { status, canAskAgain } =
-        await ImagePicker.requestCameraPermissionsAsync();
-
-      if (status === "granted") {
-        return true;
-      } else if (status === "denied" && !canAskAgain) {
-        // User has denied permissions and cannot ask again. Prompt them to manually enable it.
-        Alert.alert(
-          "Camera Permission Required",
-          "Please go to your settings and allow camera access for this app.",
-          [
-            { text: "Cancel", style: "cancel" },
-            { text: "Open Settings", onPress: () => Linking.openSettings() },
-          ]
-        );
-      } else {
-        // General denial without restriction to ask again
-        Alert.alert(
-          "Permissions required",
-          "Camera access is needed to take photos."
-        );
-      }
-      return false;
-    };
-
     const takeImage = async () => {
       // Request camera permissions
-      const hasPermission = await requestPermissionsAsync();
+      const hasPermission = await requestCameraPermissionsAsync();
       if (!hasPermission) return;
 
       // Open the camera with ImagePicker
