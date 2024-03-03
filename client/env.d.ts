@@ -3,3 +3,8 @@ declare module "@env" {
   export const IOS_CLIENT_ID: string;
 }
 declare module "react-native-progress/Bar";
+
+declare module "*.png" {
+  const value: any;
+  export = value;
+}

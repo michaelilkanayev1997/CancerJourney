@@ -2,18 +2,28 @@ import colors from "@utils/colors";
 import { FC } from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import placeholder from "@assets/user_profile.png";
 
-interface Props {}
+interface Props {
+  onButtonPress?: () => void;
+  uri: string;
+}
 
 const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
   return (
     <View style={styles.container}>
       <Image source={uri ? { uri } : placeholder} style={styles.image} />
 
-      <TouchableOpacity style={styles.editButton} onPress={onButtonPress}>
-        <MaterialCommunityIcons name="camera-outline" size={30} color="white" />
-      </TouchableOpacity>
+      {onButtonPress && (
+        <TouchableOpacity style={styles.editButton} onPress={onButtonPress}>
+          <MaterialCommunityIcons
+            name="camera-outline"
+            size={30}
+            color="white"
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
