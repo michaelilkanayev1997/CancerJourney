@@ -2,6 +2,7 @@ import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
 import { FC, Fragment, useCallback, useState } from "react";
 import { StyleSheet, Modal, View } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { ImageType } from "./ImageCard";
 import Loader from "@ui/Loader";
@@ -58,12 +59,14 @@ const CustomImageZoomViewer: FC<Props> = ({
           const isCurrentPDF = images[index]?.type === "application/pdf";
           if (isCurrentPDF) {
             return (
-              <AppLink
-                title="Open PDF"
-                onPress={toggleOpenPdf}
-                style={{ fontSize: 18 }}
-                active={active}
-              />
+              <Animated.View entering={FadeInDown.delay(100)}>
+                <AppLink
+                  title="Open PDF"
+                  onPress={toggleOpenPdf}
+                  style={{ fontSize: 18 }}
+                  active={active}
+                />
+              </Animated.View>
             );
           } else {
             // empty Fragment to satisfy TypeScript's return type requirement
