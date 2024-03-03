@@ -45,6 +45,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea",
   },
   headerText: {
     color: "black",

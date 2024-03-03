@@ -1,5 +1,12 @@
 import { JSX, forwardRef, useCallback, useMemo } from "react";
-import { Text, StyleSheet, View, Alert, Linking } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Alert,
+  Linking,
+  Dimensions,
+} from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
@@ -18,9 +25,12 @@ import { UploadStackParamList } from "src/@types/navigation";
 
 interface Props {}
 
+const screenHeight = Dimensions.get("window").height;
+const bottomSheetHeight = screenHeight * 0.56; // 56% of the screen height
+
 const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
   (props, ref) => {
-    const snapPoints = useMemo(() => ["60%"], []);
+    const snapPoints = useMemo(() => [bottomSheetHeight], [bottomSheetHeight]);
     const navigation =
       useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
 

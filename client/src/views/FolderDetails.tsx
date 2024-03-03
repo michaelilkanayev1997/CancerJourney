@@ -15,6 +15,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import CustomBottomSheet from "@components/CustomBottomSheet";
 import ImageCard from "@components/ImageCard";
 import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
+import CustomPdfViewer from "@components/CustomPdfViewer";
 
 // Placeholder images for demonstration
 const images = [
@@ -177,14 +178,18 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         key={numColumns}
       />
 
-      {selectedImageIndex !== null && (
-        <CustomImageZoomViewer
-          modalVisible={modalVisible}
-          toggleModalVisible={toggleModalVisible}
-          selectedImageIndex={selectedImageIndex}
-          images={images}
-        />
-      )}
+      {/* <CustomImageZoomViewer
+        modalVisible={modalVisible}
+        toggleModalVisible={toggleModalVisible}
+        selectedImageIndex={selectedImageIndex}
+        images={images}
+      /> */}
+
+      <CustomPdfViewer
+        modalVisible={modalVisible}
+        toggleModalVisible={toggleModalVisible}
+        item={images[selectedImageIndex || 0]}
+      />
 
       <CustomBottomSheet ref={bottomSheetModalRef} />
     </View>
