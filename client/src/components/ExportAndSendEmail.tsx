@@ -68,7 +68,14 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     }
 
     setIsDownloading(true);
-    const imageUrl = item.uri;
+
+    let imageUrl = "";
+    if (item.type.includes("pdf")) {
+      imageUrl = item.pdf_file || item.uri;
+    } else {
+      imageUrl = item.uri;
+    }
+
     const extension = getFileExtensionFromUrl(imageUrl);
 
     let fileUri = "";
@@ -133,8 +140,8 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       setTimeout(async () => {
         // Send the email with the downloaded file as attachment
         await MailComposer.composeAsync({
-          subject: "Cancer Journey",
-          body: `Hi,\n\nThis message is sent from the CancerJourney app.\n\nThank you.\n\nBest regards,\n${profile?.name}.`,
+          subject: `${profile?.name} shared a document with you through Cancer Journey app`,
+          body: `- File Name : ${item?.title}\n- Date : ${item?.date}\n\nCancerJourney is an application designed to assist cancer patients and their families in managing cancer.\n\nThank you.\n\nBest regards.`,
           attachments: [downloadResult.uri],
         });
 
