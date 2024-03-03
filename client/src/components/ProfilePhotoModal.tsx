@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import {
   Modal,
   View,
@@ -6,38 +6,119 @@ import {
   TouchableOpacity,
   StyleSheet,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import {
   MaterialCommunityIcons,
   MaterialIcons,
   Entypo,
 } from "@expo/vector-icons";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 
 import colors from "@utils/colors";
+import { requestCameraPermissionsAsync } from "@utils/permissions";
+import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {
   isVisible: boolean;
-  onClose: () => void;
-  onCameraPress: () => void;
-  onGalleryPress: () => void;
-  onRemovePress: () => void;
+  toggleModalVisible: () => void;
+  setProfileImage: Dispatch<SetStateAction<string>>;
 }
 
 const ProfilePhotoModal: FC<Props> = ({
   isVisible,
-  onClose,
-  onCameraPress,
-  onGalleryPress,
-  onRemovePress,
+  toggleModalVisible,
+  setProfileImage,
 }) => {
+  const onCameraPress = async () => {
+    // Request camera permissions
+    const hasPermission = await requestCameraPermissionsAsync();
+    if (!hasPermission) return;
+
+    // Open the camera with ImagePicker
+    const result = await ImagePicker.launchCameraAsync({
+      cameraType: ImagePicker.CameraType.front,
+      allowsEditing: true, // Allows editing the picture
+      aspect: [1, 1],
+      quality: 1, // Highest quality
+    });
+
+    // If the user doesn't cancel, set the selected image
+    if (!result.canceled) {
+      const file = result.assets[0];
+
+      const File = {
+        uri: file.uri,
+        type: file.mimeType,
+      };
+
+      setProfileImage(File.uri);
+      toggleModalVisible();
+    }
+  };
+
+  const onGalleryPress = async () => {
+    try {
+      const docRes = await DocumentPicker.getDocumentAsync({
+        type: ["image/*"],
+        multiple: false,
+      });
+
+      const assets = docRes.assets;
+      if (!assets) return;
+
+      const file = assets[0];
+      console.log(file);
+      // Check if the selected file is a GIF
+      if (file.mimeType === "image/gif") {
+        // If it's a GIF, alert the user and stop further execution
+        Alert.alert(
+          "Unsupported Format",
+          "GIFs are not supported. Please select a different image."
+        );
+        return; // Stop execution if the file is a GIF
+      }
+
+      const File = {
+        name: file.name.split(".")[0],
+        uri: file.uri,
+        type: file.mimeType,
+        size: file.size,
+      };
+
+      setProfileImage(File.uri);
+      toggleModalVisible();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onRemovePress = async () => {
+    try {
+      setProfileImage("");
+      toggleModalVisible();
+
+      ToastNotification({
+        type: "Success",
+        message: "Your profile photo has been removed",
+      });
+    } catch (error) {
+      ToastNotification({
+        type: "Error",
+        message: "error",
+      });
+    }
+  };
+
   return (
     <Modal
       animationType="fade"
       transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}
+      onRequestClose={toggleModalVisible}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
+      <TouchableWithoutFeedback onPress={toggleModalVisible}>
         <View style={styles.centeredView}>
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>

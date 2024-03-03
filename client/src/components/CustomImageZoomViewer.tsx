@@ -1,8 +1,12 @@
 import ImageZoomCustomHeader from "@ui/ImageZoomCustomHeader";
-import { FC } from "react";
-import { StyleSheet, Modal } from "react-native";
+import { FC, Fragment, useCallback, useState } from "react";
+import { StyleSheet, Modal, View } from "react-native";
 import ImageZoomViewer from "react-native-image-zoom-viewer";
+
 import { ImageType } from "./ImageCard";
+import Loader from "@ui/Loader";
+import AppLink from "@ui/AppLink";
+import CustomPdfViewer from "./CustomPdfViewer";
 
 interface Props {
   modalVisible: boolean;
@@ -17,6 +21,15 @@ const CustomImageZoomViewer: FC<Props> = ({
   selectedImageIndex,
   images,
 }) => {
+  const [active, setActive] = useState(true);
+  const [isOpenPdf, setIsopenPdf] = useState(false);
+  const [ImageIndex, setImageIndex] = useState(0);
+
+  const toggleOpenPdf = useCallback(() => {
+    setActive((prevState) => !prevState);
+    setIsopenPdf((prevVisible) => !prevVisible);
+  }, []);
+
   return (
     <Modal
       visible={modalVisible}
@@ -29,8 +42,11 @@ const CustomImageZoomViewer: FC<Props> = ({
         imageUrls={images.map((img) => ({ url: img.uri }))}
         index={selectedImageIndex}
         onSwipeDown={toggleModalVisible}
+        saveToLocalByLongPress={false}
         enableSwipeDown={true}
         backgroundColor="white"
+        useNativeDriver={true}
+        onChange={(index) => setImageIndex(index || 0)}
         renderHeader={(index) => (
           <ImageZoomCustomHeader
             currentIndex={index || 0}
@@ -38,14 +54,51 @@ const CustomImageZoomViewer: FC<Props> = ({
             images={images}
           />
         )}
-        useNativeDriver={true}
+        renderFooter={(index) => {
+          const isCurrentPDF = images[index]?.type === "application/pdf";
+          if (isCurrentPDF) {
+            return (
+              <AppLink
+                title="Open PDF"
+                onPress={toggleOpenPdf}
+                style={{ fontSize: 18 }}
+                active={active}
+              />
+            );
+          } else {
+            // empty Fragment to satisfy TypeScript's return type requirement
+            return <Fragment />;
+          }
+        }}
+        footerContainerStyle={{
+          position: "absolute",
+          bottom: "25%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        loadingRender={() => (
+          <View style={styles.loadingContainer}>
+            <Loader />
+          </View>
+        )}
+      />
+
+      <CustomPdfViewer
+        modalVisible={isOpenPdf}
+        toggleModalVisible={toggleOpenPdf}
+        item={images[ImageIndex]}
       />
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default CustomImageZoomViewer;

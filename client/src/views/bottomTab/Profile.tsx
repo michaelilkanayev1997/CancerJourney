@@ -18,10 +18,12 @@ interface Props {
 
 const Profile: FC<Props> = (props) => {
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+
   // Placeholder for user data
   const userData = {
     name: "Jane Doe",
-    description: "22 year old fighter from the Country Side",
+    description: "22 year old fighter from the Country Israel",
     email: "jane.doe@example.com",
     phone: "+1234567890",
     location: "Country Side",
@@ -37,7 +39,7 @@ const Profile: FC<Props> = (props) => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileHeader}>
-          <Avatar onButtonPress={toggleModalVisible} uri={""} />
+          <Avatar onButtonPress={toggleModalVisible} uri={profileImage} />
 
           <Text style={styles.profileName}>{userData.name}</Text>
           <Text style={styles.profileDescription}>{userData.description}</Text>
@@ -84,11 +86,8 @@ const Profile: FC<Props> = (props) => {
       </ScrollView>
       <ProfilePhotoModal
         isVisible={PhotoModalVisible}
-        onClose={toggleModalVisible}
-        onCameraPress={undefined}
-        onGalleryPress={undefined}
-        onRemovePress={undefined}
-        profilePhoto={undefined}
+        toggleModalVisible={toggleModalVisible}
+        setProfileImage={setProfileImage}
       />
     </View>
   );

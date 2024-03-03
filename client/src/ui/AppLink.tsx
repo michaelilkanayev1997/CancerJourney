@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -16,7 +16,7 @@ interface Props {
   style?: StyleProp<TextStyle>;
 }
 
-const AppLink: React.FC<Props> = ({ title, active = true, onPress, style }) => {
+const AppLink: FC<Props> = ({ title, active = true, onPress, style }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePressIn = () => {
