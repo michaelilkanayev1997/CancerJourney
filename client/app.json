@@ -39,10 +39,8 @@
           "cameraPermission": "The app needs access to your camera in order to take photos."
         }
       ],
-      [
-        "@config-plugins/react-native-blob-util",
-        "@config-plugins/react-native-pdf"
-      ]
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
     ],
     "scheme": "com.michaelilkanayev.client"
   }

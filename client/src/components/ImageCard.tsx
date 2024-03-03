@@ -23,6 +23,8 @@ export type ImageType = {
   title: string;
   date: string;
   description?: string;
+  type: string;
+  pdf_file?: string;
 };
 
 interface Props {

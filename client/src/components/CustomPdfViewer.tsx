@@ -57,7 +57,6 @@ const CustomPdfViewer: FC<Props> = ({
   return (
     <Modal
       visible={modalVisible}
-      transparent={true}
       onRequestClose={toggleModalVisible}
       hardwareAccelerated={true}
       animationType="fade"
