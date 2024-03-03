@@ -1,20 +1,23 @@
-import { FC } from "react";
+import { FC, useCallback, useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   ScrollView,
+  Vibration,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Avatar from "@ui/Avatar";
 
 import colors from "@utils/colors";
+import ProfilePhotoModal from "@components/ProfilePhotoModal";
 interface Props {
   // Add any props you might find necessary
 }
 
 const Profile: FC<Props> = (props) => {
+  const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
   // Placeholder for user data
   const userData = {
     name: "Jane Doe",
@@ -25,15 +28,16 @@ const Profile: FC<Props> = (props) => {
     activeSince: "Jan, 2023",
   };
 
+  const toggleModalVisible = useCallback(() => {
+    setPhotoModalVisible((prevVisible) => !prevVisible);
+    Vibration.vibrate(50);
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileHeader}>
-          <Avatar
-            onButtonPress={() => {
-              console.log("avatar");
-            }}
-          />
+          <Avatar onButtonPress={toggleModalVisible} uri={""} />
 
           <Text style={styles.profileName}>{userData.name}</Text>
           <Text style={styles.profileDescription}>{userData.description}</Text>
@@ -78,6 +82,14 @@ const Profile: FC<Props> = (props) => {
           <Text style={styles.infoText}>{userData.location}</Text>
         </View>
       </ScrollView>
+      <ProfilePhotoModal
+        isVisible={PhotoModalVisible}
+        onClose={toggleModalVisible}
+        onCameraPress={undefined}
+        onGalleryPress={undefined}
+        onRemovePress={undefined}
+        profilePhoto={undefined}
+      />
     </View>
   );
 };
