@@ -5,14 +5,10 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Avatar from "@ui/Avatar";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+
 import colors from "@utils/colors";
 interface Props {
   // Add any props you might find necessary
@@ -30,60 +26,59 @@ const Profile: FC<Props> = (props) => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 80 }}
-    >
-      <View style={styles.profileHeader}>
-        <Avatar
-          onButtonPress={() => {
-            console.log("avatar");
-          }}
-        />
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.profileHeader}>
+          <Avatar
+            onButtonPress={() => {
+              console.log("avatar");
+            }}
+          />
 
-        <Text style={styles.profileName}>{userData.name}</Text>
-        <Text style={styles.profileDescription}>{userData.description}</Text>
-        <Text style={styles.activeSince}>
-          Active since - {userData.activeSince}
-        </Text>
-      </View>
+          <Text style={styles.profileName}>{userData.name}</Text>
+          <Text style={styles.profileDescription}>{userData.description}</Text>
+          <Text style={styles.activeSince}>
+            Active since - {userData.activeSince}
+          </Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Personal Info</Text>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Personal Info</Text>
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.infoItem}>
-        <MaterialCommunityIcons name="email" size={24} color="#3498db" />
-        <Text style={styles.infoText}>{userData.email}</Text>
-      </View>
+        <View style={styles.infoItem}>
+          <MaterialCommunityIcons name="email" size={24} color="#3498db" />
+          <Text style={styles.infoText}>{userData.email}</Text>
+        </View>
 
-      <View style={styles.infoItem}>
-        <MaterialCommunityIcons name="phone" size={24} color="#3498db" />
-        <Text style={styles.infoText}>{userData.phone}</Text>
-      </View>
+        <View style={styles.infoItem}>
+          <MaterialCommunityIcons name="phone" size={24} color="#3498db" />
+          <Text style={styles.infoText}>{userData.phone}</Text>
+        </View>
 
-      <View style={styles.infoItem}>
-        <MaterialCommunityIcons name="map-marker" size={24} color="#3498db" />
-        <Text style={styles.infoText}>{userData.location}</Text>
-      </View>
+        <View style={styles.infoItem}>
+          <MaterialCommunityIcons name="map-marker" size={24} color="#3498db" />
+          <Text style={styles.infoText}>{userData.location}</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Utilities</Text>
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Utilities</Text>
+        </View>
 
-      <View style={styles.infoItem}>
-        <MaterialCommunityIcons name="phone" size={24} color="#3498db" />
-        <Text style={styles.infoText}>{userData.phone}</Text>
-      </View>
+        <View style={styles.infoItem}>
+          <MaterialCommunityIcons name="phone" size={24} color="#3498db" />
+          <Text style={styles.infoText}>{userData.phone}</Text>
+        </View>
 
-      <View style={styles.infoItem}>
-        <MaterialCommunityIcons name="map-marker" size={24} color="#3498db" />
-        <Text style={styles.infoText}>{userData.location}</Text>
-      </View>
-    </ScrollView>
+        <View style={styles.infoItem}>
+          <MaterialCommunityIcons name="map-marker" size={24} color="#3498db" />
+          <Text style={styles.infoText}>{userData.location}</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -91,6 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.PRIMARY_LIGHT,
+    paddingBottom: 85,
   },
   profileHeader: {
     alignItems: "center",
