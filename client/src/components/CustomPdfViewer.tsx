@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Pdf from "react-native-pdf";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { ToastNotification } from "@utils/toastConfig";
 import { ImageType } from "@components/ImageCard";
 
@@ -29,7 +30,7 @@ const CustomPdfViewer: FC<Props> = ({
   const [totalPages, setTotalPages] = useState(0);
 
   const Source = {
-    uri: "http://samples.leanpub.com/thereactnativebook-sample.pdf",
+    uri: item.pdf_file,
     cache: true,
   };
 
@@ -42,6 +43,15 @@ const CustomPdfViewer: FC<Props> = ({
     } else {
       Alert.alert(`Cannot Open Link: ${url}. Please try again later.`);
     }
+  };
+
+  const handleError = (error: object) => {
+    console.log(error);
+    toggleModalVisible();
+    ToastNotification({
+      type: "Error",
+      message: "Error loading PDF",
+    });
   };
 
   return (
@@ -75,19 +85,13 @@ const CustomPdfViewer: FC<Props> = ({
           trustAllCerts={false}
           source={Source}
           style={styles.pdf}
-          onLoadComplete={(numberOfPages, filePath) => {
+          onLoadComplete={(numberOfPages) => {
             setTotalPages(numberOfPages);
           }}
-          onPageChanged={(page, numberOfPages) => {
+          onPageChanged={(page) => {
             setCurrentPage(page);
           }}
-          onError={(error) => {
-            console.log(error);
-            ToastNotification({
-              type: "Error",
-              message: "Error loading PDF",
-            });
-          }}
+          onError={(error) => handleError(error)}
           onPressLink={(uri) => handleLinkPress(uri)}
         />
       </View>
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eaeaea",
   },
   backButton: {
-    marginRight: 20,
+    marginRight: 10,
   },
   pageInfo: {
     fontSize: 18,
