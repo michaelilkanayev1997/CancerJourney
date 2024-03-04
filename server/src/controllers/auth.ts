@@ -286,9 +286,9 @@ export const fileUpload: RequestHandler = (req, res) => {
     // Example: console.log(req.file.location); // URL of the uploaded file
     res.json({ success: true, fileUrl: req.file });
   } catch (error) {
-    console.error("An error occurred while uploading the file", error);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while uploading the file" });
+    console.log("An error occurred while uploading the file", error);
+    return res.status(500).json({
+      error: "An error occurred while uploading the file",
+    });
   }
 };

@@ -19,6 +19,8 @@ import * as ImagePicker from "expo-image-picker";
 import colors from "@utils/colors";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
+import catchAsyncError from "src/api/catchError";
+import { getClient } from "src/api/client";
 
 interface Props {
   isVisible: boolean;
@@ -31,6 +33,18 @@ const ProfilePhotoModal: FC<Props> = ({
   toggleModalVisible,
   setProfileImage,
 }) => {
+  const handleUpload = async (formData: FormData) => {
+    try {
+      const client = await getClient({
+        "Content-Type": "multipart/form-data;",
+      });
+
+      const { data } = await client.post("/audio/create", formData, {});
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+    }
+  };
+
   const onCameraPress = async () => {
     // Request camera permissions
     const hasPermission = await requestCameraPermissionsAsync();
@@ -41,20 +55,45 @@ const ProfilePhotoModal: FC<Props> = ({
       cameraType: ImagePicker.CameraType.front,
       allowsEditing: true, // Allows editing the picture
       aspect: [1, 1],
-      quality: 1, // Highest quality
+      quality: 0.4, // Quality
     });
 
     // If the user doesn't cancel, set the selected image
-    if (!result.canceled) {
+    if (!result.canceled && result.assets[0]) {
       const file = result.assets[0];
 
-      const File = {
-        uri: file.uri,
-        type: file.mimeType,
-      };
+      try {
+        const formData = new FormData();
 
-      setProfileImage(File.uri);
-      toggleModalVisible();
+        formData.append("avatar", {
+          uri: file.uri,
+          type: file.mimeType || "image/jpeg",
+          name: "profile.jpeg",
+        } as any);
+
+        const client = await getClient({
+          "Content-Type": "multipart/form-data;",
+        });
+
+        const { data } = await client.post(
+          "/auth/profile-image-upload",
+          formData
+        );
+
+        if (!data.success) {
+          throw new Error("Failed to upload image");
+        }
+
+        setProfileImage(file.uri);
+      } catch (error) {
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
+        });
+      } finally {
+        toggleModalVisible();
+      }
     }
   };
 

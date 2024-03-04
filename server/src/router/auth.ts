@@ -48,6 +48,11 @@ router.get("/is-auth", mustAuth, (req, res) => {
   });
 });
 router.post("/log-out", mustAuth, logOut);
-router.post("/upload", upload.single("image"), fileUpload);
+router.post(
+  "/profile-image-upload",
+  mustAuth,
+  upload.single("avatar"),
+  fileUpload
+);
 
 export default router;
