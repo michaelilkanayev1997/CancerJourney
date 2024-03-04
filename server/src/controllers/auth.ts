@@ -279,3 +279,16 @@ export const logOut: RequestHandler = async (req, res) => {
   await user.save();
   res.json({ success: true });
 };
+
+export const fileUpload: RequestHandler = (req, res) => {
+  try {
+    // If the file upload is successful, you can access the file details via req.file
+    // Example: console.log(req.file.location); // URL of the uploaded file
+    res.json({ success: true, fileUrl: req.file });
+  } catch (error) {
+    console.log("An error occurred while uploading the file", error);
+    return res.status(500).json({
+      error: "An error occurred while uploading the file",
+    });
+  }
+};

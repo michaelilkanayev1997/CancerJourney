@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   GoogleSignIn,
   create,
+  fileUpload,
   generateForgetPasswordLink,
   grantValid,
   logOut,
@@ -19,6 +20,7 @@ import {
   UpdatePasswordSchema,
 } from "#/utils/validationSchema";
 import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
+import { upload } from "#/middleware/fileUpload";
 
 const router = Router();
 
@@ -46,5 +48,11 @@ router.get("/is-auth", mustAuth, (req, res) => {
   });
 });
 router.post("/log-out", mustAuth, logOut);
+router.post(
+  "/profile-image-upload",
+  mustAuth,
+  upload.single("avatar"),
+  fileUpload
+);
 
 export default router;
