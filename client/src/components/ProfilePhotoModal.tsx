@@ -13,7 +13,6 @@ import {
   MaterialIcons,
   Entypo,
 } from "@expo/vector-icons";
-import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 
 import colors from "@utils/colors";
@@ -26,12 +25,14 @@ interface Props {
   isVisible: boolean;
   toggleModalVisible: () => void;
   setProfileImage: Dispatch<SetStateAction<string>>;
+  profileImage: string;
 }
 
 const ProfilePhotoModal: FC<Props> = ({
   isVisible,
   toggleModalVisible,
   setProfileImage,
+  profileImage,
 }) => {
   const handleUpload = async (formData: FormData) => {
     try {
@@ -51,52 +52,49 @@ const ProfilePhotoModal: FC<Props> = ({
   };
 
   const onCameraPress = async () => {
-    // Request camera permissions
-    const hasPermission = await requestCameraPermissionsAsync();
-    if (!hasPermission) return;
+    try {
+      // Request camera permissions
+      const hasPermission = await requestCameraPermissionsAsync();
+      if (!hasPermission) return;
 
-    // Open the camera with ImagePicker
-    const result = await ImagePicker.launchCameraAsync({
-      cameraType: ImagePicker.CameraType.front,
-      allowsEditing: true, // Allows editing the picture
-      aspect: [1, 1],
-      quality: 0.4, // Quality
-    });
+      // Open the camera with ImagePicker
+      const result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true, // Allows editing the picture
+        aspect: [1, 1], // Square aspect ratio
+        quality: 0.4, // Quality
+      });
 
-    // If the user doesn't cancel, set the selected image
-    if (!result.canceled) {
+      // If the user doesn't cancel, set the selected image
+      if (result.canceled) return;
+
       const file = result.assets[0];
-
       const formData = new FormData();
-
       formData.append("avatar", {
         uri: file.uri,
         type: "image/jpeg",
         name: "profile",
       } as any);
 
-      try {
-        const data = await handleUpload(formData);
-        console.log(data);
-        if (!data.success) {
-          throw new Error("Failed to upload image");
-        }
+      const data = await handleUpload(formData);
 
-        setProfileImage(file.uri);
-        ToastNotification({
-          type: "Success",
-          message: "Image uploaded successfully!",
-        });
-      } catch (error) {
-        const errorMessage = catchAsyncError(error);
-        ToastNotification({
-          type: "Error",
-          message: errorMessage,
-        });
-      } finally {
-        toggleModalVisible();
+      if (!data.success) {
+        throw new Error("Failed to upload image");
       }
+
+      setProfileImage(file.uri);
+      ToastNotification({
+        type: "Success",
+        message: "Image uploaded successfully!",
+      });
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
+    toggleModalVisible();
   };
 
   const onGalleryPress = async () => {
@@ -116,8 +114,8 @@ const ProfilePhotoModal: FC<Props> = ({
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true, // Allow editing
-        aspect: [1, 1],
-        quality: 0.4,
+        aspect: [1, 1], // Square aspect ratio
+        quality: 0.4, // Quality
       });
 
       if (!result.assets || result.canceled) return;
@@ -142,25 +140,24 @@ const ProfilePhotoModal: FC<Props> = ({
         type: "Success",
         message: "Image uploaded successfully!",
       });
-      toggleModalVisible();
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
         type: "Error",
         message: errorMessage,
       });
-      toggleModalVisible();
     }
+    toggleModalVisible();
   };
 
   const onRemovePress = async () => {
     try {
+      if (!profileImage) throw new Error("There is no profile image");
       const client = await getClient();
 
       const { data } = await client.post("/auth/profile-image-remove");
-      console.log(data);
+
       setProfileImage("");
-      toggleModalVisible();
 
       ToastNotification({
         type: "Success",
@@ -173,6 +170,7 @@ const ProfilePhotoModal: FC<Props> = ({
         message: errorMessage,
       });
     }
+    toggleModalVisible();
   };
 
   return (

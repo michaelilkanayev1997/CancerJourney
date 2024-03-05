@@ -1,7 +1,7 @@
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const path = require("path");
+import { FileFilterCallback } from "multer";
 
 import {
   S3_ACCESS_KEY,
@@ -18,7 +18,11 @@ const s3 = new S3Client({
   region: S3_REGION,
 });
 
-const fileFilter = (req, file, cb) => {
+const fileFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
   const allowedMimes = ["image/jpeg", "image/pjpeg", "image/png", "image/webp"];
 
   if (allowedMimes.includes(file.mimetype)) {
@@ -27,7 +31,7 @@ const fileFilter = (req, file, cb) => {
     cb(
       new Error(
         "Invalid file type. Only JPG, PNG, and WEBP files are allowed."
-      ),
+      ) as any,
       false
     );
   }
@@ -38,12 +42,12 @@ export const upload = multer({
     s3: s3,
     bucket: S3_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: (req, file, cb) => {
+    metadata: (req: any, file: any, cb: any) => {
       cb(null, {
         uploadedBy: String(req.user.id),
       });
     },
-    key: (req, file, cb) => {
+    key: (req: any, file: any, cb: any) => {
       cb(null, `${req.user.id}/${file.originalname}`);
     },
   }),
@@ -58,10 +62,8 @@ export const deleteS3Object = async (objectKey: string) => {
       Bucket: S3_BUCKET_NAME,
       Key: objectKey,
     };
-
     // Create a command to delete the object
     const command = new DeleteObjectCommand(deleteParams);
-
     // Send the command to S3
     const response = await s3.send(command);
 

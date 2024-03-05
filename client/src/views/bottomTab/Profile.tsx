@@ -88,6 +88,7 @@ const Profile: FC<Props> = (props) => {
         isVisible={PhotoModalVisible}
         toggleModalVisible={toggleModalVisible}
         setProfileImage={setProfileImage}
+        profileImage={profileImage}
       />
     </View>
   );
