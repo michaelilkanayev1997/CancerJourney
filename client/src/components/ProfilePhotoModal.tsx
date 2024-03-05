@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC, useState } from "react";
 import {
   Modal,
   View,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Alert,
+  Dimensions,
 } from "react-native";
 import {
   MaterialCommunityIcons,
@@ -14,6 +15,7 @@ import {
   Entypo,
 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { useDispatch } from "react-redux";
 
 import colors from "@utils/colors";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
@@ -21,19 +23,24 @@ import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 
+import { UserProfile, updateProfile } from "src/store/auth";
+import Loader from "@ui/Loader";
+
 interface Props {
   isVisible: boolean;
   toggleModalVisible: () => void;
-  setProfileImage: Dispatch<SetStateAction<string>>;
-  profileImage: string;
+  profile: UserProfile | null;
 }
 
 const ProfilePhotoModal: FC<Props> = ({
   isVisible,
   toggleModalVisible,
-  setProfileImage,
-  profileImage,
+  profile,
 }) => {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const screenWidth = Dimensions.get("window").width;
+
   const handleUpload = async (formData: FormData) => {
     try {
       const client = await getClient({
@@ -68,6 +75,8 @@ const ProfilePhotoModal: FC<Props> = ({
       // If the user doesn't cancel, set the selected image
       if (result.canceled) return;
 
+      setIsLoading(true);
+
       const file = result.assets[0];
       const formData = new FormData();
       formData.append("avatar", {
@@ -82,7 +91,10 @@ const ProfilePhotoModal: FC<Props> = ({
         throw new Error("Failed to upload image");
       }
 
-      setProfileImage(file.uri);
+      if (profile) {
+        dispatch(updateProfile({ ...profile, avatar: file.uri }));
+      }
+
       ToastNotification({
         type: "Success",
         message: "Image uploaded successfully!",
@@ -95,6 +107,7 @@ const ProfilePhotoModal: FC<Props> = ({
       });
     }
     toggleModalVisible();
+    setIsLoading(false);
   };
 
   const onGalleryPress = async () => {
@@ -119,6 +132,9 @@ const ProfilePhotoModal: FC<Props> = ({
       });
 
       if (!result.assets || result.canceled) return;
+
+      setIsLoading(true);
+
       const file = result.assets[0];
 
       const formData = new FormData();
@@ -135,7 +151,9 @@ const ProfilePhotoModal: FC<Props> = ({
         throw new Error("Failed to upload image");
       }
 
-      setProfileImage(file.uri);
+      if (profile) {
+        dispatch(updateProfile({ ...profile, avatar: file.uri }));
+      }
       ToastNotification({
         type: "Success",
         message: "Image uploaded successfully!",
@@ -148,16 +166,20 @@ const ProfilePhotoModal: FC<Props> = ({
       });
     }
     toggleModalVisible();
+    setIsLoading(false);
   };
 
   const onRemovePress = async () => {
     try {
-      if (!profileImage) throw new Error("There is no profile image");
+      if (!profile?.avatar) throw new Error("There is no profile image");
+
+      setIsLoading(true);
+
       const client = await getClient();
 
-      const { data } = await client.post("/auth/profile-image-remove");
+      await client.post("/auth/profile-image-remove");
 
-      setProfileImage("");
+      dispatch(updateProfile({ ...profile, avatar: "" }));
 
       ToastNotification({
         type: "Success",
@@ -171,6 +193,13 @@ const ProfilePhotoModal: FC<Props> = ({
       });
     }
     toggleModalVisible();
+    setIsLoading(false);
+  };
+
+  const handleModalClose = () => {
+    if (!isLoading) {
+      toggleModalVisible();
+    }
   };
 
   return (
@@ -178,41 +207,51 @@ const ProfilePhotoModal: FC<Props> = ({
       animationType="fade"
       transparent={true}
       visible={isVisible}
-      onRequestClose={toggleModalVisible}
+      onRequestClose={handleModalClose}
     >
-      <TouchableWithoutFeedback onPress={toggleModalVisible}>
+      <TouchableWithoutFeedback onPress={handleModalClose}>
         <View style={styles.centeredView}>
           <TouchableWithoutFeedback>
-            <View style={styles.modalView}>
+            <View style={[styles.modalView, { width: screenWidth * 0.9 }]}>
               <Text style={styles.modalTitle}>Profile Photo</Text>
 
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={onCameraPress}>
-                  <MaterialCommunityIcons
-                    name="camera"
-                    size={24}
-                    color={colors.INFO}
-                  />
-                  <Text style={styles.buttonText}>Camera</Text>
-                </TouchableOpacity>
+              {isLoading ? (
+                <Loader loaderStyle={{ height: 70 }} />
+              ) : (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={onCameraPress}
+                  >
+                    <MaterialCommunityIcons
+                      name="camera"
+                      size={24}
+                      color={colors.INFO}
+                    />
+                    <Text style={styles.buttonText}>Camera</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={onGalleryPress}
-                >
-                  <MaterialIcons
-                    name="photo-library"
-                    size={24}
-                    color={colors.INFO}
-                  />
-                  <Text style={styles.buttonText}>Gallery</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={onGalleryPress}
+                  >
+                    <MaterialIcons
+                      name="photo-library"
+                      size={24}
+                      color={colors.INFO}
+                    />
+                    <Text style={styles.buttonText}>Gallery</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={onRemovePress}>
-                  <Entypo name="trash" size={24} color={colors.INFO} />
-                  <Text style={styles.buttonText}>Remove</Text>
-                </TouchableOpacity>
-              </View>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={onRemovePress}
+                  >
+                    <Entypo name="trash" size={24} color={colors.INFO} />
+                    <Text style={styles.buttonText}>Remove</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>

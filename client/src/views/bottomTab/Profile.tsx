@@ -12,13 +12,15 @@ import Avatar from "@ui/Avatar";
 
 import colors from "@utils/colors";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
+import { useSelector } from "react-redux";
+import { getAuthState } from "src/store/auth";
 interface Props {
   // Add any props you might find necessary
 }
 
 const Profile: FC<Props> = (props) => {
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
+  const { profile } = useSelector(getAuthState);
 
   // Placeholder for user data
   const userData = {
@@ -39,7 +41,10 @@ const Profile: FC<Props> = (props) => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileHeader}>
-          <Avatar onButtonPress={toggleModalVisible} uri={profileImage} />
+          <Avatar
+            onButtonPress={toggleModalVisible}
+            uri={profile?.avatar || ""}
+          />
 
           <Text style={styles.profileName}>{userData.name}</Text>
           <Text style={styles.profileDescription}>{userData.description}</Text>
@@ -87,8 +92,7 @@ const Profile: FC<Props> = (props) => {
       <ProfilePhotoModal
         isVisible={PhotoModalVisible}
         toggleModalVisible={toggleModalVisible}
-        setProfileImage={setProfileImage}
-        profileImage={profileImage}
+        profile={profile}
       />
     </View>
   );
