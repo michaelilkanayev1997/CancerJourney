@@ -69,7 +69,7 @@ const ProfilePhotoModal: FC<Props> = ({
         cameraType: ImagePicker.CameraType.front,
         allowsEditing: true, // Allows editing the picture
         aspect: [1, 1], // Square aspect ratio
-        quality: 0.4, // Quality
+        quality: 0.2, // Quality
       });
 
       // If the user doesn't cancel, set the selected image
@@ -128,7 +128,7 @@ const ProfilePhotoModal: FC<Props> = ({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true, // Allow editing
         aspect: [1, 1], // Square aspect ratio
-        quality: 0.4, // Quality
+        quality: 0.2, // Quality
       });
 
       if (!result.assets || result.canceled) return;
