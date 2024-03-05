@@ -1,9 +1,18 @@
 import colors from "@utils/colors";
 import { FC, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Vibration,
+  ActivityIndicator,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import placeholder from "@assets/user_profile.png";
+import PulseAnimationContainer from "@components/PulseAnimationContainer";
 
 interface Props {
   onButtonPress?: () => void;
@@ -12,10 +21,27 @@ interface Props {
 
 const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isImageLoading, setImageIsLoading] = useState(true);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
+    Vibration.vibrate(50);
   };
+
+  if (isImageLoading)
+    return (
+      <PulseAnimationContainer>
+        <View style={styles.container}>
+          <Image
+            source={uri ? { uri } : placeholder}
+            style={styles.dummyImage}
+            onLoad={() => setImageIsLoading(false)} // Image loaded successfully
+            onError={() => setImageIsLoading(false)} // Image failed to load
+          />
+        </View>
+      </PulseAnimationContainer>
+    );
+
   return (
     <View style={styles.container}>
       {/* TouchableOpacity wraps the image to make it clickable */}
@@ -37,7 +63,7 @@ const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
       <Modal
         visible={isModalVisible}
         transparent={true}
-        onRequestClose={toggleModal} // Allows closing the modal by pressing the back button on Android
+        onRequestClose={toggleModal} // Back button on Android
       >
         <View style={styles.modalView}>
           <TouchableOpacity
@@ -89,9 +115,17 @@ const styles = StyleSheet.create({
   },
   modalCloseButton: {
     position: "absolute",
-    top: 50,
-    right: 20,
-    zIndex: 1, // Ensure the button is clickable by placing it above the image
+    top: 90,
+    right: 10,
+    zIndex: 1,
+  },
+  dummyImage: {
+    borderRadius: 75,
+    width: 150,
+    height: 150,
+    borderColor: colors.LIGHT_BLUE,
+    borderWidth: 5,
+    backgroundColor: colors.INACTIVE_CONTRAST,
   },
 });
 
