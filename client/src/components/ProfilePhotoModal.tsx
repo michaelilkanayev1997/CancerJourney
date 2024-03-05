@@ -39,9 +39,14 @@ const ProfilePhotoModal: FC<Props> = ({
         "Content-Type": "multipart/form-data;",
       });
 
-      const { data } = await client.post("/audio/create", formData, {});
+      const { data } = await client.post(
+        "/auth/profile-image-upload",
+        formData
+      );
+
+      return data;
     } catch (error) {
-      const errorMessage = catchAsyncError(error);
+      throw error;
     }
   };
 
@@ -59,32 +64,29 @@ const ProfilePhotoModal: FC<Props> = ({
     });
 
     // If the user doesn't cancel, set the selected image
-    if (!result.canceled && result.assets[0]) {
+    if (!result.canceled) {
       const file = result.assets[0];
 
+      const formData = new FormData();
+
+      formData.append("avatar", {
+        uri: file.uri,
+        type: "image/jpeg",
+        name: "profile",
+      } as any);
+
       try {
-        const formData = new FormData();
-
-        formData.append("avatar", {
-          uri: file.uri,
-          type: file.mimeType || "image/jpeg",
-          name: "profile.jpeg",
-        } as any);
-
-        const client = await getClient({
-          "Content-Type": "multipart/form-data;",
-        });
-
-        const { data } = await client.post(
-          "/auth/profile-image-upload",
-          formData
-        );
-
+        const data = await handleUpload(formData);
+        console.log(data);
         if (!data.success) {
           throw new Error("Failed to upload image");
         }
 
         setProfileImage(file.uri);
+        ToastNotification({
+          type: "Success",
+          message: "Image uploaded successfully!",
+        });
       } catch (error) {
         const errorMessage = catchAsyncError(error);
         ToastNotification({
@@ -99,42 +101,64 @@ const ProfilePhotoModal: FC<Props> = ({
 
   const onGalleryPress = async () => {
     try {
-      const docRes = await DocumentPicker.getDocumentAsync({
-        type: ["image/*"],
-        multiple: false,
-      });
-
-      const assets = docRes.assets;
-      if (!assets) return;
-
-      const file = assets[0];
-      console.log(file);
-      // Check if the selected file is a GIF
-      if (file.mimeType === "image/gif") {
-        // If it's a GIF, alert the user and stop further execution
+      // Request permission to access the media library
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
         Alert.alert(
-          "Unsupported Format",
-          "GIFs are not supported. Please select a different image."
+          "Permission Denied",
+          "Please allow access to your photo library to upload an image."
         );
-        return; // Stop execution if the file is a GIF
+        return;
       }
 
-      const File = {
-        name: file.name.split(".")[0],
+      // Open the image library with editing enabled and limit selection to images only
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true, // Allow editing
+        aspect: [1, 1],
+        quality: 0.4,
+      });
+
+      if (!result.assets || result.canceled) return;
+      const file = result.assets[0];
+
+      const formData = new FormData();
+
+      formData.append("avatar", {
         uri: file.uri,
         type: file.mimeType,
-        size: file.size,
-      };
+        name: "profile",
+      } as any);
 
-      setProfileImage(File.uri);
+      const data = await handleUpload(formData);
+      console.log(data);
+      if (!data.success) {
+        throw new Error("Failed to upload image");
+      }
+
+      setProfileImage(file.uri);
+      ToastNotification({
+        type: "Success",
+        message: "Image uploaded successfully!",
+      });
       toggleModalVisible();
     } catch (error) {
-      console.log(error);
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+      toggleModalVisible();
     }
   };
 
   const onRemovePress = async () => {
     try {
+      const client = await getClient();
+
+      const { data } = await client.post("/auth/profile-image-remove");
+      console.log(data);
       setProfileImage("");
       toggleModalVisible();
 
@@ -143,9 +167,10 @@ const ProfilePhotoModal: FC<Props> = ({
         message: "Your profile photo has been removed",
       });
     } catch (error) {
+      const errorMessage = catchAsyncError(error);
       ToastNotification({
         type: "Error",
-        message: "error",
+        message: errorMessage,
       });
     }
   };

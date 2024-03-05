@@ -38,19 +38,17 @@ export const upload = multer({
     s3: s3,
     bucket: S3_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: function (req, file, cb) {
-      // Include user's _id as part of the file's metadata
-      console.log(file);
+    metadata: (req, file, cb) => {
       cb(null, {
         uploadedBy: String(req.user.id),
       });
     },
     key: (req, file, cb) => {
-      const extension = path.extname(file.originalname);
-      cb(null, `${req.user.id}/profile${extension}`);
+      cb(null, `${req.user.id}/${file.originalname}`);
     },
   }),
   fileFilter: fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
 });
 
 // Function to delete an object from S3
@@ -74,7 +72,3 @@ export const deleteS3Object = async (objectKey: string) => {
     throw error;
   }
 };
-
-// deleteS3Object("65d9202c7aa232603a4c8a5c/profile.png")
-//   .then(() => console.log("File deleted successfully"))
-//   .catch((error) => console.error("Failed to delete file", error));
