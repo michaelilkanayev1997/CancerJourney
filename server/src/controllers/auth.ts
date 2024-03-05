@@ -320,7 +320,7 @@ export const profileImageRemove: RequestHandler = async (req, res) => {
     if (!user.avatar) throw new Error("There is no a profile image");
 
     if (user.avatar.publicId !== "Google") {
-      const result = await deleteS3Object(`${user.avatar.publicId}`);
+      await deleteS3Object(`${user.avatar.publicId}`);
     }
 
     user.avatar = { url: "", publicId: "" };
