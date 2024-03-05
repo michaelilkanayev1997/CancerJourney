@@ -2,6 +2,7 @@ const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 import { FileFilterCallback } from "multer";
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 import {
   S3_ACCESS_KEY,
@@ -9,6 +10,7 @@ import {
   S3_REGION,
   S3_SECRET_KEY,
 } from "#/utils/variables";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({
   credentials: {
@@ -73,3 +75,22 @@ export const deleteS3Object = async (objectKey: string) => {
     throw error;
   }
 };
+
+async function generateSignedUrl(key: string) {
+  const command = new GetObjectCommand({
+    Bucket: S3_BUCKET_NAME,
+    Key: key,
+  });
+
+  // URL expires in 3600 seconds (1 hour)
+  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
+
+  return signedUrl;
+}
+
+// Example usage
+
+const objectKey = "65d9202c7aa232603a4c8a5c/profile-1709672113852";
+// generateSignedUrl(objectKey)
+//   .then((url) => console.log(url))
+//   .catch((err) => console.error(err));
