@@ -3,10 +3,11 @@ import { Router } from "express";
 import {
   GoogleSignIn,
   create,
-  fileUpload,
   generateForgetPasswordLink,
   grantValid,
   logOut,
+  profileImageRemove,
+  profileUpload,
   sendReVerificationToken,
   signIn,
   updatePassword,
@@ -52,7 +53,8 @@ router.post(
   "/profile-image-upload",
   mustAuth,
   upload.single("avatar"),
-  fileUpload
+  profileUpload
 );
+router.post("/profile-image-remove", mustAuth, profileImageRemove);
 
 export default router;
