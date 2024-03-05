@@ -48,7 +48,7 @@ export const upload = multer({
       });
     },
     key: (req: any, file: any, cb: any) => {
-      cb(null, `${req.user.id}/${file.originalname}`);
+      cb(null, `${req.user.id}/${file.originalname}-${Date.now()}`);
     },
   }),
   fileFilter: fileFilter,

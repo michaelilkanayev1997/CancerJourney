@@ -283,8 +283,23 @@ export const logOut: RequestHandler = async (req, res) => {
 
 export const profileUpload: RequestHandler = async (req, res) => {
   try {
-    console.log(req.file.location);
-    console.log(req.file.key);
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    // Check if req.file exists
+    if (!req.file) {
+      return res.status(400).json({
+        error: "No file uploaded. Please upload a file.",
+      });
+    }
+
+    if (user.avatar.publicId && user.avatar.publicId !== "Google") {
+      const result = await deleteS3Object(`${user.avatar.publicId}`);
+    }
+
+    user.avatar = { url: req.file.location, publicId: req.file.key };
+
+    await user.save();
 
     res.json({ success: true, fileUrl: req.file });
   } catch (error) {
@@ -296,8 +311,19 @@ export const profileUpload: RequestHandler = async (req, res) => {
 
 export const profileImageRemove: RequestHandler = async (req, res) => {
   try {
-    const result = await deleteS3Object(`${req.user.id}/profile`);
-    console.log("File deleted successfully", result);
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    if (!user.avatar) throw new Error("There is no a profile image");
+
+    if (user.avatar.publicId !== "Google") {
+      const result = await deleteS3Object(`${user.avatar.publicId}`);
+    }
+
+    user.avatar = { url: "", publicId: "" };
+
+    await user.save();
+
     res.json({ success: true });
   } catch (error) {
     console.error("Failed to delete file", error);
