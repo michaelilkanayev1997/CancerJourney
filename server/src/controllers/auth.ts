@@ -292,19 +292,22 @@ export const profileUpload: RequestHandler = async (req, res) => {
         error: "No file uploaded. Please upload a file.",
       });
     }
+    console.log(req.file);
 
-    if (user.avatar.publicId && user.avatar.publicId !== "Google") {
-      const result = await deleteS3Object(`${user.avatar.publicId}`);
+    if (user.avatar?.publicId && user.avatar?.publicId !== "Google") {
+      await deleteS3Object(`${user.avatar.publicId}`);
     }
 
     user.avatar = { url: req.file.location, publicId: req.file.key };
-
+    console.log(user.avatar);
     await user.save();
 
     res.json({ success: true, fileUrl: req.file });
   } catch (error) {
+    // 'error' as an instance of 'Error'
+    const errorMessage = (error as Error).message;
     return res.status(500).json({
-      error: "An error occurred while uploading the file",
+      error: "An error occurred while uploading the file: " + errorMessage,
     });
   }
 };

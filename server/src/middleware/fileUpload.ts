@@ -48,7 +48,7 @@ export const upload = multer({
       });
     },
     key: (req: any, file: any, cb: any) => {
-      cb(null, `${req.user.id}/${file.originalname}-${Date.now()}`);
+      cb(null, `${req.user.id}/profile-${Date.now()}`);
     },
   }),
   fileFilter: fileFilter,
@@ -67,7 +67,6 @@ export const deleteS3Object = async (objectKey: string) => {
     // Send the command to S3
     const response = await s3.send(command);
 
-    console.log("Successfully deleted object from S3:", response);
     return response; // The response doesn't include any useful information for a successful delete
   } catch (error) {
     console.error("Error deleting object from S3:", error);

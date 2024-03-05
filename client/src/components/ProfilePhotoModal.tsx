@@ -54,6 +54,7 @@ const ProfilePhotoModal: FC<Props> = ({
 
       return data;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };
@@ -86,8 +87,8 @@ const ProfilePhotoModal: FC<Props> = ({
       } as any);
 
       const data = await handleUpload(formData);
-
-      if (!data.success) {
+      console.log(data);
+      if (!data?.success) {
         throw new Error("Failed to upload image");
       }
 
