@@ -12,19 +12,19 @@ import Animated, {
   FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
-
-import AppLink from "@ui/AppLink";
-import OTPField from "@ui/OTPField";
-import AppButton from "@ui/AppButton";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AuthStackParamList } from "src/@types/navigation";
-import client from "src/api/client";
 import {
   NavigationProp,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
+
+import AppLink from "@ui/AppLink";
+import OTPField from "@ui/OTPField";
+import AppButton from "@ui/AppButton";
+import { AuthStackParamList } from "src/@types/navigation";
+import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 

@@ -12,9 +12,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { FolderList, Folder, IconName } from "@ui/Folder";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
 

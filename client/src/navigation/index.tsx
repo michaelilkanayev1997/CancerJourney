@@ -102,37 +102,6 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.5 }],
     backgroundColor: colors.PRIMARY_DARK2,
   },
-  notification: {
-    width: "80%",
-    margin: 20,
-    borderRadius: 5,
-    padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  messageContainer: {
-    flexShrink: 1,
-    marginLeft: 15,
-  },
-  messageTitle: {
-    color: colors.INACTIVE_CONTRAST,
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  messageText: {
-    color: colors.INACTIVE_CONTRAST,
-    fontWeight: "500",
-    fontSize: 14,
-    flexWrap: "wrap",
-  },
 });
 
 export default AppNavigator;

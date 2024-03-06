@@ -1,6 +1,7 @@
-import colors from "@utils/colors";
 import { FC } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+
+import colors from "@utils/colors";
 
 interface Props {
   privateIcon: boolean;

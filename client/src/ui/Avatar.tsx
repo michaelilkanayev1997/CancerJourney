@@ -1,4 +1,3 @@
-import colors from "@utils/colors";
 import { FC, useState } from "react";
 import {
   View,
@@ -7,10 +6,10 @@ import {
   Image,
   Modal,
   Vibration,
-  ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import colors from "@utils/colors";
 import placeholder from "@assets/user_profile.png";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
 

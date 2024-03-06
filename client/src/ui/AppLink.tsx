@@ -7,6 +7,7 @@ import {
   StyleProp,
   TextStyle,
 } from "react-native";
+
 import colors from "@utils/colors";
 
 interface Props {

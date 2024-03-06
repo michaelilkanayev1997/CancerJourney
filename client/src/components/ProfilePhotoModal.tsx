@@ -22,7 +22,6 @@ import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
-
 import { UserProfile, updateProfile } from "src/store/auth";
 import Loader from "@ui/Loader";
 

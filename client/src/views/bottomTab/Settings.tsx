@@ -1,8 +1,9 @@
-import colors from "@utils/colors";
 import { FC } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
+
+import colors from "@utils/colors";
 import {
   getAuthState,
   updateBusyState,
@@ -11,7 +12,7 @@ import {
 } from "src/store/auth";
 import { Keys, removeFromAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
-import client, { getClient } from "src/api/client";
+import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {}
@@ -101,36 +102,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingLeft: 15,
   },
-  avatarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  linkText: {
-    color: colors.SECONDARY,
-    fontStyle: "italic",
-  },
-  paddingLeft: {
-    paddingLeft: 15,
-  },
-  nameInput: {
-    color: colors.CONTRAST,
-    fontWeight: "bold",
-    fontSize: 18,
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: colors.CONTRAST,
-    borderRadius: 7,
-    marginTop: 15,
-  },
-  emailConainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 15,
-  },
-  email: {
-    color: colors.CONTRAST,
-    marginRight: 10,
-  },
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -140,9 +111,6 @@ const styles = StyleSheet.create({
     color: colors.CONTRAST,
     fontSize: 18,
     marginLeft: 5,
-  },
-  marginTop: {
-    marginTop: 15,
   },
 });
 

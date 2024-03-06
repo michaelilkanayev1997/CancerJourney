@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Welcome from "@views/onBoarding/Welcome";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import colors from "@utils/colors";
 import OnBoarding from "@views/onBoarding/OnBoarding";
 import { AuthStackParamList } from "src/@types/navigation";

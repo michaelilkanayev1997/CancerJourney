@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, View } from "react-native";
 
 import FolderDetails from "@views/FolderDetails";
 import Upload from "@views/bottomTab/Upload";
