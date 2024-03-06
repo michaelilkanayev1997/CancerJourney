@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
   fileInfoContainer: {
     flexDirection: "row",
     marginTop: 5,
-
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,

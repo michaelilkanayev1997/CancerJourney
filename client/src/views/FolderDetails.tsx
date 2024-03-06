@@ -9,9 +9,9 @@ import {
   Vibration,
 } from "react-native";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import CustomBottomSheet from "@components/CustomBottomSheet";
 import ImageCard from "@components/ImageCard";
 import CustomImageZoomViewer from "@components/CustomImageZoomViewer";

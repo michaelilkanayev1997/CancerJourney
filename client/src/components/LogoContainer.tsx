@@ -1,8 +1,9 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useFadeInUp } from "@utils/animated";
 import { FC, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import Animated, { withSpring } from "react-native-reanimated";
+
+import { useFadeInUp } from "@utils/animated";
 
 interface Props {}
 

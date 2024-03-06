@@ -1,8 +1,9 @@
-import colors from "@utils/colors";
 import { FC, ReactNode, useState } from "react";
 import { Pressable, StyleSheet, Text, Vibration, View } from "react-native";
-import Loader from "./Loader";
 import { LinearGradient } from "expo-linear-gradient";
+
+import Loader from "./Loader";
+import colors from "@utils/colors";
 
 interface Props {
   title: string;

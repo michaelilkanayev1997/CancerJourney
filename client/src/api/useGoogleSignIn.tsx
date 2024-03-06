@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import { useDispatch } from "react-redux";
+
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import {
@@ -8,7 +10,6 @@ import {
   updateLoggedInState,
   updateProfile,
 } from "src/store/auth";
-import { useDispatch } from "react-redux";
 import client from "./client";
 import catchAsyncError from "./catchError";
 import { ToastNotification } from "@utils/toastConfig";

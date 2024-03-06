@@ -8,15 +8,14 @@ import {
   Vibration,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Avatar from "@ui/Avatar";
+import { useSelector } from "react-redux";
 
+import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
-import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
-interface Props {
-  // Add any props you might find necessary
-}
+
+interface Props {}
 
 const Profile: FC<Props> = (props) => {
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);

@@ -313,18 +313,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
   },
-  iconButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
-    marginHorizontal: 5,
-  },
-  iconButtonText: {
-    color: colors.LIGHT_BLUE,
-    marginLeft: 5,
-    textDecorationLine: "underline",
-  },
   progressContainer: {
     padding: 1,
   },

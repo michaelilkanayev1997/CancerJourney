@@ -1,4 +1,3 @@
-import colors from "@utils/colors";
 import { FC } from "react";
 import {
   View,
@@ -8,6 +7,8 @@ import {
   ImageSourcePropType,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+
+import colors from "@utils/colors";
 
 interface Props {
   item: {

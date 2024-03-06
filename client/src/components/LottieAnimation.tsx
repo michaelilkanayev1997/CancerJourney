@@ -1,8 +1,9 @@
 import { FC } from "react";
 import { StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
-import colors from "@utils/colors";
 import Animated, { withTiming } from "react-native-reanimated";
+
+import colors from "@utils/colors";
 
 interface Props {
   onAnimationFinish?: (isCancelled: boolean) => void;

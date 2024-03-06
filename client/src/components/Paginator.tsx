@@ -1,7 +1,6 @@
 import { FC } from "react";
 import {
   View,
-  StyleSheet,
   useWindowDimensions,
   Animated,
   ImageSourcePropType,
@@ -63,9 +62,5 @@ const Paginator: FC<Props> = ({ data, scrollX }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default Paginator;
