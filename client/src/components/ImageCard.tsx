@@ -67,9 +67,12 @@ const ImageCard = React.memo(
         >
           <View style={styles.imageContainer}>
             <Image source={{ uri: item.uri }} style={styles.image} />
-            <View style={styles.textContainer}>
+            <View style={[styles.textContainer]}>
               <Text
-                style={styles.imageTitle}
+                style={[
+                  styles.imageTitle,
+                  { textAlign: item.title.length > 10 ? "left" : "center" },
+                ]}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -117,7 +120,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     flexDirection: "column",
-    alignItems: "center",
     overflow: "hidden",
   },
   image: {
@@ -136,6 +138,7 @@ const styles = StyleSheet.create({
   imageDate: {
     fontSize: 14,
     color: "gray",
+    textAlign: "center",
   },
   moreIcon: {
     position: "absolute",
