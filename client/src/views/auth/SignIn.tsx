@@ -229,7 +229,7 @@ const SignIn: FC<Props> = (props) => {
             ]}
           >
             <AppButton
-              title="Sign up with Google"
+              title="Sign in with Google"
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
               onPress={() => request && promptGoogleSignIn()}
