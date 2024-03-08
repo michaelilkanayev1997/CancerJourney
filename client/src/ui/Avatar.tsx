@@ -43,7 +43,6 @@ const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
 
   return (
     <View style={styles.container}>
-      {/* TouchableOpacity wraps the image to make it clickable */}
       <TouchableOpacity onPress={toggleModal}>
         <Image source={uri ? { uri } : placeholder} style={styles.image} />
       </TouchableOpacity>
@@ -101,6 +100,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 5,
     bottom: 5,
+    elevation: 5, // Works on Android
+    // iOS shadow properties
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
   },
   modalView: {
     flex: 1,

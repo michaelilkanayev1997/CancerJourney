@@ -7,6 +7,7 @@ import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
 import Settings from "@views/bottomTab/Settings";
 import UploadFileNavigator from "./UploadFileNavigator";
 import Home from "@views/bottomTab/Home";
+import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="ProfileScreen"
-        component={Profile}
+        component={ProfileNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
