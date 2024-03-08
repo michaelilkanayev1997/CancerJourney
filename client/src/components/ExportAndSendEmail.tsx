@@ -55,11 +55,16 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     totalBytesWritten: number;
     totalBytesExpectedToWrite: number;
   }) => {
-    const percentProgress = (
-      (progress.totalBytesWritten / progress.totalBytesExpectedToWrite) *
-      100
-    ).toFixed(2);
-    setDownloadProgress(Number(percentProgress));
+    if (progress.totalBytesExpectedToWrite > 0) {
+      // We can calculate the percentage progress as normal
+      const percentProgress =
+        (progress.totalBytesWritten / progress.totalBytesExpectedToWrite) * 100;
+      setDownloadProgress(Number(percentProgress.toFixed(2)));
+    } else {
+      // When totalBytesExpectedToWrite is -1, handle differently
+      console.log(progress);
+      setDownloadProgress(-1); // Using -1 to indicate unknown size
+    }
   };
 
   const downloadFile = async () => {
@@ -296,13 +301,16 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
         style={[styles.progressContainer, { opacity: isDownloading ? 1 : 0 }]}
       >
         <ProgressBar
-          progress={downloadProgress / 100}
+          progress={downloadProgress === -1 ? 100 : downloadProgress / 100}
           width={200}
           color={colors.LIGHT_BLUE}
           animated={true}
           useNativeDriver={true}
         />
-        <Text style={styles.progressText}>Progress: {downloadProgress}%</Text>
+
+        <Text style={styles.progressText}>
+          Progress: {downloadProgress === -1 ? "100" : downloadProgress}%
+        </Text>
       </View>
     </>
   );
