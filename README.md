@@ -4,7 +4,7 @@
  
 ---
 
-## Description 
+## Description
 
 **Everyone’s cancer journey is different, individual. And with so much information to stay on top of, we know it can also seem overwhelming.**
 
@@ -14,6 +14,4 @@
 
 **If you are living with cancer, we are here to support you. CancerJourney aims to be a useful resource for patients, providing the help they need to manage their condition and improve their quality of life. Help is always on hand with CancerJourney.**
 
-
-
-</div> 
+</div>
