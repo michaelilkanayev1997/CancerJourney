@@ -7,7 +7,7 @@ import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
 import Settings from "@views/bottomTab/Settings";
 import UploadFileNavigator from "./UploadFileNavigator";
 import Home from "@views/bottomTab/Home";
-import ProfileNavigator from "./ProfileNavigator";
+import SocialNavigator from "./SocialNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,8 +34,10 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="ProfileScreen"
-        component={ProfileNavigator}
+        component={Profile}
         options={{
+          headerShown: true,
+          title: "Personal Profile",
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
               label="Profile"
@@ -44,11 +46,18 @@ const TabNavigator = () => {
               color={color}
             />
           ),
+          headerStyle: {
+            shadowColor: "#000", // Shadow color
+            shadowOffset: { width: 0, height: 2 }, // Shadow offset
+            shadowOpacity: 0.1, // Shadow opacity
+            shadowRadius: 3.84, // Shadow radius
+            elevation: 5, // Elevation for Android
+          },
         }}
       />
       <Tab.Screen
         name="PostScreen"
-        component={Profile}
+        component={SocialNavigator}
         options={{
           tabBarIcon: (props) => {
             return (

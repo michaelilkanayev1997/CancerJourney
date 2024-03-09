@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   image: {
-    borderRadius: 75,
-    width: 150,
-    height: 150,
+    borderRadius: 55,
+    width: 110,
+    height: 110,
     borderColor: colors.LIGHT_BLUE,
-    borderWidth: 5,
+    borderWidth: 3,
   },
   editButton: {
     backgroundColor: colors.LIGHT_BLUE,
