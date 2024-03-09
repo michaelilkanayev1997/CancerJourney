@@ -19,6 +19,7 @@ import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import Avatar from "@ui/Avatar";
 import { useFadeInRight } from "@utils/animated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {}
 
@@ -118,7 +119,17 @@ const Profile: FC<Props> = (props) => {
           uri={profile?.avatar || ""}
         />
         <Text style={styles.profileName}>{profile?.name}</Text>
-        <Text style={styles.profileEmail}>{profile?.email}</Text>
+        <View style={styles.row}>
+          <Text style={styles.profileEmail}>{profile?.email}</Text>
+          {profile?.verified ? (
+            <MaterialCommunityIcons
+              name="check-decagram"
+              size={24}
+              color={colors.LIGHT_BLUE}
+              style={styles.verifiedIcon}
+            />
+          ) : null}
+        </View>
         <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
       </View>
 
@@ -317,6 +328,12 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 17,
     fontWeight: "600",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  verifiedIcon: {
+    paddingLeft: 5,
   },
 });
 
