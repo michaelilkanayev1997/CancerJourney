@@ -9,6 +9,7 @@ export interface UserProfile {
   avatar?: string;
   followers: number;
   followings: number;
+  createdAt: Date;
 }
 
 interface AuthState {
