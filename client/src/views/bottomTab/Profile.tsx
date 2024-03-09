@@ -94,6 +94,19 @@ const Profile: FC<Props> = (props) => {
     startAnimation: startSaveBtnAnimation,
   } = useFadeInRight(0);
 
+  let formattedDate = "";
+  if (profile?.createdAt) {
+    // Check if `createdAt` is defined
+    const date = new Date(profile.createdAt); // Now it's safe to create the Date object
+
+    // Format the date
+    formattedDate = date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
   return (
     <View
       style={[styles.container, { paddingBottom: keyboardIsShown ? 0 : 85 }]}
@@ -103,11 +116,9 @@ const Profile: FC<Props> = (props) => {
           onButtonPress={toggleModalVisible}
           uri={profile?.avatar || ""}
         />
-        <Text style={styles.profileName}>{newProfile.name}</Text>
-        <Text style={styles.profileEmail}>{newProfile.email}</Text>
-        <Text style={styles.activeSince}>
-          Active since - {newProfile.activeSince}
-        </Text>
+        <Text style={styles.profileName}>{profile?.name}</Text>
+        <Text style={styles.profileEmail}>{profile?.email}</Text>
+        <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
       </View>
 
       <ScrollView style={styles.container}>
