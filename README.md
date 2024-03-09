@@ -1,7 +1,7 @@
 <div align="center">
 
-<img src="https://github.com/vovadavidzon/CancerJourney/assets/93651794/b519d727-03c8-4b74-8305-7d411f27f561" alt="Date" width="60%" />
-
+ <img src="client/src/assets/Icons/Logo.png" width="60%"  alt="Logo" />
+ 
 ---
 
 ## Description 
