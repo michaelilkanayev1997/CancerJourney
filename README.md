@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="https://github.com/vovadavidzon/CancerJourney/assets/93651794/b519d727-03c8-4b74-8305-7d411f27f561" alt="Date" width="60%" />
-
+ <img src="client/src/assets/Icons/Logo.png" width="75%"  alt="Logo" />
+ 
 ---
 
-## Description 
+## Description
 
 **Everyone’s cancer journey is different, individual. And with so much information to stay on top of, we know it can also seem overwhelming.**
 
@@ -14,6 +14,4 @@
 
 **If you are living with cancer, we are here to support you. CancerJourney aims to be a useful resource for patients, providing the help they need to manage their condition and improve their quality of life. Help is always on hand with CancerJourney.**
 
-
-
-</div> 
+</div>
