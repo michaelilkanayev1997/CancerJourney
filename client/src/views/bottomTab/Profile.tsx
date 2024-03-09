@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,13 +10,14 @@ import {
   Keyboard,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import colors from "@utils/colors";
 import { useSelector } from "react-redux";
-import { getAuthState } from "src/store/auth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Animated from "react-native-reanimated";
+
+import colors from "@utils/colors";
+import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import Avatar from "@ui/Avatar";
-import Animated from "react-native-reanimated";
 import { useFadeInRight } from "@utils/animated";
 
 interface Props {}
