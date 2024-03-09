@@ -1,6 +1,6 @@
 <div align="center">
 
- <img src="client/src/assets/Icons/Logo.png" width="60%"  alt="Logo" />
+ <img src="client/src/assets/Icons/Logo.png" width="75%"  alt="Logo" />
  
 ---
 
