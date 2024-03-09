@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Keyboard,
+  Vibration,
 } from "react-native";
 import * as Linking from "expo-linking";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -13,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
+import CustomPdfViewer from "@components/CustomPdfViewer";
 
 interface Props {}
 
@@ -27,6 +29,13 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [pdf, setPdf] = useState("");
+
+  const toggleModalVisible = useCallback(() => {
+    setModalVisible((prevVisible) => !prevVisible);
+    Vibration.vibrate(50);
+  }, []);
 
   const handleSave = async () => {
     //navigation.goBack(); // Or navigate elsewhere
@@ -49,46 +58,70 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   );
 
   return (
-    <ScrollView
-      ref={scrollViewRef}
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-      overScrollMode="never"
-    >
-      {fileType.includes("image/") && (
-        <Image
-          source={{ uri: fileUri }}
-          style={styles.preview}
-          resizeMode="contain"
+    <>
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+      >
+        {fileType.includes("image/") && (
+          <Image
+            source={{ uri: fileUri }}
+            style={styles.preview}
+            resizeMode="contain"
+          />
+        )}
+        {fileType.includes("application/pdf") && (
+          <>
+            <Image
+              source={{
+                uri: "https://blog.idrsolutions.com/app/uploads/2020/10/pdf-1.png",
+              }}
+              style={styles.pdfPreview}
+              resizeMode="contain"
+            />
+            <Text
+              style={styles.link}
+              onPress={() => {
+                setPdf(fileUri);
+                toggleModalVisible();
+              }}
+            >
+              Open PDF
+            </Text>
+          </>
+        )}
+
+        <TextInput
+          style={styles.input}
+          placeholder="Title*"
+          value={title}
+          onChangeText={setTitle}
+        />
+        <TextInput
+          style={[styles.input, styles.descriptionInput]}
+          placeholder="Description"
+          value={description}
+          onChangeText={setDescription}
+          multiline
+        />
+
+        <AppButton
+          title="Save"
+          pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+          defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+          onPress={handleSave}
+        />
+      </ScrollView>
+      {modalVisible && (
+        <CustomPdfViewer
+          modalVisible={modalVisible}
+          toggleModalVisible={toggleModalVisible}
+          item={{ pdf_file: pdf, title: "Pdf File" }}
         />
       )}
-      {fileType.includes("application/pdf") && (
-        <Text style={styles.link} onPress={() => Linking.openURL(fileUri)}>
-          Open PDF
-        </Text>
-      )}
-
-      <TextInput
-        style={styles.input}
-        placeholder="Title*"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={[styles.input, styles.descriptionInput]}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-
-      <AppButton
-        title="Save"
-        pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
-        defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-        onPress={handleSave}
-      />
-    </ScrollView>
+    </>
   );
 };
 
@@ -96,6 +129,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: "center",
+  },
+  pdfPreview: {
+    width: 250,
+    height: 150,
+    marginBottom: 20,
   },
   preview: {
     width: 250,
