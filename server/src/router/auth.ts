@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   GoogleSignIn,
   create,
+  fileUpload,
   generateForgetPasswordLink,
   grantValid,
   logOut,
@@ -21,7 +22,7 @@ import {
   UpdatePasswordSchema,
 } from "#/utils/validationSchema";
 import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
-import { upload } from "#/middleware/fileUpload";
+import { folderFileUpload, upload } from "#/middleware/fileUpload";
 
 const router = Router();
 
@@ -56,5 +57,11 @@ router.post(
   profileUpload
 );
 router.post("/profile-image-remove", mustAuth, profileImageRemove);
+router.post(
+  "/file-upload",
+  mustAuth,
+  folderFileUpload.single("file"),
+  fileUpload
+); // i have to set it in other controller!
 
 export default router;

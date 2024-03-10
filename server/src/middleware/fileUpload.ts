@@ -57,6 +57,25 @@ export const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
 });
 
+export const folderFileUpload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: S3_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: (req: any, file: any, cb: any) => {
+      cb(null, {
+        uploadedBy: String(req.user.id),
+      });
+    },
+    key: (req: any, file: any, cb: any) => {
+      console.log(file.originalname);
+      cb(null, `${req.user.id}/scans/${file.originalname}-${Date.now()}`);
+    },
+  }),
+  // fileFilter: fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
+});
+
 // Function to delete an object from S3
 export const deleteS3Object = async (objectKey: string) => {
   try {
