@@ -8,13 +8,15 @@ import {
   Keyboard,
   Vibration,
 } from "react-native";
-import * as Linking from "expo-linking";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
 import CustomPdfViewer from "@components/CustomPdfViewer";
+import { ToastNotification } from "@utils/toastConfig";
+import { getClient } from "src/api/client";
+import catchAsyncError from "src/api/catchError";
 
 interface Props {}
 
@@ -31,14 +33,73 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const [description, setDescription] = useState("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [pdf, setPdf] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
     Vibration.vibrate(50);
   }, []);
 
+  const handleUpload = async (formData: FormData) => {
+    try {
+      const client = await getClient({
+        "Content-Type": "multipart/form-data;",
+      });
+
+      const { data } = await client.post("/auth/file-upload", formData);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   const handleSave = async () => {
-    //navigation.goBack(); // Or navigate elsewhere
+    if (title.length === 0) {
+      ToastNotification({
+        type: "Info",
+        message: "Title is required !",
+      });
+      return;
+    } else if (!fileUri) {
+      ToastNotification({
+        type: "Info",
+        message: "File is required !",
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", {
+        uri: fileUri,
+        type: fileType,
+        name: title,
+      } as any);
+
+      const data = await handleUpload(formData);
+      console.log(data);
+      if (!data?.success) {
+        throw new Error("Failed to upload file");
+      }
+
+      ToastNotification({
+        type: "Success",
+        message: "File uploaded successfully!",
+      });
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    }
+
+    navigation.goBack(); // navigate back
+    setIsLoading(false);
   };
 
   useFocusEffect(
@@ -109,6 +170,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
 
         <AppButton
           title="Save"
+          busy={isLoading}
           pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
           defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
           onPress={handleSave}

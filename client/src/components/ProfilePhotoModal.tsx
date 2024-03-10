@@ -106,6 +106,7 @@ const ProfilePhotoModal: FC<Props> = ({
         message: errorMessage,
       });
     }
+
     toggleModalVisible();
     setIsLoading(false);
   };
@@ -136,6 +137,7 @@ const ProfilePhotoModal: FC<Props> = ({
       setIsLoading(true);
 
       const file = result.assets[0];
+      console.log(file);
 
       const formData = new FormData();
 
@@ -146,7 +148,8 @@ const ProfilePhotoModal: FC<Props> = ({
       } as any);
 
       const data = await handleUpload(formData);
-      console.log(data);
+
+      // console.log(data);
       if (!data.success) {
         throw new Error("Failed to upload image");
       }
@@ -165,6 +168,7 @@ const ProfilePhotoModal: FC<Props> = ({
         message: errorMessage,
       });
     }
+
     toggleModalVisible();
     setIsLoading(false);
   };

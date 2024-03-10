@@ -13,13 +13,13 @@ import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import Avatar from "@ui/Avatar";
 import { useFadeInRight } from "@utils/animated";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {}
 
@@ -223,7 +223,7 @@ const Profile: FC<Props> = (props) => {
             }
             style={styles.rowInput}
           >
-            <Picker.Item label="Breast Cancer" value="breast" />
+            <Picker.Item label="Breasts cancer" value="breasts" />
             <Picker.Item label="Family member" value="family" />
             <Picker.Item label="Supporter (Friend)" value="friend" />
             <Picker.Item label="Health care pro" value="professional" />
