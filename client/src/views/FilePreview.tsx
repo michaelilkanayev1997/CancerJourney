@@ -27,7 +27,7 @@ type FilePreviewRouteType = NativeStackScreenProps<
 
 const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const navigation = useNavigation();
-  const { fileUri, fileType } = route.params;
+  const { fileUri, fileType, folderName } = route.params;
   const scrollViewRef = useRef<ScrollView>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -46,7 +46,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         "Content-Type": "multipart/form-data;",
       });
 
-      const { data } = await client.post("/auth/file-upload", formData);
+      const { data } = await client.post("/file/file-upload", formData);
 
       return data;
     } catch (error) {
@@ -77,8 +77,11 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
       formData.append("file", {
         uri: fileUri,
         type: fileType,
-        name: title,
+        name: folderName,
       } as any);
+
+      // Append the folder name as a separate field
+      formData.append("folder", "medications");
 
       const data = await handleUpload(formData);
       console.log(data);
@@ -105,7 +108,6 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   useFocusEffect(
     useCallback(() => {
       const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-        console.log("Keyboard hidden");
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
         }

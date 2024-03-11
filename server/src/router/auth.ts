@@ -22,7 +22,7 @@ import {
   UpdatePasswordSchema,
 } from "#/utils/validationSchema";
 import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
-import { folderFileUpload, upload } from "#/middleware/fileUpload";
+import { profileImageUpload } from "#/middleware/fileUpload";
 
 const router = Router();
 
@@ -53,15 +53,9 @@ router.post("/log-out", mustAuth, logOut);
 router.post(
   "/profile-image-upload",
   mustAuth,
-  upload.single("avatar"),
+  profileImageUpload.single("avatar"),
   profileUpload
 );
 router.post("/profile-image-remove", mustAuth, profileImageRemove);
-router.post(
-  "/file-upload",
-  mustAuth,
-  folderFileUpload.single("file"),
-  fileUpload
-); // i have to set it in other controller!
 
 export default router;

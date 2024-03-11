@@ -17,13 +17,15 @@ import AppButton from "@ui/AppButton";
 import { UploadStackParamList } from "src/@types/navigation";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
 
-interface Props {}
+interface Props {
+  folderName: string;
+}
 
 const screenHeight = Dimensions.get("window").height;
 const bottomSheetHeight = screenHeight * 0.56; // 56% of the screen height
 
 const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
-  (props, ref) => {
+  ({ folderName }, ref) => {
     const snapPoints = useMemo(() => [bottomSheetHeight], [bottomSheetHeight]);
     const navigation =
       useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
@@ -65,6 +67,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           navigation.navigate("FilePreview", {
             fileUri: File.uri,
             fileType: File.type,
+            folderName,
           });
         }
       }
@@ -98,6 +101,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           navigation.navigate("FilePreview", {
             fileUri: File.uri,
             fileType: File.type,
+            folderName,
           });
         }
       } catch (error) {

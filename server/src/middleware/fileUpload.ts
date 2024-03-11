@@ -11,6 +11,7 @@ import {
   S3_SECRET_KEY,
 } from "#/utils/variables";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import crypto from "crypto";
 
 const s3 = new S3Client({
   credentials: {
@@ -20,7 +21,7 @@ const s3 = new S3Client({
   region: S3_REGION,
 });
 
-const fileFilter = (
+const imageFilter = (
   req: Express.Request,
   file: Express.Multer.File,
   cb: FileFilterCallback
@@ -39,7 +40,33 @@ const fileFilter = (
   }
 };
 
-export const upload = multer({
+const fileFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  const allowedMimes = [
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+  ];
+
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true); // Accept the file
+  } else {
+    // Reject the file with a custom error message
+    cb(
+      new Error(
+        "Invalid file type. Only JPG, PNG, WEBP images and PDF files are allowed."
+      ) as any,
+      false
+    );
+  }
+};
+
+export const profileImageUpload = multer({
   storage: multerS3({
     s3: s3,
     bucket: S3_BUCKET_NAME,
@@ -53,7 +80,7 @@ export const upload = multer({
       cb(null, `${req.user.id}/profile-${Date.now()}`);
     },
   }),
-  fileFilter: fileFilter,
+  fileFilter: imageFilter,
   limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
 });
 
@@ -68,11 +95,15 @@ export const folderFileUpload = multer({
       });
     },
     key: (req: any, file: any, cb: any) => {
-      console.log(file.originalname);
-      cb(null, `${req.user.id}/scans/${file.originalname}-${Date.now()}`);
+      // Generate a 16-byte random hex string
+      const randomBytes = crypto.randomBytes(16).toString("hex");
+      cb(
+        null,
+        `${req.user.id}/${file.originalname}/${randomBytes}-${Date.now()}`
+      );
     },
   }),
-  // fileFilter: fileFilter,
+  fileFilter: fileFilter,
   limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
 });
 
