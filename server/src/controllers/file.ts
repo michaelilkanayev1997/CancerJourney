@@ -1,3 +1,4 @@
+import { Files } from "#/models/Files";
 import User from "#/models/user";
 import { RequestHandler } from "express";
 
@@ -12,17 +13,31 @@ export const fileUpload: RequestHandler = async (req, res) => {
         error: "No file uploaded. Please upload a file.",
       });
     }
-    console.log(req.file);
 
-    // if (user.avatar?.publicId && user.avatar?.publicId !== "Google") {
-    //   await deleteS3Object(`${user.avatar.publicId}`);
-    // }
+    // Accessing title and description from the request body
+    const { title, description } = req.body;
 
-    // user.avatar = { url: req.file.location, publicId: req.file.key };
-    // console.log(user.avatar);
-    // await user.save();
+    if (title === "") throw new Error("title is a required field !");
 
-    res.json({ success: true, fileUrl: req.file });
+    const newFile = {
+      title,
+      description,
+      key: req.file.key,
+      type: req.file.mimetype.includes("pdf") ? "pdf" : "image",
+    };
+
+    const name = req.file.originalname.toLowerCase().replace(/\s+/g, ""); // Remove space & LowerCase
+
+    // Update or insert UserFiles document
+    await Files.updateOne(
+      { owner: user.id },
+      {
+        $push: { [name]: newFile },
+      },
+      { upsert: true } // create a new document if one doesn't exist
+    );
+
+    res.json({ success: true, file: req.file });
   } catch (error) {
     // 'error' as an instance of 'Error'
     const errorMessage = (error as Error).message;

@@ -97,10 +97,10 @@ export const folderFileUpload = multer({
     key: (req: any, file: any, cb: any) => {
       // Generate a 16-byte random hex string
       const randomBytes = crypto.randomBytes(16).toString("hex");
-      cb(
-        null,
-        `${req.user.id}/${file.originalname}/${randomBytes}-${Date.now()}`
-      );
+
+      const folderName = file.originalname.toLowerCase().replace(/\s+/g, ""); // Remove space & LowerCase
+
+      cb(null, `${req.user.id}/${folderName}/${randomBytes}-${Date.now()}`);
     },
   }),
   fileFilter: fileFilter,

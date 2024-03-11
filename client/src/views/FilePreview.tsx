@@ -80,8 +80,9 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         name: folderName,
       } as any);
 
-      // Append the folder name as a separate field
-      formData.append("folder", "medications");
+      // Append the folder name and description
+      formData.append("title", title);
+      formData.append("description", description);
 
       const data = await handleUpload(formData);
       console.log(data);
