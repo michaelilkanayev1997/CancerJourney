@@ -206,7 +206,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         />
       )}
 
-      <CustomBottomSheet ref={bottomSheetModalRef} />
+      <CustomBottomSheet ref={bottomSheetModalRef} folderName={folderName} />
     </View>
   );
 };

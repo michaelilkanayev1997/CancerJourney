@@ -22,5 +22,6 @@ export type UploadStackParamList = {
   FilePreview: {
     fileUri: string;
     fileType: string;
+    folderName: string;
   };
 };
