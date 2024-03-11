@@ -20,7 +20,7 @@ interface IUserFiles extends Document {
 }
 
 const FileSchema: Schema = new Schema({
-  name: { type: String, required: true },
+  title: { type: String, required: true },
   description: String,
   uploadTime: { type: Date, default: Date.now },
   key: { type: String, required: true },
@@ -38,7 +38,4 @@ const UserFilesSchema: Schema = new Schema({
   other: [FileSchema],
 });
 
-export const UserFiles = mongoose.model<IUserFiles>(
-  "UserFiles",
-  UserFilesSchema
-);
+export const Files = mongoose.model<IUserFiles>("Files", UserFilesSchema);

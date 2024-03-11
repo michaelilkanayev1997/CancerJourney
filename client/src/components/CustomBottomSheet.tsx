@@ -77,10 +77,8 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       try {
         const docRes = await DocumentPicker.getDocumentAsync({
           type: [
-            "application/pdf",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "image/*",
+            "application/pdf", // Allows PDFs
+            "image/*", // Allows all image types
           ],
           multiple: false,
         });
