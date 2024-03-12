@@ -128,7 +128,7 @@ export const deleteS3Object = async (objectKey: string) => {
   }
 };
 
-async function generateSignedUrl(key: string) {
+export async function generateSignedUrl(key: string) {
   const command = new GetObjectCommand({
     Bucket: S3_BUCKET_NAME,
     Key: key,
@@ -139,10 +139,3 @@ async function generateSignedUrl(key: string) {
 
   return signedUrl;
 }
-
-// Example usage
-
-const objectKey = "65d9202c7aa232603a4c8a5c/profile-1709672113852";
-// generateSignedUrl(objectKey)
-//   .then((url) => console.log(url))
-//   .catch((err) => console.error(err));

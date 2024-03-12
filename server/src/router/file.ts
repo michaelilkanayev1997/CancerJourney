@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { mustAuth } from "#/middleware/auth";
 import { folderFileUpload } from "#/middleware/fileUpload";
-import { fileRemove, fileUpload } from "#/controllers/file";
+import { fileRemove, fileUpload, getFolderFiles } from "#/controllers/file";
 
 const router = Router();
 
@@ -13,5 +13,6 @@ router.post(
   fileUpload
 );
 router.delete("/file-delete", mustAuth, fileRemove);
+router.get("/:folder", mustAuth, getFolderFiles);
 
 export default router;

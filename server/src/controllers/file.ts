@@ -1,6 +1,5 @@
-import { UploadFileRequest } from "#/@types/files";
-import { deleteS3Object } from "#/middleware/fileUpload";
-import { Files } from "#/models/files";
+import { deleteS3Object, generateSignedUrl } from "#/middleware/fileUpload";
+import { Files, IFile } from "#/models/files";
 import User from "#/models/user";
 import { RequestHandler } from "express";
 
@@ -90,6 +89,58 @@ export const fileRemove: RequestHandler = async (req, res) => {
     }
 
     res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete file", error);
+    return res.status(500).json({
+      error: "An error occurred while removing the file",
+    });
+  }
+};
+
+export const getFolderFiles: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const folder = req.params.folder; // Get the folder name from the URL
+
+    // Validate if the folder name is one of the allowed categories
+    const allowedFolders = [
+      "bloodtests",
+      "treatments",
+      "medications",
+      "reports",
+      "scans",
+      "appointments",
+      "other",
+    ];
+
+    if (!allowedFolders.includes(folder)) {
+      return res.status(400).send({ message: "Invalid folder name" });
+    }
+
+    // Query the database for files in the specified folder, belonging to the authenticated user, sorted by uploadTime
+    const folderFiles = await Files.findOne(
+      { owner: user.id },
+      { [folder]: 1, _id: 0 }
+    ).sort({ [`${folder}.uploadTime`]: 1 });
+
+    if (!folderFiles) {
+      return res.status(404).send({ message: "Files not found" });
+    }
+
+    const files = folderFiles[folder];
+
+    // Generate signed URLs for each file
+    const filesWithSignedUrls = await Promise.all(
+      files.map(async (file: IFile) => {
+        const signedUrl = await generateSignedUrl(file.key);
+        return { ...file.toObject(), signedUrl }; // Add the signed URL to the file object
+      })
+    );
+
+    // Send the files of the requested folder with their signed URLs
+    res.status(200).send(filesWithSignedUrls);
   } catch (error) {
     console.error("Failed to delete file", error);
     return res.status(500).json({
