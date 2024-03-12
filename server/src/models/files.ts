@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
 interface IFile {
+  _id: ObjectId;
   name: string;
   description?: string;
   uploadTime: Date;
@@ -17,6 +18,7 @@ interface IUserFiles extends Document {
   scans: IFile[];
   appointments: IFile[];
   other: IFile[];
+  [key: string]: any; // index signature
 }
 
 const FileSchema: Schema = new Schema({

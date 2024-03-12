@@ -13,6 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
 import ExportAndSendEmail from "./ExportAndSendEmail";
+import { getClient } from "src/api/client";
 
 interface Props {
   item: ImageType;
@@ -44,6 +45,26 @@ const MoreOptionsModal: FC<Props> = ({
   const handleDescriptionChange = useCallback((text: string) => {
     setDescription(text);
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      // Construct the URL with query parameters
+      const fileId = "65f043ad410026cd4eb76404";
+      const folderName = "medications";
+      const url = `/file/file-delete?fileId=${encodeURIComponent(
+        fileId
+      )}&folderName=${encodeURIComponent(folderName)}`;
+
+      const client = await getClient();
+
+      const { data } = await client.delete(url);
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 
   return (
     <Modal
@@ -99,7 +120,7 @@ const MoreOptionsModal: FC<Props> = ({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => console.log("Delete")}
+              onPress={handleDelete}
               style={styles.modalActionButton}
             >
               <MaterialCommunityIcons name="delete" size={20} color="#FF5C5C" />
