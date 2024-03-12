@@ -98,8 +98,10 @@ export const folderFileUpload = multer({
       // Generate a 16-byte random hex string
       const randomBytes = crypto.randomBytes(16).toString("hex");
 
-      const folderName = file.originalname.toLowerCase().replace(/\s+/g, ""); // Remove space & LowerCase
+      // Remove space & LowerCase
+      const folderName = file.originalname.toLowerCase().replace(/\s+/g, "");
 
+      // Construct the S3 object key with the user ID, processed file name, random bytes, and timestamp
       cb(null, `${req.user.id}/${folderName}/${randomBytes}-${Date.now()}`);
     },
   }),
