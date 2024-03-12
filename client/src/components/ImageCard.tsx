@@ -34,6 +34,7 @@ interface Props {
   setModalVisible: Dispatch<SetStateAction<boolean>>;
   numColumns: number;
   description?: string;
+  folderName: string;
 }
 
 const ImageCard = React.memo(
@@ -43,6 +44,7 @@ const ImageCard = React.memo(
     setSelectedImageIndex,
     setModalVisible,
     numColumns,
+    folderName,
   }: Props) => {
     const [isOptionModalVisible, setOptionModalVisible] =
       useState<boolean>(false);
@@ -98,6 +100,7 @@ const ImageCard = React.memo(
           item={item}
           isOptionModalVisible={isOptionModalVisible}
           setOptionModalVisible={setOptionModalVisible}
+          folderName={folderName}
         />
       </>
     );

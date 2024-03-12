@@ -183,6 +183,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             setSelectedImageIndex={setSelectedImageIndex}
             setModalVisible={toggleModalVisible}
             numColumns={numColumns}
+            folderName={folderName}
           />
         )}
         keyExtractor={(item) => item.id}
