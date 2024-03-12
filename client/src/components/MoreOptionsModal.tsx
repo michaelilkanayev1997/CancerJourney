@@ -19,12 +19,14 @@ interface Props {
   item: ImageType;
   isOptionModalVisible: boolean;
   setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
+  folderName: string;
 }
 
 const MoreOptionsModal: FC<Props> = ({
   item,
   isOptionModalVisible,
   setOptionModalVisible,
+  folderName,
 }) => {
   const [name, setName] = useState<string>(item.title);
   const [description, setDescription] = useState<string>(
@@ -49,10 +51,9 @@ const MoreOptionsModal: FC<Props> = ({
   const handleDelete = async () => {
     try {
       // Construct the URL with query parameters
-      const fileId = "65f043ad410026cd4eb76404";
-      const folderName = "medications";
+
       const url = `/file/file-delete?fileId=${encodeURIComponent(
-        fileId
+        item._id
       )}&folderName=${encodeURIComponent(folderName)}`;
 
       const client = await getClient();
