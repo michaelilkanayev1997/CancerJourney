@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
-interface IFile {
+export interface IFile {
+  toObject: any;
   _id: ObjectId;
   name: string;
   description?: string;
