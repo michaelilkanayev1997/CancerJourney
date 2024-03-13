@@ -16,6 +16,9 @@ import CustomBottomSheet from "@components/CustomBottomSheet";
 import ImageCard from "@components/ImageCard";
 import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
 import CustomPdfViewer from "@components/CustomPdfViewer";
+import { getClient } from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { ToastNotification } from "@utils/toastConfig";
 
 // Placeholder images for demonstration
 const images = [
@@ -171,11 +174,49 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     });
   }, [navigation, numColumns]);
 
+  const fetchNewSignedUrl = async () => {
+    // Fetch the new signed URL
+
+    try {
+      const client = await getClient();
+
+      const { data } = await client.get(`/file/${folderName}`);
+
+      console.log(data);
+      setFolderFiles(data);
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Define a function to initiate the fetching process
+    const initiateFetch = () => {
+      fetchNewSignedUrl();
+
+      // Set the interval to refresh the signed URL every 59 minutes
+      const intervalId = setInterval(fetchNewSignedUrl, 3540000); // 3540000 milliseconds = 59 minutes
+
+      // Return a cleanup function that clears the interval
+      return () => clearInterval(intervalId);
+    };
+
+    // Call the function to start fetching
+    const cleanup = initiateFetch();
+
+    // Return the cleanup function to be called on component unmount
+    return cleanup;
+  }, [folderName]); // Only re-run the effect if folderName changes
+
   return (
     <View style={styles.container}>
       <FlatList
         removeClippedSubviews={false} // Fixing InputText Bug
-        data={images}
+        data={folderFiles}
         renderItem={({ item, index }) => (
           <ImageCard
             item={item}
@@ -186,25 +227,30 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             folderName={folderName}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         numColumns={numColumns}
         contentContainerStyle={styles.imagesContainer}
         key={numColumns}
       />
 
-      {images[selectedImageIndex || 0]?.type.includes("image") ? (
-        <CustomImageZoomViewer
-          modalVisible={modalVisible}
-          toggleModalVisible={toggleModalVisible}
-          selectedImageIndex={selectedImageIndex}
-          images={images}
-        />
+      {folderFiles.length > 0 ? (
+        folderFiles[selectedImageIndex || 0]?.type === "image" ? (
+          <CustomImageZoomViewer
+            modalVisible={modalVisible}
+            toggleModalVisible={toggleModalVisible}
+            selectedImageIndex={selectedImageIndex}
+            images={folderFiles}
+          />
+        ) : (
+          <CustomPdfViewer
+            modalVisible={modalVisible}
+            toggleModalVisible={toggleModalVisible}
+            item={folderFiles[selectedImageIndex || 0]}
+          />
+        )
       ) : (
-        <CustomPdfViewer
-          modalVisible={modalVisible}
-          toggleModalVisible={toggleModalVisible}
-          item={images[selectedImageIndex || 0]}
-        />
+        // Fallback content if folderFiles is empty
+        <Text>No files to display</Text>
       )}
 
       <CustomBottomSheet ref={bottomSheetModalRef} folderName={folderName} />

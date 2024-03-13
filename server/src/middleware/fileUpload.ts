@@ -135,7 +135,7 @@ export async function generateSignedUrl(key: string) {
   });
 
   // URL expires in 3600 seconds (1 hour)
-  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
+  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
   return signedUrl;
 }

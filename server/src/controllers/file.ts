@@ -14,7 +14,7 @@ export const fileUpload: RequestHandler = async (req, res) => {
         error: "No file uploaded. Please upload a file.",
       });
     }
-
+    console.log(req.file);
     // Accessing title and description from the request body
     const { title, description } = req.body;
 
@@ -55,15 +55,18 @@ export const fileRemove: RequestHandler = async (req, res) => {
 
     const { fileId, folderName } = req.query;
 
+    // Remove space & LowerCase
+    const folderNameFormated = folderName?.toLowerCase().replace(/\s+/g, "");
+
     // Type checking and conversion if necessary
-    if (typeof folderName !== "string" || typeof fileId !== "string") {
+    if (typeof folderNameFormated !== "string" || typeof fileId !== "string") {
       return res.status(400).json({ error: "Invalid query parameters." });
     }
 
     // Retrieve the file document from MongoDB
     const fileDocument = await Files.findOne(
-      { [`${folderName}._id`]: fileId },
-      { [`${folderName}.$`]: 1 }
+      { [`${folderNameFormated}._id`]: fileId },
+      { [`${folderNameFormated}.$`]: 1 }
     );
 
     // Use bracket notation to dynamically access the folder
@@ -75,12 +78,12 @@ export const fileRemove: RequestHandler = async (req, res) => {
     }
 
     // Dolder is an array and we want the first item
-    const fileToRemove = fileDocument[folderName][0];
+    const fileToRemove = fileDocument[folderNameFormated][0];
     console.log(fileToRemove);
 
     const dbRemove = await Files.updateOne(
       { _id: fileDocument._id }, // Use the parent document's _id to identify it
-      { $pull: { [folderName]: { _id: fileToRemove._id } } } // Pull operation to remove the specific file
+      { $pull: { [folderNameFormated]: { _id: fileToRemove._id } } } // Pull operation to remove the specific file
     );
 
     if (dbRemove.acknowledged) {
@@ -104,6 +107,9 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
 
     const folder = req.params.folder; // Get the folder name from the URL
 
+    // Remove space & LowerCase
+    const folderName = folder.toLowerCase().replace(/\s+/g, "");
+
     // Validate if the folder name is one of the allowed categories
     const allowedFolders = [
       "bloodtests",
@@ -115,27 +121,41 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
       "other",
     ];
 
-    if (!allowedFolders.includes(folder)) {
+    if (!allowedFolders.includes(folderName)) {
       return res.status(400).send({ message: "Invalid folder name" });
     }
 
     // Query the database for files in the specified folder, belonging to the authenticated user, sorted by uploadTime
     const folderFiles = await Files.findOne(
       { owner: user.id },
-      { [folder]: 1, _id: 0 }
-    ).sort({ [`${folder}.uploadTime`]: 1 });
+      { [folderName]: 1, _id: 0 }
+    ).sort({ [`${folderName}.uploadTime`]: 1 });
 
     if (!folderFiles) {
       return res.status(404).send({ message: "Files not found" });
     }
 
-    const files = folderFiles[folder];
+    const files = folderFiles[folderName];
 
     // Generate signed URLs for each file
     const filesWithSignedUrls = await Promise.all(
       files.map(async (file: IFile) => {
         const signedUrl = await generateSignedUrl(file.key);
-        return { ...file.toObject(), signedUrl }; // Add the signed URL to the file object
+        console.log(file);
+        if (file.type === "pdf") {
+          return {
+            ...file.toObject(),
+            uri: "https://blog.idrsolutions.com/app/uploads/2020/10/pdf-1.png",
+            pdf_file: signedUrl,
+            uploadTime: file.uploadTime.toISOString().split("T")[0], // Format the upload time to a date string
+          }; // Add the signed URL to the file object
+        } else {
+          return {
+            ...file.toObject(),
+            uri: signedUrl,
+            uploadTime: file.uploadTime.toISOString().split("T")[0], // Format the upload time to a date string
+          };
+        }
       })
     );
 

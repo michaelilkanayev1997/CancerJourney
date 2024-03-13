@@ -56,7 +56,7 @@ const CustomImageZoomViewer: FC<Props> = ({
           />
         )}
         renderFooter={(index) => {
-          const isCurrentPDF = images[index]?.type === "application/pdf";
+          const isCurrentPDF = images[index]?.type === "pdf";
           if (isCurrentPDF) {
             return (
               <Animated.View entering={FadeInDown.delay(100)}>
