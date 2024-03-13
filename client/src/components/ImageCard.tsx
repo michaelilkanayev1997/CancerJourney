@@ -18,10 +18,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MoreOptionsModal from "./MoreOptionsModal";
 
 export type ImageType = {
-  id: string;
+  _id: string;
   uri: string;
   title: string;
-  date: string;
+  uploadTime: string;
   description?: string;
   type: string;
   pdf_file?: string;

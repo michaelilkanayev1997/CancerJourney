@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import CustomBottomSheet from "@components/CustomBottomSheet";
-import ImageCard from "@components/ImageCard";
+import ImageCard, { ImageType } from "@components/ImageCard";
 import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
 import CustomPdfViewer from "@components/CustomPdfViewer";
 import { getClient } from "src/api/client";
@@ -123,9 +123,8 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<
     number | undefined
   >(undefined);
-
   const bottomSheetModalRef = useRef<BottomSheet>(null);
-  const [folderFiles, setFolderFiles] = useState([]);
+  const [folderFiles, setFolderFiles] = useState<ImageType[]>([]);
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);

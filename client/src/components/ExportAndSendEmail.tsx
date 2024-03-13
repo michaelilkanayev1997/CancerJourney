@@ -62,7 +62,6 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       setDownloadProgress(Number(percentProgress.toFixed(2)));
     } else {
       // When totalBytesExpectedToWrite is -1, handle differently
-      console.log(progress);
       setDownloadProgress(-1); // Using -1 to indicate unknown size
     }
   };
@@ -146,7 +145,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
         // Send the email with the downloaded file as attachment
         await MailComposer.composeAsync({
           subject: `${profile?.name} shared a document with you through Cancer Journey app`,
-          body: `- File Name : ${item?.title}\n- Date : ${item?.date}\n\nCancerJourney is an application designed to assist cancer patients and their families in managing cancer.\n\nThank you.\n\nBest regards.`,
+          body: `- File Name : ${item?.title}\n- Date : ${item?.uploadTime}\n\nCancerJourney is an application designed to assist cancer patients and their families in managing cancer.\n\nThank you.\n\nBest regards.`,
           attachments: [downloadResult.uri],
         });
 
