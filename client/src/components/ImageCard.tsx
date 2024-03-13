@@ -55,7 +55,7 @@ const ImageCard = React.memo(
     }, []);
 
     const iconSize = useMemo(() => (numColumns === 3 ? 24 : 30), [numColumns]);
-
+    console.log(item);
     return (
       <>
         <TouchableOpacity
@@ -80,7 +80,7 @@ const ImageCard = React.memo(
               >
                 {item.title}
               </Text>
-              <Text style={styles.imageDate}>{item.date}</Text>
+              <Text style={styles.imageDate}>{item.uploadTime}</Text>
             </View>
             <TouchableOpacity
               style={styles.moreIcon}

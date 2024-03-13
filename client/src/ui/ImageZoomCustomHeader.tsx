@@ -30,7 +30,7 @@ const ImageZoomCustomHeader: FC<Props> = ({
       </TouchableOpacity>
       <Text style={styles.headerText} numberOfLines={1} ellipsizeMode="tail">
         {images[currentIndex].title.substring(0, 16)} -{" "}
-        {images[currentIndex].date}
+        {images[currentIndex].uploadTime}
       </Text>
       <View style={styles.placeholderView}></View>
     </View>

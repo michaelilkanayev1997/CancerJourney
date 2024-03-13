@@ -80,9 +80,9 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     } else {
       imageUrl = item.uri;
     }
-
+    console.log(imageUrl); // fix extension!!!!!!!!!!!!!!!!!!!!!!!!!!
     const extension = getFileExtensionFromUrl(imageUrl);
-
+    console.log(extension);
     let fileUri = "";
     if (extension) {
       const fileName = `${item.title}.${extension}`; // Extract filename from URL

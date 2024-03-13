@@ -14,6 +14,8 @@ import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
 import ExportAndSendEmail from "./ExportAndSendEmail";
 import { getClient } from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {
   item: ImageType;
@@ -52,18 +54,21 @@ const MoreOptionsModal: FC<Props> = ({
     try {
       // Construct the URL with query parameters
 
-      const url = `/file/file-delete?fileId=${encodeURIComponent(
-        item._id
-      )}&folderName=${encodeURIComponent(folderName)}`;
-
+      const url = `/file/file-delete?fileId=${item._id}&folderName=${folderName}`;
+      console.log(url);
       const client = await getClient();
 
       const { data } = await client.delete(url);
-
       console.log(data);
+      ToastNotification({
+        message: "File deleted successfully",
+      });
     } catch (error) {
-      console.log(error);
-      throw error;
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
   };
 
