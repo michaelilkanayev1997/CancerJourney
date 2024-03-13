@@ -17,6 +17,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FolderList, Folder, IconName } from "@ui/Folder";
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
+import { getClient } from "src/api/client";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -55,6 +56,22 @@ const Upload: FC<Props> = (props) => {
       };
     }, [])
   );
+
+  const fetchFoldersLength = async () => {
+    try {
+      const client = await getClient();
+      const { data: foldersLength } = await client.get("/file/folders-length");
+      console.log(foldersLength);
+      return foldersLength;
+    } catch (error) {
+      console.error("Error fetching folders length:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    fetchFoldersLength();
+  }, []);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

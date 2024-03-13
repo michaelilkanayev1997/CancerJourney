@@ -160,9 +160,42 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
     // Send the files of the requested folder with their signed URLs
     res.status(200).send(filesWithSignedUrls);
   } catch (error) {
-    console.error("Failed to delete file", error);
+    console.error("Failed to get files", error);
     return res.status(500).json({
-      error: "An error occurred while removing the file",
+      error: "An error occurred while getting the files",
+    });
+  }
+};
+
+export const getFolderLength: RequestHandler = async (req, res) => {
+  try {
+    console.log(req.user.id);
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+    console.log(user);
+    const userFolders = await Files.findOne({ owner: req.user.id });
+
+    if (!userFolders) {
+      return res.status(404).send("User files not found.");
+    }
+
+    // Calculate lengths of each folder array
+    const foldersLength = {
+      bloodtestsLength: userFolders.bloodtests.length,
+      treatmentsLength: userFolders.treatments.length,
+      medicationsLength: userFolders.medications.length,
+      reportsLength: userFolders.reports.length,
+      scansLength: userFolders.scans.length,
+      appointmentsLength: userFolders.appointments.length,
+      otherLength: userFolders.other.length,
+    };
+
+    // Send the lengths object as a response
+    res.json(foldersLength);
+  } catch (error) {
+    console.error("Failed to get Folders Length", error);
+    return res.status(500).json({
+      error: "An error occurred while getting Folders Length",
     });
   }
 };
