@@ -55,13 +55,13 @@ export const fileRemove: RequestHandler = async (req, res) => {
 
     const { fileId, folderName } = req.query;
 
-    // Remove space & LowerCase
-    const folderNameFormated = folderName?.toLowerCase().replace(/\s+/g, "");
-
     // Type checking and conversion if necessary
-    if (typeof folderNameFormated !== "string" || typeof fileId !== "string") {
+    if (typeof folderName !== "string" || typeof fileId !== "string") {
       return res.status(400).json({ error: "Invalid query parameters." });
     }
+
+    // Remove space & LowerCase
+    const folderNameFormated = folderName?.toLowerCase().replace(/\s+/g, "");
 
     // Retrieve the file document from MongoDB
     const fileDocument = await Files.findOne(

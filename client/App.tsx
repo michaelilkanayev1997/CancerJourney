@@ -4,6 +4,7 @@ import { I18nManager, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import Animated from "react-native-reanimated";
 import { Provider } from "react-redux";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import LottieAnimation from "@components/LottieAnimation";
 import store from "./src/store";
@@ -14,6 +15,9 @@ import PreloadIcons from "@components/PreloadIcons";
 // Force LTR text direction
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
+
+// Create a client
+const queryClient = new QueryClient();
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -50,9 +54,11 @@ const App = () => {
         />
       ) : (
         <Provider store={store}>
-          <AppContainer>
-            <AppNavigator />
-          </AppContainer>
+          <QueryClientProvider client={queryClient}>
+            <AppContainer>
+              <AppNavigator />
+            </AppContainer>
+          </QueryClientProvider>
         </Provider>
       )}
       <StatusBar style="auto" />
