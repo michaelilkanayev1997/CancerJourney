@@ -82,18 +82,19 @@ const MoreOptionsModal: FC<Props> = ({
       visible={isOptionModalVisible}
       transparent={true}
       animationType="fade"
-      onRequestClose={handleCloseMoreOptionsPress} // Android back button
+      onRequestClose={isLoading ? undefined : handleCloseMoreOptionsPress} // Android back button
     >
       <TouchableOpacity
         style={styles.modalOverlay}
         activeOpacity={1}
+        disabled={isLoading}
         onPressOut={handleCloseMoreOptionsPress}
       >
         <View
           style={styles.modalContent}
           onStartShouldSetResponder={() => true}
         >
-          {/* Actual Loader Component, make sure it's positioned absolutely within the modal */}
+          {/* Loader Component */}
           {isLoading && (
             <View style={styles.loaderOverlay}>
               <Loader
@@ -104,6 +105,7 @@ const MoreOptionsModal: FC<Props> = ({
               />
             </View>
           )}
+
           <View style={styles.header}>
             <View style={styles.dateHeader}>
               <MaterialCommunityIcons

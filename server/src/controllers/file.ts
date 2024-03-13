@@ -69,15 +69,13 @@ export const fileRemove: RequestHandler = async (req, res) => {
       { [`${folderNameFormated}.$`]: 1 }
     );
 
-    // Use bracket notation to dynamically access the folder
-
+    // Handle the case where no document is found
     if (!fileDocument) {
-      // Handle the case where no document is found
       console.log("File not found.");
       return;
     }
 
-    // Dolder is an array and we want the first item
+    // Folder is an array and we want the first item
     const fileToRemove = fileDocument[folderNameFormated][0];
     console.log(fileToRemove);
 

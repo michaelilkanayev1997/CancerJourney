@@ -8,6 +8,7 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -51,7 +52,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       // Open the camera with ImagePicker
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true, // Allows editing the picture
-        quality: 1, // Highest quality
+        quality: 0.2, // Quality
       });
 
       // If the user doesn't cancel, set the selected image
@@ -82,18 +83,35 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           ],
           multiple: false,
         });
-
+        console.log(docRes);
         const assets = docRes.assets;
         if (!assets) return;
 
         const file = assets[0];
 
-        const File = {
-          name: file.name.split(".")[0],
-          uri: file.uri,
-          type: file.mimeType,
-          size: file.size,
-        };
+        let File;
+        if (file.mimeType?.startsWith("image/")) {
+          // The picked document is an image, let's manipulate it
+          const manipulatedImage = await ImageManipulator.manipulateAsync(
+            file.uri,
+            [], // Actions like resize or rotate would go here
+            { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG } // Compress and convert to JPEG
+          );
+
+          File = {
+            name: file.name.split(".")[0],
+            uri: manipulatedImage.uri,
+            type: file.mimeType,
+            size: file.size,
+          };
+        } else {
+          File = {
+            name: file.name.split(".")[0],
+            uri: file.uri,
+            type: file.mimeType,
+            size: file.size,
+          };
+        }
 
         if (File.type) {
           navigation.navigate("FilePreview", {

@@ -101,9 +101,8 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         message: errorMessage,
       });
     }
-
-    navigation.goBack(); // navigate back
     setIsLoading(false);
+    navigation.goBack(); // navigate back
   };
 
   useFocusEffect(

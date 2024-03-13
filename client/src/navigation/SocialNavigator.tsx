@@ -2,7 +2,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { StyleSheet } from "react-native";
 
 import colors from "@utils/colors";
-import Settings from "@views/bottomTab/Settings";
+import Posts from "@views/bottomTab/Posts";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -14,9 +14,9 @@ const SocialNavigator = () => {
         tabBarLabelStyle: styles.tabbarLabelStyle,
       }}
     >
-      <Tab.Screen name="Main" component={Settings} />
-      <Tab.Screen name="Posts" component={Settings} />
-      <Tab.Screen name="Favorites" component={Settings} />
+      <Tab.Screen name="Main" component={Posts} />
+      <Tab.Screen name="Posts" component={Posts} />
+      <Tab.Screen name="Favorites" component={Posts} />
     </Tab.Navigator>
   );
 };
