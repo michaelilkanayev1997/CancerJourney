@@ -3,6 +3,7 @@ import { FC, useCallback } from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
 
 import { ToastNotification } from "@utils/toastConfig";
+import colors from "@utils/colors";
 
 interface Props {}
 
@@ -24,8 +25,8 @@ const Home: FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
-      <Button
+      <Text style={styles.title}>Home</Text>
+      {/* <Button
         title="Success"
         onPress={() => {
           ToastNotification({ message: "asdasdasdasd asdasa asdas asd as" });
@@ -48,13 +49,21 @@ const Home: FC<Props> = (props) => {
             message: "asdasdasdasd asdasa asdas asd as",
           });
         }}
-      />
+      /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {},
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: colors.LIGHT_BLUE,
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: "center",
+  },
 });
 
 export default Home;
