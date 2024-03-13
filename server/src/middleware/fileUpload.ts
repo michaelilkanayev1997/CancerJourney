@@ -89,11 +89,6 @@ export const folderFileUpload = multer({
     s3: s3,
     bucket: S3_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: (req: any, file: any, cb: any) => {
-      cb(null, {
-        uploadedBy: String(req.user.id),
-      });
-    },
     key: (req: any, file: any, cb: any) => {
       // Generate a 16-byte random hex string
       const randomBytes = crypto.randomBytes(16).toString("hex");
@@ -101,8 +96,14 @@ export const folderFileUpload = multer({
       // Remove space & LowerCase
       const folderName = file.originalname.toLowerCase().replace(/\s+/g, "");
 
+      const parts = file.mimetype.split("/"); // This splits the string into an array of parts divided by '/'
+      const fileType = parts[1]; // get file type
+
       // Construct the S3 object key with the user ID, processed file name, random bytes, and timestamp
-      cb(null, `${req.user.id}/${folderName}/${randomBytes}-${Date.now()}`);
+      cb(
+        null,
+        `${req.user.id}/${folderName}/${randomBytes}-${Date.now()}.${fileType}`
+      );
     },
   }),
   fileFilter: fileFilter,
