@@ -13,11 +13,12 @@ import Pdf from "react-native-pdf";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { ToastNotification } from "@utils/toastConfig";
+import { ImageType } from "./ImageCard";
 
 interface Props {
   modalVisible: boolean;
   toggleModalVisible: () => void;
-  item: { pdf_file: string; title: string };
+  item: ImageType;
 }
 
 const CustomPdfViewer: FC<Props> = ({

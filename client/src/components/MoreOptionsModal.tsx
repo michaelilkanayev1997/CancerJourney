@@ -16,6 +16,7 @@ import ExportAndSendEmail from "./ExportAndSendEmail";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import Loader from "@ui/Loader";
 
 interface Props {
   item: ImageType;
@@ -34,6 +35,7 @@ const MoreOptionsModal: FC<Props> = ({
   const [description, setDescription] = useState<string>(
     item.description || ""
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
@@ -51,14 +53,14 @@ const MoreOptionsModal: FC<Props> = ({
   }, []);
 
   const handleDelete = async () => {
+    setIsLoading(true); // Start loading
     try {
       // Construct the URL with query parameters
-
       const url = `/file/file-delete?fileId=${item._id}&folderName=${folderName}`;
-      console.log(url);
-      const client = await getClient();
 
+      const client = await getClient();
       const { data } = await client.delete(url);
+
       console.log(data);
       ToastNotification({
         message: "File deleted successfully",
@@ -69,6 +71,9 @@ const MoreOptionsModal: FC<Props> = ({
         type: "Error",
         message: errorMessage,
       });
+    } finally {
+      handleCloseMoreOptionsPress();
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -88,6 +93,17 @@ const MoreOptionsModal: FC<Props> = ({
           style={styles.modalContent}
           onStartShouldSetResponder={() => true}
         >
+          {/* Actual Loader Component, make sure it's positioned absolutely within the modal */}
+          {isLoading && (
+            <View style={styles.loaderOverlay}>
+              <Loader
+                loaderStyle={{
+                  width: 150,
+                  height: 150,
+                }}
+              />
+            </View>
+          )}
           <View style={styles.header}>
             <View style={styles.dateHeader}>
               <MaterialCommunityIcons
@@ -95,7 +111,7 @@ const MoreOptionsModal: FC<Props> = ({
                 size={20}
                 color={colors.LIGHT_BLUE}
               />
-              <Text style={styles.dateText}>{item.date}</Text>
+              <Text style={styles.dateText}>{item.uploadTime}</Text>
             </View>
             <TouchableOpacity
               style={styles.closeButton}
@@ -126,13 +142,15 @@ const MoreOptionsModal: FC<Props> = ({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
+              disabled={isLoading}
               onPress={handleDelete}
-              style={styles.modalActionButton}
+              style={[styles.modalActionButton]}
             >
               <MaterialCommunityIcons name="delete" size={20} color="#FF5C5C" />
               <Text style={styles.actionButtonText}>Delete</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={isLoading}
               onPress={() => console.log("Update")}
               style={styles.modalActionButton}
             >
@@ -225,6 +243,18 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1, // Ensure loader is above the overlay
+    backgroundColor: "rgba(255, 255, 255, 0.9)", // Semi-transparent overlay
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20, // Match modalContent's borderRadius
   },
 });
 
