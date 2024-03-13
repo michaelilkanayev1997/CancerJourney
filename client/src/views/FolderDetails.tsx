@@ -159,7 +159,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             <MaterialCommunityIcons name="plus" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={toggleNumColumns}
+            onPress={folderFiles.length > 2 ? toggleNumColumns : undefined}
             style={{ marginRight: 10 }}
           >
             <MaterialCommunityIcons
