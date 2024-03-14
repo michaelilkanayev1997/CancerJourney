@@ -5,6 +5,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
+import { FoldersLength } from "src/@types/file";
 
 export type IconName =
   | "blood-bag"
@@ -18,11 +19,11 @@ export type IconName =
 interface Props {
   name: string;
   icon: IconName;
+  folderLength?: FoldersLength;
 }
 
-export const Folder: FC<Props> = ({ name, icon }) => {
+export const Folder: FC<Props> = ({ folderLength, name, icon }) => {
   const navigation = useNavigation<NavigationProp<UploadStackParamList>>();
-  const numberOfFiles = 25; // Example number
 
   return (
     <TouchableOpacity
@@ -33,15 +34,16 @@ export const Folder: FC<Props> = ({ name, icon }) => {
       <Text style={styles.folderText}>{name}</Text>
       <View style={styles.fileInfoContainer}>
         <MaterialCommunityIcons name="file-outline" size={16} color="#003366" />
-        <Text style={styles.fileInfoText}>{`${numberOfFiles} Files`}</Text>
+        <Text style={styles.fileInfoText}>
+          {folderLength && `${folderLength[name]} Files`}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export const FolderList: FC<Props> = ({ name, icon }) => {
+export const FolderList: FC<Props> = ({ folderLength, name, icon }) => {
   const navigation = useNavigation<NavigationProp<UploadStackParamList>>();
-  const numberOfFiles = 25; // Example number
 
   return (
     <TouchableOpacity
@@ -52,7 +54,7 @@ export const FolderList: FC<Props> = ({ name, icon }) => {
       <View style={styles.centerContainer}>
         <Text style={styles.folderListText}>{name}</Text>
       </View>
-      <Text style={styles.fileCountText}>{`${numberOfFiles} files`}</Text>
+      <Text style={styles.fileCountText}>{`${folderLength[name]} files`}</Text>
     </TouchableOpacity>
   );
 };

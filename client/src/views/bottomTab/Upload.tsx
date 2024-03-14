@@ -4,6 +4,8 @@ import {
   FlatList,
   TouchableOpacity,
   Vibration,
+  View,
+  Text,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -21,6 +23,7 @@ import { getClient } from "src/api/client";
 import { useQuery } from "react-query";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import { useFetchFoldersLength } from "src/hooks/query";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [
   { name: "Blood Tests", icon: "blood-bag", key: "1" },
@@ -34,31 +37,9 @@ const folders: Array<{ name: string; icon: IconName; key: string }> = [
 
 interface Props {}
 
-const fetchFoldersLength = async () => {
-  try {
-    const client = await getClient();
-    const { data: foldersLength } = await client.get("/file/folders-length");
-    console.log(foldersLength);
-    return foldersLength;
-  } catch (error) {
-    console.error("Error fetching folders length:", error);
-    return null;
-  }
-};
-
 const Upload: FC<Props> = (props) => {
-  const data = useQuery(["folders-length"], {
-    queryFn: () => fetchFoldersLength(),
-    onError(err) {
-      const errorMessage = catchAsyncError(err);
-      ToastNotification({
-        type: "Error",
-        message: errorMessage,
-      });
-    },
-  });
+  const { data: folderLength, isLoading } = useFetchFoldersLength();
 
-  console.log(data);
   const scale = useSharedValue(0.5); // Start from a smaller scale
   const paddingBottom = useSharedValue(0); // Initial paddingBottom
   const backgroundColor = useSharedValue(colors.PRIMARY);
@@ -118,9 +99,17 @@ const Upload: FC<Props> = (props) => {
         data={folders}
         renderItem={({ item }) =>
           numColumns === 2 ? (
-            <Folder name={item.name} icon={item.icon} />
+            <Folder
+              folderLength={folderLength}
+              name={item.name}
+              icon={item.icon}
+            />
           ) : (
-            <FolderList name={item.name} icon={item.icon} />
+            <FolderList
+              folderLength={folderLength}
+              name={item.name}
+              icon={item.icon}
+            />
           )
         }
         keyExtractor={(item) => item.key}
