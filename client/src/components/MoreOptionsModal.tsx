@@ -17,7 +17,7 @@ import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import Loader from "@ui/Loader";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 interface Props {
   item: ImageType;
@@ -42,8 +42,6 @@ const MoreOptionsModal: FC<Props> = ({
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
     Vibration.vibrate(40);
-    setDescription(item.description || "");
-    setName(item.title);
   }, [setOptionModalVisible]);
 
   const handleNameChange = useCallback((text: string) => {
@@ -63,7 +61,6 @@ const MoreOptionsModal: FC<Props> = ({
       const client = await getClient();
       const { data } = await client.delete(url);
 
-      console.log(data);
       queryClient.invalidateQueries(["folder-files", folderName]);
       queryClient.invalidateQueries(["folders-length"]);
 
@@ -80,6 +77,51 @@ const MoreOptionsModal: FC<Props> = ({
       handleCloseMoreOptionsPress();
       setIsLoading(false); // Stop loading
     }
+  };
+
+  const updateFile = async () => {
+    const client = await getClient();
+    const url = `/file/file-update?fileId=${item._id}&folderName=${folderName}`;
+    return client.patch(url, { title: name, description });
+  };
+
+  const { isLoading: updateLoading, mutate: fileUpdateMutate } = useMutation(
+    updateFile,
+    {
+      onSuccess: () => {
+        // Optimistically update the local cache
+        queryClient.setQueryData(
+          ["folder-files", folderName],
+          (oldData: ImageType[] | undefined) => {
+            if (!oldData) {
+              return [];
+            }
+            return oldData.map((file) => {
+              if (file._id === item._id) {
+                return { ...file, title: name, description };
+              }
+              return file;
+            });
+          }
+        );
+        ToastNotification({ message: "File updated successfully" });
+      },
+      onError: (error) => {
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
+        });
+      },
+      //  final logic with onSettled
+      onSettled: () => {
+        handleCloseMoreOptionsPress();
+      },
+    }
+  );
+
+  const handleUpdate = async () => {
+    fileUpdateMutate();
   };
 
   return (
@@ -100,7 +142,7 @@ const MoreOptionsModal: FC<Props> = ({
           onStartShouldSetResponder={() => true}
         >
           {/* Loader Component */}
-          {isLoading && (
+          {(isLoading || updateLoading) && (
             <View style={styles.loaderOverlay}>
               <Loader
                 loaderStyle={{
@@ -158,7 +200,7 @@ const MoreOptionsModal: FC<Props> = ({
             </TouchableOpacity>
             <TouchableOpacity
               disabled={isLoading}
-              onPress={() => console.log("Update")}
+              onPress={handleUpdate}
               style={styles.modalActionButton}
             >
               <MaterialCommunityIcons name="update" size={20} color="#4A90E2" />

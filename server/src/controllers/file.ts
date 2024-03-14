@@ -138,7 +138,7 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
     const filesWithSignedUrls = await Promise.all(
       sortedFolderFiles.map(async (file: IFile) => {
         const signedUrl = await generateSignedUrl(file.key);
-        console.log(file);
+
         if (file.type === "pdf") {
           return {
             ...file,
@@ -168,10 +168,9 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
 
 export const getFolderLength: RequestHandler = async (req, res) => {
   try {
-    console.log(req.user.id);
     const user = await User.findById(req.user.id);
     if (!user) throw new Error("Something went wrong, user not found!");
-    console.log(user);
+
     const userFolders = await Files.findOne({ owner: req.user.id });
 
     if (!userFolders) {
@@ -197,4 +196,37 @@ export const getFolderLength: RequestHandler = async (req, res) => {
       error: "An error occurred while getting Folders Length",
     });
   }
+};
+
+export const updateFile: RequestHandler = async (req, res) => {
+  const { title, description } = req.body;
+  const ownerId = req.user.id;
+
+  // Use req.query instead of req.params to access fileId and folderName
+  const { fileId, folderName } = req.query;
+
+  // Remove space & LowerCase
+  const folder = folderName.toLowerCase().replace(/\s+/g, "");
+
+  const updateResult = await Files.findOneAndUpdate(
+    {
+      owner: ownerId, // Match the owner of the document
+      [`${folder}._id`]: fileId, // Match the file by _id within the specified folder array
+    },
+    {
+      $set: {
+        // Use the positional $ operator to update title and description of the matched file
+        [`${folder}.$.title`]: title,
+        [`${folder}.$.description`]: description,
+      },
+    },
+    {
+      new: true, // Returns the updated document
+      projection: { [folder]: { $elemMatch: { _id: fileId } } }, // Project only the matching subdocument
+    }
+  );
+
+  if (!updateResult) return res.status(404).json({ error: "File not found!" });
+
+  res.status(201).json(updateResult[folder][0]);
 };
