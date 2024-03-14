@@ -26,7 +26,7 @@ const Home: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
-      {/* <Button
+      <Button
         title="Success"
         onPress={() => {
           ToastNotification({ message: "asdasdasdasd asdasa asdas asd as" });
@@ -49,7 +49,7 @@ const Home: FC<Props> = (props) => {
             message: "asdasdasdasd asdasa asdas asd as",
           });
         }}
-      /> */}
+      />
     </View>
   );
 };

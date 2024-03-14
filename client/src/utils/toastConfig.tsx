@@ -25,6 +25,7 @@ export const ToastNotification = ({
       message,
     },
     visibilityTime: 3000,
+    swipeable: false, // it has some bug where on swipe down it's not hiding the toast
   });
 };
 
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
   notification: {
     width: "80%",
     borderRadius: 5,
+    marginTop: 25,
     padding: 10,
     flexDirection: "row",
     alignItems: "center",

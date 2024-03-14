@@ -45,6 +45,13 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       []
     );
 
+    const handleCanecl = () => {
+      // Check if ref and current are available
+      if (ref && "current" in ref && ref.current) {
+        ref.current.close();
+      }
+    };
+
     const takeImage = async () => {
       // Request camera permissions
       const hasPermission = await requestCameraPermissionsAsync();
@@ -72,6 +79,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
             folderName,
           });
         }
+        handleCanecl(); // close Bottom Sheet
       }
     };
 
@@ -132,15 +140,9 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
             folderName,
           });
         }
+        handleCanecl(); // close Bottom Sheet
       } catch (error) {
         console.log(error);
-      }
-    };
-
-    const handleCanecl = () => {
-      // Check if ref and current are available
-      if (ref && "current" in ref && ref.current) {
-        ref.current.close();
       }
     };
 
