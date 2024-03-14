@@ -82,27 +82,27 @@ const ImageCard = React.memo(
                   }}
                 />
                 <Image
-                  source={{ uri: item.uri }}
+                  source={{ uri: item?.uri }}
                   onLoad={() => setImageIsLoading(false)} // Image loaded successfully
                   onError={() => setImageIsLoading(false)} // Image failed to load
                 />
               </View>
             ) : (
-              <Image source={{ uri: item.uri }} style={styles.image} />
+              <Image source={{ uri: item?.uri }} style={styles.image} />
             )}
 
             <View style={[styles.textContainer]}>
               <Text
                 style={[
                   styles.imageTitle,
-                  { textAlign: item.title.length > 10 ? "left" : "center" },
+                  { textAlign: item?.title.length > 10 ? "left" : "center" },
                 ]}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {item.title}
+                {item?.title}
               </Text>
-              <Text style={styles.imageDate}>{item.uploadTime}</Text>
+              <Text style={styles.imageDate}>{item?.uploadTime}</Text>
             </View>
             <TouchableOpacity
               style={styles.moreIcon}

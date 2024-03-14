@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import CustomBottomSheet from "@components/CustomBottomSheet";
-import ImageCard, { ImageType } from "@components/ImageCard";
+import ImageCard from "@components/ImageCard";
 import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
 import CustomPdfViewer from "@components/CustomPdfViewer";
 import { useFetchFolderFiles } from "src/hooks/query";

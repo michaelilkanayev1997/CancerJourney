@@ -65,6 +65,7 @@ const MoreOptionsModal: FC<Props> = ({
 
       console.log(data);
       queryClient.invalidateQueries(["folder-files", folderName]);
+      queryClient.invalidateQueries(["folders-length"]);
 
       ToastNotification({
         message: "File deleted successfully",

@@ -15,6 +15,7 @@ const fetchFoldersLength = async (): Promise<FoldersLength> => {
 export const useFetchFoldersLength = () => {
   return useQuery(["folders-length"], {
     queryFn: () => fetchFoldersLength(),
+    staleTime: Infinity, // Data never becomes stale
     onError(err) {
       const errorMessage = catchAsyncError(err);
       ToastNotification({
