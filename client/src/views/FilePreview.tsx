@@ -17,6 +17,7 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
+import { useQueryClient } from "react-query";
 
 interface Props {}
 
@@ -34,6 +35,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [pdf, setPdf] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
@@ -89,6 +91,8 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
       if (!data?.success) {
         throw new Error("Failed to upload file");
       }
+
+      queryClient.invalidateQueries(["folder-files", folderName]);
 
       ToastNotification({
         type: "Success",

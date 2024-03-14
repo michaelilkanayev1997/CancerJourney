@@ -30,7 +30,7 @@ const CustomPdfViewer: FC<Props> = ({
   const [totalPages, setTotalPages] = useState(0);
 
   const Source = {
-    uri: item.pdf_file,
+    uri: item?.pdf_file,
     cache: true,
   };
 
