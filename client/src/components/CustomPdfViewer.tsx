@@ -76,7 +76,7 @@ const CustomPdfViewer: FC<Props> = ({
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {item.title.substring(0, 20)}
+            {item?.title.substring(0, 20)}
           </Text>
         </View>
         <Pdf

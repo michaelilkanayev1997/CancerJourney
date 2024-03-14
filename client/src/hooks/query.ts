@@ -30,6 +30,7 @@ const fetchFolderFiles = async (folderName: string): Promise<ImageType[]> => {
   const client = await getClient();
   const { data } = await client.get(`/file/${folderName}`);
 
+  console.log("fetching files...");
   return data;
 };
 

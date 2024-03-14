@@ -123,33 +123,32 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
       return res.status(400).send({ message: "Invalid folder name" });
     }
 
-    // Query the database for files in the specified folder, belonging to the authenticated user, sorted by uploadTime
-    const folderFiles = await Files.findOne(
-      { owner: user.id },
-      { [folderName]: 1, _id: 0 }
-    ).sort({ [`${folderName}.uploadTime`]: 1 });
+    const sortedFolderFiles = await Files.aggregate([
+      { $match: { owner: req.user.id } }, // Match the document by owner
+      { $unwind: `$${folderName}` }, // Deconstruct the array in the document
+      { $replaceRoot: { newRoot: `$${folderName}` } }, // Promote nested objects to top level
+      { $sort: { uploadTime: -1 } }, // Sort the documents by uploadTime in descending order
+    ]);
 
-    if (!folderFiles) {
+    if (!sortedFolderFiles) {
       return res.status(404).send({ message: "Files not found" });
     }
 
-    const files = folderFiles[folderName];
-
     // Generate signed URLs for each file
     const filesWithSignedUrls = await Promise.all(
-      files.map(async (file: IFile) => {
+      sortedFolderFiles.map(async (file: IFile) => {
         const signedUrl = await generateSignedUrl(file.key);
         console.log(file);
         if (file.type === "pdf") {
           return {
-            ...file.toObject(),
+            ...file,
             uri: "https://blog.idrsolutions.com/app/uploads/2020/10/pdf-1.png",
             pdf_file: signedUrl,
             uploadTime: file.uploadTime.toISOString().split("T")[0], // Format the upload time to a date string
           }; // Add the signed URL to the file object
         } else {
           return {
-            ...file.toObject(),
+            ...file,
             uri: signedUrl,
             uploadTime: file.uploadTime.toISOString().split("T")[0], // Format the upload time to a date string
           };

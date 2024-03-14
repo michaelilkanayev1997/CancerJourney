@@ -174,9 +174,9 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     });
   }, [navigation, numColumns, folderFiles]);
 
-  if (isLoading) return <Text>Loading...</Text>;
+  console.log(isLoading);
 
-  console.log(folderFiles);
+  if (isLoading) return <Text>Loading...</Text>;
 
   return (
     <View style={styles.container}>
