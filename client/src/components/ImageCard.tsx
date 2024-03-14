@@ -14,11 +14,9 @@ import {
   Image,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import LottieView from "lottie-react-native";
 
 import MoreOptionsModal from "./MoreOptionsModal";
-import PulseAnimationContainer from "./PulseAnimationContainer";
-import colors from "@utils/colors";
-import LottieView from "lottie-react-native";
 
 export type ImageType = {
   _id: string;

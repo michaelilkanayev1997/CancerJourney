@@ -20,6 +20,7 @@ import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
+import { useFetchFolderFiles } from "src/hooks/query";
 
 // Placeholder images for demonstration
 const images = [
@@ -125,7 +126,12 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     number | undefined
   >(undefined);
   const bottomSheetModalRef = useRef<BottomSheet>(null);
-  const [folderFiles, setFolderFiles] = useState<ImageType[]>([]);
+  //const [folderFiles, setFolderFiles] = useState<ImageType[]>([]);
+
+  const {
+    data: folderFiles = [], // Default to an empty array if data is undefined
+    isLoading,
+  } = useFetchFolderFiles(folderName);
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
@@ -141,8 +147,6 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     setNumColumns((currentColumns) => (currentColumns === 2 ? 3 : 2));
     Vibration.vibrate(50);
   }, []);
-
-  //i have to add loading logic + animation
 
   useEffect(() => {
     navigation.setOptions({
@@ -160,7 +164,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             <MaterialCommunityIcons name="plus" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={folderFiles.length > 2 ? toggleNumColumns : undefined}
+            onPress={folderFiles?.length > 2 ? toggleNumColumns : undefined}
             style={{ marginRight: 10 }}
           >
             <MaterialCommunityIcons
@@ -174,43 +178,47 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     });
   }, [navigation, numColumns, folderFiles]);
 
-  const fetchNewSignedUrl = async () => {
-    // Fetch the new signed URL
+  // const fetchNewSignedUrl = async () => {
+  //   // Fetch the new signed URL
 
-    try {
-      const client = await getClient();
+  //   try {
+  //     const client = await getClient();
 
-      const { data } = await client.get(`/file/${folderName}`);
+  //     const { data } = await client.get(`/file/${folderName}`);
 
-      console.log(data);
-      setFolderFiles(data);
-    } catch (error) {
-      const errorMessage = catchAsyncError(error);
-      ToastNotification({
-        type: "Error",
-        message: errorMessage,
-      });
-    }
-  };
+  //     console.log(data);
+  //     setFolderFiles(data);
+  //   } catch (error) {
+  //     const errorMessage = catchAsyncError(error);
+  //     ToastNotification({
+  //       type: "Error",
+  //       message: errorMessage,
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    // Define a function to initiate the fetching process
-    const initiateFetch = () => {
-      fetchNewSignedUrl();
+  // useEffect(() => {
+  //   // Define a function to initiate the fetching process
+  //   const initiateFetch = () => {
+  //     fetchNewSignedUrl();
 
-      // Set the interval to refresh the signed URL every 59 minutes
-      const intervalId = setInterval(fetchNewSignedUrl, 3540000); // 3540000 milliseconds = 59 minutes
+  //     // Set the interval to refresh the signed URL every 59 minutes
+  //     const intervalId = setInterval(fetchNewSignedUrl, 3540000); // 3540000 milliseconds = 59 minutes
 
-      // Return a cleanup function that clears the interval
-      return () => clearInterval(intervalId);
-    };
+  //     // Return a cleanup function that clears the interval
+  //     return () => clearInterval(intervalId);
+  //   };
 
-    // Call the function to start fetching
-    const cleanup = initiateFetch();
+  //   // Call the function to start fetching
+  //   const cleanup = initiateFetch();
 
-    // Return the cleanup function to be called on component unmount
-    return cleanup;
-  }, [folderName]); // Only re-run the effect if folderName changes
+  //   // Return the cleanup function to be called on component unmount
+  //   return cleanup;
+  // }, [folderName]); // Only re-run the effect if folderName changes
+
+  if (isLoading) return <Text>Loading...</Text>;
+
+  console.log(folderFiles);
 
   return (
     <View style={styles.container}>
@@ -233,7 +241,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         key={numColumns}
       />
 
-      {folderFiles.length > 0 ? (
+      {folderFiles?.length > 0 ? (
         folderFiles[selectedImageIndex || 0]?.type === "image" ? (
           <CustomImageZoomViewer
             modalVisible={modalVisible}

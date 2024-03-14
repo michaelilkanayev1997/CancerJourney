@@ -17,6 +17,7 @@ import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import Loader from "@ui/Loader";
+import { useQueryClient } from "react-query";
 
 interface Props {
   item: ImageType;
@@ -36,6 +37,7 @@ const MoreOptionsModal: FC<Props> = ({
     item.description || ""
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
@@ -62,6 +64,7 @@ const MoreOptionsModal: FC<Props> = ({
       const { data } = await client.delete(url);
 
       console.log(data);
+      queryClient.invalidateQueries(["folder-files", folderName]);
       ToastNotification({
         message: "File deleted successfully",
       });

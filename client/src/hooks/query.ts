@@ -4,6 +4,7 @@ import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { FoldersLength } from "src/@types/file";
+import { ImageType } from "@components/ImageCard";
 
 const fetchFoldersLength = async (): Promise<FoldersLength> => {
   const client = await getClient();
@@ -14,6 +15,28 @@ const fetchFoldersLength = async (): Promise<FoldersLength> => {
 export const useFetchFoldersLength = () => {
   return useQuery(["folders-length"], {
     queryFn: () => fetchFoldersLength(),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
+const fetchFolderFiles = async (folderName: string): Promise<ImageType[]> => {
+  const client = await getClient();
+  const { data } = await client.get(`/file/${folderName}`);
+
+  return data;
+};
+
+export const useFetchFolderFiles = (folderName: string) => {
+  return useQuery(["folder-files", folderName], {
+    staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
+    cacheTime: 1000 * 60 * 60, // 1 hours cache time
+    queryFn: () => fetchFolderFiles(folderName),
     onError(err) {
       const errorMessage = catchAsyncError(err);
       ToastNotification({
