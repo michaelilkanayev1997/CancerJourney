@@ -21,7 +21,7 @@ const PulseAnimationContainer: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     oppacitySharedValue.value = withRepeat(
-      withTiming(0.3, { duration: 1000 }),
+      withTiming(0.2, { duration: 1000 }),
       -1,
       true
     );

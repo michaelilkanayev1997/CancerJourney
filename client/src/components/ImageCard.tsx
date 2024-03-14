@@ -16,6 +16,9 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import MoreOptionsModal from "./MoreOptionsModal";
+import PulseAnimationContainer from "./PulseAnimationContainer";
+import colors from "@utils/colors";
+import LottieView from "lottie-react-native";
 
 export type ImageType = {
   _id: string;
@@ -48,6 +51,7 @@ const ImageCard = React.memo(
   }: Props) => {
     const [isOptionModalVisible, setOptionModalVisible] =
       useState<boolean>(false);
+    const [isImageLoading, setImageIsLoading] = useState(true);
 
     const handleMoreOptionsPress = useCallback(() => {
       setOptionModalVisible(true);
@@ -55,7 +59,7 @@ const ImageCard = React.memo(
     }, []);
 
     const iconSize = useMemo(() => (numColumns === 3 ? 24 : 30), [numColumns]);
-    console.log(item);
+
     return (
       <>
         <TouchableOpacity
@@ -68,7 +72,27 @@ const ImageCard = React.memo(
           style={styles.cardContainer}
         >
           <View style={styles.imageContainer}>
-            <Image source={{ uri: item.uri }} style={styles.image} />
+            {isImageLoading ? (
+              <View style={styles.image}>
+                <LottieView
+                  source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                  autoPlay
+                  loop
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+                <Image
+                  source={{ uri: item.uri }}
+                  onLoad={() => setImageIsLoading(false)} // Image loaded successfully
+                  onError={() => setImageIsLoading(false)} // Image failed to load
+                />
+              </View>
+            ) : (
+              <Image source={{ uri: item.uri }} style={styles.image} />
+            )}
+
             <View style={[styles.textContainer]}>
               <Text
                 style={[
