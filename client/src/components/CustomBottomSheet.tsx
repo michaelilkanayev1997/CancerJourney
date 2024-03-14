@@ -17,6 +17,7 @@ import colors from "@utils/colors";
 import AppButton from "@ui/AppButton";
 import { UploadStackParamList } from "src/@types/navigation";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
+import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {
   folderName: string;
@@ -83,11 +84,22 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
           ],
           multiple: false,
         });
-        console.log(docRes);
+
         const assets = docRes.assets;
         if (!assets) return;
 
         const file = assets[0];
+        console.log("docRes   ", file.size);
+
+        if (file.size !== undefined && file.size > 3000000) {
+          ToastNotification({
+            type: "Info",
+            message:
+              "The file you selected is larger than 3MB. Please choose a file that is smaller than 3MB.",
+          });
+
+          return;
+        }
 
         let File;
         if (file.mimeType?.startsWith("image/")) {

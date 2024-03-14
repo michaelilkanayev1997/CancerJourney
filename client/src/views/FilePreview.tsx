@@ -93,6 +93,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
       }
 
       queryClient.invalidateQueries(["folder-files", folderName]);
+      queryClient.invalidateQueries(["folders-length"]);
 
       ToastNotification({
         type: "Success",
