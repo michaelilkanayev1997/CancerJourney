@@ -181,13 +181,13 @@ export const getFolderLength: RequestHandler = async (req, res) => {
 
     // Calculate lengths of each folder array
     const foldersLength = {
-      bloodtestsLength: userFolders.bloodtests.length,
-      treatmentsLength: userFolders.treatments.length,
-      medicationsLength: userFolders.medications.length,
-      reportsLength: userFolders.reports.length,
-      scansLength: userFolders.scans.length,
-      appointmentsLength: userFolders.appointments.length,
-      otherLength: userFolders.other.length,
+      "Blood Tests": userFolders.bloodtests.length,
+      Treatments: userFolders.treatments.length,
+      Medications: userFolders.medications.length,
+      Reports: userFolders.reports.length,
+      Scans: userFolders.scans.length,
+      Appointments: userFolders.appointments.length,
+      Other: userFolders.other.length,
     };
 
     // Send the lengths object as a response

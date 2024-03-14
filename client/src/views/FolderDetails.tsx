@@ -19,6 +19,7 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import PulseAnimationContainer from "@components/PulseAnimationContainer";
 
 // Placeholder images for demonstration
 const images = [
@@ -171,7 +172,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         </>
       ),
     });
-  }, [navigation, numColumns]);
+  }, [navigation, numColumns, folderFiles]);
 
   const fetchNewSignedUrl = async () => {
     // Fetch the new signed URL
