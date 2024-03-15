@@ -7,7 +7,10 @@ import {
   fileUpload,
   getFolderFiles,
   getFolderLength,
+  updateFile,
 } from "#/controllers/file";
+import { validate } from "#/middleware/validator";
+import { UpdateFileSchema } from "#/utils/validationSchema";
 
 const router = Router();
 
@@ -20,5 +23,6 @@ router.post(
 router.delete("/file-delete", mustAuth, fileRemove);
 router.get("/folders-length", mustAuth, getFolderLength);
 router.get("/:folder", mustAuth, getFolderFiles);
+router.patch("/file-update", mustAuth, validate(UpdateFileSchema), updateFile);
 
 export default router;

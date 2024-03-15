@@ -61,3 +61,8 @@ export const SignInValidationSchema = yup.object().shape({
   email: yup.string().required("Email is missing!").email("Invalid email !"),
   password: yup.string().trim().required("Password is missing!"),
 });
+
+export const UpdateFileSchema = yup.object().shape({
+  title: yup.string().required("title is missing!"),
+  description: yup.string().trim(),
+});
