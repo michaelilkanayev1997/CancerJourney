@@ -12,6 +12,8 @@ interface UserDocument {
   favorites: ObjectId[];
   followers: ObjectId[];
   followings: ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 //Methods interface is used to define schema methods

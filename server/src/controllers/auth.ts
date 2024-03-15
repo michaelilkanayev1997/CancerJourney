@@ -17,7 +17,6 @@ import {
   sendVerificationMail,
 } from "#/utils/mail";
 import EmailVerificationToken from "#/models/emailVerificationToken";
-
 import PasswordResetToken from "#/models/passwordResetToken";
 import { JWT_SECRET, PASSWORD_RESET_LINK } from "#/utils/variables";
 import { deleteS3Object } from "#/middleware/fileUpload";
@@ -136,7 +135,7 @@ export const updatePassword: RequestHandler = async (
   const { password, userId } = req.body;
 
   const user = await User.findById(userId);
-  if (!user) return res.status(403).json({ eror: "Unauthorized access!" });
+  if (!user) return res.status(403).json({ error: "Unauthorized access!" });
 
   const matched = await user.comparePassword(password);
   if (matched)
@@ -292,22 +291,21 @@ export const profileUpload: RequestHandler = async (req, res) => {
         error: "No file uploaded. Please upload a file.",
       });
     }
-    console.log(req.file);
 
+    // If avatar exists and it's not a Google avatar then Delete it from aws
     if (user.avatar?.publicId && user.avatar?.publicId !== "Google") {
       await deleteS3Object(`${user.avatar.publicId}`);
     }
 
+    // Set user new avatar
     user.avatar = { url: req.file.location, publicId: req.file.key };
-    console.log(user.avatar);
+
     await user.save();
 
     res.json({ success: true, fileUrl: req.file });
   } catch (error) {
-    // 'error' as an instance of 'Error'
-    const errorMessage = (error as Error).message;
     return res.status(500).json({
-      error: "An error occurred while uploading the file: " + errorMessage,
+      error: "An error occurred while uploading the profile image",
     });
   }
 };

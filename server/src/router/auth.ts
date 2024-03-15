@@ -3,7 +3,6 @@ import { Router } from "express";
 import {
   GoogleSignIn,
   create,
-  fileUpload,
   generateForgetPasswordLink,
   grantValid,
   logOut,

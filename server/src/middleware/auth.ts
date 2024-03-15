@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
-import PasswordResetToken from "#/models/passwordResetToken";
 import { JwtPayload, verify } from "jsonwebtoken";
+
+import PasswordResetToken from "#/models/passwordResetToken";
 import { JWT_SECRET } from "#/utils/variables";
 import User from "#/models/user";
 
