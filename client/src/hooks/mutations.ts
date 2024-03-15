@@ -14,7 +14,7 @@ interface DeleteFileParams {
 interface UpdateFileParams {
   fileId: string;
   folderName: string;
-  name: string;
+  title: string;
   description: string;
   handleCloseMoreOptionsPress: () => void;
 }
@@ -77,14 +77,14 @@ export const useFileMutations = () => {
     UpdateFileParams,
     unknown
   >(
-    async ({ fileId, name, description, folderName }) => {
+    async ({ fileId, title, description, folderName }) => {
       const client = await getClient();
       const url = `/file/file-update?fileId=${fileId}&folderName=${folderName}`;
-      return client.patch(url, { title: name, description });
+      return client.patch(url, { title: title, description });
     },
     {
       onSuccess: (data, variables) => {
-        const { fileId, folderName, description, name } = variables;
+        const { fileId, folderName, description, title } = variables;
         // Optimistically update the local cache
         queryClient.setQueryData(
           ["folder-files", folderName],
@@ -94,7 +94,7 @@ export const useFileMutations = () => {
             }
             return oldData.map((file) => {
               if (file._id === fileId) {
-                return { ...file, title: name, description };
+                return { ...file, title, description };
               }
               return file;
             });

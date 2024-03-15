@@ -9,6 +9,7 @@ import {
   Vibration,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
@@ -29,7 +30,7 @@ const MoreOptionsModal: FC<Props> = ({
   setOptionModalVisible,
   folderName,
 }) => {
-  const [name, setName] = useState<string>(item.title);
+  const [title, setTitle] = useState<string>(item.title);
   const [description, setDescription] = useState<string>(
     item.description || ""
   );
@@ -46,7 +47,7 @@ const MoreOptionsModal: FC<Props> = ({
   }, [setOptionModalVisible]);
 
   const handleNameChange = useCallback((text: string) => {
-    setName(text);
+    setTitle(text);
   }, []);
 
   const handleDescriptionChange = useCallback((text: string) => {
@@ -64,16 +65,19 @@ const MoreOptionsModal: FC<Props> = ({
 
   // Update button is pressed
   const handleUpdate = async () => {
+    if (title === "") {
+      return;
+    }
+
     updateFileMutation({
       fileId: item._id,
       folderName,
-      name,
+      title,
       description,
       handleCloseMoreOptionsPress,
     });
   };
 
-  console.log(isOptionModalVisible);
   return (
     <Modal
       visible={isOptionModalVisible}
@@ -122,11 +126,22 @@ const MoreOptionsModal: FC<Props> = ({
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.label}>Name</Text>
+          <View style={styles.titleWithError}>
+            <Text style={styles.label}>Title</Text>
+            {title.length === 0 ? (
+              <Animated.Text
+                entering={FadeInLeft.duration(500)}
+                exiting={FadeOutRight.duration(500)}
+                style={styles.errorMessage}
+              >
+                Title is Required !
+              </Animated.Text>
+            ) : null}
+          </View>
           <TextInput
             style={styles.input}
             onChangeText={handleNameChange}
-            value={name}
+            value={title}
             placeholder="Enter Name here"
           />
 
@@ -256,6 +271,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20, // Match modalContent's borderRadius
+  },
+  titleWithError: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%", // Ensure this container stretches to fill its parent
+  },
+  errorMessage: {
+    color: colors.ERROR,
+    paddingRight: 12,
+    fontWeight: "400",
   },
 });
 
