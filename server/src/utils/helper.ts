@@ -21,3 +21,8 @@ export const verifyGoogleToken = async (token: string) => {
     return error;
   }
 };
+
+// Remove space & LowerCase
+export const sanitizeFolderName = (folderName: string) => {
+  return folderName.toLowerCase().replace(/\s+/g, "");
+};

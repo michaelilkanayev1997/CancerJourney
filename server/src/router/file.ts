@@ -10,7 +10,7 @@ import {
   updateFile,
 } from "#/controllers/file";
 import { validate } from "#/middleware/validator";
-import { UpdateFileSchema } from "#/utils/validationSchema";
+import { FileTitleAndDescSchema } from "#/utils/validationSchema";
 
 const router = Router();
 
@@ -18,11 +18,17 @@ router.post(
   "/file-upload",
   mustAuth,
   folderFileUpload.single("file"),
+  validate(FileTitleAndDescSchema),
   fileUpload
 );
 router.delete("/file-delete", mustAuth, fileRemove);
 router.get("/folders-length", mustAuth, getFolderLength);
-router.get("/:folder", mustAuth, getFolderFiles);
-router.patch("/file-update", mustAuth, validate(UpdateFileSchema), updateFile);
+router.get("/:foldername", mustAuth, getFolderFiles);
+router.patch(
+  "/file-update",
+  mustAuth,
+  validate(FileTitleAndDescSchema),
+  updateFile
+);
 
 export default router;

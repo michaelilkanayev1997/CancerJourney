@@ -62,7 +62,7 @@ export const SignInValidationSchema = yup.object().shape({
   password: yup.string().trim().required("Password is missing!"),
 });
 
-export const UpdateFileSchema = yup.object().shape({
-  title: yup.string().required("title is missing!"),
+export const FileTitleAndDescSchema = yup.object().shape({
+  title: yup.string().required("Title is missing!"),
   description: yup.string().trim(),
 });

@@ -3,6 +3,8 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 import { FileFilterCallback } from "multer";
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import crypto from "crypto";
 
 import {
   S3_ACCESS_KEY,
@@ -10,8 +12,7 @@ import {
   S3_REGION,
   S3_SECRET_KEY,
 } from "#/utils/variables";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import crypto from "crypto";
+import { sanitizeFolderName } from "#/utils/helper";
 
 const s3 = new S3Client({
   credentials: {
@@ -33,7 +34,7 @@ const imageFilter = (
   } else {
     cb(
       new Error(
-        "Invalid file type. Only JPG, PNG, and WEBP files are allowed."
+        "Invalid file type. Only JPG, PNG, and WEBP images are allowed."
       ) as any,
       false
     );
@@ -94,7 +95,7 @@ export const folderFileUpload = multer({
       const randomBytes = crypto.randomBytes(16).toString("hex");
 
       // Remove space & LowerCase
-      const folderName = file.originalname.toLowerCase().replace(/\s+/g, "");
+      const folderName = sanitizeFolderName(file.originalname);
 
       const parts = file.mimetype.split("/"); // This splits the string into an array of parts divided by '/'
       const fileType = parts[1]; // get file type
