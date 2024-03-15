@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useQueryClient } from "react-query";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
@@ -17,7 +18,6 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import { useQueryClient } from "react-query";
 
 interface Props {}
 
@@ -87,7 +87,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
       formData.append("description", description);
 
       const data = await handleUpload(formData);
-      console.log(data);
+
       if (!data?.success) {
         throw new Error("Failed to upload file");
       }
@@ -184,6 +184,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
           onPress={handleSave}
         />
       </ScrollView>
+
       {modalVisible && (
         <CustomPdfViewer
           modalVisible={modalVisible}

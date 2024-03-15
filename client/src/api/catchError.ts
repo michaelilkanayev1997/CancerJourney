@@ -5,7 +5,7 @@ const catchAsyncError = (error: any): string => {
 
   if (isAxiosError(error)) {
     const errorResponse = error.response?.data;
-
+    console.log(errorResponse);
     if (errorResponse) {
       errorMessage = errorResponse.error;
     }

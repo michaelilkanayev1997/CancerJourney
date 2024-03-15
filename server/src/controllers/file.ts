@@ -1,7 +1,8 @@
+import { RequestHandler } from "express";
+
 import { deleteS3Object, generateSignedUrl } from "#/middleware/fileUpload";
 import { Files, IFile } from "#/models/files";
 import User from "#/models/user";
-import { RequestHandler } from "express";
 
 export const fileUpload: RequestHandler = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ export const fileUpload: RequestHandler = async (req, res) => {
         error: "No file uploaded. Please upload a file.",
       });
     }
-    console.log(req.file);
+
     // Accessing title and description from the request body
     const { title, description } = req.body;
 
@@ -71,13 +72,12 @@ export const fileRemove: RequestHandler = async (req, res) => {
 
     // Handle the case where no document is found
     if (!fileDocument) {
-      console.log("File not found.");
+      res.status(400).json({ error: "File not found" });
       return;
     }
 
     // Folder is an array and we want the first item
     const fileToRemove = fileDocument[folderNameFormated][0];
-    console.log(fileToRemove);
 
     const dbRemove = await Files.updateOne(
       { _id: fileDocument._id }, // Use the parent document's _id to identify it
@@ -119,7 +119,7 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
     ];
 
     if (!allowedFolders.includes(folderName)) {
-      return res.status(400).send({ message: "Invalid folder name" });
+      return res.status(400).send({ error: "Invalid folder name" });
     }
 
     const sortedFolderFiles = await Files.aggregate([
@@ -130,7 +130,7 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
     ]);
 
     if (!sortedFolderFiles) {
-      return res.status(404).send({ message: "Files not found" });
+      return res.status(404).send({ error: "Files not found" });
     }
 
     // Generate signed URLs for each file
@@ -173,7 +173,7 @@ export const getFolderLength: RequestHandler = async (req, res) => {
     const userFolders = await Files.findOne({ owner: req.user.id });
 
     if (!userFolders) {
-      return res.status(404).send("User files not found.");
+      return res.status(404).send({ error: "Files not found." });
     }
 
     // Calculate lengths of each folder array
@@ -190,7 +190,6 @@ export const getFolderLength: RequestHandler = async (req, res) => {
     // Send the lengths object as a response
     res.json(foldersLength);
   } catch (error) {
-    console.error("Failed to get Folders Length", error);
     return res.status(500).json({
       error: "An error occurred while getting Folders Length",
     });
@@ -199,10 +198,8 @@ export const getFolderLength: RequestHandler = async (req, res) => {
 
 export const updateFile: RequestHandler = async (req, res) => {
   const { title, description } = req.body;
-  const ownerId = req.user.id;
-
-  // Use req.query instead of req.params to access fileId and folderName
   const { fileId, folderName } = req.query;
+  const ownerId = req.user.id;
 
   // Remove space & LowerCase
   const folder = folderName.toLowerCase().replace(/\s+/g, "");

@@ -19,97 +19,6 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { useFetchFolderFiles } from "src/hooks/query";
 import NoFilesDisplay from "@ui/NoFilesDisplay";
 
-// Placeholder images for demonstration
-const images = [
-  {
-    id: "1",
-    uri: "https://images.template.net/115163/acknowledgement-for-school-project-report-a6i6u.png",
-    title: "Doctor Avi Appointment",
-    description:
-      "this is my medication for my blood pressare asdasdas dasd asda sdas asd asda sdas das das dasd asd asda sd afwertg retekmerjnghoerog ergfdnbkfdm wrfwjbef skmdvc fbewkfn lrkwgokerh gnsdvf mklsdbhthenklfn",
-    date: "2023-01-01",
-    type: "image/png",
-  },
-  {
-    id: "2",
-    uri: "https://assets-global.website-files.com/5ebb0930dd82631397ddca92/61bb9a7943343e03bb9fcd1b_documents-product-template-software.png",
-    title: "Radiation Therapy Appointment",
-    date: "2023-01-02",
-    type: "image/png",
-  },
-  {
-    id: "3",
-    uri: "https://blog.idrsolutions.com/app/uploads/2020/10/pdf-1.png",
-    pdf_file: "http://samples.leanpub.com/thereactnativebook-sample.pdf",
-    title: "Chemotherapy Session",
-    date: "2023-01-03",
-    type: "application/pdf",
-  },
-  {
-    id: "4",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Follow-up with Oncologist",
-    date: "2023-01-04",
-    type: "image/jpg",
-  },
-  {
-    id: "5",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Targeted Therapy Meeting",
-    date: "2023-01-05",
-    type: "image/jpg",
-  },
-  {
-    id: "6",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Tumor Board Review Meeting",
-    date: "2023-01-06",
-    type: "image/jpg",
-  },
-  {
-    id: "7",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Pain Management Consultation",
-    date: "2023-01-01",
-    type: "image/jpg",
-  },
-  {
-    id: "8",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Lung Cancer Assessment",
-    date: "2023-01-02",
-    type: "image/jpg",
-  },
-  {
-    id: "9",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Pain Management Consultation",
-    date: "2023-01-03",
-    type: "image/jpg",
-  },
-  {
-    id: "10",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Image 4",
-    date: "2023-01-04",
-    type: "image/jpg",
-  },
-  {
-    id: "11",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Image 5",
-    date: "2023-01-05",
-    type: "image/jpg",
-  },
-  {
-    id: "12",
-    uri: "https://signaturely.com/wp-content/uploads/2022/08/non-disclosure-agreement-uplead.jpg",
-    title: "Image 6",
-    date: "2023-01-06",
-    type: "image/jpg",
-  },
-];
-
 type FolderDetailsProps = NativeStackScreenProps<
   UploadStackParamList,
   "FolderDetails"
@@ -174,9 +83,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     });
   }, [navigation, numColumns, folderFiles]);
 
-  console.log(isLoading);
-
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) return <Text>Loading...</Text>; //fix it
 
   return (
     <View style={styles.container}>

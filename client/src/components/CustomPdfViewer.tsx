@@ -15,10 +15,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ToastNotification } from "@utils/toastConfig";
 import { ImageType } from "./ImageCard";
 
+interface PdfItemType {
+  pdf_file: string;
+  title: string;
+}
+
 interface Props {
   modalVisible: boolean;
   toggleModalVisible: () => void;
-  item: ImageType;
+  item: ImageType | PdfItemType;
 }
 
 const CustomPdfViewer: FC<Props> = ({
