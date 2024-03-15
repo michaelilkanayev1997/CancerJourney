@@ -35,7 +35,7 @@ export const Folder: FC<Props> = ({ folderLength, name, icon }) => {
       <View style={styles.fileInfoContainer}>
         <MaterialCommunityIcons name="file-outline" size={16} color="#003366" />
         <Text style={styles.fileInfoText}>
-          {folderLength && `${folderLength[name]} Files`}
+          {folderLength ? `${folderLength[name]} Files` : `0 Files`}
         </Text>
       </View>
     </TouchableOpacity>
@@ -54,7 +54,9 @@ export const FolderList: FC<Props> = ({ folderLength, name, icon }) => {
       <View style={styles.centerContainer}>
         <Text style={styles.folderListText}>{name}</Text>
       </View>
-      <Text style={styles.fileCountText}>{`${folderLength[name]} files`}</Text>
+      <Text style={styles.fileInfoText}>
+        {folderLength ? `${folderLength[name]} Files` : `0 Files`}
+      </Text>
     </TouchableOpacity>
   );
 };

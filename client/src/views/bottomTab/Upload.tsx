@@ -4,8 +4,6 @@ import {
   FlatList,
   TouchableOpacity,
   Vibration,
-  View,
-  Text,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -19,10 +17,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FolderList, Folder, IconName } from "@ui/Folder";
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
-import { getClient } from "src/api/client";
-import { useQuery } from "react-query";
-import catchAsyncError from "src/api/catchError";
-import { ToastNotification } from "@utils/toastConfig";
 import { useFetchFoldersLength } from "src/hooks/query";
 
 const folders: Array<{ name: string; icon: IconName; key: string }> = [

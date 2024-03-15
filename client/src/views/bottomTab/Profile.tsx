@@ -25,6 +25,9 @@ interface Props {}
 
 const Profile: FC<Props> = (props) => {
   const navigation = useNavigation();
+  const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
+  const [keyboardIsShown, setKeyboardIsShown] = useState(false);
+  const { profile } = useSelector(getAuthState);
   const [newProfile, setNewProfile] = useState({
     userType: "Family member",
     diagnosisDate: "",
@@ -42,9 +45,6 @@ const Profile: FC<Props> = (props) => {
     birthDate: "",
     country: "",
   });
-  const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
-  const [keyboardIsShown, setKeyboardIsShown] = useState(false);
-  const { profile } = useSelector(getAuthState);
 
   const toggleModalVisible = useCallback(() => {
     setPhotoModalVisible((prevVisible) => !prevVisible);
@@ -99,7 +99,7 @@ const Profile: FC<Props> = (props) => {
   let formattedDate = "";
   if (profile?.createdAt) {
     // Check if `createdAt` is defined
-    const date = new Date(profile.createdAt); // Now it's safe to create the Date object
+    const date = new Date(profile.createdAt);
 
     // Format the date
     formattedDate = date.toLocaleDateString("en-US", {

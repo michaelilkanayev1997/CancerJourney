@@ -88,7 +88,11 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         const docRes = await DocumentPicker.getDocumentAsync({
           type: [
             "application/pdf", // Allows PDFs
-            "image/*", // Allows all image types
+            "image/webp",
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+            "image/pjpeg",
           ],
           multiple: false,
         });
@@ -97,7 +101,6 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         if (!assets) return;
 
         const file = assets[0];
-        console.log("docRes   ", file.size);
 
         if (file.size !== undefined && file.size > 3000000) {
           ToastNotification({
