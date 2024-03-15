@@ -38,6 +38,7 @@ export const useFetchFolderFiles = (folderName: string) => {
   return useQuery(["folder-files", folderName], {
     staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
     cacheTime: 1000 * 60 * 60, // 1 hours cache time
+
     queryFn: () => fetchFolderFiles(folderName),
     onError(err) {
       const errorMessage = catchAsyncError(err);

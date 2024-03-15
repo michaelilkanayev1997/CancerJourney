@@ -91,7 +91,6 @@ export const fileRemove: RequestHandler = async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete file", error);
     return res.status(500).json({
       error: "An error occurred while removing the file",
     });

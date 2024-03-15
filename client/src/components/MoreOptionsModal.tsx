@@ -13,11 +13,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
 import ExportAndSendEmail from "./ExportAndSendEmail";
-import { getClient } from "src/api/client";
-import catchAsyncError from "src/api/catchError";
-import { ToastNotification } from "@utils/toastConfig";
 import Loader from "@ui/Loader";
-import { useMutation, useQueryClient } from "react-query";
+import { useFileMutations } from "src/hooks/mutations";
 
 interface Props {
   item: ImageType;
@@ -36,8 +33,12 @@ const MoreOptionsModal: FC<Props> = ({
   const [description, setDescription] = useState<string>(
     item.description || ""
   );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const queryClient = useQueryClient();
+  const {
+    deleteFileMutation,
+    deleteLoading,
+    updateFileMutation,
+    updateLoading,
+  } = useFileMutations();
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
@@ -52,89 +53,40 @@ const MoreOptionsModal: FC<Props> = ({
     setDescription(text);
   }, []);
 
-  const handleDelete = async () => {
-    setIsLoading(true); // Start loading
-    try {
-      // Construct the URL with query parameters
-      const url = `/file/file-delete?fileId=${item._id}&folderName=${folderName}`;
-
-      const client = await getClient();
-      const { data } = await client.delete(url);
-
-      queryClient.invalidateQueries(["folder-files", folderName]);
-      queryClient.invalidateQueries(["folders-length"]);
-
-      ToastNotification({
-        message: "File deleted successfully",
-      });
-    } catch (error) {
-      const errorMessage = catchAsyncError(error);
-      ToastNotification({
-        type: "Error",
-        message: errorMessage,
-      });
-    } finally {
-      handleCloseMoreOptionsPress();
-      setIsLoading(false); // Stop loading
-    }
+  // Delete button is pressed
+  const handleDelete = () => {
+    deleteFileMutation({
+      fileId: item._id,
+      folderName,
+      handleCloseMoreOptionsPress,
+    });
   };
 
-  const updateFile = async () => {
-    const client = await getClient();
-    const url = `/file/file-update?fileId=${item._id}&folderName=${folderName}`;
-    return client.patch(url, { title: name, description });
-  };
-
-  const { isLoading: updateLoading, mutate: fileUpdateMutate } = useMutation(
-    updateFile,
-    {
-      onSuccess: () => {
-        // Optimistically update the local cache
-        queryClient.setQueryData(
-          ["folder-files", folderName],
-          (oldData: ImageType[] | undefined) => {
-            if (!oldData) {
-              return [];
-            }
-            return oldData.map((file) => {
-              if (file._id === item._id) {
-                return { ...file, title: name, description };
-              }
-              return file;
-            });
-          }
-        );
-        ToastNotification({ message: "File updated successfully" });
-      },
-      onError: (error) => {
-        const errorMessage = catchAsyncError(error);
-        ToastNotification({
-          type: "Error",
-          message: errorMessage,
-        });
-      },
-      //  final logic with onSettled
-      onSettled: () => {
-        handleCloseMoreOptionsPress();
-      },
-    }
-  );
-
+  // Update button is pressed
   const handleUpdate = async () => {
-    fileUpdateMutate();
+    updateFileMutation({
+      fileId: item._id,
+      folderName,
+      name,
+      description,
+      handleCloseMoreOptionsPress,
+    });
   };
 
+  console.log(isOptionModalVisible);
   return (
     <Modal
       visible={isOptionModalVisible}
       transparent={true}
       animationType="fade"
-      onRequestClose={isLoading ? undefined : handleCloseMoreOptionsPress} // Android back button
+      onRequestClose={
+        deleteLoading || updateLoading ? undefined : handleCloseMoreOptionsPress
+      } // Android back button
     >
       <TouchableOpacity
         style={styles.modalOverlay}
         activeOpacity={1}
-        disabled={isLoading}
+        disabled={deleteLoading || updateLoading}
         onPressOut={handleCloseMoreOptionsPress}
       >
         <View
@@ -142,7 +94,7 @@ const MoreOptionsModal: FC<Props> = ({
           onStartShouldSetResponder={() => true}
         >
           {/* Loader Component */}
-          {(isLoading || updateLoading) && (
+          {(deleteLoading || updateLoading) && (
             <View style={styles.loaderOverlay}>
               <Loader
                 loaderStyle={{
@@ -191,7 +143,7 @@ const MoreOptionsModal: FC<Props> = ({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              disabled={isLoading}
+              disabled={deleteLoading || updateLoading}
               onPress={handleDelete}
               style={[styles.modalActionButton]}
             >
@@ -199,7 +151,7 @@ const MoreOptionsModal: FC<Props> = ({
               <Text style={styles.actionButtonText}>Delete</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              disabled={isLoading}
+              disabled={deleteLoading || updateLoading}
               onPress={handleUpdate}
               style={styles.modalActionButton}
             >
