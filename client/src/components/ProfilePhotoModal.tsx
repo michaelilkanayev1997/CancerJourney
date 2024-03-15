@@ -53,7 +53,6 @@ const ProfilePhotoModal: FC<Props> = ({
 
       return data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -137,7 +136,6 @@ const ProfilePhotoModal: FC<Props> = ({
       setIsLoading(true);
 
       const file = result.assets[0];
-      console.log(file);
 
       const formData = new FormData();
 
@@ -157,6 +155,7 @@ const ProfilePhotoModal: FC<Props> = ({
       if (profile) {
         dispatch(updateProfile({ ...profile, avatar: file.uri }));
       }
+
       ToastNotification({
         type: "Success",
         message: "Image uploaded successfully!",
@@ -165,7 +164,7 @@ const ProfilePhotoModal: FC<Props> = ({
       const errorMessage = catchAsyncError(error);
       ToastNotification({
         type: "Error",
-        message: errorMessage,
+        message: errorMessage || "Network error",
       });
     }
 
