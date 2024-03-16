@@ -18,6 +18,7 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
+import LottieView from "lottie-react-native";
 
 interface Props {}
 
@@ -36,6 +37,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
   const [pdf, setPdf] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
+  const [imageLoading, setImageLoading] = useState(true);
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
@@ -135,11 +137,34 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         overScrollMode="never"
       >
         {fileType.includes("image/") && (
-          <Image
-            source={{ uri: fileUri }}
-            style={styles.preview}
-            resizeMode="contain"
-          />
+          <>
+            {imageLoading ? (
+              <>
+                <LottieView
+                  source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                  autoPlay
+                  loop
+                  style={{
+                    width: 150,
+                    height: 250,
+                  }}
+                />
+                <Image
+                  source={{ uri: fileUri }}
+                  style={styles.preview}
+                  resizeMode="contain"
+                  onLoad={() => setImageLoading(false)} // Image loaded successfully
+                  onError={() => setImageLoading(false)} // Image failed to load
+                />
+              </>
+            ) : (
+              <Image
+                source={{ uri: fileUri }}
+                style={styles.preview}
+                resizeMode="contain"
+              />
+            )}
+          </>
         )}
         {fileType.includes("application/pdf") && (
           <>

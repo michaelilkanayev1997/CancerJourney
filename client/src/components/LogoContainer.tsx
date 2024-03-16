@@ -1,29 +1,13 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { FC, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import Animated, { withSpring } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 import { useFadeInUp } from "@utils/animated";
 
 interface Props {}
 
 const LogoContainer: FC<Props> = (props) => {
-  const entering = () => {
-    "worklet";
-    return {
-      initialValues: {
-        translateY: 190, // Initial vertical position
-      },
-      animations: {
-        translateY: withSpring(-30, {
-          mass: 1,
-          damping: 7,
-          stiffness: 23,
-        }),
-      },
-    };
-  };
-
   useFocusEffect(
     useCallback(() => {
       // Reset Animations

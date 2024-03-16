@@ -18,6 +18,7 @@ import AppButton from "@ui/AppButton";
 import { UploadStackParamList } from "src/@types/navigation";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
+import { calculateCompression } from "@utils/helper";
 
 interface Props {
   folderName: string;
@@ -60,7 +61,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       // Open the camera with ImagePicker
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true, // Allows editing the picture
-        quality: 0.2, // Quality
+        quality: 0.7, // Quality
       });
 
       // If the user doesn't cancel, set the selected image
@@ -114,25 +115,23 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
 
         let File;
         if (file.mimeType?.startsWith("image/")) {
+          const compression = calculateCompression(file.size || 1000000);
+
           // The picked document is an image, let's manipulate it
           const manipulatedImage = await ImageManipulator.manipulateAsync(
             file.uri,
             [], // Actions like resize or rotate would go here
-            { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG } // Compress and convert to JPEG
+            { compress: compression, format: ImageManipulator.SaveFormat.JPEG } // Compress and convert to JPEG
           );
 
           File = {
-            name: file.name.split(".")[0],
             uri: manipulatedImage.uri,
-            type: file.mimeType,
-            size: file.size,
+            type: "image/jpeg",
           };
         } else {
           File = {
-            name: file.name.split(".")[0],
             uri: file.uri,
-            type: file.mimeType,
-            size: file.size,
+            type: "application/pdf",
           };
         }
 
@@ -145,7 +144,11 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         }
         handleCanecl(); // close Bottom Sheet
       } catch (error) {
-        console.log(error);
+        console.error("Error picking document:", error);
+        ToastNotification({
+          type: "Error",
+          message: "An error occurred while selecting the file.",
+        });
       }
     };
 

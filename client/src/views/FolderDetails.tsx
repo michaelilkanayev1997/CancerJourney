@@ -18,6 +18,7 @@ import CustomImageZoomViewer from "@components/CustomImageZoomViewer";
 import CustomPdfViewer from "@components/CustomPdfViewer";
 import { useFetchFolderFiles } from "src/hooks/query";
 import NoFilesDisplay from "@ui/NoFilesDisplay";
+import Loader from "@ui/Loader";
 
 type FolderDetailsProps = NativeStackScreenProps<
   UploadStackParamList,
@@ -83,7 +84,13 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
     });
   }, [navigation, numColumns, folderFiles]);
 
-  if (isLoading) return <Text>Loading...</Text>; //fix it
+  if (isLoading) {
+    return (
+      <View style={styles.loader}>
+        <Loader />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -139,6 +146,11 @@ const styles = StyleSheet.create({
   },
   imagesContainer: {
     paddingHorizontal: 10,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center", // Center vertically
+    alignItems: "center", // Center horizontally
   },
 });
 
