@@ -17,6 +17,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 
 import MoreOptionsModal from "./MoreOptionsModal";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 export type ImageType = {
   _id: string;
@@ -72,15 +73,20 @@ const ImageCard = React.memo(
           <View style={styles.imageContainer}>
             {isImageLoading ? (
               <View style={styles.image}>
-                <LottieView
-                  source={require("@assets/Animations/ImageLoadingAnimation.json")}
-                  autoPlay
-                  loop
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                />
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut.duration(500)}
+                >
+                  <LottieView
+                    source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                    autoPlay
+                    loop
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  />
+                </Animated.View>
                 <Image
                   source={{ uri: item?.uri }}
                   onLoad={() => setImageIsLoading(false)} // Image loaded successfully

@@ -61,7 +61,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
       // Open the camera with ImagePicker
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true, // Allows editing the picture
-        quality: 0.2, // Quality
+        quality: 0.7, // Quality
       });
 
       // If the user doesn't cancel, set the selected image
