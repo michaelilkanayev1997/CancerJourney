@@ -65,7 +65,7 @@ export const verifyEmail: RequestHandler = async (
 
   await EmailVerificationToken.findByIdAndDelete(verificationToken._id);
 
-  res.json({ messgae: "Your email is verified!" });
+  res.json({ message: "Your email is verified!" });
 };
 
 export const sendReVerificationToken: RequestHandler = async (

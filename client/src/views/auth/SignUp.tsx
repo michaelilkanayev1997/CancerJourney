@@ -84,7 +84,7 @@ const SignUp: FC<Props> = (props) => {
         ...values,
       });
 
-      navigation.navigate("Verification", { userInfo: data.user });
+      navigation.navigate("Verification", { userInfo: data.user, ...values });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
