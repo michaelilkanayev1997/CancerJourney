@@ -9,6 +9,7 @@ import { ImageType } from "@components/ImageCard";
 const fetchFoldersLength = async (): Promise<FoldersLength> => {
   const client = await getClient();
   const { data: foldersLength } = await client.get("/file/folders-length");
+
   return foldersLength;
 };
 

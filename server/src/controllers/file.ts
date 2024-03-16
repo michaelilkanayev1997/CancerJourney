@@ -166,13 +166,14 @@ export const getFolderFiles: RequestHandler = async (req, res) => {
 export const getFolderLength: RequestHandler = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
+    console.log(user);
     if (!user) throw new Error("Something went wrong, user not found!");
 
     const userFolders = await Files.findOne({ owner: req.user.id });
 
     if (!userFolders) {
       // No folders found
-      return null;
+      return res.json(null);
     }
 
     // Calculate lengths of each folder array

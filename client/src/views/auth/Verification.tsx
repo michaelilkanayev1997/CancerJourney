@@ -27,6 +27,9 @@ import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
+import { updateLoggedInState, updateProfile } from "src/store/auth";
+import { useDispatch } from "react-redux";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
@@ -40,8 +43,9 @@ const Verification: FC<Props> = ({ route }) => {
   const [coundDown, setCoundDown] = useState(60);
   const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const dispatch = useDispatch();
 
-  const { userInfo } = route.params;
+  const { userInfo, password } = route.params;
   const inputRef = useRef<TextInput>(null);
 
   const handleChange = (value: string, index: number) => {
@@ -67,18 +71,30 @@ const Verification: FC<Props> = ({ route }) => {
 
   const handleSubmit = async () => {
     if (!isValidOtp) return;
-    setSubmitting(true);
+    setSubmitting(true); // Activate busy for loader
     try {
-      await client.post("/auth/verify-email", {
+      const { data } = await client.post("/auth/verify-email", {
         userId: userInfo.id,
         token: otp.join(""),
       });
 
       ToastNotification({
-        message: "You are Verified !",
+        message: data.message, // Your mail is verified!
       });
 
-      navigation.navigate("SignIn");
+      const email = userInfo.email;
+
+      const { data: userData } = await client.post("/auth/sign-in", {
+        password,
+        email,
+      });
+
+      await saveToAsyncStorage(Keys.AUTH_TOKEN, userData.token);
+
+      dispatch(updateProfile(userData.profile));
+      dispatch(updateLoggedInState(true));
+
+      navigation.navigate("LostPassword");
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -86,7 +102,7 @@ const Verification: FC<Props> = ({ route }) => {
         message: errorMessage,
       });
     }
-    setSubmitting(false);
+    setSubmitting(false); // Deactivate busy for loader
   };
 
   const requestForOTP = async () => {
@@ -95,7 +111,11 @@ const Verification: FC<Props> = ({ route }) => {
     try {
       await client.post("/auth/re-verify-email", { userId: userInfo.id });
     } catch (error) {
-      console.log(error);
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
     }
   };
 
