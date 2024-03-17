@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+
 import CountryPickerCustom from "@components/CountryPickerCustom";
 
 const userTypes = [

@@ -18,12 +18,12 @@ const AuthNavigator = () => {
         animation: "slide_from_right",
       }}
     >
-      {/* check */}
-      <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="LostPassword" component={LostPassword} />
       <Stack.Screen name="Verification" component={Verification} />
+      {/* check */}
+      <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
     </Stack.Navigator>
   );
 };

@@ -20,6 +20,7 @@ import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import Avatar from "@ui/Avatar";
 import { useFadeInRight } from "@utils/animated";
+import InputRowContainer from "@ui/inputRowContainer";
 
 interface Props {}
 
@@ -33,11 +34,7 @@ const Profile: FC<Props> = (props) => {
     diagnosisDate: "",
     cancerType: "Melanoma",
     subtype: "Lentigo Maligna",
-    mutation: "",
     stage: "",
-    treatmentHistory: "",
-    clinicalTrials: false,
-    story: "",
     name: "Jane Doe",
     email: "jane.doe@example.com",
     activeSince: "Jan, 2023",
@@ -113,144 +110,159 @@ const Profile: FC<Props> = (props) => {
     <View
       style={[styles.container, { paddingBottom: keyboardIsShown ? 0 : 85 }]}
     >
-      <View style={styles.profileHeader}>
-        <Avatar
-          onButtonPress={toggleModalVisible}
-          uri={profile?.avatar || ""}
-        />
-        <Text style={styles.profileName}>{profile?.name}</Text>
-        <View style={styles.row}>
-          <Text style={styles.profileEmail}>{profile?.email}</Text>
-          {profile?.verified ? (
-            <MaterialCommunityIcons
-              name="check-decagram"
-              size={24}
-              color={colors.LIGHT_BLUE}
-              style={styles.verifiedIcon}
-            />
-          ) : null}
-        </View>
-        <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
-      </View>
-
       <ScrollView style={styles.container}>
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Name</Text>
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, name: text })
-            }
-            value={newProfile.name}
-            placeholder="Enter your name"
+        <View style={styles.profileHeader}>
+          <Avatar
+            onButtonPress={toggleModalVisible}
+            uri={profile?.avatar || ""}
           />
+          <Text style={styles.profileName}>{profile?.name}</Text>
+          <View style={styles.row}>
+            <Text style={styles.profileEmail}>{profile?.email}</Text>
+            {profile?.verified ? (
+              <MaterialCommunityIcons
+                name="check-decagram"
+                size={24}
+                color={colors.LIGHT_BLUE}
+                style={styles.verifiedIcon}
+              />
+            ) : null}
+          </View>
+          <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
         </View>
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Gender</Text>
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, gender: text })
-            }
-            value={newProfile.gender}
-            placeholder="Enter your Gender"
-          />
-        </View>
+        <InputRowContainer
+          title={"Name"}
+          children={
+            <TextInput
+              style={styles.rowInput}
+              onChangeText={(text) =>
+                setNewProfile({ ...newProfile, name: text })
+              }
+              value={newProfile.name}
+              placeholder="Enter your name"
+            />
+          }
+        />
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Country</Text>
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, country: text })
-            }
-            value={newProfile.country}
-            placeholder="Enter your Country"
-          />
-        </View>
+        <InputRowContainer
+          title={"Gender"}
+          children={
+            <Picker
+              selectedValue={newProfile.cancerType}
+              onValueChange={(itemValue, itemIndex) =>
+                setNewProfile({ ...newProfile, stage: itemValue })
+              }
+              style={styles.rowInput}
+            >
+              <Picker.Item label="Male" value="Male" />
+              <Picker.Item label="Female" value="Female" />
+            </Picker>
+          }
+        />
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Birth Date</Text>
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, birthDate: text })
-            }
-            value={newProfile.birthDate}
-            placeholder="DD/MM/YYYY"
-          />
-        </View>
+        <InputRowContainer
+          title={"Birth Date"}
+          children={
+            <TextInput
+              style={styles.rowInput}
+              onChangeText={(text) =>
+                setNewProfile({ ...newProfile, birthDate: text })
+              }
+              value={newProfile.birthDate}
+              placeholder="DD/MM/YYYY"
+            />
+          }
+        />
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Diagnosis Date</Text>
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, diagnosisDate: text })
-            }
-            value={newProfile.diagnosisDate}
-            placeholder="DD/MM/YYYY"
-          />
-        </View>
+        <InputRowContainer
+          title={"Diagnosis Date"}
+          children={
+            <TextInput
+              style={styles.rowInput}
+              onChangeText={(text) =>
+                setNewProfile({ ...newProfile, diagnosisDate: text })
+              }
+              value={newProfile.diagnosisDate}
+              placeholder="DD/MM/YYYY"
+            />
+          }
+        />
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>User Type</Text>
+        <InputRowContainer
+          title={"User Type"}
+          children={
+            <Picker
+              selectedValue={newProfile.userType}
+              onValueChange={(itemValue, itemIndex) =>
+                setNewProfile({ ...newProfile, userType: itemValue })
+              }
+              style={styles.rowInput}
+            >
+              <Picker.Item label="Fighter (Patient)" value="patient" />
+              <Picker.Item label="Family member" value="family" />
+              <Picker.Item label="Supporter (Friend)" value="friend" />
+              <Picker.Item label="Health care pro" value="professional" />
+              <Picker.Item label="Caregiver" value="caregiver" />
+              <Picker.Item label="Other" value="other" />
+            </Picker>
+          }
+        />
 
-          <Picker
-            selectedValue={newProfile.userType}
-            onValueChange={(itemValue, itemIndex) =>
-              setNewProfile({ ...newProfile, userType: itemValue })
-            }
-            style={styles.rowInput}
-          >
-            <Picker.Item label="Fighter (Patient)" value="patient" />
-            <Picker.Item label="Family member" value="family" />
-            <Picker.Item label="Supporter (Friend)" value="friend" />
-            <Picker.Item label="Health care pro" value="professional" />
-            <Picker.Item label="Caregiver" value="caregiver" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
-        </View>
+        <InputRowContainer
+          title={"Cancer Type"}
+          children={
+            <Picker
+              selectedValue={newProfile.cancerType}
+              onValueChange={(itemValue, itemIndex) =>
+                setNewProfile({ ...newProfile, stage: itemValue })
+              }
+              style={styles.rowInput}
+            >
+              <Picker.Item label="Breasts cancer" value="breasts" />
+              <Picker.Item label="Family member" value="family" />
+              <Picker.Item label="Supporter (Friend)" value="friend" />
+              <Picker.Item label="Health care pro" value="professional" />
+              <Picker.Item label="Caregiver" value="caregiver" />
+              <Picker.Item label="Other" value="other" />
+            </Picker>
+          }
+        />
 
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Cancer Type</Text>
+        <InputRowContainer
+          title={"Cancer Stage"}
+          children={
+            <Picker
+              selectedValue={newProfile.stage}
+              onValueChange={(itemValue, itemIndex) =>
+                setNewProfile({ ...newProfile, stage: itemValue })
+              }
+              style={styles.rowInput}
+            >
+              <Picker.Item label="No stage" value="no" />
+              <Picker.Item label="Stage 0" value="0" />
+              <Picker.Item label="Stage 1" value="1" />
+              <Picker.Item label="Stage 2" value="2" />
+              <Picker.Item label="Stage 3" value="3" />
+              <Picker.Item label="Stage 4" value="4" />
+              <Picker.Item label="I don't know" value="" />
+            </Picker>
+          }
+        />
 
-          <Picker
-            selectedValue={newProfile.cancerType}
-            onValueChange={(itemValue, itemIndex) =>
-              setNewProfile({ ...newProfile, stage: itemValue })
-            }
-            style={styles.rowInput}
-          >
-            <Picker.Item label="Breasts cancer" value="breasts" />
-            <Picker.Item label="Family member" value="family" />
-            <Picker.Item label="Supporter (Friend)" value="friend" />
-            <Picker.Item label="Health care pro" value="professional" />
-            <Picker.Item label="Caregiver" value="caregiver" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
-        </View>
-
-        <View style={styles.inputRowContainer}>
-          <Text style={styles.rowLabel}>Cancer Stage</Text>
-
-          <Picker
-            selectedValue={newProfile.stage}
-            onValueChange={(itemValue, itemIndex) =>
-              setNewProfile({ ...newProfile, stage: itemValue })
-            }
-            style={styles.rowInput}
-          >
-            <Picker.Item label="No stage" value="no" />
-            <Picker.Item label="Stage 0" value="0" />
-            <Picker.Item label="Stage 1" value="1" />
-            <Picker.Item label="Stage 2" value="2" />
-            <Picker.Item label="Stage 3" value="3" />
-            <Picker.Item label="Stage 4" value="4" />
-            <Picker.Item label="I don't know" value="" />
-          </Picker>
-        </View>
+        <InputRowContainer
+          title={"Country"}
+          children={
+            <TextInput
+              style={styles.rowInput}
+              onChangeText={(text) =>
+                setNewProfile({ ...newProfile, country: text })
+              }
+              value={newProfile.country}
+              placeholder="Enter your Country"
+            />
+          }
+        />
       </ScrollView>
       <ProfilePhotoModal
         isVisible={PhotoModalVisible}
@@ -287,21 +299,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#bdc3c7",
     marginTop: 5,
-  },
-  inputRowContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: colors.PRIMARY,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e1e1e1",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  rowLabel: {
-    flex: 1, // Take up 1/3 of the space
-    fontSize: 16,
-    color: "#000",
   },
   rowInput: {
     flex: 2, // Take up 2/3 of the space
