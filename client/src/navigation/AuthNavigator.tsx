@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import RegistrationForm from "@views/RegistrationForm";
 
 import LostPassword from "@views/auth/LostPassword";
 import SignIn from "@views/auth/SignIn";
@@ -17,6 +18,8 @@ const AuthNavigator = () => {
         animation: "slide_from_right",
       }}
     >
+      {/* check */}
+      <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="LostPassword" component={LostPassword} />
