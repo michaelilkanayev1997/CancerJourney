@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 8,
     backgroundColor: "#fff",
-    overflow: "hidden", // This is necessary for iOS to clip the shadow
+    overflow: "hidden", // Necessary for iOS to clip the shadow
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    elevation: 3, // This is for Android
+    elevation: 3, // For Android
   },
 });
 
