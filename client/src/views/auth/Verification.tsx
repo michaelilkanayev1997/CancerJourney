@@ -14,11 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 import AppLink from "@ui/AppLink";
 import OTPField from "@ui/OTPField";
@@ -29,14 +26,12 @@ import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import { updateLoggedInState, updateProfile } from "src/store/auth";
-import { useDispatch } from "react-redux";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
 const otpFields = new Array(4).fill("");
 
 const Verification: FC<Props> = ({ route }) => {
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const [otp, setOtp] = useState([...otpFields]);
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -93,8 +88,6 @@ const Verification: FC<Props> = ({ route }) => {
 
       dispatch(updateProfile(userData.profile));
       dispatch(updateLoggedInState(true));
-
-      navigation.navigate("LostPassword");
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({

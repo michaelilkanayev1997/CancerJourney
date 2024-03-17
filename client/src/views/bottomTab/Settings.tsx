@@ -14,11 +14,13 @@ import { Keys, removeFromAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
+import { useQueryClient } from "react-query";
 
 interface Props {}
 
 const Settings: FC<Props> = (props) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { profile } = useSelector(getAuthState);
 
   const handleLoggout = async (fromAll?: boolean) => {
@@ -28,6 +30,10 @@ const Settings: FC<Props> = (props) => {
 
       const client = await getClient();
       await client.post(endpoint);
+
+      // Clear the React Query cache
+      queryClient.clear(); // This removes all queries from the cache
+
       await removeFromAsyncStorage(Keys.AUTH_TOKEN);
       dispatch(updateProfile(null));
       dispatch(updateLoggedInState(false));
