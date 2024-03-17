@@ -29,7 +29,7 @@ const Profile: FC<Props> = (props) => {
   const [newProfile, setNewProfile] = useState({
     userType: "Family member",
     diagnosisDate: "",
-    cancerType: "Melanoma",
+    cancerType: "bone",
     subtype: "Lentigo Maligna",
     stage: "",
     name: "Jane Doe",

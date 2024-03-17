@@ -1,7 +1,13 @@
 import { Picker } from "@react-native-picker/picker";
 import { FC, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 import CustomPicker from "./CustomPicker";
 import InputRowContainer from "@ui/InputRowContainer";
@@ -19,6 +25,33 @@ export interface NewProfile {
   birthDate: string;
   country: string;
 }
+
+interface CancerTypeRibbon {
+  [key: string]: number; // Use `number` since `require()` returns a number for local assets
+}
+
+const cancerTypeRibbon: CancerTypeRibbon = {
+  bone: require("@assets/CancerType/bone-cancer.png"),
+  breast: require("@assets/CancerType/breast-cancer.png"),
+  lung: require("@assets/CancerType/lung-cancer.png"),
+  appendix: require("@assets/CancerType/appendix-cancer.png"),
+  brain: require("@assets/CancerType/brain-cancer.png"),
+  bladder: require("@assets/CancerType/bladder-cancer.png"),
+  blood: require("@assets/CancerType/blood-cancer.png"),
+  kidney: require("@assets/CancerType/kidney-cancer.png"),
+  childhood: require("@assets/CancerType/childhood-cancer.png"),
+  colorectal: require("@assets/CancerType/colorectal-cancer.png"),
+  "gallbladder-and-bile-duct": require("@assets/CancerType/gallbladder-and-bile-duct-cancer.png"),
+  gastric: require("@assets/CancerType/gastric-cancer.png"),
+  gynecological: require("@assets/CancerType/gynecological-cancer.png"),
+  "head-and-neck": require("@assets/CancerType/head-and-neck-cancer.png"),
+  liver: require("@assets/CancerType/liver-cancer.png"),
+  pancreatic: require("@assets/CancerType/pancreatic-cancer.png"),
+  prostate: require("@assets/CancerType/prostate-cancer.png"),
+  skin: require("@assets/CancerType/skin-cancer.png"),
+  testicular: require("@assets/CancerType/testicular-cancer.png"),
+  thyroid: require("@assets/CancerType/thyroid-cancer.png"),
+};
 
 interface Props {
   newProfile: NewProfile;
@@ -111,20 +144,41 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
       <InputRowContainer
         title={"Cancer Type"}
         children={
-          <Picker
-            selectedValue={newProfile.cancerType}
-            onValueChange={(itemValue, itemIndex) =>
-              setNewProfile({ ...newProfile, stage: itemValue })
-            }
-            style={styles.rowInput}
-          >
-            <Picker.Item label="Breasts cancer" value="breasts" />
-            <Picker.Item label="Family member" value="family" />
-            <Picker.Item label="Supporter (Friend)" value="friend" />
-            <Picker.Item label="Health care pro" value="professional" />
-            <Picker.Item label="Caregiver" value="caregiver" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
+          <>
+            <TouchableOpacity
+              onPress={() => setPickerVisible(true)}
+              style={[styles.rowInput, { paddingVertical: 15 }]}
+            >
+              <Text
+                style={styles.buttonText}
+                numberOfLines={1} // Ensure text is on one line
+                ellipsizeMode="tail" // Add ellipsis at the end if text is too long
+              >
+                {newProfile.cancerType.charAt(0).toUpperCase() +
+                  newProfile.cancerType.slice(1) +
+                  " Cancer"}
+              </Text>
+              <Image
+                source={
+                  cancerTypeRibbon[newProfile.cancerType] ||
+                  require("@assets/CancerType/breast-cancer.png")
+                }
+                style={{ width: 25, height: 25, marginRight: 5 }}
+              />
+              <MaterialIcons
+                name="arrow-drop-down"
+                size={24}
+                color="gray"
+                style={{ paddingRight: 6 }}
+              />
+            </TouchableOpacity>
+            <CustomPicker
+              visible={pickerVisible}
+              setNewProfile={setNewProfile}
+              setPickerVisible={setPickerVisible}
+              newProfile={newProfile}
+            />
+          </>
         }
       />
 
@@ -162,31 +216,6 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
           />
         }
       />
-      <InputRowContainer
-        title={"Cancer Type"}
-        children={
-          <>
-            <TouchableOpacity
-              onPress={() => setPickerVisible(true)}
-              style={[styles.rowInput, { paddingVertical: 12 }]}
-            >
-              <Text style={styles.buttonText}>{newProfile.cancerType}</Text>
-              <MaterialIcons
-                name="arrow-drop-down"
-                size={24}
-                color="gray"
-                style={{ marginRight: 5 }}
-              />
-            </TouchableOpacity>
-            <CustomPicker
-              visible={pickerVisible}
-              setNewProfile={setNewProfile}
-              setPickerVisible={setPickerVisible}
-              newProfile={newProfile}
-            />
-          </>
-        }
-      />
     </>
   );
 };
@@ -222,6 +251,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   buttonText: {
+    width: "70%",
     fontSize: 16,
     color: "#000",
     marginLeft: 10,
