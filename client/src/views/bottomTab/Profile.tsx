@@ -13,14 +13,13 @@ import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
-import Avatar from "@ui/Avatar";
 import { useFadeInRight } from "@utils/animated";
-import InputRowContainer from "@ui/inputRowContainer";
+import ProfileHeader from "@ui/ProfileHeader";
+import InputRowContainer from "@ui/InputRowContainer";
 
 interface Props {}
 
@@ -93,43 +92,15 @@ const Profile: FC<Props> = (props) => {
     startAnimation: startSaveBtnAnimation,
   } = useFadeInRight(0);
 
-  let formattedDate = "";
-  if (profile?.createdAt) {
-    // Check if `createdAt` is defined
-    const date = new Date(profile.createdAt);
-
-    // Format the date
-    formattedDate = date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
-
   return (
     <View
-      style={[styles.container, { paddingBottom: keyboardIsShown ? 0 : 85 }]}
+      style={[styles.container, { marginBottom: keyboardIsShown ? 15 : 105 }]}
     >
       <ScrollView style={styles.container}>
-        <View style={styles.profileHeader}>
-          <Avatar
-            onButtonPress={toggleModalVisible}
-            uri={profile?.avatar || ""}
-          />
-          <Text style={styles.profileName}>{profile?.name}</Text>
-          <View style={styles.row}>
-            <Text style={styles.profileEmail}>{profile?.email}</Text>
-            {profile?.verified ? (
-              <MaterialCommunityIcons
-                name="check-decagram"
-                size={24}
-                color={colors.LIGHT_BLUE}
-                style={styles.verifiedIcon}
-              />
-            ) : null}
-          </View>
-          <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
-        </View>
+        <ProfileHeader
+          profile={profile}
+          toggleModalVisible={toggleModalVisible}
+        />
 
         <InputRowContainer
           title={"Name"}
@@ -278,28 +249,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.PRIMARY_LIGHT,
   },
-  profileHeader: {
-    alignItems: "center",
-    paddingTop: 10,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.LIGHT_GRAY,
-  },
-  profileName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-  profileEmail: {
-    fontSize: 16,
-    color: "#7f8c8d",
-    marginTop: 1,
-  },
-  activeSince: {
-    fontSize: 14,
-    color: "#bdc3c7",
-    marginTop: 5,
-  },
   rowInput: {
     flex: 2, // Take up 2/3 of the space
     borderWidth: 1,
@@ -325,12 +274,6 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 17,
     fontWeight: "600",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  verifiedIcon: {
-    paddingLeft: 5,
   },
 });
 
