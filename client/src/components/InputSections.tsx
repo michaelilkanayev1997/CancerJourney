@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   Image,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -11,6 +12,7 @@ import {
 
 import CustomPicker from "./CustomPicker";
 import InputRowContainer from "@ui/InputRowContainer";
+import DatePicker from "@ui/DatePicker";
 
 export interface NewProfile {
   userType: string;
@@ -60,6 +62,8 @@ interface Props {
 
 const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [showBirthDatePicker, setShowBirthDatePicker] = useState(false);
+  const [showDiagnosisDatePicker, setShowDiagnosisDatePicker] = useState(false);
 
   return (
     <>
@@ -96,13 +100,13 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
       <InputRowContainer
         title={"Birth Date"}
         children={
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, birthDate: text })
+          <DatePicker
+            setShowDateModal={setShowBirthDatePicker}
+            showDateModal={showBirthDatePicker}
+            setDate={(formattedDate) =>
+              setNewProfile({ ...newProfile, birthDate: formattedDate })
             }
-            value={newProfile.birthDate}
-            placeholder="DD/MM/YYYY"
+            date={newProfile.birthDate || "DD/MM/YYYY"}
           />
         }
       />
@@ -110,13 +114,13 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
       <InputRowContainer
         title={"Diagnosis Date"}
         children={
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, diagnosisDate: text })
+          <DatePicker
+            setShowDateModal={setShowDiagnosisDatePicker}
+            showDateModal={showDiagnosisDatePicker}
+            setDate={(formattedDate) =>
+              setNewProfile({ ...newProfile, diagnosisDate: formattedDate })
             }
-            value={newProfile.diagnosisDate}
-            placeholder="DD/MM/YYYY"
+            date={newProfile.diagnosisDate || "DD/MM/YYYY"}
           />
         }
       />

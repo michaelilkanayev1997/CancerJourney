@@ -17,7 +17,7 @@ import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import { useFadeInRight } from "@utils/animated";
 import ProfileHeader from "@ui/ProfileHeader";
-import InputSections from "@components/InputSections";
+import InputSections, { NewProfile } from "@components/InputSections";
 
 interface Props {}
 
