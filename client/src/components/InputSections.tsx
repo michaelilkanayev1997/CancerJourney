@@ -3,7 +3,6 @@ import { FC, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   Image,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -162,22 +161,24 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
                 numberOfLines={1} // Ensure text is on one line
                 ellipsizeMode="tail" // Add ellipsis at the end if text is too long
               >
-                {newProfile.cancerType.charAt(0).toUpperCase() +
-                  newProfile.cancerType.slice(1) +
-                  " Cancer"}
+                {newProfile.cancerType !== ""
+                  ? newProfile.cancerType.charAt(0).toUpperCase() +
+                    newProfile.cancerType.slice(1) +
+                    " Cancer"
+                  : "Other Cancer"}
               </Text>
               <Image
                 source={
                   cancerTypeRibbon[newProfile.cancerType] ||
-                  require("@assets/CancerType/breast-cancer.png")
+                  require("@assets/CancerType/other-cancer.png")
                 }
-                style={{ width: 25, height: 25, marginRight: 5 }}
+                style={{ width: 25, height: 25, marginRight: 2 }}
               />
               <MaterialIcons
                 name="arrow-drop-down"
                 size={24}
                 color="gray"
-                style={{ paddingRight: 6 }}
+                style={{ paddingRight: 7 }}
               />
             </TouchableOpacity>
             <CustomPicker
@@ -217,7 +218,7 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
           <>
             <TouchableOpacity
               onPress={() => setCountryPickerVisible(true)}
-              style={[styles.rowInput, { paddingVertical: 15 }]}
+              style={[styles.rowInput, { paddingVertical: 12 }]}
             >
               <Text
                 style={styles.buttonText}

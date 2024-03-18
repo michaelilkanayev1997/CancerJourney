@@ -1,93 +1,60 @@
 import { FC, useState } from "react";
-import { Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { Text, StyleSheet, ScrollView, View } from "react-native";
 
-import CountryPickerCustom from "@components/CountryPickerCustom";
-
-const userTypes = [
-  "Contender (Patient)",
-  "Family Member",
-  "Supporter (Friend)",
-  "Health Field",
-  "Caretaker",
-  "Other",
-];
-
-const cancerTypes = [
-  "Breast Cancer",
-  "Lung Cancer",
-  "Prostate Cancer",
-  "Colorectal Cancer",
-  "Other",
-];
+import InputSections from "@components/InputSections";
+import AppButton from "@ui/AppButton";
+import { Feather } from "@expo/vector-icons";
 
 interface Props {}
 
 const RegistrationForm: FC<Props> = (props) => {
-  const [formState, setFormState] = useState({
-    userType: "",
-    cancerType: "",
-    cancerSubtype: "",
+  const [newProfile, setNewProfile] = useState({
+    userType: "Fighter (Patient)",
     diagnosisDate: "",
-    cancerStage: "",
-    sex: "",
-    location: null,
+    cancerType: "",
+    subtype: "Lentigo Maligna",
+    stage: "",
+    name: "Jane Doe",
+    email: "jane.doe@example.com",
+    activeSince: "Jan, 2023",
+    gender: "Male",
+    birthDate: "",
+    country: { cca2: "US", name: "" },
   });
 
-  const handleChange = (name, value) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
   const handleSubmit = () => {
-    console.log("Form submitted:", formState);
-    // Here you'd typically send the form data to your backend
+    console.log("Form submitted:", newProfile);
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       <Text style={styles.header}>Registration</Text>
 
-      <Text style={styles.label}>User Type</Text>
-      <Picker
-        selectedValue={formState.userType}
-        onValueChange={(itemValue) => handleChange("userType", itemValue)}
-        style={styles.input}
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: 40 }}
       >
-        {userTypes.map((type) => (
-          <Picker.Item key={type} label={type} value={type} />
-        ))}
-      </Picker>
+        <InputSections newProfile={newProfile} setNewProfile={setNewProfile} />
 
-      {/* Similar setup for cancerType, sex, etc. */}
-      {/* For simplicity, demonstrating with userType and cancerType */}
-
-      <Text style={styles.label}>Cancer Type</Text>
-      <Picker
-        selectedValue={formState.cancerType}
-        onValueChange={(itemValue) => handleChange("cancerType", itemValue)}
-        style={styles.input}
-      >
-        {cancerTypes.map((type) => (
-          <Picker.Item key={type} label={type} value={type} />
-        ))}
-      </Picker>
-
-      <Text style={styles.label}>Cancer Subtype</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={(value) => handleChange("cancerSubtype", value)}
-        value={formState.cancerSubtype}
-      />
-
-      {/* Add other fields here following the same pattern */}
-
-      <CountryPickerCustom />
-
-      <Button title="Register" onPress={handleSubmit} />
-    </ScrollView>
+        <View style={styles.button}>
+          <AppButton
+            title="Register"
+            pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+            defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+            onPress={handleSubmit}
+            icon={
+              <Feather
+                name="check-square"
+                size={24}
+                color="white"
+                style={{ marginRight: 10 }}
+              />
+            }
+            busy={false}
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
@@ -97,20 +64,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
+    paddingLeft: 10,
+    paddingTop: 10,
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  input: {
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
+  button: {
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
   },
 });
 
