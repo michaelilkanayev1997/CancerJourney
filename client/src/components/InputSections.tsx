@@ -8,11 +8,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 import CustomPicker from "./CustomPicker";
 import InputRowContainer from "@ui/InputRowContainer";
 import DatePicker from "@ui/DatePicker";
+import CountryPickerCustom from "./CountryPickerCustom";
 
 export interface NewProfile {
   userType: string;
@@ -25,7 +27,7 @@ export interface NewProfile {
   activeSince: string;
   gender: string;
   birthDate: string;
-  country: string;
+  country: { cca2: string; name: string };
 }
 
 interface CancerTypeRibbon {
@@ -53,6 +55,7 @@ const cancerTypeRibbon: CancerTypeRibbon = {
   skin: require("@assets/CancerType/skin-cancer.png"),
   testicular: require("@assets/CancerType/testicular-cancer.png"),
   thyroid: require("@assets/CancerType/thyroid-cancer.png"),
+  other: require("@assets/CancerType/other-cancer.png"),
 };
 
 interface Props {
@@ -64,6 +67,7 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [showBirthDatePicker, setShowBirthDatePicker] = useState(false);
   const [showDiagnosisDatePicker, setShowDiagnosisDatePicker] = useState(false);
+  const [countryPickerVisible, setCountryPickerVisible] = useState(false);
 
   return (
     <>
@@ -71,7 +75,7 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
         title={"Name"}
         children={
           <TextInput
-            style={styles.rowInput}
+            style={[styles.rowInput, styles.nameInput]}
             onChangeText={(text) =>
               setNewProfile({ ...newProfile, name: text })
             }
@@ -210,14 +214,42 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
       <InputRowContainer
         title={"Country"}
         children={
-          <TextInput
-            style={styles.rowInput}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, country: text })
-            }
-            value={newProfile.country}
-            placeholder="Enter your Country"
-          />
+          <>
+            <TouchableOpacity
+              onPress={() => setCountryPickerVisible(true)}
+              style={[styles.rowInput, { paddingVertical: 15 }]}
+            >
+              <Text
+                style={styles.buttonText}
+                numberOfLines={1} // Ensure text is on one line
+                ellipsizeMode="tail" // Add ellipsis at the end if text is too long
+              >
+                {newProfile?.country.name !== ""
+                  ? newProfile.country.name
+                  : "Pick your location"}
+              </Text>
+
+              <View style={{ marginLeft: -25 }}>
+                <CountryPickerCustom
+                  countryPickerVisible={countryPickerVisible}
+                  setCountryPickerVisible={setCountryPickerVisible}
+                  setCountry={({ cca2, name }) => {
+                    setNewProfile({
+                      ...newProfile,
+                      country: { ...newProfile.country, cca2, name },
+                    });
+                  }}
+                  country={newProfile.country}
+                />
+              </View>
+              <MaterialIcons
+                name="arrow-drop-down"
+                size={24}
+                color="gray"
+                style={{ paddingRight: 6 }}
+              />
+            </TouchableOpacity>
+          </>
         }
       />
     </>
@@ -244,21 +276,17 @@ const styles = StyleSheet.create({
     elevation: 3, // This is for Android
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  button: {
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#e1e1e1",
-    borderRadius: 5,
-    padding: 15,
-    backgroundColor: "#fff",
-    marginVertical: 8,
+    paddingVertical: 12,
   },
   buttonText: {
     width: "70%",
     fontSize: 16,
     color: "#000",
     marginLeft: 10,
+  },
+  nameInput: {
+    flex: 1.91,
+    paddingLeft: 14,
   },
 });
 

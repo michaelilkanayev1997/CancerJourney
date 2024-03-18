@@ -123,9 +123,14 @@ const cancerTypes = [
     imageUrl: require("@assets/CancerType/testicular-cancer.png"),
   },
   {
-    label: "Thyroid Cancer ",
+    label: "Thyroid Cancer",
     value: "thyroid",
     imageUrl: require("@assets/CancerType/thyroid-cancer.png"),
+  },
+  {
+    label: "Other",
+    value: "other",
+    imageUrl: require("@assets/CancerType/other-cancer.png"),
   },
 ];
 
