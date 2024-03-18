@@ -6,6 +6,7 @@ import Upload from "@views/bottomTab/Upload";
 import CustomDrawer from "@components/CustomDrawer";
 import colors from "@utils/colors";
 import TabNavigator from "./TabNavigator";
+import RegistrationForm from "@views/RegistrationForm";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,8 @@ const DrawerNavigator = () => {
         swipeEnabled: false,
       }}
     >
+      {/* check */}
+      <Drawer.Screen name="RegistrationForm" component={RegistrationForm} />
       <Drawer.Screen
         name="Home"
         component={TabNavigator}
