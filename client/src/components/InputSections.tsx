@@ -55,6 +55,7 @@ const cancerTypeRibbon: CancerTypeRibbon = {
   skin: require("@assets/CancerType/skin-cancer.png"),
   testicular: require("@assets/CancerType/testicular-cancer.png"),
   thyroid: require("@assets/CancerType/thyroid-cancer.png"),
+  other: require("@assets/CancerType/other-cancer.png"),
 };
 
 interface Props {
