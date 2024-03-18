@@ -17,7 +17,7 @@ import { getAuthState } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import { useFadeInRight } from "@utils/animated";
 import ProfileHeader from "@ui/ProfileHeader";
-import InputSections, { NewProfile } from "@components/InputSections";
+import InputSections from "@components/InputSections";
 
 interface Props {}
 
@@ -37,7 +37,7 @@ const Profile: FC<Props> = (props) => {
     activeSince: "Jan, 2023",
     gender: "Male",
     birthDate: "",
-    country: "",
+    country: { cca2: "US", name: "" },
   });
 
   const toggleModalVisible = useCallback(() => {

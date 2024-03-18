@@ -24,6 +24,7 @@ const DatePicker: FC<Props> = ({
       return;
     }
     if (selectedDate) {
+      // Convert Date to DD/MM/YYYY format
       const formattedDate = `${("0" + selectedDate.getDate()).slice(-2)}/${(
         "0" +
         (selectedDate.getMonth() + 1)
