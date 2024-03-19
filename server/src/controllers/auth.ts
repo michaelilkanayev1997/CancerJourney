@@ -334,3 +334,46 @@ export const profileImageRemove: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const updateProfile: RequestHandler = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const profileData = req.body; // The new profile data from the request body
+    console.log(profileData);
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (profileData.name) {
+      user.name = profileData.name; // Optional, so it might not be provided
+    }
+
+    // Update or set the profile information
+    user.userType = profileData.userType;
+    user.diagnosisDate = profileData.diagnosisDate;
+    user.cancerType = profileData.cancerType;
+    user.subtype = profileData.subtype;
+    user.stage = profileData.stage;
+    user.gender = profileData.gender;
+    user.birthDate = profileData.birthDate;
+    user.country = profileData.country;
+
+    // Save the updated user document
+    await user.save();
+
+    // Respond with the updated user profile
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      profile: user,
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the profile",
+    });
+  }
+};

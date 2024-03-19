@@ -1,26 +1,48 @@
 import { FC, useState } from "react";
 import { Text, StyleSheet, ScrollView, View } from "react-native";
 
-import InputSections from "@components/InputSections";
+import InputSections, { NewProfile } from "@components/InputSections";
 import AppButton from "@ui/AppButton";
 import { Feather } from "@expo/vector-icons";
+import { getClient } from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { ToastNotification } from "@utils/toastConfig";
 
 interface Props {}
 
 const RegistrationForm: FC<Props> = (props) => {
-  const [newProfile, setNewProfile] = useState({
+  const [newProfile, setNewProfile] = useState<NewProfile>({
     userType: "Fighter (Patient)",
     diagnosisDate: "",
     cancerType: "",
-    subtype: "",
     stage: "",
     gender: "Male",
     birthDate: "",
     country: { cca2: "", name: "" },
   });
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Form submitted:", newProfile);
+    setLoadingUpdate(true);
+    try {
+      const client = await getClient();
+
+      const { data } = await client.post("/auth/update-profile", newProfile);
+
+      console.log(data);
+      ToastNotification({
+        message: data.message,
+      });
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    } finally {
+      setLoadingUpdate(false);
+    }
   };
 
   return (
@@ -50,7 +72,7 @@ const RegistrationForm: FC<Props> = (props) => {
                 style={{ marginRight: 10 }}
               />
             }
-            busy={false}
+            busy={loadingUpdate}
           />
         </View>
       </ScrollView>

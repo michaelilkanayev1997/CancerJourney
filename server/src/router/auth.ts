@@ -11,6 +11,7 @@ import {
   sendReVerificationToken,
   signIn,
   updatePassword,
+  updateProfile,
   verifyEmail,
 } from "#/controllers/auth";
 import { validate } from "#/middleware/validator";
@@ -56,5 +57,6 @@ router.post(
   profileUpload
 );
 router.post("/profile-image-remove", mustAuth, profileImageRemove);
+router.post("/update-profile", mustAuth, updateProfile);
 
 export default router;
