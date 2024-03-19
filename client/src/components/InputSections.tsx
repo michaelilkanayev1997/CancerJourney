@@ -21,8 +21,7 @@ export interface NewProfile {
   cancerType: string;
   subtype: string;
   stage: string;
-  name: string;
-  email: string;
+  name?: string;
   gender: string;
   birthDate: string;
   country: { cca2: string; name: string };
@@ -185,9 +184,13 @@ const InputSections: FC<Props> = ({
         }
       />
 
-      <Text style={styles.optionalLabel}>
-        Optional - you can add this later
-      </Text>
+      {Registration ? (
+        <Text style={styles.optionalLabel}>
+          Optional - you can add this later
+        </Text>
+      ) : (
+        <></>
+      )}
 
       <InputRowContainer
         title={"Diagnosis Date"}
@@ -313,7 +316,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderBottomWidth: 2,
     borderBottomColor: "#e1e1e1",
-    borderTopWidth: 1,
+    borderTopWidth: 1.2,
     borderTopColor: "#e1e1e1",
   },
 });

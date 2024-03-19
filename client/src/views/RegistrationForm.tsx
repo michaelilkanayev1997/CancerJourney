@@ -12,13 +12,11 @@ const RegistrationForm: FC<Props> = (props) => {
     userType: "Fighter (Patient)",
     diagnosisDate: "",
     cancerType: "",
-    subtype: "Lentigo Maligna",
+    subtype: "",
     stage: "",
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
     gender: "Male",
     birthDate: "",
-    country: { cca2: "US", name: "" },
+    country: { cca2: "", name: "" },
   });
 
   const handleSubmit = () => {
