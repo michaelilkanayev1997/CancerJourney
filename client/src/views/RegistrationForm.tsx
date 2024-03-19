@@ -12,18 +12,17 @@ interface Props {}
 
 const RegistrationForm: FC<Props> = (props) => {
   const [newProfile, setNewProfile] = useState<NewProfile>({
-    userType: "Fighter (Patient)",
-    diagnosisDate: "",
-    cancerType: "",
-    stage: "",
     gender: "Male",
-    birthDate: "",
+    birthDate: null,
+    userType: "patient",
+    cancerType: "other",
+    diagnosisDate: null,
+    stage: "",
     country: { cca2: "", name: "" },
   });
   const [loadingUpdate, setLoadingUpdate] = useState(false);
 
   const handleSubmit = async () => {
-    console.log("Form submitted:", newProfile);
     setLoadingUpdate(true);
     try {
       const client = await getClient();

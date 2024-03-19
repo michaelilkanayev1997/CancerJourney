@@ -19,8 +19,8 @@ interface UserDocument {
   gender: string;
   userType: string;
   cancerType: string;
-  birthDate: string;
-  diagnosisDate?: string;
+  birthDate: Date | string;
+  diagnosisDate?: Date;
   subtype?: string;
   stage?: string;
   country?: { cca2: string; name: string };
@@ -81,16 +81,16 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
     tokens: [String],
 
     // NewProfile properties
-    userType: { type: String },
-    diagnosisDate: { type: String },
-    cancerType: { type: String },
-    subtype: { type: String },
+    userType: { type: String, default: "" },
+    cancerType: { type: String, default: "" },
+    gender: { type: String, default: "" },
+    birthDate: { type: Date, default: null },
+    diagnosisDate: { type: Date },
     stage: { type: String },
-    gender: { type: String },
-    birthDate: { type: String },
     country: {
-      cca2: { type: String },
-      name: { type: String },
+      type: Object,
+      cca2: String,
+      name: String,
     },
   },
   {
