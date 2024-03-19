@@ -7,6 +7,8 @@ import { Feather } from "@expo/vector-icons";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import { getAuthState, updateProfile } from "src/store/auth";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Props {}
 
@@ -21,6 +23,7 @@ const RegistrationForm: FC<Props> = (props) => {
     country: { cca2: "", name: "" },
   });
   const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
     setLoadingUpdate(true);
@@ -29,10 +32,10 @@ const RegistrationForm: FC<Props> = (props) => {
 
       const { data } = await client.post("/auth/update-profile", newProfile);
 
-      console.log(data);
       ToastNotification({
         message: data.message,
       });
+      dispatch(updateProfile(data.profile));
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
