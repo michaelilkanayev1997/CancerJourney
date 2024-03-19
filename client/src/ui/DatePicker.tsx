@@ -29,7 +29,12 @@ const DatePicker: FC<Props> = ({
       setDate(selectedDate);
     }
   };
-  const displayDate = date instanceof Date ? convertDateFormat(date) : date;
+
+  // Check if date is valid
+  const parsedDate = new Date(date);
+  const displayDate = !isNaN(parsedDate.getTime())
+    ? convertDateFormat(date)
+    : date;
 
   return (
     <>

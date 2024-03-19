@@ -27,16 +27,16 @@ const Profile: FC<Props> = (props) => {
   const [keyboardIsShown, setKeyboardIsShown] = useState(false);
   const { profile } = useSelector(getAuthState);
   const [newProfile, setNewProfile] = useState<NewProfile>({
-    userType: "Family member",
-    diagnosisDate: null,
-    cancerType: "bone",
-    stage: "",
+    userType: profile?.userType || "Family member",
+    diagnosisDate: profile?.diagnosisDate || null,
+    cancerType: profile?.cancerType || "other",
+    stage: profile?.stage || "",
     name: profile?.name || "",
-    gender: "Male",
-    birthDate: null,
-    country: { cca2: "US", name: "" },
+    gender: profile?.gender || "Male",
+    birthDate: profile?.birthDate || null,
+    country: profile?.country || { cca2: "US", name: "" },
   });
-
+  console.log(newProfile);
   const toggleModalVisible = useCallback(() => {
     setPhotoModalVisible((prevVisible) => !prevVisible);
     Vibration.vibrate(50);
