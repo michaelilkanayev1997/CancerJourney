@@ -183,6 +183,12 @@ export const signIn: RequestHandler = async (req, res) => {
       avatar: user.avatar?.url,
       followers: user.followers.length,
       followings: user.followings.length,
+      createdAt: user.createdAt,
+
+      userType: user.userType,
+      cancerType: user.cancerType,
+      gender: user.gender,
+      birthDate: user.birthDate,
     },
     token,
   });
@@ -217,6 +223,12 @@ export const GoogleSignIn: RequestHandler = async (req, res) => {
           avatar: oldUser.avatar?.url,
           followers: oldUser.followers.length,
           followings: oldUser.followings.length,
+          createdAt: oldUser.createdAt,
+
+          userType: oldUser.userType,
+          cancerType: oldUser.cancerType,
+          gender: oldUser.gender,
+          birthDate: oldUser.birthDate,
         },
         token: token,
       });
@@ -252,6 +264,13 @@ export const GoogleSignIn: RequestHandler = async (req, res) => {
           avatar: createdUser.avatar?.url,
           followers: createdUser.followers.length,
           followings: createdUser.followings.length,
+
+          createdAt: createdUser.createdAt,
+
+          userType: createdUser.userType,
+          cancerType: createdUser.cancerType,
+          gender: createdUser.gender,
+          birthDate: createdUser.birthDate,
         },
         token,
       });
@@ -339,7 +358,7 @@ export const updateProfile: RequestHandler = async (req, res) => {
   try {
     const userId = req.user.id;
     const profileData = req.body; // The new profile data from the request body
-    console.log(profileData);
+
     // Find the user by ID
     const user = await User.findById(userId);
     if (!user) {
@@ -351,13 +370,12 @@ export const updateProfile: RequestHandler = async (req, res) => {
     }
 
     // Update or set the profile information
-    user.userType = profileData.userType;
-    user.diagnosisDate = profileData.diagnosisDate;
-    user.cancerType = profileData.cancerType;
-    user.subtype = profileData.subtype;
-    user.stage = profileData.stage;
     user.gender = profileData.gender;
     user.birthDate = profileData.birthDate;
+    user.userType = profileData.userType;
+    user.cancerType = profileData.cancerType;
+    user.diagnosisDate = profileData.diagnosisDate;
+    user.stage = profileData.stage;
     user.country = profileData.country;
 
     // Save the updated user document
@@ -372,8 +390,7 @@ export const updateProfile: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error("Error updating user profile:", error);
     res.status(500).json({
-      success: false,
-      message: "An error occurred while updating the profile",
+      error: "An error occurred while updating the profile",
     });
   }
 };

@@ -17,12 +17,12 @@ import CountryPickerCustom from "./CountryPickerCustom";
 
 export interface NewProfile {
   userType: string;
-  diagnosisDate: Date | string;
+  diagnosisDate: Date | null;
   cancerType: string;
   stage: string;
   name?: string;
   gender: string;
-  birthDate: Date | string;
+  birthDate: Date | null;
   country: { cca2: string; name: string };
 }
 

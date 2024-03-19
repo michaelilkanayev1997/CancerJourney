@@ -66,3 +66,36 @@ export const FileTitleAndDescSchema = yup.object().shape({
   title: yup.string().required("Title is missing!"),
   description: yup.string().trim(),
 });
+
+export const profileUpdateSchema = yup.object().shape({
+  name: yup
+    .string()
+    .trim()
+    .min(1, "Name is too short!")
+    .max(20, "Name is too long!"),
+  userType: yup
+    .string()
+    .required("userType is missing!")
+    .oneOf(
+      ["patient", "family", "friend", "professional", "caregiver", "other"],
+      "Invalid userType"
+    ),
+  cancerType: yup.string().required("cancerType is missing!"),
+  gender: yup
+    .string()
+    .required("gender is missing!")
+    .oneOf(["Male", "Female", "Other"], "Invalid gender"),
+  birthDate: yup
+    .date()
+    .required("Birth Date is missing!")
+    .max(new Date(), "birthDate cannot be in the future"),
+  diagnosisDate: yup.date().nullable().notRequired(),
+  stage: yup.string(),
+  country: yup
+    .object()
+    .shape({
+      cca2: yup.string(),
+      name: yup.string(),
+    })
+    .notRequired(),
+});

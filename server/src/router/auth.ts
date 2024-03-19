@@ -20,6 +20,7 @@ import {
   SignInValidationSchema,
   TokenAndIdValidation,
   UpdatePasswordSchema,
+  profileUpdateSchema,
 } from "#/utils/validationSchema";
 import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
 import { profileImageUpload } from "#/middleware/fileUpload";
@@ -57,6 +58,11 @@ router.post(
   profileUpload
 );
 router.post("/profile-image-remove", mustAuth, profileImageRemove);
-router.post("/update-profile", mustAuth, updateProfile);
+router.post(
+  "/update-profile",
+  mustAuth,
+  validate(profileUpdateSchema),
+  updateProfile
+);
 
 export default router;

@@ -44,6 +44,11 @@ export const mustAuth: RequestHandler = async (req, res, next) => {
     followers: user.followers.length,
     followings: user.followings.length,
     createdAt: user.createdAt,
+
+    userType: user.userType,
+    cancerType: user.cancerType,
+    gender: user.gender,
+    birthDate: user.birthDate,
   };
 
   req.token = token;

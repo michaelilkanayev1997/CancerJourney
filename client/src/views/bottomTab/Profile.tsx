@@ -28,12 +28,12 @@ const Profile: FC<Props> = (props) => {
   const { profile } = useSelector(getAuthState);
   const [newProfile, setNewProfile] = useState<NewProfile>({
     userType: "Family member",
-    diagnosisDate: "",
+    diagnosisDate: null,
     cancerType: "bone",
     stage: "",
     name: profile?.name || "",
     gender: "Male",
-    birthDate: "",
+    birthDate: null,
     country: { cca2: "US", name: "" },
   });
 
