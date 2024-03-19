@@ -13,12 +13,6 @@ import {
 
 import { NewProfile } from "./InputSections";
 
-interface CancerType {
-  label: string;
-  value: string;
-  icon: string;
-}
-
 interface Props {
   visible: boolean;
   newProfile: NewProfile;

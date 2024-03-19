@@ -16,3 +16,17 @@ export const calculateCompression = (size: number) => {
     return 0.8; // Default compression
   }
 };
+
+export const convertDateFormat = (dateInput: Date | string | undefined) => {
+  if (dateInput === undefined) return;
+  // Ensure dateInput is a Date object
+  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+  // Convert Date to DD/MM/YYYY format
+  const formattedDate = `${("0" + date.getDate()).slice(-2)}/${(
+    "0" +
+    (date.getMonth() + 1)
+  ).slice(-2)}/${date.getFullYear()}`;
+
+  return formattedDate;
+};

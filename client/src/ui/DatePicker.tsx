@@ -4,12 +4,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { convertDateFormat } from "@utils/helper";
 
 interface Props {
   setShowDateModal: (show: boolean) => void;
   showDateModal: boolean;
-  date: string;
-  setDate: (formattedDate: string) => void;
+  date: Date | string;
+  setDate: (formattedDate: Date) => void;
 }
 
 const DatePicker: FC<Props> = ({
@@ -24,15 +25,11 @@ const DatePicker: FC<Props> = ({
       return;
     }
     if (selectedDate) {
-      // Convert Date to DD/MM/YYYY format
-      const formattedDate = `${("0" + selectedDate.getDate()).slice(-2)}/${(
-        "0" +
-        (selectedDate.getMonth() + 1)
-      ).slice(-2)}/${selectedDate.getFullYear()}`;
       setShowDateModal(Platform.OS === "ios");
-      setDate(formattedDate);
+      setDate(selectedDate);
     }
   };
+  const displayDate = date instanceof Date ? convertDateFormat(date) : date;
 
   return (
     <>
@@ -40,7 +37,7 @@ const DatePicker: FC<Props> = ({
         onPress={() => setShowDateModal(true)}
         style={[styles.rowInput, { paddingVertical: 15 }]}
       >
-        <Text style={styles.buttonText}>{date}</Text>
+        <Text style={styles.buttonText}>{displayDate}</Text>
         <MaterialIcons
           name="arrow-drop-down"
           size={24}

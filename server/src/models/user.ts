@@ -14,6 +14,16 @@ interface UserDocument {
   followings: ObjectId[];
   createdAt: Date;
   updatedAt: Date;
+
+  // NewProfile properties
+  gender: string;
+  userType: string;
+  cancerType: string;
+  birthDate: string;
+  diagnosisDate?: string;
+  subtype?: string;
+  stage?: string;
+  country?: { cca2: string; name: string };
 }
 
 //Methods interface is used to define schema methods
@@ -69,6 +79,19 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       },
     ],
     tokens: [String],
+
+    // NewProfile properties
+    userType: { type: String },
+    diagnosisDate: { type: String },
+    cancerType: { type: String },
+    subtype: { type: String },
+    stage: { type: String },
+    gender: { type: String },
+    birthDate: { type: String },
+    country: {
+      cca2: { type: String },
+      name: { type: String },
+    },
   },
   {
     timestamps: true,

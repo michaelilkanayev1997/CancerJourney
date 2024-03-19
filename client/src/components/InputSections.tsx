@@ -1,5 +1,5 @@
 import { Picker } from "@react-native-picker/picker";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   Image,
@@ -17,14 +17,12 @@ import CountryPickerCustom from "./CountryPickerCustom";
 
 export interface NewProfile {
   userType: string;
-  diagnosisDate: string;
+  diagnosisDate: Date | string;
   cancerType: string;
-  subtype: string;
   stage: string;
-  name: string;
-  email: string;
+  name?: string;
   gender: string;
-  birthDate: string;
+  birthDate: Date | string;
   country: { cca2: string; name: string };
 }
 
@@ -58,8 +56,8 @@ const cancerTypeRibbon: CancerTypeRibbon = {
 
 interface Props {
   newProfile: NewProfile;
-  setNewProfile: (profile: NewProfile) => void;
   Registration?: boolean;
+  setNewProfile: Dispatch<SetStateAction<NewProfile>>;
 }
 
 const InputSections: FC<Props> = ({
@@ -114,8 +112,8 @@ const InputSections: FC<Props> = ({
           <DatePicker
             setShowDateModal={setShowBirthDatePicker}
             showDateModal={showBirthDatePicker}
-            setDate={(formattedDate) =>
-              setNewProfile({ ...newProfile, birthDate: formattedDate })
+            setDate={(selectedDate) =>
+              setNewProfile({ ...newProfile, birthDate: selectedDate })
             }
             date={newProfile.birthDate || "DD/MM/YYYY"}
           />
@@ -185,9 +183,13 @@ const InputSections: FC<Props> = ({
         }
       />
 
-      <Text style={styles.optionalLabel}>
-        Optional - you can add this later
-      </Text>
+      {Registration ? (
+        <Text style={styles.optionalLabel}>
+          Optional - you can add this later
+        </Text>
+      ) : (
+        <></>
+      )}
 
       <InputRowContainer
         title={"Diagnosis Date"}
@@ -195,8 +197,8 @@ const InputSections: FC<Props> = ({
           <DatePicker
             setShowDateModal={setShowDiagnosisDatePicker}
             showDateModal={showDiagnosisDatePicker}
-            setDate={(formattedDate) =>
-              setNewProfile({ ...newProfile, diagnosisDate: formattedDate })
+            setDate={(selectedDate) =>
+              setNewProfile({ ...newProfile, diagnosisDate: selectedDate })
             }
             date={newProfile.diagnosisDate || "DD/MM/YYYY"}
           />
@@ -313,7 +315,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderBottomWidth: 2,
     borderBottomColor: "#e1e1e1",
-    borderTopWidth: 1,
+    borderTopWidth: 1.2,
     borderTopColor: "#e1e1e1",
   },
 });

@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Avatar from "./Avatar";
 import colors from "@utils/colors";
 import { UserProfile } from "src/store/auth";
+import { convertDateFormat } from "@utils/helper";
 
 interface Props {
   profile: UserProfile | null;
@@ -12,19 +13,6 @@ interface Props {
 }
 
 const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
-  let formattedDate = "";
-  if (profile?.createdAt) {
-    // Check if `createdAt` is defined
-    const date = new Date(profile.createdAt);
-
-    // Format the date
-    formattedDate = date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
-
   return (
     <View style={styles.profileHeader}>
       <Avatar onButtonPress={toggleModalVisible} uri={profile?.avatar || ""} />
@@ -40,7 +28,9 @@ const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
           />
         ) : null}
       </View>
-      <Text style={styles.activeSince}>Active since - {formattedDate}</Text>
+      <Text style={styles.activeSince}>
+        Active since - {convertDateFormat(profile?.createdAt)}
+      </Text>
     </View>
   );
 };
