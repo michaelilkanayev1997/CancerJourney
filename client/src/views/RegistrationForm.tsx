@@ -16,7 +16,6 @@ const RegistrationForm: FC<Props> = (props) => {
     stage: "",
     name: "Jane Doe",
     email: "jane.doe@example.com",
-    activeSince: "Jan, 2023",
     gender: "Male",
     birthDate: "",
     country: { cca2: "US", name: "" },
@@ -31,10 +30,13 @@ const RegistrationForm: FC<Props> = (props) => {
       <Text style={styles.header}>Registration</Text>
 
       <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 40, flex: 1, padding: 10 }}
       >
-        <InputSections newProfile={newProfile} setNewProfile={setNewProfile} />
+        <InputSections
+          newProfile={newProfile}
+          setNewProfile={setNewProfile}
+          Registration={true}
+        />
 
         <View style={styles.button}>
           <AppButton
@@ -59,10 +61,6 @@ const RegistrationForm: FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
   header: {
     paddingLeft: 10,
     paddingTop: 10,
