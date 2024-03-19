@@ -34,7 +34,6 @@ const Profile: FC<Props> = (props) => {
     stage: "",
     name: "Jane Doe",
     email: "jane.doe@example.com",
-    activeSince: "Jan, 2023",
     gender: "Male",
     birthDate: "",
     country: { cca2: "US", name: "" },

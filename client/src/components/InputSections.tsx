@@ -23,7 +23,6 @@ export interface NewProfile {
   stage: string;
   name: string;
   email: string;
-  activeSince: string;
   gender: string;
   birthDate: string;
   country: { cca2: string; name: string };
@@ -60,9 +59,14 @@ const cancerTypeRibbon: CancerTypeRibbon = {
 interface Props {
   newProfile: NewProfile;
   setNewProfile: (profile: NewProfile) => void;
+  Registration?: boolean;
 }
 
-const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
+const InputSections: FC<Props> = ({
+  newProfile,
+  setNewProfile,
+  Registration = false,
+}) => {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [showBirthDatePicker, setShowBirthDatePicker] = useState(false);
   const [showDiagnosisDatePicker, setShowDiagnosisDatePicker] = useState(false);
@@ -70,19 +74,23 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
 
   return (
     <>
-      <InputRowContainer
-        title={"Name"}
-        children={
-          <TextInput
-            style={[styles.rowInput, styles.nameInput]}
-            onChangeText={(text) =>
-              setNewProfile({ ...newProfile, name: text })
-            }
-            value={newProfile.name}
-            placeholder="Enter your name"
-          />
-        }
-      />
+      {!Registration ? (
+        <InputRowContainer
+          title={"Name"}
+          children={
+            <TextInput
+              style={[styles.rowInput, styles.nameInput]}
+              onChangeText={(text) =>
+                setNewProfile({ ...newProfile, name: text })
+              }
+              value={newProfile.name}
+              placeholder="Enter your name"
+            />
+          }
+        />
+      ) : (
+        <></>
+      )}
 
       <InputRowContainer
         title={"Gender"}
@@ -110,20 +118,6 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
               setNewProfile({ ...newProfile, birthDate: formattedDate })
             }
             date={newProfile.birthDate || "DD/MM/YYYY"}
-          />
-        }
-      />
-
-      <InputRowContainer
-        title={"Diagnosis Date"}
-        children={
-          <DatePicker
-            setShowDateModal={setShowDiagnosisDatePicker}
-            showDateModal={showDiagnosisDatePicker}
-            setDate={(formattedDate) =>
-              setNewProfile({ ...newProfile, diagnosisDate: formattedDate })
-            }
-            date={newProfile.diagnosisDate || "DD/MM/YYYY"}
           />
         }
       />
@@ -172,7 +166,7 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
                   cancerTypeRibbon[newProfile.cancerType] ||
                   require("@assets/CancerType/other-cancer.png")
                 }
-                style={{ width: 25, height: 25, marginRight: 2 }}
+                style={{ width: 25, height: 25, marginRight: 0 }}
               />
               <MaterialIcons
                 name="arrow-drop-down"
@@ -188,6 +182,24 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
               newProfile={newProfile}
             />
           </>
+        }
+      />
+
+      <Text style={styles.optionalLabel}>
+        Optional - you can add this later
+      </Text>
+
+      <InputRowContainer
+        title={"Diagnosis Date"}
+        children={
+          <DatePicker
+            setShowDateModal={setShowDiagnosisDatePicker}
+            showDateModal={showDiagnosisDatePicker}
+            setDate={(formattedDate) =>
+              setNewProfile({ ...newProfile, diagnosisDate: formattedDate })
+            }
+            date={newProfile.diagnosisDate || "DD/MM/YYYY"}
+          />
         }
       />
 
@@ -218,7 +230,10 @@ const InputSections: FC<Props> = ({ newProfile, setNewProfile }) => {
           <>
             <TouchableOpacity
               onPress={() => setCountryPickerVisible(true)}
-              style={[styles.rowInput, { paddingVertical: 12 }]}
+              style={[
+                styles.rowInput,
+                { paddingVertical: 12, alignItems: "center" },
+              ]}
             >
               <Text
                 style={styles.buttonText}
@@ -280,7 +295,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   buttonText: {
-    width: "70%",
+    width: "69%",
     fontSize: 16,
     color: "#000",
     marginLeft: 10,
@@ -288,6 +303,18 @@ const styles = StyleSheet.create({
   nameInput: {
     flex: 1.91,
     paddingLeft: 14,
+  },
+  optionalLabel: {
+    padding: 5,
+    paddingLeft: 5,
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 5,
+    borderBottomWidth: 2,
+    borderBottomColor: "#e1e1e1",
+    borderTopWidth: 1,
+    borderTopColor: "#e1e1e1",
   },
 });
 
