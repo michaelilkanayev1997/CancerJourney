@@ -10,6 +10,14 @@ export interface UserProfile {
   followers: number;
   followings: number;
   createdAt: Date;
+
+  userType: string;
+  diagnosisDate: Date | null;
+  cancerType: string;
+  stage: string;
+  gender: string;
+  birthDate: Date | null;
+  country: { cca2: string; name: string };
 }
 
 interface AuthState {

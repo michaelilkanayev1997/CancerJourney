@@ -7,10 +7,13 @@ import CustomDrawer from "@components/CustomDrawer";
 import colors from "@utils/colors";
 import TabNavigator from "./TabNavigator";
 import RegistrationForm from "@views/RegistrationForm";
+import { useSelector } from "react-redux";
+import { getAuthState } from "src/store/auth";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
+  const { profile } = useSelector(getAuthState);
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
@@ -23,8 +26,10 @@ const DrawerNavigator = () => {
         swipeEnabled: false,
       }}
     >
-      {/* check */}
-      <Drawer.Screen name="RegistrationForm" component={RegistrationForm} />
+      {/* If User dont have userType show RegistrationForm */}
+      {profile?.userType === "" && (
+        <Drawer.Screen name="RegistrationForm" component={RegistrationForm} />
+      )}
       <Drawer.Screen
         name="Home"
         component={TabNavigator}

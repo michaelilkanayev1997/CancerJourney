@@ -85,7 +85,7 @@ const ProfilePhotoModal: FC<Props> = ({
       } as any);
 
       const data = await handleUpload(formData);
-      console.log(data);
+
       if (!data?.success) {
         throw new Error("Failed to upload image");
       }

@@ -185,10 +185,13 @@ export const signIn: RequestHandler = async (req, res) => {
       followings: user.followings.length,
       createdAt: user.createdAt,
 
-      userType: user.userType,
-      cancerType: user.cancerType,
       gender: user.gender,
       birthDate: user.birthDate,
+      userType: user.userType,
+      cancerType: user.cancerType,
+      diagnosisDate: user.diagnosisDate,
+      stage: user.stage,
+      country: user.country,
     },
     token,
   });
@@ -225,10 +228,13 @@ export const GoogleSignIn: RequestHandler = async (req, res) => {
           followings: oldUser.followings.length,
           createdAt: oldUser.createdAt,
 
-          userType: oldUser.userType,
-          cancerType: oldUser.cancerType,
           gender: oldUser.gender,
           birthDate: oldUser.birthDate,
+          userType: oldUser.userType,
+          cancerType: oldUser.cancerType,
+          diagnosisDate: oldUser.diagnosisDate,
+          stage: oldUser.stage,
+          country: oldUser.country,
         },
         token: token,
       });
@@ -267,10 +273,13 @@ export const GoogleSignIn: RequestHandler = async (req, res) => {
 
           createdAt: createdUser.createdAt,
 
-          userType: createdUser.userType,
-          cancerType: createdUser.cancerType,
           gender: createdUser.gender,
           birthDate: createdUser.birthDate,
+          userType: createdUser.userType,
+          cancerType: createdUser.cancerType,
+          diagnosisDate: createdUser.diagnosisDate,
+          stage: createdUser.stage,
+          country: createdUser.country,
         },
         token,
       });
@@ -382,10 +391,26 @@ export const updateProfile: RequestHandler = async (req, res) => {
     await user.save();
 
     // Respond with the updated user profile
-    res.json({
-      success: true,
+    return res.json({
+      profile: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        verified: user.verified,
+        avatar: user.avatar?.url,
+        followers: user.followers.length,
+        followings: user.followings.length,
+        createdAt: user.createdAt,
+
+        gender: user.gender,
+        birthDate: user.birthDate,
+        userType: user.userType,
+        cancerType: user.cancerType,
+        diagnosisDate: user.diagnosisDate,
+        stage: user.stage,
+        country: user.country,
+      },
       message: "Profile updated successfully",
-      profile: user,
     });
   } catch (error) {
     console.error("Error updating user profile:", error);
