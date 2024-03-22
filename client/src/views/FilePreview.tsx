@@ -11,6 +11,7 @@ import {
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "react-query";
+import LottieView from "lottie-react-native";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
@@ -18,7 +19,6 @@ import CustomPdfViewer from "@components/CustomPdfViewer";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import LottieView from "lottie-react-native";
 
 interface Props {}
 

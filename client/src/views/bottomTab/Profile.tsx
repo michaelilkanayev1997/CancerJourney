@@ -21,6 +21,7 @@ import InputSections, { NewProfile } from "@components/InputSections";
 import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
+import Loader from "@ui/Loader";
 
 interface Props {}
 
@@ -59,7 +60,6 @@ const Profile: FC<Props> = (props) => {
     try {
       const client = await getClient();
       // Use newProfileRef.current to access the most up-to-date state
-      console.log(newProfileRef.current);
       const { data } = await client.post(
         "/auth/update-profile",
         newProfileRef.current
@@ -127,11 +127,12 @@ const Profile: FC<Props> = (props) => {
     startAnimation: startSaveBtnAnimation,
   } = useFadeInRight(0);
 
-  if (loadingUpdate) return <Text>Loading...</Text>;
-
   return (
     <View
-      style={[styles.container, { marginBottom: keyboardIsShown ? 15 : 105 }]}
+      style={[
+        styles.container,
+        { marginBottom: loadingUpdate ? 0 : keyboardIsShown ? 15 : 105 },
+      ]}
     >
       <ScrollView style={styles.container}>
         <ProfileHeader
@@ -147,6 +148,17 @@ const Profile: FC<Props> = (props) => {
         toggleModalVisible={toggleModalVisible}
         profile={profile}
       />
+
+      {loadingUpdate && (
+        <View style={styles.loaderOverlay}>
+          <Loader
+            loaderStyle={{
+              width: 150,
+              height: 150,
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -162,6 +174,17 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 17,
     fontWeight: "600",
+  },
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1, // Ensure loader is above the overlay
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
