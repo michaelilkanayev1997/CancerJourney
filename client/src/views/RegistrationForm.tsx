@@ -1,14 +1,19 @@
 import { FC, useState } from "react";
 import { Text, StyleSheet, ScrollView, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { Feather } from "@expo/vector-icons";
 
 import InputSections, { NewProfile } from "@components/InputSections";
 import AppButton from "@ui/AppButton";
-import { Feather } from "@expo/vector-icons";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
-import { getAuthState, updateProfile } from "src/store/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "src/store/auth";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInRight,
+} from "react-native-reanimated";
 
 interface Props {}
 
@@ -49,35 +54,46 @@ const RegistrationForm: FC<Props> = (props) => {
 
   return (
     <>
-      <Text style={styles.header}>Registration</Text>
+      <Animated.Text
+        entering={FadeInRight.duration(1000)}
+        style={styles.header}
+      >
+        Registration
+      </Animated.Text>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 40, flex: 1, padding: 10 }}
+        contentContainerStyle={{
+          paddingBottom: 8,
+          padding: 8,
+        }}
       >
         <InputSections
           newProfile={newProfile}
           setNewProfile={setNewProfile}
           Registration={true}
         />
-
-        <View style={styles.button}>
-          <AppButton
-            title="Register"
-            pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
-            defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
-            onPress={handleSubmit}
-            icon={
-              <Feather
-                name="check-square"
-                size={24}
-                color="white"
-                style={{ marginRight: 10 }}
-              />
-            }
-            busy={loadingUpdate}
-          />
-        </View>
       </ScrollView>
+
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(1000).springify()}
+        style={styles.button}
+      >
+        <AppButton
+          title="Register"
+          pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
+          defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
+          onPress={handleSubmit}
+          icon={
+            <Feather
+              name="check-square"
+              size={24}
+              color="white"
+              style={{ marginRight: 10 }}
+            />
+          }
+          busy={loadingUpdate}
+        />
+      </Animated.View>
     </>
   );
 };
@@ -90,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   button: {
-    padding: 5,
+    padding: 15,
     width: "100%",
     alignItems: "center",
   },
