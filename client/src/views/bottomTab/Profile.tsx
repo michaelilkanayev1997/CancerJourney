@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,21 +8,26 @@ import {
   Vibration,
   Keyboard,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 
 import colors from "@utils/colors";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, updateProfile } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import { useFadeInRight } from "@utils/animated";
 import ProfileHeader from "@ui/ProfileHeader";
 import InputSections, { NewProfile } from "@components/InputSections";
+import { getClient } from "src/api/client";
+import { ToastNotification } from "@utils/toastConfig";
+import catchAsyncError from "src/api/catchError";
 
 interface Props {}
 
 const Profile: FC<Props> = (props) => {
   const navigation = useNavigation();
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const dispatch = useDispatch();
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
   const [keyboardIsShown, setKeyboardIsShown] = useState(false);
   const { profile } = useSelector(getAuthState);
@@ -36,11 +41,44 @@ const Profile: FC<Props> = (props) => {
     birthDate: profile?.birthDate || null,
     country: profile?.country || { cca2: "US", name: "" },
   });
-  console.log(newProfile);
+
+  const newProfileRef = useRef(newProfile);
+
+  // Update the ref every time newProfile changes
+  useEffect(() => {
+    newProfileRef.current = newProfile;
+  }, [newProfile]);
+
   const toggleModalVisible = useCallback(() => {
     setPhotoModalVisible((prevVisible) => !prevVisible);
     Vibration.vibrate(50);
   }, []);
+
+  const handleSubmit = async () => {
+    setLoadingUpdate(true);
+    try {
+      const client = await getClient();
+      // Use newProfileRef.current to access the most up-to-date state
+      console.log(newProfileRef.current);
+      const { data } = await client.post(
+        "/auth/update-profile",
+        newProfileRef.current
+      );
+
+      ToastNotification({
+        message: data.message,
+      });
+      dispatch(updateProfile(data.profile));
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    } finally {
+      setLoadingUpdate(false);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -62,7 +100,8 @@ const Profile: FC<Props> = (props) => {
             <TouchableOpacity
               onPress={() => {
                 Vibration.vibrate(50);
-                // Handle the save action here
+                // Handle the save action
+                handleSubmit();
               }}
               style={styles.saveButtonContainer}
             >
@@ -82,10 +121,13 @@ const Profile: FC<Props> = (props) => {
     }, [navigation])
   );
 
+  // Save Button Animation Setup
   const {
     animatedStyle: SaveBtnAnimatedStyle,
     startAnimation: startSaveBtnAnimation,
   } = useFadeInRight(0);
+
+  if (loadingUpdate) return <Text>Loading...</Text>;
 
   return (
     <View
