@@ -367,7 +367,7 @@ export const updateProfile: RequestHandler = async (req, res) => {
   try {
     const userId = req.user.id;
     const profileData = req.body; // The new profile data from the request body
-
+    console.log(profileData);
     // Find the user by ID
     const user = await User.findById(userId);
     if (!user) {
