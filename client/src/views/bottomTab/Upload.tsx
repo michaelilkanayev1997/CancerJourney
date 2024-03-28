@@ -50,6 +50,7 @@ const Upload: FC<Props> = (props) => {
       backgroundColor.value = withTiming(colors.PRIMARY_LIGHT, {
         duration: 600,
       });
+
       return () => {
         // Animate out when the component loses focus
         scale.value = withTiming(0.5, { duration: 300 }); // Scale down a bit
