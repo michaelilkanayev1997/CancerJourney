@@ -7,6 +7,7 @@ import UploadFileNavigator from "./UploadFileNavigator";
 import Home from "@views/bottomTab/Home";
 import SocialNavigator from "./SocialNavigator";
 import ProfileNavigator from "./ProfileNavigator";
+import ScheduleNavigator from "./ScheduleNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -85,8 +86,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Appointment"
-        component={UploadFileNavigator}
+        name="Schedule"
+        component={ScheduleNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
