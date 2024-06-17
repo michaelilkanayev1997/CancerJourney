@@ -1,13 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet } from "react-native";
 
-import Profile from "@views/bottomTab/Profile";
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
-import Settings from "@views/bottomTab/Settings";
 import UploadFileNavigator from "./UploadFileNavigator";
 import Home from "@views/bottomTab/Home";
 import SocialNavigator from "./SocialNavigator";
+import ProfileNavigator from "./ProfileNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,9 +33,8 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="ProfileScreen"
-        component={Profile}
+        component={ProfileNavigator}
         options={{
-          headerShown: true,
           title: "Personal Profile",
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
@@ -87,13 +85,13 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="SettingsScreen"
-        component={Settings}
+        name="Appointment"
+        component={UploadFileNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
-              label="Settings"
-              icon="settings"
+              label="Schedule"
+              icon="calendar"
               size={size}
               color={color}
             />

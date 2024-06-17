@@ -3,7 +3,7 @@ import axiosRetry from "axios-retry";
 
 import { Keys, getFromAsyncStorage } from "@utils/asyncStorage";
 
-const baseURL = "http://10.0.0.9:8000";
+const baseURL = "http://10.0.0.12:8000";
 
 const client = axios.create({
   baseURL,
