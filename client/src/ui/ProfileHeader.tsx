@@ -1,11 +1,14 @@
 import { FC } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 import Avatar from "./Avatar";
 import colors from "@utils/colors";
 import { UserProfile } from "src/store/auth";
 import { convertDateFormat } from "@utils/helper";
+import { ProfileStackParamList } from "src/@types/navigation";
 
 interface Props {
   profile: UserProfile | null;
@@ -13,6 +16,12 @@ interface Props {
 }
 
 const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
+  const navigation = useNavigation<NavigationProp<ProfileStackParamList>>();
+
+  const navigateToSettings = () => {
+    navigation.navigate("Settings");
+  };
+
   return (
     <View style={styles.profileHeader}>
       <Avatar onButtonPress={toggleModalVisible} uri={profile?.avatar || ""} />
@@ -31,6 +40,12 @@ const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
       <Text style={styles.activeSince}>
         Active since - {convertDateFormat(profile?.createdAt)}
       </Text>
+      <TouchableOpacity
+        onPress={navigateToSettings}
+        style={styles.settingsIcon}
+      >
+        <Feather name="settings" size={24} color={colors.LIGHT_BLUE} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -63,6 +78,11 @@ const styles = StyleSheet.create({
   },
   verifiedIcon: {
     paddingLeft: 5,
+  },
+  settingsIcon: {
+    position: "absolute",
+    top: 12,
+    right: 12,
   },
 });
 

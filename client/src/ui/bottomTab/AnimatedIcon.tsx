@@ -10,7 +10,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 interface AnimatedIconProps {
   label: string;
-  icon: "home" | "user" | "upload" | "settings";
+  icon: "home" | "user" | "upload" | "calendar";
   size: number;
   color: string;
 }

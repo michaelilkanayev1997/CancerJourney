@@ -13,6 +13,11 @@ export type AuthStackParamList = {
   Welcome: undefined;
 };
 
+export type ProfileStackParamList = {
+  Profile: undefined;
+  Settings: undefined;
+};
+
 export type UploadStackParamList = {
   FolderGrid: undefined;
   FolderDetails: {
