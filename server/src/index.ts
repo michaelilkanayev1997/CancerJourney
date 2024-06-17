@@ -5,6 +5,7 @@ import "./db";
 
 import authRouter from "./router/auth";
 import fileRouter from "./router/file";
+import scheduleRouter from "./router/schedule";
 import { errorHandler } from "./middleware/error";
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.static("src/public"));
 
 app.use("/auth", authRouter);
 app.use("/file", fileRouter);
+app.use("/schedule", scheduleRouter);
 
 app.use(errorHandler);
 
