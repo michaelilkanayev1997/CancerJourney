@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 import User from "#/models/user";
-import { IMedication, Schedule } from "#/models/Schedule";
+import { Schedule } from "#/models/Schedule";
 import { MedicationInput } from "#/@types/schedule";
 
 export const addAppointment: RequestHandler = async (req, res) => {
