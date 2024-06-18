@@ -120,3 +120,42 @@ export const getSchedule: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const scheduleRemove: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { scheduleId, scheduleName } = req.query;
+
+    // Type checking
+    if (typeof scheduleName !== "string" || typeof scheduleId !== "string") {
+      return res.status(400).json({ error: "Invalid query parameters." });
+    }
+
+    // Retrieve the file document from MongoDB
+    const scheduleDocument = await Schedule.findOne(
+      { [`${scheduleName}._id`]: scheduleId },
+      { [`${scheduleName}.$`]: 1 }
+    );
+
+    // Handle the case where no document is found
+    if (!scheduleDocument) {
+      res.status(400).json({ error: "File not found" });
+      return;
+    }
+
+    // schedule is an array and we want the first item
+    const scheduleToRemove = scheduleDocument[scheduleName][0];
+    const dbRemove = await Schedule.updateOne(
+      { _id: scheduleDocument._id }, // Use the parent document's _id to identify it
+      { $pull: { [scheduleName]: { _id: scheduleToRemove._id } } } // Pull operation to remove the specific file
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while removing the schedule",
+    });
+  }
+};
