@@ -7,6 +7,7 @@ import {
   addMedication,
   getSchedule,
   scheduleRemove,
+  updateSchedule,
 } from "#/controllers/schedule";
 import { AppointmentSchema, MedicationSchema } from "#/utils/validationSchema";
 
@@ -25,6 +26,18 @@ router.post(
   addMedication
 );
 router.get("/:schedulename", mustAuth, getSchedule);
-router.delete("/file-delete", mustAuth, scheduleRemove);
+router.delete("/schedule-delete", mustAuth, scheduleRemove);
+router.patch(
+  "/appointment-update",
+  mustAuth,
+  validate(AppointmentSchema),
+  updateSchedule
+);
+router.patch(
+  "/medication-update",
+  mustAuth,
+  validate(MedicationSchema),
+  updateSchedule
+);
 
 export default router;
