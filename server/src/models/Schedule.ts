@@ -2,10 +2,11 @@ import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
 export interface IAppointment extends Document {
   _id: ObjectId;
+  title: string;
   location: string;
   date: Date;
-  type: string;
   notes?: string;
+  reminder?: string;
 }
 
 export interface IMedication extends Document {
@@ -23,13 +24,15 @@ interface IUserSchedule extends Document {
   owner: ObjectId;
   appointments: IAppointment[];
   medications: IAppointment[];
+  [key: string]: any; // index signature
 }
 
 const AppointmentSchema: Schema = new Schema({
+  title: { type: String, required: true },
   location: { type: String, required: true },
   date: { type: Date, required: true },
-  type: { type: String, required: true },
   notes: { type: String },
+  reminder: { type: String },
 });
 
 const MedicationSchema: Schema = new Schema({
