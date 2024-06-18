@@ -118,6 +118,34 @@ export const folderFileUpload = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
 });
 
+export const medicationPhotoUpload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: S3_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: (req: any, file: any, cb: any) => {
+      cb(null, {
+        uploadedBy: String(req.user.id),
+      });
+    },
+    key: (req: any, file: any, cb: any) => {
+      // Generate a 16-byte random hex string
+      const randomBytes = crypto.randomBytes(16).toString("hex");
+
+      const parts = file.mimetype.split("/"); // This splits the string into an array of parts divided by '/'
+      const fileType = parts[1]; // get file type
+
+      // Construct the S3 object key with the user ID, processed file name, random bytes, and timestamp
+      cb(
+        null,
+        `${req.user.id}/medications/${randomBytes}-${Date.now()}.${fileType}`
+      );
+    },
+  }),
+  fileFilter: imageFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
+});
+
 // Function to delete an object from S3
 export const deleteS3Object = async (objectKey: string) => {
   try {

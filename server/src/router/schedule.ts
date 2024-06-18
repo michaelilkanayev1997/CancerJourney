@@ -10,6 +10,7 @@ import {
   updateSchedule,
 } from "#/controllers/schedule";
 import { AppointmentSchema, MedicationSchema } from "#/utils/validationSchema";
+import { medicationPhotoUpload } from "#/middleware/fileUpload";
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.post(
 router.post(
   "/add-medication",
   mustAuth,
+  medicationPhotoUpload.single("file"),
   validate(MedicationSchema),
   addMedication
 );

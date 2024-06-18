@@ -18,6 +18,7 @@ export interface IMedication extends Document {
   prescriber?: string;
   notes?: string;
   date: Date;
+  photo?: { url: string; publicId: string };
 }
 
 interface IUserSchedule extends Document {
@@ -43,6 +44,11 @@ const MedicationSchema: Schema = new Schema({
   prescriber: { type: String },
   notes: { type: String },
   date: { type: Date, required: true },
+  photo: {
+    type: Object,
+    url: String,
+    publicId: String,
+  },
 });
 
 const UserScheduleSchema: Schema = new Schema({
