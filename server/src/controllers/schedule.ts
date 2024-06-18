@@ -49,8 +49,15 @@ export const addMedication: RequestHandler = async (req, res) => {
     }
     console.log(req.file);
     // Accessing title and description from the request body
-    const { name, frequency, timesPerDay, specificDays, prescriber, notes } =
-      req.body;
+    const {
+      name,
+      frequency,
+      timesPerDay,
+      specificDays,
+      prescriber,
+      notes,
+      date,
+    } = req.body;
 
     const newMedication = {
       name,
@@ -59,6 +66,7 @@ export const addMedication: RequestHandler = async (req, res) => {
       specificDays,
       prescriber,
       notes,
+      date,
     };
 
     // Update or insert UserFiles document
@@ -74,6 +82,41 @@ export const addMedication: RequestHandler = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "An error occurred while uploading the file",
+    });
+  }
+};
+
+export const getSchedule: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { schedulename } = req.params; // Get the schedule name from the URL
+
+    // Validate if the schedule name is one of the allowed
+    const allowedSchedules = ["appointments", "medications"];
+
+    if (!allowedSchedules.includes(schedulename)) {
+      return res.status(400).send({ error: "Invalid schedule name" });
+    }
+
+    const sortedFolderFiles = await Schedule.aggregate([
+      { $match: { owner: req.user.id } }, // Match the document by owner
+      { $unwind: `$${schedulename}` }, // Deconstruct the array in the document
+      { $replaceRoot: { newRoot: `$${schedulename}` } }, // Promote nested objects to top level
+      { $sort: { date: -1 } }, // Sort the documents by date in descending order
+    ]);
+
+    if (!sortedFolderFiles) {
+      return res.status(404).send({ error: "Schedule not found" });
+    }
+
+    // Send the Schedules
+    res.status(200).send(sortedFolderFiles);
+  } catch (error) {
+    console.error("Failed to get Schedules", error);
+    return res.status(500).json({
+      error: "An error occurred while getting the Schedules",
     });
   }
 };

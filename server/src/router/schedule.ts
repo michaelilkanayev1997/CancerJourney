@@ -2,22 +2,27 @@ import { Router } from "express";
 
 import { mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validator";
-import { addAppointment, addMedication } from "#/controllers/schedule";
+import {
+  addAppointment,
+  addMedication,
+  getSchedule,
+} from "#/controllers/schedule";
 import { AppointmentSchema, MedicationSchema } from "#/utils/validationSchema";
 
-const schedule = Router();
+const router = Router();
 
-schedule.post(
+router.post(
   "/add-appointment",
   mustAuth,
   validate(AppointmentSchema),
   addAppointment
 );
-schedule.post(
+router.post(
   "/add-medication",
   mustAuth,
   validate(MedicationSchema),
   addMedication
 );
+router.get("/:schedulename", mustAuth, getSchedule);
 
-export default schedule;
+export default router;
