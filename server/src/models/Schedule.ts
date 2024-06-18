@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, ObjectId } from "mongoose";
 export interface IAppointment extends Document {
   _id: ObjectId;
   location: string;
-  time: Date;
+  date: Date;
   type: string;
   notes?: string;
 }
@@ -16,6 +16,7 @@ export interface IMedication extends Document {
   specificDays?: string;
   prescriber?: string;
   notes?: string;
+  date: Date;
 }
 
 interface IUserSchedule extends Document {
@@ -26,7 +27,7 @@ interface IUserSchedule extends Document {
 
 const AppointmentSchema: Schema = new Schema({
   location: { type: String, required: true },
-  time: { type: String, required: true },
+  date: { type: Date, required: true },
   type: { type: String, required: true },
   notes: { type: String },
 });
@@ -38,6 +39,7 @@ const MedicationSchema: Schema = new Schema({
   specificDays: { type: String },
   prescriber: { type: String },
   notes: { type: String },
+  date: { type: Date, required: true },
 });
 
 const UserScheduleSchema: Schema = new Schema({

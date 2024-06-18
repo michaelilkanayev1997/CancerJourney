@@ -107,7 +107,7 @@ export const AppointmentSchema = yup.object().shape({
     .min(3, "location is too short!")
     .max(30, "location is too long!")
     .required("location is missing!"),
-  date: yup.date().required("time is missing!"),
+  date: yup.date().required("date is missing!"),
   reminder: yup
     .string()
     .oneOf(
@@ -164,4 +164,5 @@ export const MedicationSchema = yup.object().shape({
     .max(30, "Prescriber name is too long!")
     .notRequired(),
   notes: yup.string().notRequired(),
+  date: yup.date().required("date is missing!"),
 });
