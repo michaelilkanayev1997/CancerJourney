@@ -67,7 +67,7 @@ export const FileTitleAndDescSchema = yup.object().shape({
   description: yup.string().trim(),
 });
 
-export const profileUpdateSchema = yup.object().shape({
+export const ProfileUpdateSchema = yup.object().shape({
   name: yup
     .string()
     .trim()
@@ -98,4 +98,70 @@ export const profileUpdateSchema = yup.object().shape({
       name: yup.string(),
     })
     .notRequired(),
+});
+
+export const AppointmentSchema = yup.object().shape({
+  title: yup.string().required("title is missing!"),
+  location: yup
+    .string()
+    .min(3, "location is too short!")
+    .max(30, "location is too long!")
+    .required("location is missing!"),
+  date: yup.date().required("time is missing!"),
+  reminder: yup
+    .string()
+    .oneOf(
+      ["1 hour before", "2 hours before", "The day before"],
+      "Invalid reminder"
+    )
+    .notRequired(),
+  notes: yup.string().notRequired(),
+});
+
+export const MedicationSchema = yup.object().shape({
+  name: yup.string().required("Name and strength is missing!"),
+  frequency: yup
+    .string()
+    .oneOf(["As needed", "Every day", "Specific days"], "Invalid frequency")
+    .required("Frequency is missing!"),
+  timesPerDay: yup
+    .string()
+    .oneOf(
+      [
+        "Once a day",
+        "2 times a day",
+        "3 times a day",
+        "4 times a day",
+        "5 times a day",
+        "6 times a day",
+        "7 times a day",
+        "8 times a day",
+        "9 times a day",
+        "10 times a day",
+      ],
+      "Invalid times per day"
+    )
+    .required(
+      "Times per day is required when frequency is 'Every day' or 'Specific days'"
+    ),
+  specificDays: yup
+    .string()
+    .oneOf(
+      [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      "Invalid specific day"
+    )
+    .required("Specific days are required when frequency is 'Specific days'"),
+  prescriber: yup
+    .string()
+    .max(30, "Prescriber name is too long!")
+    .notRequired(),
+  notes: yup.string().notRequired(),
 });
