@@ -8,7 +8,7 @@ export const addAppointment: RequestHandler = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) throw new Error("Something went wrong, user not found!");
 
-    // Accessing title and description from the request body
+    // Accessing the request body
     const { title, location, date, reminder, notes } = req.body;
 
     const newAppointment = {
@@ -158,4 +158,80 @@ export const scheduleRemove: RequestHandler = async (req, res) => {
       error: "An error occurred while removing the schedule",
     });
   }
+};
+
+export const updateSchedule: RequestHandler = async (req, res) => {
+  const { scheduleId, scheduleName } = req.query;
+  const ownerId = req.user.id;
+
+  // Type checking
+  if (typeof scheduleName !== "string" || typeof scheduleId !== "string") {
+    return res.status(400).json({ error: "Invalid query parameters." });
+  }
+
+  let updateResult;
+  if (scheduleName === "appointments") {
+    // Accessing the request body
+    const { title, location, date, reminder, notes } = req.body;
+
+    updateResult = await Schedule.findOneAndUpdate(
+      {
+        owner: ownerId, // Match the owner of the document
+        [`${scheduleName}._id`]: scheduleId, // Match the file by _id within the specified folder array
+      },
+      {
+        $set: {
+          // Use the positional $ operator to update values of the matched schedule
+          [`${scheduleName}.$.title`]: title,
+          [`${scheduleName}.$.location`]: location,
+          [`${scheduleName}.$.date`]: date,
+          [`${scheduleName}.$.reminder`]: reminder,
+          [`${scheduleName}.$.notes`]: notes,
+        },
+      },
+      {
+        new: true, // Returns the updated document
+        projection: { [scheduleName]: { $elemMatch: { _id: scheduleId } } }, // Project only the matching subdocument
+      }
+    );
+  } else if (scheduleName === "medications") {
+    // Accessing the request body
+    const {
+      name,
+      frequency,
+      timesPerDay,
+      specificDays,
+      prescriber,
+      notes,
+      date,
+    } = req.body;
+
+    updateResult = await Schedule.findOneAndUpdate(
+      {
+        owner: ownerId, // Match the owner of the document
+        [`${scheduleName}._id`]: scheduleId, // Match the file by _id within the specified folder array
+      },
+      {
+        $set: {
+          // Use the positional $ operator to update values of the matched schedule
+          [`${scheduleName}.$.name`]: name,
+          [`${scheduleName}.$.frequency`]: frequency,
+          [`${scheduleName}.$.timesPerDay`]: timesPerDay,
+          [`${scheduleName}.$.specificDays`]: specificDays,
+          [`${scheduleName}.$.prescriber`]: prescriber,
+          [`${scheduleName}.$.notes`]: notes,
+          [`${scheduleName}.$.date`]: date,
+        },
+      },
+      {
+        new: true, // Returns the updated document
+        projection: { [scheduleName]: { $elemMatch: { _id: scheduleId } } }, // Project only the matching subdocument
+      }
+    );
+  }
+
+  if (!updateResult)
+    return res.status(404).json({ error: "schedule not found!" });
+
+  res.status(201).json(updateResult[scheduleName][0]);
 };
