@@ -5,7 +5,7 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { FoldersLength } from "src/@types/file";
 import { ImageType } from "@components/ImageCard";
-import { IAppointment } from "../../../server/src/models/Schedule";
+import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
 
 const fetchFoldersLength = async (): Promise<FoldersLength> => {
   const client = await getClient();
@@ -66,6 +66,30 @@ export const useFetchAppointments = () => {
     cacheTime: 1000 * 60 * 60, // 1 hours cache time
 
     queryFn: () => fetchAppointments(),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
+const fetchMedications = async (): Promise<IMedication[]> => {
+  const client = await getClient();
+  const { data } = await client.get(`/schedule/medications`);
+
+  console.log("fetching medications...");
+  return data;
+};
+
+export const useFetchMedications = () => {
+  return useQuery(["medications"], {
+    staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
+    cacheTime: 1000 * 60 * 60, // 1 hours cache time
+
+    queryFn: () => fetchMedications(),
     onError(err) {
       const errorMessage = catchAsyncError(err);
       ToastNotification({

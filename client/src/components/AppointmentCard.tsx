@@ -32,25 +32,31 @@ const AppointmentCard: React.FC<{ appointment: IAppointment }> = ({
           >
             <MaterialCommunityIcons
               name="dots-vertical"
-              size={30}
+              size={24}
               color="black"
             />
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.location}>{appointment.location}</Text>
-      <View style={styles.dateContainer}>
-        <MaterialIcons name="date-range" size={20} color="black" />
+      <View style={styles.detailRow}>
+        <MaterialCommunityIcons name="map-marker" size={20} color="gray" />
+        <Text style={styles.location}>{appointment.location}</Text>
+      </View>
+      <View style={styles.detailRow}>
+        <MaterialCommunityIcons name="calendar" size={20} color="gray" />
         <Text style={styles.dateText}>
           {new Date(appointment.date).toDateString()}
         </Text>
       </View>
       {appointment.notes && (
-        <Text style={styles.notes}>{appointment.notes}</Text>
+        <View style={styles.detailRow}>
+          <MaterialCommunityIcons name="note-outline" size={20} color="gray" />
+          <Text style={styles.notes}>{appointment.notes}</Text>
+        </View>
       )}
       {appointment.reminder && (
         <View style={styles.reminderContainer}>
-          <MaterialIcons name="notifications" size={20} color="black" />
+          <MaterialIcons name="notifications" size={20} color="gray" />
           <Text style={styles.reminderText}>{appointment.reminder}</Text>
         </View>
       )}
@@ -81,33 +87,34 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  location: {
-    fontSize: 16,
-    color: "gray",
-    marginBottom: 10,
-  },
-  dateContainer: {
+  detailRow: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
   },
-  dateText: {
-    marginLeft: 5,
+  location: {
     fontSize: 16,
+    color: "gray",
+    marginLeft: 5,
+  },
+  dateText: {
+    fontSize: 16,
+    color: "gray",
+    marginLeft: 5,
   },
   notes: {
     fontSize: 14,
     color: "gray",
-    marginBottom: 10,
+    marginLeft: 5,
   },
   reminderContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   reminderText: {
-    marginLeft: 5,
     fontSize: 16,
     color: "gray",
+    marginLeft: 5,
   },
   moreOption: {
     marginLeft: "auto",
