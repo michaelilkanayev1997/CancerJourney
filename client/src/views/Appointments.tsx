@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,12 +7,10 @@ import {
   Vibration,
   View,
 } from "react-native";
-
-import { IAppointment } from "../../../server/src/models/Schedule";
-import AppointmentCard from "@components/AppointmentCard";
 import { MaterialIcons } from "@expo/vector-icons";
+
+import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
-import { useCallback } from "react";
 import { useFetchAppointments } from "src/hooks/query";
 import Loader from "@ui/Loader";
 
