@@ -41,14 +41,7 @@ export const addMedication: RequestHandler = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) throw new Error("Something went wrong, user not found!");
 
-    // Check if req.file exists
-    if (req.file) {
-      key = req.file.key;
-      type = "image";
-      console.log(req.file);
-    }
-    console.log(req.file);
-    // Accessing title and description from the request body
+    // Accessing the request body
     const {
       name,
       frequency,
@@ -58,6 +51,28 @@ export const addMedication: RequestHandler = async (req, res) => {
       notes,
       date,
     } = req.body;
+
+    if (
+      (frequency === "Every day" || frequency === "Specific days") &&
+      timesPerDay === undefined
+    ) {
+      return res.status(400).send({
+        error:
+          "Times per day is required when frequency is 'Every day' or 'Specific days'",
+      });
+    } else if (frequency === "Specific days" && specificDays === undefined) {
+      return res.status(400).send({
+        error: "Specific days are required when frequency is 'Specific days'",
+      });
+    }
+
+    // Check if req.file exists
+    if (req.file) {
+      key = req.file.key;
+      type = "image";
+      console.log(req.file);
+    }
+    console.log(req.file);
 
     const newMedication = {
       name,
@@ -69,7 +84,7 @@ export const addMedication: RequestHandler = async (req, res) => {
       date,
     };
 
-    // Update or insert UserFiles document
+    // Update or insert Medication Schedule document
     await Schedule.updateOne(
       { owner: user.id },
       {
