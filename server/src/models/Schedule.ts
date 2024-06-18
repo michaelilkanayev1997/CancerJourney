@@ -14,7 +14,7 @@ export interface IMedication extends Document {
   name: string;
   frequency: string;
   timesPerDay?: string;
-  specificDays?: string;
+  specificDays?: string[];
   prescriber?: string;
   notes?: string;
   date: Date;
@@ -23,7 +23,7 @@ export interface IMedication extends Document {
 interface IUserSchedule extends Document {
   owner: ObjectId;
   appointments: IAppointment[];
-  medications: IAppointment[];
+  medications: IMedication[];
   [key: string]: any; // index signature
 }
 
@@ -39,7 +39,7 @@ const MedicationSchema: Schema = new Schema({
   name: { type: String, required: true },
   frequency: { type: String },
   timesPerDay: { type: String },
-  specificDays: { type: String },
+  specificDays: { type: [String] },
   prescriber: { type: String },
   notes: { type: String },
   date: { type: Date, required: true },

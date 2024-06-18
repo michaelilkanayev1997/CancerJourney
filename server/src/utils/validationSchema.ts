@@ -140,25 +140,26 @@ export const MedicationSchema = yup.object().shape({
         "10 times a day",
       ],
       "Invalid times per day"
-    )
-    .required(
-      "Times per day is required when frequency is 'Every day' or 'Specific days'"
     ),
+
   specificDays: yup
-    .string()
-    .oneOf(
-      [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ],
-      "Invalid specific day"
-    )
-    .required("Specific days are required when frequency is 'Specific days'"),
+    .array()
+    .of(
+      yup
+        .string()
+        .oneOf(
+          [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ],
+          "Invalid specific day"
+        )
+    ),
   prescriber: yup
     .string()
     .max(30, "Prescriber name is too long!")
