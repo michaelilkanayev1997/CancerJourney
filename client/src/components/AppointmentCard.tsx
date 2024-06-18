@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IAppointment } from "./../../../server/src/models/Schedule";
 
@@ -14,7 +15,11 @@ const AppointmentCard: React.FC<{ appointment: IAppointment }> = ({
   appointment,
 }) => {
   return (
-    <View style={styles.card}>
+    <Animated.View
+      entering={FadeIn}
+      exiting={FadeOut.duration(500)}
+      style={styles.card}
+    >
       <View style={styles.header}>
         <MaterialIcons name="event" size={24} color="black" />
         <Text style={styles.title}>{appointment.title}</Text>
@@ -36,7 +41,9 @@ const AppointmentCard: React.FC<{ appointment: IAppointment }> = ({
       <Text style={styles.location}>{appointment.location}</Text>
       <View style={styles.dateContainer}>
         <MaterialIcons name="date-range" size={20} color="black" />
-        <Text style={styles.dateText}>{appointment.date.toDateString()}</Text>
+        <Text style={styles.dateText}>
+          {new Date(appointment.date).toDateString()}
+        </Text>
       </View>
       {appointment.notes && (
         <Text style={styles.notes}>{appointment.notes}</Text>
@@ -47,7 +54,7 @@ const AppointmentCard: React.FC<{ appointment: IAppointment }> = ({
           <Text style={styles.reminderText}>{appointment.reminder}</Text>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 };
 
