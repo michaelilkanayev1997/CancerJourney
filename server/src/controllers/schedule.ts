@@ -1,7 +1,8 @@
 import { RequestHandler } from "express";
 
 import User from "#/models/user";
-import { Schedule } from "#/models/Schedule";
+import { IMedication, Schedule } from "#/models/Schedule";
+import { MedicationInput } from "#/@types/schedule";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {
@@ -66,15 +67,7 @@ export const addMedication: RequestHandler = async (req, res) => {
       });
     }
 
-    // Check if req.file exists
-    if (req.file) {
-      key = req.file.key;
-      type = "image";
-      console.log(req.file);
-    }
-    console.log(req.file);
-
-    const newMedication = {
+    const newMedication: MedicationInput = {
       name,
       frequency,
       timesPerDay,
@@ -83,6 +76,12 @@ export const addMedication: RequestHandler = async (req, res) => {
       notes,
       date,
     };
+
+    // Check if req.file exists
+    if (req.file) {
+      // Set medication photo
+      newMedication.photo = { url: req.file.location, publicId: req.file.key };
+    }
 
     // Update or insert Medication Schedule document
     await Schedule.updateOne(
