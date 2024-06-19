@@ -40,7 +40,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
           style={styles.card}
         >
           <View style={styles.header}>
-            <MaterialIcons name="event" size={24} color="black" />
+            <MaterialIcons name="event" size={20} color="black" />
             <Text style={styles.title}>
               {formatText(appointment.title, 20)}
             </Text>
@@ -55,11 +55,11 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
             </View>
           </View>
           <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="map-marker" size={20} color="gray" />
+            <MaterialCommunityIcons name="map-marker" size={16} color="gray" />
             <Text style={styles.location}>{appointment.location}</Text>
           </View>
           <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="calendar" size={20} color="gray" />
+            <MaterialCommunityIcons name="calendar" size={16} color="gray" />
             <Text style={styles.dateText}>
               {new Date(appointment.date).toDateString()}
             </Text>
@@ -68,7 +68,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
             <View style={styles.detailRow}>
               <MaterialCommunityIcons
                 name="note-outline"
-                size={20}
+                size={16}
                 color="gray"
               />
               <Text style={styles.notes}>
@@ -78,7 +78,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
           )}
           {appointment.reminder && (
             <View style={styles.reminderContainer}>
-              <MaterialIcons name="notifications" size={20} color="gray" />
+              <MaterialIcons name="notifications" size={16} color="gray" />
               <Text style={styles.reminderText}>{appointment.reminder}</Text>
             </View>
           )}
