@@ -52,20 +52,22 @@ export const useFetchFolderFiles = (folderName: string) => {
   });
 };
 
-const fetchAppointments = async (): Promise<IAppointment[]> => {
+const fetchSchedules = async (
+  scheduleName: string
+): Promise<IAppointment[] | IMedication[]> => {
   const client = await getClient();
-  const { data } = await client.get(`/schedule/appointments`);
+  const { data } = await client.get(`/schedule/${scheduleName}`);
 
-  console.log("fetching appointments...");
+  console.log(`fetching ${scheduleName}...`);
   return data;
 };
 
-export const useFetchAppointments = () => {
-  return useQuery(["appointments"], {
+export const useFetchSchedules = (scheduleName: string) => {
+  return useQuery(["schedules", scheduleName], {
     staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
     cacheTime: 1000 * 60 * 60, // 1 hours cache time
 
-    queryFn: () => fetchAppointments(),
+    queryFn: () => fetchSchedules(scheduleName),
     onError(err) {
       const errorMessage = catchAsyncError(err);
       ToastNotification({
@@ -76,26 +78,50 @@ export const useFetchAppointments = () => {
   });
 };
 
-const fetchMedications = async (): Promise<IMedication[]> => {
-  const client = await getClient();
-  const { data } = await client.get(`/schedule/medications`);
+// const fetchAppointments = async (): Promise<IAppointment[]> => {
+//   const client = await getClient();
+//   const { data } = await client.get(`/schedule/appointments`);
 
-  console.log("fetching medications...");
-  return data;
-};
+//   console.log("fetching appointments...");
+//   return data;
+// };
 
-export const useFetchMedications = () => {
-  return useQuery(["medications"], {
-    staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
-    cacheTime: 1000 * 60 * 60, // 1 hours cache time
+// export const useFetchAppointments = () => {
+//   return useQuery(["appointments"], {
+//     staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
+//     cacheTime: 1000 * 60 * 60, // 1 hours cache time
 
-    queryFn: () => fetchMedications(),
-    onError(err) {
-      const errorMessage = catchAsyncError(err);
-      ToastNotification({
-        type: "Error",
-        message: errorMessage,
-      });
-    },
-  });
-};
+//     queryFn: () => fetchAppointments(),
+//     onError(err) {
+//       const errorMessage = catchAsyncError(err);
+//       ToastNotification({
+//         type: "Error",
+//         message: errorMessage,
+//       });
+//     },
+//   });
+// };
+
+// const fetchMedications = async (): Promise<IMedication[]> => {
+//   const client = await getClient();
+//   const { data } = await client.get(`/schedule/medications`);
+
+//   console.log("fetching medications...");
+//   return data;
+// };
+
+// export const useFetchMedications = () => {
+//   return useQuery(["medications"], {
+//     staleTime: 1000 * 60 * 59, // Consider data stale after 59 minutes (3540 seconds)
+//     cacheTime: 1000 * 60 * 60, // 1 hours cache time
+
+//     queryFn: () => fetchMedications(),
+//     onError(err) {
+//       const errorMessage = catchAsyncError(err);
+//       ToastNotification({
+//         type: "Error",
+//         message: errorMessage,
+//       });
+//     },
+//   });
+// };

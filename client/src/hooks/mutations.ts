@@ -4,6 +4,7 @@ import { ImageType } from "@components/ImageCard";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
+import { IAppointment } from "../../../server/src/models/Schedule";
 
 interface DeleteFileParams {
   fileId: string;
@@ -119,6 +120,120 @@ export const useFileMutations = () => {
     deleteFileMutation,
     deleteLoading,
     updateFileMutation,
+    updateLoading,
+  };
+};
+
+interface DeleteAppointmentParams {
+  scheduleId: string;
+  scheduleName: string;
+  handleCloseMoreOptionsPress: () => void;
+}
+
+interface UpdateAppointmentParams {
+  fileId: string;
+  folderName: string;
+  title: string;
+  description: string;
+  handleCloseMoreOptionsPress: () => void;
+}
+
+export const useScheduleMutations = () => {
+  const queryClient = useQueryClient();
+
+  const { isLoading: deleteLoading, mutate: deleteScheduleMutation } =
+    useMutation<void, Error, DeleteAppointmentParams, unknown>(
+      async ({ scheduleId, scheduleName }) => {
+        // Construct the URL with query parameters
+        const url = `/schedule/schedule-delete?scheduleId=${scheduleId}&scheduleName=${scheduleName}`;
+        const client = await getClient();
+        await client.delete(url);
+      },
+      {
+        onMutate: async (variables) => {
+          return { ...variables };
+        },
+        // Invalidate related queries on success to refresh the UI
+        onSuccess: (data, variables) => {
+          const { scheduleId, scheduleName } = variables;
+
+          queryClient.setQueryData(
+            ["schedules", scheduleName],
+            (oldData: IAppointment[] | undefined) => {
+              if (!oldData) {
+                return [];
+              }
+
+              // Filter out the deleted schedule
+              return (
+                oldData?.filter(
+                  (schedule) => schedule._id.toString() !== scheduleId
+                ) ?? []
+              );
+            }
+          );
+
+          ToastNotification({
+            message: `${scheduleName.slice(0, -1)} deleted successfully`,
+          });
+        },
+        onError: (error) => {
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
+        onSettled: (data, error, variables) => {
+          variables?.handleCloseMoreOptionsPress();
+        },
+      }
+    );
+
+  const { isLoading: updateLoading, mutate: updateScheduleMutation } =
+    useMutation<void, Error, UpdateFileParams, unknown>(
+      async ({ fileId, title, description, folderName }) => {
+        const client = await getClient();
+        const url = `/file/file-update?fileId=${fileId}&folderName=${folderName}`;
+        return client.patch(url, { title: title, description });
+      },
+      {
+        onSuccess: (data, variables) => {
+          const { fileId, folderName, description, title } = variables;
+          // Optimistically update the local cache
+          queryClient.setQueryData(
+            ["folder-files", folderName],
+            (oldData: ImageType[] | undefined) => {
+              if (!oldData) {
+                return [];
+              }
+              return oldData.map((file) => {
+                if (file._id === fileId) {
+                  return { ...file, title, description };
+                }
+                return file;
+              });
+            }
+          );
+          ToastNotification({ message: "File updated successfully" });
+        },
+        onError: (error) => {
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
+        onSettled: (data, error, variables) => {
+          variables?.handleCloseMoreOptionsPress();
+        },
+      }
+    );
+
+  return {
+    deleteScheduleMutation,
+    deleteLoading,
+    updateScheduleMutation,
     updateLoading,
   };
 };

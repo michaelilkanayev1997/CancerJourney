@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
@@ -17,7 +18,7 @@ import { Picker } from "@react-native-picker/picker";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
-import { useFileMutations } from "src/hooks/mutations";
+import { useScheduleMutations } from "src/hooks/mutations";
 import { IAppointment } from "../../../server/src/models/Schedule";
 import DatePicker from "@ui/DatePicker";
 
@@ -40,11 +41,11 @@ const AppointmentMoreOptionsModal: FC<Props> = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const {
-    deleteFileMutation,
+    deleteScheduleMutation,
     deleteLoading,
-    updateFileMutation,
+    updateScheduleMutation,
     updateLoading,
-  } = useFileMutations();
+  } = useScheduleMutations();
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
@@ -63,14 +64,14 @@ const AppointmentMoreOptionsModal: FC<Props> = ({
     setNotes(text);
   }, []);
 
-  //   // Delete button is pressed
-  //   const handleDelete = () => {
-  //     deleteFileMutation({
-  //       fileId: item._id,
-  //       folderName,
-  //       handleCloseMoreOptionsPress,
-  //     });
-  //   };
+  // Delete button is pressed
+  const handleDelete = () => {
+    deleteScheduleMutation({
+      scheduleId: item._id.toString(),
+      scheduleName: "appointments",
+      handleCloseMoreOptionsPress,
+    });
+  };
 
   // // Update button is pressed
   //   const handleUpdate = async () => {
@@ -96,168 +97,180 @@ const AppointmentMoreOptionsModal: FC<Props> = ({
         deleteLoading || updateLoading ? undefined : handleCloseMoreOptionsPress
       } // Android back button
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.modalOverlay}
-      >
-        <TouchableOpacity
-          activeOpacity={1}
-          disabled={deleteLoading || updateLoading}
-          onPressOut={handleCloseMoreOptionsPress}
+      <TouchableWithoutFeedback onPress={handleCloseMoreOptionsPress}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalOverlay}
         >
-          <ScrollView
-            contentContainerStyle={styles.scrollContainer}
-            keyboardShouldPersistTaps="handled"
+          <TouchableOpacity
+            activeOpacity={1}
+            disabled={deleteLoading || updateLoading}
+            onPressOut={handleCloseMoreOptionsPress}
           >
-            <View
-              style={styles.modalContent}
-              onStartShouldSetResponder={() => true}
+            <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              keyboardShouldPersistTaps="handled"
             >
-              {/* Loader Component */}
-              {(deleteLoading || updateLoading) && (
-                <View style={styles.loaderOverlay}>
-                  <Loader
-                    loaderStyle={{
-                      width: 150,
-                      height: 150,
-                    }}
-                  />
+              <View
+                style={styles.modalContent}
+                onStartShouldSetResponder={() => true}
+              >
+                {/* Loader Component */}
+                {(deleteLoading || updateLoading) && (
+                  <View style={styles.loaderOverlay}>
+                    <Loader
+                      loaderStyle={{
+                        width: 150,
+                        height: 150,
+                      }}
+                    />
+                  </View>
+                )}
+
+                <View style={styles.header}>
+                  <View style={styles.appointmentHeader}>
+                    <MaterialIcons
+                      name="event"
+                      size={24}
+                      color={colors.LIGHT_BLUE}
+                    />
+                    <Text style={styles.appointmentText}>
+                      Appointment Details
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={handleCloseMoreOptionsPress}
+                  >
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={24}
+                      color="#333"
+                    />
+                  </TouchableOpacity>
                 </View>
-              )}
 
-              <View style={styles.header}>
-                <View style={styles.appointmentHeader}>
-                  <MaterialIcons
-                    name="event"
-                    size={24}
-                    color={colors.LIGHT_BLUE}
-                  />
-                  <Text style={styles.appointmentText}>
-                    Appointment Details
-                  </Text>
+                <View style={styles.titleWithError}>
+                  <Text style={styles.label}>Title</Text>
+                  {title.length === 0 ? (
+                    <Animated.Text
+                      entering={FadeInLeft.duration(500)}
+                      exiting={FadeOutRight.duration(500)}
+                      style={styles.errorMessage}
+                    >
+                      Title is Required!
+                    </Animated.Text>
+                  ) : null}
                 </View>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={handleCloseMoreOptionsPress}
-                >
-                  <MaterialCommunityIcons name="close" size={24} color="#333" />
-                </TouchableOpacity>
-              </View>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={handleNameChange}
+                  value={title}
+                  placeholder="Enter Name here"
+                />
 
-              <View style={styles.titleWithError}>
-                <Text style={styles.label}>Title</Text>
-                {title.length === 0 ? (
-                  <Animated.Text
-                    entering={FadeInLeft.duration(500)}
-                    exiting={FadeOutRight.duration(500)}
-                    style={styles.errorMessage}
+                <View style={styles.titleWithError}>
+                  <Text style={styles.label}>Location</Text>
+                  {location.length === 0 ? (
+                    <Animated.Text
+                      entering={FadeInLeft.duration(500)}
+                      exiting={FadeOutRight.duration(500)}
+                      style={styles.errorMessage}
+                    >
+                      Location is Required!
+                    </Animated.Text>
+                  ) : null}
+                </View>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={handleLocationChange}
+                  value={location}
+                  placeholder="Enter Location here"
+                />
+
+                <View style={styles.titleWithError}>
+                  <Text style={styles.label}>Date</Text>
+                  {new Date(date).toDateString().length === 0 ? (
+                    <Animated.Text
+                      entering={FadeInLeft.duration(500)}
+                      exiting={FadeOutRight.duration(500)}
+                      style={styles.errorMessage}
+                    >
+                      Date is Required!
+                    </Animated.Text>
+                  ) : null}
+                </View>
+                <DatePicker
+                  setShowDateModal={setShowDatePicker}
+                  showDateModal={showDatePicker}
+                  setDate={(selectedDate) => setDate(selectedDate)}
+                  date={date || "DD/MM/YYYY"}
+                  appointmentDate={true}
+                  style={styles.input}
+                />
+
+                <Text style={styles.label}>Notes</Text>
+                <TextInput
+                  style={[styles.input, styles.descriptionInput]}
+                  onChangeText={handleNotesChange}
+                  value={notes}
+                  placeholder="Enter notes here"
+                  multiline
+                />
+
+                <Text style={styles.label}>Reminder</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={reminder}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setReminder(itemValue)
+                    }
+                    style={styles.picker}
                   >
-                    Title is Required!
-                  </Animated.Text>
-                ) : null}
-              </View>
-              <TextInput
-                style={styles.input}
-                onChangeText={handleNameChange}
-                value={title}
-                placeholder="Enter Name here"
-              />
+                    <Picker.Item label="No Reminder" value="No Reminder" />
+                    <Picker.Item label="1 hour before" value="1 hour before" />
+                    <Picker.Item
+                      label="2 hours before"
+                      value="2 hours before"
+                    />
+                    <Picker.Item
+                      label="The day before"
+                      value="The day before"
+                    />
+                  </Picker>
+                </View>
 
-              <View style={styles.titleWithError}>
-                <Text style={styles.label}>Location</Text>
-                {location.length === 0 ? (
-                  <Animated.Text
-                    entering={FadeInLeft.duration(500)}
-                    exiting={FadeOutRight.duration(500)}
-                    style={styles.errorMessage}
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    disabled={deleteLoading || updateLoading}
+                    onPress={handleDelete}
+                    style={[styles.modalActionButton]}
                   >
-                    Location is Required!
-                  </Animated.Text>
-                ) : null}
-              </View>
-              <TextInput
-                style={styles.input}
-                onChangeText={handleLocationChange}
-                value={location}
-                placeholder="Enter Location here"
-              />
-
-              <View style={styles.titleWithError}>
-                <Text style={styles.label}>Date</Text>
-                {new Date(date).toDateString().length === 0 ? (
-                  <Animated.Text
-                    entering={FadeInLeft.duration(500)}
-                    exiting={FadeOutRight.duration(500)}
-                    style={styles.errorMessage}
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={20}
+                      color="#FF5C5C"
+                    />
+                    <Text style={styles.actionButtonText}>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    disabled={deleteLoading || updateLoading}
+                    // onPress={handleUpdate}
+                    style={styles.modalActionButton}
                   >
-                    Date is Required!
-                  </Animated.Text>
-                ) : null}
+                    <MaterialCommunityIcons
+                      name="update"
+                      size={20}
+                      color="#4A90E2"
+                    />
+                    <Text style={styles.actionButtonText}>Update</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <DatePicker
-                setShowDateModal={setShowDatePicker}
-                showDateModal={showDatePicker}
-                setDate={(selectedDate) => setDate(selectedDate)}
-                date={date || "DD/MM/YYYY"}
-                appointmentDate={true}
-                style={styles.input}
-              />
-
-              <Text style={styles.label}>Notes</Text>
-              <TextInput
-                style={[styles.input, styles.descriptionInput]}
-                onChangeText={handleNotesChange}
-                value={notes}
-                placeholder="Enter notes here"
-                multiline
-              />
-
-              <Text style={styles.label}>Reminder</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={reminder}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setReminder(itemValue)
-                  }
-                  style={styles.picker}
-                >
-                  <Picker.Item label="No Reminder" value="No Reminder" />
-                  <Picker.Item label="1 hour before" value="1 hour before" />
-                  <Picker.Item label="2 hours before" value="2 hours before" />
-                  <Picker.Item label="The day before" value="The day before" />
-                </Picker>
-              </View>
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  disabled={deleteLoading || updateLoading}
-                  // onPress={handleDelete}
-                  style={[styles.modalActionButton]}
-                >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="#FF5C5C"
-                  />
-                  <Text style={styles.actionButtonText}>Delete</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  disabled={deleteLoading || updateLoading}
-                  // onPress={handleUpdate}
-                  style={styles.modalActionButton}
-                >
-                  <MaterialCommunityIcons
-                    name="update"
-                    size={20}
-                    color="#4A90E2"
-                  />
-                  <Text style={styles.actionButtonText}>Update</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+            </ScrollView>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

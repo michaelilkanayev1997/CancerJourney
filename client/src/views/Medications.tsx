@@ -11,14 +11,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
-import { useFetchMedications } from "src/hooks/query";
+import { useFetchSchedules } from "src/hooks/query";
 import MedicationCard from "@components/MedicationCard";
 
 const Medications = () => {
   const {
     data: medications = [], // Default to an empty array if data is undefined
     isLoading,
-  } = useFetchMedications();
+  } = useFetchSchedules("medications");
 
   const handleMoreOptionsPress = useCallback(() => {
     // setOptionModalVisible(true);

@@ -34,7 +34,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
       >
         <Animated.View
           entering={FadeIn}
-          exiting={FadeOut.duration(500)}
+          exiting={FadeOut.duration(250)}
           style={styles.card}
         >
           <View style={styles.header}>
