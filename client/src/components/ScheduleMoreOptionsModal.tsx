@@ -16,16 +16,16 @@ import {
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 import { Picker } from "@react-native-picker/picker";
+import { useQueryClient } from "react-query";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
 import { useScheduleMutations } from "src/hooks/mutations";
-import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
+import { IAppointment } from "../../../server/src/models/Schedule";
 import DatePicker from "@ui/DatePicker";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
-import { useQueryClient } from "react-query";
 
 interface AppointmentMoreOptionsProps {
   item: IAppointment;
@@ -92,27 +92,26 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
     });
   };
 
-  // // Update button is pressed
-  //   const handleUpdate = async () => {
-  //     if (title === "") {
-  //       return;
-  //     }
+  // Update button is pressed
+  const handleUpdate = async () => {
+    if (title === "" || location === "" || date.toString() === "") {
+      return;
+    }
 
-  //     updateFileMutation({
-  //       fileId: item._id,
-  //       folderName,
-  //       title,
-  //       description,
-  //       handleCloseMoreOptionsPress,
-  //     });
-  //   };
+    updateScheduleMutation({
+      scheduleId: item?._id.toString(),
+      scheduleName: "appointments",
+      title,
+      location,
+      date: new Date(date),
+      notes,
+      reminder,
+      handleCloseMoreOptionsPress,
+    });
+  };
 
   const handleAddAppointment = async () => {
     if (title === "" || location === "" || date.toString() === "") {
-      //   ToastNotification({
-      //     type: "Info",
-      //     message: "Title is required !",
-      //   });
       return;
     }
 
@@ -129,10 +128,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
 
       const client = await getClient();
 
-      const { data } = await client.post(
-        "/schedule/add-appointment",
-        newAppointment
-      );
+      await client.post("/schedule/add-appointment", newAppointment);
 
       queryClient.invalidateQueries(["schedules", "appointments"]);
 
@@ -236,7 +232,8 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     style={styles.input}
                     onChangeText={handleTitleChange}
                     value={title}
-                    placeholder="Enter Name here"
+                    placeholder="Enter Title here"
+                    maxLength={40}
                   />
 
                   <View style={styles.titleWithError}>
@@ -256,6 +253,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     onChangeText={handleLocationChange}
                     value={location}
                     placeholder="Enter Location here"
+                    maxLength={30}
                   />
 
                   <View style={styles.titleWithError}>
@@ -344,7 +342,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                       </TouchableOpacity>
                       <TouchableOpacity
                         disabled={deleteLoading || updateLoading}
-                        // onPress={handleUpdate}
+                        onPress={handleUpdate}
                         style={styles.modalActionButton}
                       >
                         <MaterialCommunityIcons
@@ -431,6 +429,7 @@ const styles = StyleSheet.create({
   descriptionInput: {
     height: 80,
     textAlignVertical: "top",
+    paddingVertical: 3,
   },
   buttonContainer: {
     marginTop: 20,

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IAppointment } from "./../../../server/src/models/Schedule";
 import AppointmentMoreOptionsModal from "./ScheduleMoreOptionsModal";
+import { formatParagraph, formatText } from "@utils/helper";
 
 interface AppointmentCardProps {
   appointment: IAppointment;
@@ -40,7 +41,9 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
         >
           <View style={styles.header}>
             <MaterialIcons name="event" size={24} color="black" />
-            <Text style={styles.title}>{appointment.title}</Text>
+            <Text style={styles.title}>
+              {formatText(appointment.title, 20)}
+            </Text>
             <View style={styles.moreOption}>
               <TouchableOpacity onPress={handleMoreOptionsPress}>
                 <MaterialCommunityIcons
@@ -68,7 +71,9 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
                 size={20}
                 color="gray"
               />
-              <Text style={styles.notes}>{appointment.notes}</Text>
+              <Text style={styles.notes}>
+                {formatParagraph(appointment.notes, 33, 90)}
+              </Text>
             </View>
           )}
           {appointment.reminder && (
@@ -96,6 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 15,
+    paddingLeft: 10,
     margin: 10,
     elevation: 3,
     shadowColor: "black",

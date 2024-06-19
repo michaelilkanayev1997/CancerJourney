@@ -30,3 +30,19 @@ export const convertDateFormat = (dateInput: Date | string | undefined) => {
 
   return formattedDate;
 };
+
+export const formatParagraph = (
+  text: string,
+  maxLineLength: number,
+  maxTotalLength: number
+): string => {
+  if (text.length > maxTotalLength) {
+    text = text.slice(0, maxTotalLength) + "...";
+  }
+
+  const regex = new RegExp(`.{1,${maxLineLength}}`, "g");
+  return text.match(regex)?.join("\n") ?? text;
+};
+
+export const formatText = (text: string, length: number) =>
+  text.length > length ? `${text.slice(0, length)} ...` : text;
