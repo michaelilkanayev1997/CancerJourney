@@ -11,13 +11,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IAppointment } from "./../../../server/src/models/Schedule";
-import AppointmentMoreOptionsModal from "./ScheduleMoreOptionsModal";
+
 import { formatParagraph, formatText } from "@utils/helper";
+import { AppointmentMoreOptionsModal } from "./ScheduleMoreOptionsModal";
 
 interface AppointmentCardProps {
   appointment: IAppointment;
 }
-3;
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
   const [isOptionModalVisible, setOptionModalVisible] =

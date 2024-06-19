@@ -21,11 +21,12 @@ import { useQueryClient } from "react-query";
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
 import { useScheduleMutations } from "src/hooks/mutations";
-import { IAppointment } from "../../../server/src/models/Schedule";
+import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
 import DatePicker from "@ui/DatePicker";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
+import DaySelector from "./DaySelector";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
@@ -279,7 +280,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     style={styles.input}
                   />
 
-                  <Text style={styles.label}>Notes</Text>
+                  <Text style={styles.label}>Notes (optional)</Text>
                   <TextInput
                     style={[styles.input, styles.descriptionInput]}
                     onChangeText={handleNotesChange}
@@ -288,7 +289,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     multiline
                   />
 
-                  <Text style={styles.label}>Reminder</Text>
+                  <Text style={styles.label}>Reminder (optional)</Text>
                   <View style={styles.pickerContainer}>
                     <Picker
                       selectedValue={reminder}
@@ -345,6 +346,372 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                       <TouchableOpacity
                         disabled={deleteLoading || updateLoading}
                         onPress={handleUpdate}
+                        style={styles.modalActionButton}
+                      >
+                        <MaterialCommunityIcons
+                          name="update"
+                          size={20}
+                          color="#4A90E2"
+                        />
+                        <Text style={styles.actionButtonText}>Update</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Modal>
+  );
+};
+
+interface MedicationMoreOptionsProps {
+  item?: IMedication;
+  isOptionModalVisible: boolean;
+  setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
+  addAppointmentModal: boolean;
+}
+
+const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
+  item,
+  isOptionModalVisible,
+  setOptionModalVisible,
+  addAppointmentModal = false,
+}) => {
+  const [name, setName] = useState<string>(item?.name || "");
+  const [frequency, setFrequency] = useState<string>(item?.frequency || "");
+  const [timesPerDay, setTimesPerDay] = useState<Date | string>(
+    item?.timesPerDay || ""
+  );
+  const [specificDays, setSpecificDays] = useState<string[]>(
+    item?.specificDays || []
+  );
+  const [prescriber, setPrescriber] = useState<string>(item?.prescriber || "");
+  const [notes, setNotes] = useState(item?.notes || "");
+
+  const [addMedicationLoading, setAddMedicationLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  const {
+    deleteScheduleMutation,
+    deleteLoading,
+    updateScheduleMutation,
+    updateLoading,
+  } = useScheduleMutations();
+
+  const handleCloseMoreOptionsPress = useCallback(() => {
+    setOptionModalVisible(false);
+    Vibration.vibrate(40);
+  }, [setOptionModalVisible]);
+
+  const handleNameChange = useCallback((text: string) => {
+    setName(text);
+  }, []);
+
+  const handlePrescriberChange = useCallback((text: string) => {
+    setPrescriber(text);
+  }, []);
+
+  const handleNotesChange = useCallback((text: string) => {
+    setNotes(text);
+  }, []);
+
+  const resetFields = () => {
+    handleNameChange("");
+    handlePrescriberChange("");
+    handleNotesChange("");
+  };
+
+  // Delete button is pressed
+  const handleDelete = () => {
+    if (!item) return;
+
+    deleteScheduleMutation({
+      scheduleId: item?._id.toString(),
+      scheduleName: "medications",
+      handleCloseMoreOptionsPress,
+    });
+  };
+
+  //   // Update button is pressed
+  //   const handleUpdate = async () => {
+  //     if (title === "" || location === "" || date.toString() === "") {
+  //       return;
+  //     } else if (!item) return;
+
+  //     updateScheduleMutation({
+  //       scheduleId: item?._id.toString(),
+  //       scheduleName: "medications",
+  //       title,
+  //       location,
+  //       date: new Date(date),
+  //       notes,
+  //       reminder,
+  //       handleCloseMoreOptionsPress,
+  //     });
+  //   };
+
+  //   const handleAddMedication = async () => {
+  //     if (title === "" || location === "" || date.toString() === "") {
+  //       return;
+  //     }
+
+  //     try {
+  //       setAddMedicationLoading(true);
+
+  //       const newAppointment = {
+  //         title,
+  //         location,
+  //         date,
+  //         notes,
+  //         reminder,
+  //       };
+
+  //       const client = await getClient();
+
+  //       await client.post("/schedule/add-appointment", newAppointment);
+
+  //       queryClient.invalidateQueries(["schedules", "appointments"]);
+
+  //       ToastNotification({
+  //         type: "Success",
+  //         message: "Appointment uploaded successfully!",
+  //       });
+  //     } catch (error) {
+  //       const errorMessage = catchAsyncError(error);
+  //       ToastNotification({
+  //         type: "Error",
+  //         message: errorMessage,
+  //       });
+  //     } finally {
+  //       setAddMedicationLoading(false);
+  //       handleCloseMoreOptionsPress();
+  //       resetFields();
+  //     }
+  //   };
+
+  return (
+    <Modal
+      visible={isOptionModalVisible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={
+        deleteLoading || updateLoading || addMedicationLoading
+          ? undefined
+          : handleCloseMoreOptionsPress
+      } // Android back button
+    >
+      <TouchableWithoutFeedback onPress={handleCloseMoreOptionsPress}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalOverlay}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            disabled={deleteLoading || updateLoading || addMedicationLoading}
+            onPressOut={handleCloseMoreOptionsPress}
+          >
+            <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              keyboardShouldPersistTaps="handled"
+            >
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View
+                  style={styles.modalContent}
+                  onStartShouldSetResponder={() => true}
+                >
+                  {/* Loader Component */}
+                  {(deleteLoading || updateLoading || addMedicationLoading) && (
+                    <View style={styles.loaderOverlay}>
+                      <Loader
+                        loaderStyle={{
+                          width: 150,
+                          height: 150,
+                        }}
+                      />
+                    </View>
+                  )}
+
+                  <View style={styles.header}>
+                    <View style={styles.appointmentHeader}>
+                      <MaterialCommunityIcons
+                        name="pill"
+                        size={24}
+                        color={colors.LIGHT_BLUE}
+                      />
+                      <Text style={styles.appointmentText}>
+                        Medication Details
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={handleCloseMoreOptionsPress}
+                    >
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={24}
+                        color="#333"
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.titleWithError}>
+                    <Text style={styles.label}>Name and strength</Text>
+                    {name.length === 0 ? (
+                      <Animated.Text
+                        entering={FadeInLeft.duration(500)}
+                        exiting={FadeOutRight.duration(500)}
+                        style={styles.errorMessage}
+                      >
+                        Name is Required!
+                      </Animated.Text>
+                    ) : null}
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleNameChange}
+                    value={name}
+                    placeholder="Enter Name and strength here"
+                    maxLength={40}
+                  />
+
+                  <Text style={styles.label}>Frequency (optional)</Text>
+                  <View style={styles.pickerContainer}>
+                    <Picker
+                      selectedValue={frequency}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setFrequency(itemValue)
+                      }
+                      style={styles.picker}
+                    >
+                      <Picker.Item label="As needed" value="As needed" />
+                      <Picker.Item label="Every day" value="Every day" />
+                      <Picker.Item
+                        label="Specific days"
+                        value="Specific days"
+                      />
+                    </Picker>
+                  </View>
+
+                  <Text style={styles.label}>Times Per Day</Text>
+                  <View style={styles.pickerContainer}>
+                    <Picker
+                      selectedValue={timesPerDay}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setTimesPerDay(itemValue)
+                      }
+                      style={styles.picker}
+                    >
+                      <Picker.Item label="Once a day" value="Once a day" />
+                      <Picker.Item
+                        label="2 times a day"
+                        value="2 times a day"
+                      />
+                      <Picker.Item
+                        label="3 times a day"
+                        value="3 times a day"
+                      />
+                      <Picker.Item
+                        label="4 times a day"
+                        value="4 times a day"
+                      />
+                      <Picker.Item
+                        label="5 times a day"
+                        value="5 times a day"
+                      />
+                      <Picker.Item
+                        label="6 times a day"
+                        value="6 times a day"
+                      />
+                      <Picker.Item
+                        label="7 times a day"
+                        value="7 times a day"
+                      />
+                      <Picker.Item
+                        label="8 times a day"
+                        value="8 times a day"
+                      />
+                      <Picker.Item
+                        label="9 times a day"
+                        value="9 times a day"
+                      />
+                      <Picker.Item
+                        label="10 times a day"
+                        value="10 times a day"
+                      />
+                    </Picker>
+                  </View>
+
+                  <View style={styles.titleWithError}>
+                    <Text style={styles.label}>Specific Days</Text>
+                    {specificDays.length === 0 ? (
+                      <Animated.Text
+                        entering={FadeInLeft.duration(500)}
+                        exiting={FadeOutRight.duration(500)}
+                        style={styles.errorMessage}
+                      >
+                        Required!
+                      </Animated.Text>
+                    ) : null}
+                  </View>
+
+                  <DaySelector
+                    selectedDays={specificDays}
+                    setSelectedDays={setSpecificDays}
+                  />
+
+                  <Text style={styles.label}>Prescriber (optional)</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handlePrescriberChange}
+                    value={prescriber}
+                    placeholder="Enter Prescriber here"
+                    maxLength={30}
+                  />
+
+                  <Text style={styles.label}>Notes (optional)</Text>
+                  <TextInput
+                    style={[styles.input, styles.descriptionInput]}
+                    onChangeText={handleNotesChange}
+                    value={notes}
+                    placeholder="Enter Notes here"
+                    multiline
+                  />
+
+                  {addAppointmentModal ? (
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity
+                        disabled={addMedicationLoading}
+                        // onPress={handleAddMedication}
+                        style={[styles.modalActionButton]}
+                      >
+                        <MaterialCommunityIcons
+                          name="plus-circle"
+                          size={20}
+                          color={colors.LIGHT_BLUE}
+                        />
+                        <Text style={styles.actionButtonText}>Add</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity
+                        disabled={deleteLoading || updateLoading}
+                        onPress={handleDelete}
+                        style={[styles.modalActionButton]}
+                      >
+                        <MaterialCommunityIcons
+                          name="delete"
+                          size={20}
+                          color="#FF5C5C"
+                        />
+                        <Text style={styles.actionButtonText}>Delete</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        disabled={deleteLoading || updateLoading}
+                        // onPress={handleUpdate}
                         style={styles.modalActionButton}
                       >
                         <MaterialCommunityIcons
@@ -491,4 +858,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppointmentMoreOptionsModal;
+export { AppointmentMoreOptionsModal, MedicationMoreOptionsModal };
