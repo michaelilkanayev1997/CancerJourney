@@ -13,26 +13,20 @@ import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
 import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
+import AppointmentMoreOptionsModal from "@components/ScheduleMoreOptionsModal";
 
 const Appointments = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
 
   const {
     data: appointments = [], // Default to an empty array if data is undefined
     isLoading,
   } = useFetchSchedules("appointments");
 
-  const toggleModalVisible = useCallback(() => {
-    setModalVisible((prevVisible) => !prevVisible);
-    Vibration.vibrate(50);
-  }, []);
-
-  const handleMoreOptionsPress = useCallback(() => {
-    // setOptionModalVisible(true);
+  const OpenAddOptionModal = useCallback(() => {
+    setAddModalVisible(true);
     Vibration.vibrate(60);
   }, []);
-
-  console.log(appointments);
 
   if (isLoading) {
     return (
@@ -43,34 +37,44 @@ const Appointments = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={handleMoreOptionsPress}
-        activeOpacity={0.6}
-      >
-        <MaterialIcons name="add" size={30} color="white" />
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
-          Appointments
-        </Text>
-        {appointments.length > 0 ? (
-          appointments.map((appointment) => (
-            <AppointmentCard
-              key={appointment._id.toString()} // Convert ObjectId to string
-              appointment={appointment}
-            />
-          ))
-        ) : (
-          <View style={styles.noAppointmentsContainer}>
-            <Text style={styles.noAppointmentsText}>
-              No Appointments Available
-            </Text>
-          </View>
-        )}
-      </ScrollView>
-    </View>
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={OpenAddOptionModal}
+          activeOpacity={0.6}
+        >
+          <MaterialIcons name="add" size={30} color="white" />
+        </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
+            Appointments
+          </Text>
+          {appointments.length > 0 ? (
+            appointments.map((appointment) => (
+              <AppointmentCard
+                key={appointment._id.toString()} // Convert ObjectId to string
+                appointment={appointment}
+              />
+            ))
+          ) : (
+            <View style={styles.noAppointmentsContainer}>
+              <Text style={styles.noAppointmentsText}>
+                No Appointments Available
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+      </View>
+
+      {/* Custom Modal for add Appointment */}
+      <AppointmentMoreOptionsModal
+        item={undefined}
+        isOptionModalVisible={isAddModalVisible}
+        setOptionModalVisible={setAddModalVisible}
+        addAppointmentModal={true}
+      />
+    </>
   );
 };
 
