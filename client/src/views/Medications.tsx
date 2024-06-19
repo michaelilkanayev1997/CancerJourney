@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -13,15 +13,19 @@ import colors from "@utils/colors";
 import Loader from "@ui/Loader";
 import { useFetchSchedules } from "src/hooks/query";
 import MedicationCard from "@components/MedicationCard";
+import { IMedication } from "../../../server/src/models/Schedule";
+import { MedicationMoreOptionsModal } from "@components/ScheduleMoreOptionsModal";
 
 const Medications = () => {
+  const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
+
   const {
     data: medications = [], // Default to an empty array if data is undefined
     isLoading,
   } = useFetchSchedules("medications");
 
-  const handleMoreOptionsPress = useCallback(() => {
-    // setOptionModalVisible(true);
+  const OpenAddOptionModal = useCallback(() => {
+    setAddModalVisible(true);
     Vibration.vibrate(60);
   }, []);
 
@@ -34,37 +38,44 @@ const Medications = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={handleMoreOptionsPress}
-        activeOpacity={0.6}
-      >
-        <MaterialIcons name="add" size={30} color="white" />
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
-          Medications
-        </Text>
-        {medications.length > 0 ? (
-          medications.map((medication) => (
-            <TouchableOpacity
-              key={medication._id.toString()} // Convert ObjectId to string
-              onLongPress={handleMoreOptionsPress}
-              activeOpacity={0.9}
-            >
-              <MedicationCard medication={medication} />
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={styles.noMedicationsContainer}>
-            <Text style={styles.noMedicationsText}>
-              No Medications Available
-            </Text>
-          </View>
-        )}
-      </ScrollView>
-    </View>
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={OpenAddOptionModal}
+          activeOpacity={0.6}
+        >
+          <MaterialIcons name="add" size={30} color="white" />
+        </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
+            Medications
+          </Text>
+          {medications.length > 0 ? (
+            medications.map((medication) => (
+              <MedicationCard
+                key={medication._id.toString()} // Convert ObjectId to string
+                medication={medication as IMedication}
+              />
+            ))
+          ) : (
+            <View style={styles.noMedicationsContainer}>
+              <Text style={styles.noMedicationsText}>
+                No Medications Available
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+      </View>
+
+      {/* Custom Modal for add Medication */}
+      <MedicationMoreOptionsModal
+        item={undefined}
+        isOptionModalVisible={isAddModalVisible}
+        setOptionModalVisible={setAddModalVisible}
+        addAppointmentModal={true}
+      />
+    </>
   );
 };
 const styles = StyleSheet.create({
