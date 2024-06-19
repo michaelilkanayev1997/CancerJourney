@@ -11,7 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
-import { useFetchAppointments } from "src/hooks/query";
+import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
 
 const Appointments = () => {
@@ -20,7 +20,7 @@ const Appointments = () => {
   const {
     data: appointments = [], // Default to an empty array if data is undefined
     isLoading,
-  } = useFetchAppointments();
+  } = useFetchSchedules("appointments");
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
