@@ -131,10 +131,13 @@ interface DeleteAppointmentParams {
 }
 
 interface UpdateAppointmentParams {
-  fileId: string;
-  folderName: string;
+  scheduleId: string;
+  scheduleName: string;
   title: string;
-  description: string;
+  location: string;
+  date: Date;
+  notes?: string;
+  reminder: string;
   handleCloseMoreOptionsPress: () => void;
 }
 
@@ -191,31 +194,61 @@ export const useScheduleMutations = () => {
     );
 
   const { isLoading: updateLoading, mutate: updateScheduleMutation } =
-    useMutation<void, Error, UpdateFileParams, unknown>(
-      async ({ fileId, title, description, folderName }) => {
+    useMutation<void, Error, UpdateAppointmentParams, unknown>(
+      async ({
+        scheduleId,
+        scheduleName,
+        title,
+        location,
+        date,
+        notes,
+        reminder,
+      }) => {
         const client = await getClient();
-        const url = `/file/file-update?fileId=${fileId}&folderName=${folderName}`;
-        return client.patch(url, { title: title, description });
+
+        const url = `/schedule/${scheduleName.slice(
+          0,
+          -1
+        )}-update?scheduleId=${scheduleId}&scheduleName=${scheduleName}`;
+
+        return client.patch(url, { title, location, date, notes, reminder });
       },
       {
         onSuccess: (data, variables) => {
-          const { fileId, folderName, description, title } = variables;
+          const {
+            scheduleId,
+            scheduleName,
+            title,
+            location,
+            date,
+            notes,
+            reminder,
+          } = variables;
+
           // Optimistically update the local cache
-          queryClient.setQueryData(
-            ["folder-files", folderName],
-            (oldData: ImageType[] | undefined) => {
-              if (!oldData) {
-                return [];
-              }
-              return oldData.map((file) => {
-                if (file._id === fileId) {
-                  return { ...file, title, description };
+          queryClient.setQueryData<IAppointment[]>(
+            ["schedules", scheduleName],
+            (oldData) => {
+              if (!oldData) return [];
+              return oldData.map((schedule) => {
+                if (schedule._id.toString() === scheduleId) {
+                  return {
+                    ...schedule,
+                    title,
+                    location,
+                    date,
+                    notes,
+                    reminder,
+                  } as IAppointment;
                 }
-                return file;
+                return schedule;
               });
             }
           );
-          ToastNotification({ message: "File updated successfully" });
+
+          ToastNotification({
+            message: `${scheduleName.slice(0, -1)} updated successfully`,
+          });
         },
         onError: (error) => {
           const errorMessage = catchAsyncError(error);
