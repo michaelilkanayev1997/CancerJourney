@@ -6,7 +6,7 @@ export interface IAppointment extends Document {
   location: string;
   date: Date;
   notes?: string;
-  reminder?: string;
+  reminder: string;
 }
 
 export interface IMedication extends Document {

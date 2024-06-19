@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 15,
     top: 15,
-    zIndex: 1000,
+    zIndex: 1001,
     backgroundColor: colors.LIGHT_BLUE,
     borderRadius: 30,
     justifyContent: "center",
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 150,
+    paddingTop: 260,
   },
   noMedicationsText: {
     marginTop: 0,
