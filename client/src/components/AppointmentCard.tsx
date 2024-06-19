@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import AppointmentMoreOptionsModal from "./ScheduleMoreOptionsModal";
 interface AppointmentCardProps {
   appointment: IAppointment;
 }
+3;
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
   const [isOptionModalVisible, setOptionModalVisible] =
@@ -84,6 +85,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
         item={appointment}
         isOptionModalVisible={isOptionModalVisible}
         setOptionModalVisible={setOptionModalVisible}
+        addAppointmentModal={false}
       />
     </>
   );
