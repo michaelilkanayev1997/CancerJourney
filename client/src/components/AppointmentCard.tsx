@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -10,57 +11,81 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IAppointment } from "./../../../server/src/models/Schedule";
+import AppointmentMoreOptionsModal from "./ScheduleMoreOptionsModal";
 
-const AppointmentCard: React.FC<{ appointment: IAppointment }> = ({
-  appointment,
-}) => {
+interface AppointmentCardProps {
+  appointment: IAppointment;
+}
+
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
+  const [isOptionModalVisible, setOptionModalVisible] =
+    useState<boolean>(false);
+
+  const handleMoreOptionsPress = useCallback(() => {
+    setOptionModalVisible(true);
+    Vibration.vibrate(60);
+  }, []);
+
   return (
-    <Animated.View
-      entering={FadeIn}
-      exiting={FadeOut.duration(500)}
-      style={styles.card}
-    >
-      <View style={styles.header}>
-        <MaterialIcons name="event" size={24} color="black" />
-        <Text style={styles.title}>{appointment.title}</Text>
-        <View style={styles.moreOption}>
-          <TouchableOpacity
-            onPress={() => {
-              Vibration.vibrate(50);
-              console.log("more");
-            }}
-          >
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.detailRow}>
-        <MaterialCommunityIcons name="map-marker" size={20} color="gray" />
-        <Text style={styles.location}>{appointment.location}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <MaterialCommunityIcons name="calendar" size={20} color="gray" />
-        <Text style={styles.dateText}>
-          {new Date(appointment.date).toDateString()}
-        </Text>
-      </View>
-      {appointment.notes && (
-        <View style={styles.detailRow}>
-          <MaterialCommunityIcons name="note-outline" size={20} color="gray" />
-          <Text style={styles.notes}>{appointment.notes}</Text>
-        </View>
-      )}
-      {appointment.reminder && (
-        <View style={styles.reminderContainer}>
-          <MaterialIcons name="notifications" size={20} color="gray" />
-          <Text style={styles.reminderText}>{appointment.reminder}</Text>
-        </View>
-      )}
-    </Animated.View>
+    <>
+      <TouchableOpacity
+        onLongPress={handleMoreOptionsPress}
+        activeOpacity={0.9}
+      >
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut.duration(500)}
+          style={styles.card}
+        >
+          <View style={styles.header}>
+            <MaterialIcons name="event" size={24} color="black" />
+            <Text style={styles.title}>{appointment.title}</Text>
+            <View style={styles.moreOption}>
+              <TouchableOpacity onPress={handleMoreOptionsPress}>
+                <MaterialCommunityIcons
+                  name="dots-vertical"
+                  size={24}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons name="map-marker" size={20} color="gray" />
+            <Text style={styles.location}>{appointment.location}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons name="calendar" size={20} color="gray" />
+            <Text style={styles.dateText}>
+              {new Date(appointment.date).toDateString()}
+            </Text>
+          </View>
+          {appointment.notes && (
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="note-outline"
+                size={20}
+                color="gray"
+              />
+              <Text style={styles.notes}>{appointment.notes}</Text>
+            </View>
+          )}
+          {appointment.reminder && (
+            <View style={styles.reminderContainer}>
+              <MaterialIcons name="notifications" size={20} color="gray" />
+              <Text style={styles.reminderText}>{appointment.reminder}</Text>
+            </View>
+          )}
+        </Animated.View>
+      </TouchableOpacity>
+
+      {/* Custom Modal for More Options */}
+      <AppointmentMoreOptionsModal
+        item={appointment}
+        isOptionModalVisible={isOptionModalVisible}
+        setOptionModalVisible={setOptionModalVisible}
+      />
+    </>
   );
 };
 

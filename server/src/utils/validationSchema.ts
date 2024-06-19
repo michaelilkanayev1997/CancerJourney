@@ -111,10 +111,10 @@ export const AppointmentSchema = yup.object().shape({
   reminder: yup
     .string()
     .oneOf(
-      ["1 hour before", "2 hours before", "The day before"],
+      ["No Reminder", "1 hour before", "2 hours before", "The day before"],
       "Invalid reminder"
     )
-    .notRequired(),
+    .required("Reminder is missing!"),
   notes: yup.string().notRequired(),
 });
 

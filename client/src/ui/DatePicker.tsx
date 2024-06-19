@@ -11,6 +11,8 @@ interface Props {
   showDateModal: boolean;
   date: Date | string;
   setDate: (formattedDate: Date) => void;
+  appointmentDate?: boolean;
+  style?: object;
 }
 
 const DatePicker: FC<Props> = ({
@@ -18,6 +20,8 @@ const DatePicker: FC<Props> = ({
   showDateModal,
   setDate,
   date,
+  appointmentDate = false,
+  style,
 }) => {
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === "dismissed") {
@@ -40,9 +44,17 @@ const DatePicker: FC<Props> = ({
     <>
       <TouchableOpacity
         onPress={() => setShowDateModal(true)}
-        style={[styles.rowInput, { paddingVertical: 15 }]}
+        style={[
+          styles.rowInput,
+          !appointmentDate && styles.registerSpecificStyle,
+          style,
+        ]}
       >
-        <Text style={styles.buttonText}>{displayDate}</Text>
+        <Text
+          style={[styles.buttonText, !appointmentDate && { marginLeft: 10 }]}
+        >
+          {displayDate?.toString()}
+        </Text>
         <MaterialIcons
           name="arrow-drop-down"
           size={24}
@@ -56,7 +68,7 @@ const DatePicker: FC<Props> = ({
           mode="date"
           onChange={onDateChange}
           style={{ backgroundColor: "white" }}
-          maximumDate={new Date()}
+          maximumDate={appointmentDate ? undefined : new Date()}
           minimumDate={new Date(1920, 0, 1)}
           is24Hour={true}
         />
@@ -74,7 +86,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
     backgroundColor: "#fff",
-    overflow: "hidden", // This is necessary for iOS to clip the shadow
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  registerSpecificStyle: {
+    paddingVertical: 15,
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -82,15 +99,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    elevation: 3, // This is for Android
-    flexDirection: "row",
-    justifyContent: "space-between",
+    elevation: 3,
   },
   buttonText: {
     width: "70%",
     fontSize: 16,
     color: "#000",
-    marginLeft: 10,
   },
 });
 
