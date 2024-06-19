@@ -28,7 +28,7 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 
 interface AppointmentMoreOptionsProps {
-  item: IAppointment;
+  item?: IAppointment;
   isOptionModalVisible: boolean;
   setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
   addAppointmentModal: boolean;
@@ -85,6 +85,8 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
 
   // Delete button is pressed
   const handleDelete = () => {
+    if (!item) return;
+
     deleteScheduleMutation({
       scheduleId: item?._id.toString(),
       scheduleName: "appointments",
@@ -96,7 +98,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
   const handleUpdate = async () => {
     if (title === "" || location === "" || date.toString() === "") {
       return;
-    }
+    } else if (!item) return;
 
     updateScheduleMutation({
       scheduleId: item?._id.toString(),

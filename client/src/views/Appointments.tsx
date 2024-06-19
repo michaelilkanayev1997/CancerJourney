@@ -14,6 +14,7 @@ import colors from "@utils/colors";
 import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
 import AppointmentMoreOptionsModal from "@components/ScheduleMoreOptionsModal";
+import { IAppointment } from "../../../server/src/models/Schedule";
 
 const Appointments = () => {
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
@@ -54,7 +55,7 @@ const Appointments = () => {
             appointments.map((appointment) => (
               <AppointmentCard
                 key={appointment._id.toString()} // Convert ObjectId to string
-                appointment={appointment}
+                appointment={appointment as IAppointment}
               />
             ))
           ) : (

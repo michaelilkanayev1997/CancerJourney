@@ -17,7 +17,11 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
         <Image source={{ uri: medication.photo.url }} style={styles.photo} />
       )}
       <View style={styles.header}>
-        <Text style={styles.name}>{medication.name}</Text>
+        <View style={styles.detailRow}>
+          <MaterialCommunityIcons name="pill" size={20} color="black" />
+          <Text style={styles.name}>{medication.name}</Text>
+        </View>
+
         <TouchableOpacity
           style={styles.moreOption}
           onPress={() => {
@@ -105,6 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: "bold",
+    marginLeft: 5,
   },
   moreOption: {
     marginLeft: "auto",
