@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import {
   Modal,
   View,
@@ -29,12 +29,14 @@ interface Props {
   isVisible: boolean;
   toggleModalVisible: () => void;
   profile: UserProfile | null;
+  setPhoto?: Dispatch<SetStateAction<null>>;
 }
 
 const ProfilePhotoModal: FC<Props> = ({
   isVisible,
   toggleModalVisible,
   profile,
+  setPhoto,
 }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -155,6 +157,8 @@ const ProfilePhotoModal: FC<Props> = ({
       if (profile) {
         dispatch(updateProfile({ ...profile, avatar: file.uri }));
       }
+
+      // setPhoto(file.uri);
 
       ToastNotification({
         type: "Success",
