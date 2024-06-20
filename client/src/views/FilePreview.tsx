@@ -84,7 +84,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
         name: folderName,
       } as any);
 
-      // Append the folder name and description
+      // Append the title and description
       formData.append("title", title);
       formData.append("description", description);
 

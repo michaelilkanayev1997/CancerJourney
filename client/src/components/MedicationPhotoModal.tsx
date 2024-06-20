@@ -1,46 +1,27 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch } from "react-redux";
 
 import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
-import { getClient } from "src/api/client";
-import { UserProfile, updateProfile } from "src/store/auth";
+import { updateProfile } from "src/store/auth";
 import ImageUpload from "./ImageUpload";
 
 interface Props {
   isVisible: boolean;
   toggleModalVisible: () => void;
-  profile: UserProfile | null;
-  setPhoto?: Dispatch<SetStateAction<null>>;
+  setPhoto: Dispatch<SetStateAction<ImagePicker.ImagePickerAsset | null>>;
+  photo: ImagePicker.ImagePickerAsset | null;
 }
 
-const ProfilePhotoModal: FC<Props> = ({
+const MedicationPhotoModal: FC<Props> = ({
   isVisible,
   toggleModalVisible,
-  profile,
+  setPhoto,
+  photo,
 }) => {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleUpload = async (formData: FormData) => {
-    try {
-      const client = await getClient({
-        "Content-Type": "multipart/form-data;",
-      });
-
-      const { data } = await client.post(
-        "/auth/profile-image-upload",
-        formData
-      );
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  };
 
   const onCameraPress = async () => {
     try {
@@ -62,26 +43,19 @@ const ProfilePhotoModal: FC<Props> = ({
       setIsLoading(true);
 
       const file = result.assets[0];
-      const formData = new FormData();
-      formData.append("avatar", {
-        uri: file.uri,
-        type: "image/jpeg",
-        name: "profile",
-      } as any);
 
-      const data = await handleUpload(formData);
+      //   const formData = new FormData();
+      //   formData.append("avatar", {
+      //     uri: file.uri,
+      //     type: "image/jpeg",
+      //     name: "profile",
+      //   } as any);
 
-      if (!data?.success) {
-        throw new Error("Failed to upload image");
-      }
-
-      if (profile) {
-        dispatch(updateProfile({ ...profile, avatar: file.uri }));
-      }
+      setPhoto(file);
 
       ToastNotification({
         type: "Success",
-        message: "Image uploaded successfully!",
+        message: "Photo uploaded successfully!",
       });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
@@ -90,7 +64,6 @@ const ProfilePhotoModal: FC<Props> = ({
         message: errorMessage,
       });
     }
-
     toggleModalVisible();
     setIsLoading(false);
   };
@@ -122,30 +95,18 @@ const ProfilePhotoModal: FC<Props> = ({
 
       const file = result.assets[0];
 
-      const formData = new FormData();
+      //   const formData = new FormData();
+      //   formData.append("avatar", {
+      //     uri: file.uri,
+      //     type: file.mimeType,
+      //     name: "profile",
+      //   } as any);
 
-      formData.append("avatar", {
-        uri: file.uri,
-        type: file.mimeType,
-        name: "profile",
-      } as any);
-
-      const data = await handleUpload(formData);
-
-      // console.log(data);
-      if (!data.success) {
-        throw new Error("Failed to upload image");
-      }
-
-      if (profile) {
-        dispatch(updateProfile({ ...profile, avatar: file.uri }));
-      }
-
-      // setPhoto(file.uri);
+      setPhoto(file);
 
       ToastNotification({
         type: "Success",
-        message: "Image uploaded successfully!",
+        message: "Photo uploaded successfully!",
       });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
@@ -154,26 +115,21 @@ const ProfilePhotoModal: FC<Props> = ({
         message: errorMessage || "Network error",
       });
     }
-
     toggleModalVisible();
     setIsLoading(false);
   };
 
   const onRemovePress = async () => {
     try {
-      if (!profile?.avatar) throw new Error("There is no profile image");
+      if (!photo) throw new Error("There is no Photo to remove");
 
       setIsLoading(true);
 
-      const client = await getClient();
-
-      await client.post("/auth/profile-image-remove");
-
-      dispatch(updateProfile({ ...profile, avatar: "" }));
+      setPhoto(null);
 
       ToastNotification({
         type: "Success",
-        message: "Your profile photo has been removed",
+        message: "Your photo has been removed",
       });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
@@ -206,4 +162,4 @@ const ProfilePhotoModal: FC<Props> = ({
 
 const styles = StyleSheet.create({});
 
-export default ProfilePhotoModal;
+export default MedicationPhotoModal;

@@ -11,6 +11,7 @@ import {
 } from "#/controllers/schedule";
 import { AppointmentSchema, MedicationSchema } from "#/utils/validationSchema";
 import { medicationPhotoUpload } from "#/middleware/fileUpload";
+import { parseSpecificDaysAndDate } from "#/middleware/schedule";
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.post(
   "/add-medication",
   mustAuth,
   medicationPhotoUpload.single("file"),
+  parseSpecificDaysAndDate,
   validate(MedicationSchema),
   addMedication
 );

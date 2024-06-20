@@ -41,6 +41,8 @@ import { getClient } from "src/api/client";
 import DaySelector from "./DaySelector";
 import ProfilePhotoModal from "./ProfilePhotoModal";
 import Toast from "react-native-toast-message";
+import MedicationPhotoModal from "./MedicationPhotoModal";
+import { ImagePickerAsset } from "expo-image-picker";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
@@ -129,6 +131,17 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
 
   const handleAddAppointment = async () => {
     if (title === "" || location === "" || date.toString() === "") {
+      return;
+    }
+    if (location.length < 3) {
+      ToastNotification({
+        type: "ModalError",
+        message: "Location has to be at least 3 characters",
+        values: {
+          position: "bottom",
+          bottomOffset: 40,
+        },
+      });
       return;
     }
 
@@ -377,6 +390,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      <Toast config={toastConfig} />
     </Modal>
   );
 };
@@ -409,7 +423,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   const [addMedicationLoading, setAddMedicationLoading] = useState(false);
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState<ImagePickerAsset | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -492,20 +506,12 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       ToastNotification({
         type: "ModalError",
         message: "Name is required!",
-        values: {
-          position: "bottom",
-          bottomOffset: 40,
-        },
       });
       return;
     } else if (frequency === "Specific days" && specificDays.length === 0) {
       ToastNotification({
         type: "ModalError",
         message: "Please select specific days!",
-        values: {
-          position: "bottom",
-          bottomOffset: 40,
-        },
       });
       return;
     }
@@ -513,20 +519,45 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     try {
       setAddMedicationLoading(true);
 
-      // New Medication Object
-      const newMedication = {
-        name,
-        frequency,
-        timesPerDay,
-        specificDays,
-        prescriber,
-        notes,
-        date: new Date(),
-      };
+      const formData = new FormData();
 
-      const client = await getClient();
+      // Append the Body fields to the form
+      formData.append("name", name);
+      formData.append("frequency", frequency);
+      formData.append("timesPerDay", timesPerDay);
+      formData.append("specificDays", JSON.stringify(specificDays)); // Convert array to string
+      formData.append("prescriber", prescriber);
+      formData.append("notes", notes);
+      formData.append("date", new Date().toISOString()); // Convert date to string
 
-      await client.post("/schedule/add-medication", newMedication);
+      if (photo) {
+        formData.append("file", {
+          uri: photo.uri,
+          type: photo.type,
+          name: "image",
+        } as any);
+      }
+
+      const client = await getClient({
+        "Content-Type": "multipart/form-data;",
+      });
+
+      const { data } = await client.post("/schedule/add-medication", formData);
+      console.log(data);
+      if (!data?.success) {
+        throw new Error("Failed to upload file");
+      }
+
+      // // New Medication Object
+      // const newMedication = {
+      //   name,
+      //   frequency,
+      //   timesPerDay,
+      //   specificDays,
+      //   prescriber,
+      //   notes,
+      //   date: new Date(),
+      // };
 
       queryClient.invalidateQueries(["schedules", "medications"]);
 
@@ -764,7 +795,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                       </TouchableOpacity>
                       {photo ? (
                         <Image
-                          source={{ uri: photo }}
+                          source={{ uri: photo.uri }}
                           style={styles.photoPreview}
                         />
                       ) : (
@@ -845,11 +876,11 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
         <Toast config={toastConfig} />
       </Modal>
 
-      <ProfilePhotoModal
+      <MedicationPhotoModal
         isVisible={PhotoModalVisible}
         toggleModalVisible={toggleModalVisible}
-        profile={null}
         setPhoto={setPhoto}
+        photo={photo}
       />
     </>
   );
