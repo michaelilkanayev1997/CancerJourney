@@ -131,10 +131,10 @@ export const medicationPhotoUpload = multer({
     key: (req: any, file: any, cb: any) => {
       // Generate a 16-byte random hex string
       const randomBytes = crypto.randomBytes(16).toString("hex");
-
+      console.log("file", file);
       const parts = file.mimetype.split("/"); // This splits the string into an array of parts divided by '/'
       const fileType = parts[1]; // get file type
-
+      console.log("fileType", fileType);
       // Construct the S3 object key with the user ID, processed file name, random bytes, and timestamp
       cb(
         null,

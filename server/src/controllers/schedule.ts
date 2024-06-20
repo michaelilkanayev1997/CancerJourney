@@ -61,7 +61,7 @@ export const addMedication: RequestHandler = async (req, res) => {
         error:
           "Times per day is required when frequency is 'Every day' or 'Specific days'",
       });
-    } else if (frequency === "Specific days" && specificDays === undefined) {
+    } else if (frequency === "Specific days" && specificDays.length === 0) {
       return res.status(400).send({
         error: "Specific days are required when frequency is 'Specific days'",
       });
@@ -95,7 +95,7 @@ export const addMedication: RequestHandler = async (req, res) => {
     res.json({ success: true, file: req.file });
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while uploading the file",
+      error: "An error occurred while adding Medication",
     });
   }
 };
