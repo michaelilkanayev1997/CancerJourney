@@ -19,10 +19,10 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Animated, {
-  FadeInDown,
   FadeInLeft,
   FadeInUp,
   FadeOutRight,
@@ -39,6 +39,7 @@ import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import DaySelector from "./DaySelector";
+import ProfilePhotoModal from "./ProfilePhotoModal";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
@@ -393,9 +394,11 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   addAppointmentModal = false,
 }) => {
   const [name, setName] = useState<string>(item?.name || "");
-  const [frequency, setFrequency] = useState<string>(item?.frequency || "");
+  const [frequency, setFrequency] = useState<string>(
+    item?.frequency || "As needed"
+  );
   const [timesPerDay, setTimesPerDay] = useState<string>(
-    item?.timesPerDay || ""
+    item?.timesPerDay || "Once a day"
   );
   const [specificDays, setSpecificDays] = useState<string[]>(
     item?.specificDays || []
@@ -404,6 +407,9 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   const [notes, setNotes] = useState(item?.notes || "");
 
   const [addMedicationLoading, setAddMedicationLoading] = useState(false);
+  const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
+  const [photo, setPhoto] = useState(null);
+
   const queryClient = useQueryClient();
 
   const {
@@ -430,10 +436,15 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     setNotes(text);
   }, []);
 
+  const toggleModalVisible = useCallback(() => {
+    setPhotoModalVisible((prevVisible) => !prevVisible);
+    Vibration.vibrate(50);
+  }, []);
+
   const resetFields = () => {
     handleNameChange("");
-    setFrequency("");
-    setTimesPerDay("");
+    setFrequency("As needed");
+    setTimesPerDay("Once a day");
     setSpecificDays([]);
     handlePrescriberChange("");
     handleNotesChange("");
@@ -441,7 +452,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   useEffect(() => {
     if (frequency === "As needed") {
-      setTimesPerDay("");
+      setTimesPerDay("Once a day");
       setSpecificDays([]);
     }
   }, [frequency]);
@@ -475,308 +486,354 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   //     });
   //   };
 
-  //   const handleAddMedication = async () => {
-  //     if (title === "" || location === "" || date.toString() === "") {
-  //       return;
-  //     }
+  const handleAddMedication = async () => {
+    if (name === "") {
+      return;
+    } else if (frequency === "Specific days" && specificDays.length === 0) {
+      return;
+    }
 
-  //     try {
-  //       setAddMedicationLoading(true);
+    try {
+      setAddMedicationLoading(true);
 
-  //       const newAppointment = {
-  //         title,
-  //         location,
-  //         date,
-  //         notes,
-  //         reminder,
-  //       };
+      // New Medication Object
+      const newMedication = {
+        name,
+        frequency,
+        timesPerDay,
+        specificDays,
+        prescriber,
+        notes,
+        date: new Date(),
+      };
 
-  //       const client = await getClient();
+      const client = await getClient();
 
-  //       await client.post("/schedule/add-appointment", newAppointment);
+      await client.post("/schedule/add-medication", newMedication);
 
-  //       queryClient.invalidateQueries(["schedules", "appointments"]);
+      queryClient.invalidateQueries(["schedules", "medications"]);
 
-  //       ToastNotification({
-  //         type: "Success",
-  //         message: "Appointment uploaded successfully!",
-  //       });
-  //     } catch (error) {
-  //       const errorMessage = catchAsyncError(error);
-  //       ToastNotification({
-  //         type: "Error",
-  //         message: errorMessage,
-  //       });
-  //     } finally {
-  //       setAddMedicationLoading(false);
-  //       handleCloseMoreOptionsPress();
-  //       resetFields();
-  //     }
-  //   };
+      ToastNotification({
+        type: "Success",
+        message: "Medication uploaded successfully!",
+      });
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    } finally {
+      setAddMedicationLoading(false);
+      handleCloseMoreOptionsPress();
+      resetFields();
+    }
+  };
 
   return (
-    <Modal
-      visible={isOptionModalVisible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={
-        deleteLoading || updateLoading || addMedicationLoading
-          ? undefined
-          : handleCloseMoreOptionsPress
-      } // Android back button
-    >
-      <TouchableWithoutFeedback onPress={handleCloseMoreOptionsPress}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.modalOverlay}
-        >
-          <TouchableOpacity
-            activeOpacity={1}
-            disabled={deleteLoading || updateLoading || addMedicationLoading}
-            onPressOut={handleCloseMoreOptionsPress}
+    <>
+      <Modal
+        visible={isOptionModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={
+          deleteLoading || updateLoading || addMedicationLoading
+            ? undefined
+            : handleCloseMoreOptionsPress
+        } // Android back button
+      >
+        <TouchableWithoutFeedback onPress={handleCloseMoreOptionsPress}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.modalOverlay}
           >
-            <ScrollView
-              contentContainerStyle={styles.scrollContainer}
-              keyboardShouldPersistTaps="handled"
+            <TouchableOpacity
+              activeOpacity={1}
+              disabled={deleteLoading || updateLoading || addMedicationLoading}
+              onPressOut={handleCloseMoreOptionsPress}
             >
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View
-                  style={styles.modalContent}
-                  onStartShouldSetResponder={() => true}
-                >
-                  {/* Loader Component */}
-                  {(deleteLoading || updateLoading || addMedicationLoading) && (
-                    <View style={styles.loaderOverlay}>
-                      <Loader
-                        loaderStyle={{
-                          width: 150,
-                          height: 150,
-                        }}
-                      />
-                    </View>
-                  )}
-
-                  <View style={styles.header}>
-                    <View style={styles.appointmentHeader}>
-                      <MaterialCommunityIcons
-                        name="pill"
-                        size={24}
-                        color={colors.LIGHT_BLUE}
-                      />
-                      <Text style={styles.appointmentText}>
-                        Medication Details
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={handleCloseMoreOptionsPress}
-                    >
-                      <MaterialCommunityIcons
-                        name="close"
-                        size={24}
-                        color="#333"
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Name and strength</Text>
-                    {name.length === 0 ? (
-                      <Animated.Text
-                        entering={FadeInLeft.duration(500)}
-                        exiting={FadeOutRight.duration(500)}
-                        style={styles.errorMessage}
-                      >
-                        Name is Required!
-                      </Animated.Text>
-                    ) : null}
-                  </View>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={handleNameChange}
-                    value={name}
-                    placeholder="Enter Name and strength here"
-                    maxLength={40}
-                  />
-
-                  <Text style={styles.label}>Frequency (optional)</Text>
-                  <View style={styles.pickerContainer}>
-                    <Picker
-                      selectedValue={frequency}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setFrequency(itemValue)
-                      }
-                      style={styles.picker}
-                    >
-                      <Picker.Item label="As needed" value="As needed" />
-                      <Picker.Item label="Every day" value="Every day" />
-                      <Picker.Item
-                        label="Specific days"
-                        value="Specific days"
-                      />
-                    </Picker>
-                  </View>
-
-                  {/* Times per day is required when frequency is 'Every day' or 'Specific days' */}
-                  {frequency === "Every day" ||
-                  frequency === "Specific days" ? (
-                    <>
-                      <Animated.Text
-                        entering={FadeInUp.duration(600)}
-                        style={styles.label}
-                      >
-                        Times Per Day
-                      </Animated.Text>
-
-                      <Animated.View
-                        entering={FadeInUp.duration(600)}
-                        style={styles.pickerContainer}
-                      >
-                        <Picker
-                          selectedValue={timesPerDay}
-                          onValueChange={(itemValue, itemIndex) =>
-                            setTimesPerDay(itemValue)
-                          }
-                          style={styles.picker}
-                        >
-                          <Picker.Item label="Once a day" value="Once a day" />
-                          <Picker.Item
-                            label="2 times a day"
-                            value="2 times a day"
-                          />
-                          <Picker.Item
-                            label="3 times a day"
-                            value="3 times a day"
-                          />
-                          <Picker.Item
-                            label="4 times a day"
-                            value="4 times a day"
-                          />
-                          <Picker.Item
-                            label="5 times a day"
-                            value="5 times a day"
-                          />
-                          <Picker.Item
-                            label="6 times a day"
-                            value="6 times a day"
-                          />
-                          <Picker.Item
-                            label="7 times a day"
-                            value="7 times a day"
-                          />
-                          <Picker.Item
-                            label="8 times a day"
-                            value="8 times a day"
-                          />
-                          <Picker.Item
-                            label="9 times a day"
-                            value="9 times a day"
-                          />
-                          <Picker.Item
-                            label="10 times a day"
-                            value="10 times a day"
-                          />
-                        </Picker>
-                      </Animated.View>
-                    </>
-                  ) : null}
-
-                  {/* Specific days are required when frequency is 'Specific days' */}
-                  {frequency === "Specific days" ? (
-                    <>
-                      <View style={styles.titleWithError}>
-                        <Animated.Text
-                          entering={FadeInUp.duration(500)}
-                          style={styles.label}
-                        >
-                          Specific Days
-                        </Animated.Text>
-                        {specificDays.length === 0 ? (
-                          <Animated.Text
-                            entering={FadeInLeft.duration(500)}
-                            exiting={FadeOutRight.duration(500)}
-                            style={styles.errorMessage}
-                          >
-                            Required!
-                          </Animated.Text>
-                        ) : null}
+              <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                keyboardShouldPersistTaps="handled"
+              >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <View
+                    style={styles.modalContent}
+                    onStartShouldSetResponder={() => true}
+                  >
+                    {/* Loader Component */}
+                    {(deleteLoading ||
+                      updateLoading ||
+                      addMedicationLoading) && (
+                      <View style={styles.loaderOverlay}>
+                        <Loader
+                          loaderStyle={{
+                            width: 150,
+                            height: 150,
+                          }}
+                        />
                       </View>
+                    )}
 
-                      <DaySelector
-                        selectedDays={specificDays}
-                        setSelectedDays={setSpecificDays}
-                      />
-                    </>
-                  ) : null}
-
-                  <Text style={styles.label}>Prescriber (optional)</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={handlePrescriberChange}
-                    value={prescriber}
-                    placeholder="Enter Prescriber here"
-                    maxLength={30}
-                  />
-
-                  <Text style={styles.label}>Notes (optional)</Text>
-                  <TextInput
-                    style={[styles.input, styles.descriptionInput]}
-                    onChangeText={handleNotesChange}
-                    value={notes}
-                    placeholder="Enter Notes here"
-                    multiline
-                  />
-
-                  {addAppointmentModal ? (
-                    <View style={styles.buttonContainer}>
-                      <TouchableOpacity
-                        disabled={addMedicationLoading}
-                        // onPress={handleAddMedication}
-                        style={[styles.modalActionButton]}
-                      >
+                    <View style={styles.header}>
+                      <View style={styles.appointmentHeader}>
                         <MaterialCommunityIcons
-                          name="plus-circle"
-                          size={20}
+                          name="pill"
+                          size={24}
                           color={colors.LIGHT_BLUE}
                         />
-                        <Text style={styles.actionButtonText}>Add</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    <View style={styles.buttonContainer}>
+                        <Text style={styles.appointmentText}>
+                          Medication Details
+                        </Text>
+                      </View>
                       <TouchableOpacity
-                        disabled={deleteLoading || updateLoading}
-                        onPress={handleDelete}
-                        style={[styles.modalActionButton]}
+                        style={styles.closeButton}
+                        onPress={handleCloseMoreOptionsPress}
                       >
                         <MaterialCommunityIcons
-                          name="delete"
-                          size={20}
-                          color="#FF5C5C"
+                          name="close"
+                          size={24}
+                          color="#333"
                         />
-                        <Text style={styles.actionButtonText}>Delete</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        disabled={deleteLoading || updateLoading}
-                        // onPress={handleUpdate}
-                        style={styles.modalActionButton}
-                      >
-                        <MaterialCommunityIcons
-                          name="update"
-                          size={20}
-                          color="#4A90E2"
-                        />
-                        <Text style={styles.actionButtonText}>Update</Text>
                       </TouchableOpacity>
                     </View>
-                  )}
-                </View>
-              </TouchableWithoutFeedback>
-            </ScrollView>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </Modal>
+
+                    <View style={styles.titleWithError}>
+                      <Text style={styles.label}>Name and strength</Text>
+                      {name.length === 0 ? (
+                        <Animated.Text
+                          entering={FadeInLeft.duration(500)}
+                          exiting={FadeOutRight.duration(500)}
+                          style={styles.errorMessage}
+                        >
+                          Name is Required!
+                        </Animated.Text>
+                      ) : null}
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={handleNameChange}
+                      value={name}
+                      placeholder="Enter Name and strength here"
+                      maxLength={40}
+                    />
+
+                    <Text style={styles.label}>Frequency (optional)</Text>
+                    <View style={styles.pickerContainer}>
+                      <Picker
+                        selectedValue={frequency}
+                        onValueChange={(itemValue, itemIndex) =>
+                          setFrequency(itemValue)
+                        }
+                        style={styles.picker}
+                      >
+                        <Picker.Item label="As needed" value="As needed" />
+                        <Picker.Item label="Every day" value="Every day" />
+                        <Picker.Item
+                          label="Specific days"
+                          value="Specific days"
+                        />
+                      </Picker>
+                    </View>
+
+                    {/* Times per day is required when frequency is 'Every day' or 'Specific days' */}
+                    {frequency === "Every day" ||
+                    frequency === "Specific days" ? (
+                      <>
+                        <Animated.Text
+                          entering={FadeInUp.duration(600)}
+                          style={styles.label}
+                        >
+                          Times Per Day
+                        </Animated.Text>
+
+                        <Animated.View
+                          entering={FadeInUp.duration(600)}
+                          style={styles.pickerContainer}
+                        >
+                          <Picker
+                            selectedValue={timesPerDay}
+                            onValueChange={(itemValue, itemIndex) =>
+                              setTimesPerDay(itemValue)
+                            }
+                            style={styles.picker}
+                          >
+                            <Picker.Item
+                              label="Once a day"
+                              value="Once a day"
+                            />
+                            <Picker.Item
+                              label="2 times a day"
+                              value="2 times a day"
+                            />
+                            <Picker.Item
+                              label="3 times a day"
+                              value="3 times a day"
+                            />
+                            <Picker.Item
+                              label="4 times a day"
+                              value="4 times a day"
+                            />
+                            <Picker.Item
+                              label="5 times a day"
+                              value="5 times a day"
+                            />
+                            <Picker.Item
+                              label="6 times a day"
+                              value="6 times a day"
+                            />
+                            <Picker.Item
+                              label="7 times a day"
+                              value="7 times a day"
+                            />
+                            <Picker.Item
+                              label="8 times a day"
+                              value="8 times a day"
+                            />
+                            <Picker.Item
+                              label="9 times a day"
+                              value="9 times a day"
+                            />
+                            <Picker.Item
+                              label="10 times a day"
+                              value="10 times a day"
+                            />
+                          </Picker>
+                        </Animated.View>
+                      </>
+                    ) : null}
+
+                    {/* Specific days are required when frequency is 'Specific days' */}
+                    {frequency === "Specific days" ? (
+                      <>
+                        <View style={styles.titleWithError}>
+                          <Animated.Text
+                            entering={FadeInUp.duration(500)}
+                            style={styles.label}
+                          >
+                            Specific Days
+                          </Animated.Text>
+                          {specificDays.length === 0 ? (
+                            <Animated.Text
+                              entering={FadeInLeft.duration(500)}
+                              exiting={FadeOutRight.duration(500)}
+                              style={styles.errorMessage}
+                            >
+                              Required!
+                            </Animated.Text>
+                          ) : null}
+                        </View>
+
+                        <DaySelector
+                          selectedDays={specificDays}
+                          setSelectedDays={setSpecificDays}
+                        />
+                      </>
+                    ) : null}
+
+                    {/* Photo Upload Icon */}
+                    <Text style={styles.label}>Photo (optional)</Text>
+                    <View style={styles.photoUploadContainer}>
+                      <TouchableOpacity
+                        onPress={toggleModalVisible}
+                        style={styles.photoUploadButton}
+                      >
+                        <MaterialCommunityIcons
+                          name="camera-outline"
+                          size={20}
+                          color="white"
+                        />
+                        {/* <Text style={styles.photoUploadText}>Upload Photo</Text> */}
+                      </TouchableOpacity>
+                      {photo ? (
+                        <Image
+                          source={{ uri: photo }}
+                          style={styles.photoPreview}
+                        />
+                      ) : (
+                        <Image
+                          source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+                          style={styles.photoPreview}
+                        />
+                      )}
+                    </View>
+
+                    <Text style={styles.label}>Prescriber (optional)</Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={handlePrescriberChange}
+                      value={prescriber}
+                      placeholder="Enter Prescriber here"
+                      maxLength={30}
+                    />
+
+                    <Text style={styles.label}>Notes (optional)</Text>
+                    <TextInput
+                      style={[styles.input, styles.descriptionInput]}
+                      onChangeText={handleNotesChange}
+                      value={notes}
+                      placeholder="Enter Notes here"
+                      multiline
+                    />
+
+                    {addAppointmentModal ? (
+                      <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                          disabled={addMedicationLoading}
+                          onPress={handleAddMedication}
+                          style={[styles.modalActionButton]}
+                        >
+                          <MaterialCommunityIcons
+                            name="plus-circle"
+                            size={20}
+                            color={colors.LIGHT_BLUE}
+                          />
+                          <Text style={styles.actionButtonText}>Add</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                          disabled={deleteLoading || updateLoading}
+                          onPress={handleDelete}
+                          style={[styles.modalActionButton]}
+                        >
+                          <MaterialCommunityIcons
+                            name="delete"
+                            size={20}
+                            color="#FF5C5C"
+                          />
+                          <Text style={styles.actionButtonText}>Delete</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          disabled={deleteLoading || updateLoading}
+                          // onPress={handleUpdate}
+                          style={styles.modalActionButton}
+                        >
+                          <MaterialCommunityIcons
+                            name="update"
+                            size={20}
+                            color="#4A90E2"
+                          />
+                          <Text style={styles.actionButtonText}>Update</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                </TouchableWithoutFeedback>
+              </ScrollView>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <ProfilePhotoModal
+        isVisible={PhotoModalVisible}
+        toggleModalVisible={toggleModalVisible}
+        profile={undefined}
+        setPhoto={setPhoto}
+      />
+    </>
   );
 };
 
@@ -902,6 +959,44 @@ const styles = StyleSheet.create({
   picker: {
     width: "100%",
     height: 40,
+  },
+  photoUploadContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 15,
+    justifyContent: "space-between",
+    backgroundColor: "#f9f9f9",
+    padding: 8,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
+    width: "90%",
+  },
+  photoUploadButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.LIGHT_BLUE,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  photoUploadText: {
+    color: "#fff",
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  photoPreview: {
+    marginLeft: 15,
+    width: 165,
+    height: 100,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
 });
 

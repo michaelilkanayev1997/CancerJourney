@@ -141,7 +141,6 @@ export const MedicationSchema = yup.object().shape({
       ],
       "Invalid times per day"
     ),
-
   specificDays: yup
     .array()
     .of(

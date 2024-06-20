@@ -30,8 +30,13 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
         exiting={FadeOut.duration(500)}
         style={styles.card}
       >
-        {medication.photo && (
+        {medication.photo ? (
           <Image source={{ uri: medication.photo.url }} style={styles.photo} />
+        ) : (
+          <Image
+            source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+            style={styles.photo}
+          />
         )}
         <View style={styles.header}>
           <View style={styles.detailRow}>
@@ -68,7 +73,7 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
             </Text>
           </View>
         )}
-        {medication.specificDays && (
+        {medication.specificDays && medication.specificDays?.length !== 0 && (
           <View style={styles.detailRow}>
             <MaterialCommunityIcons
               name="calendar-check-outline"
