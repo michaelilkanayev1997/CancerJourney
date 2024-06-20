@@ -35,11 +35,12 @@ import Loader from "@ui/Loader";
 import { useScheduleMutations } from "src/hooks/mutations";
 import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
 import DatePicker from "@ui/DatePicker";
-import { ToastNotification } from "@utils/toastConfig";
+import { ToastNotification, toastConfig } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import DaySelector from "./DaySelector";
 import ProfilePhotoModal from "./ProfilePhotoModal";
+import Toast from "react-native-toast-message";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
@@ -488,8 +489,24 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   const handleAddMedication = async () => {
     if (name === "") {
+      ToastNotification({
+        type: "ModalError",
+        message: "Name is required!",
+        values: {
+          position: "bottom",
+          bottomOffset: 40,
+        },
+      });
       return;
     } else if (frequency === "Specific days" && specificDays.length === 0) {
+      ToastNotification({
+        type: "ModalError",
+        message: "Please select specific days!",
+        values: {
+          position: "bottom",
+          bottomOffset: 40,
+        },
+      });
       return;
     }
 
@@ -825,12 +842,13 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
+        <Toast config={toastConfig} />
       </Modal>
 
       <ProfilePhotoModal
         isVisible={PhotoModalVisible}
         toggleModalVisible={toggleModalVisible}
-        profile={undefined}
+        profile={null}
         setPhoto={setPhoto}
       />
     </>
