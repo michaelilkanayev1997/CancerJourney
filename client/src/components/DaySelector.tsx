@@ -1,6 +1,7 @@
 import colors from "@utils/colors";
 import { Dispatch, SetStateAction } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 const daysOfWeek = [
   "Monday",
@@ -29,7 +30,7 @@ const DaySelector: React.FC<Props> = ({ selectedDays, setSelectedDays }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeInUp.duration(500)} style={styles.container}>
       <View style={styles.overlay}>
         {daysOfWeek.map((day) => (
           <TouchableOpacity
@@ -44,7 +45,7 @@ const DaySelector: React.FC<Props> = ({ selectedDays, setSelectedDays }) => {
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

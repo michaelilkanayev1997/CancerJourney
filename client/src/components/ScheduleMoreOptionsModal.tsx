@@ -1,4 +1,11 @@
-import { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   View,
   StyleSheet,
@@ -14,7 +21,12 @@ import {
   Keyboard,
 } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInUp,
+  FadeOutRight,
+} from "react-native-reanimated";
 import { Picker } from "@react-native-picker/picker";
 import { useQueryClient } from "react-query";
 
@@ -382,7 +394,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 }) => {
   const [name, setName] = useState<string>(item?.name || "");
   const [frequency, setFrequency] = useState<string>(item?.frequency || "");
-  const [timesPerDay, setTimesPerDay] = useState<Date | string>(
+  const [timesPerDay, setTimesPerDay] = useState<string>(
     item?.timesPerDay || ""
   );
   const [specificDays, setSpecificDays] = useState<string[]>(
@@ -420,9 +432,19 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   const resetFields = () => {
     handleNameChange("");
+    setFrequency("");
+    setTimesPerDay("");
+    setSpecificDays([]);
     handlePrescriberChange("");
     handleNotesChange("");
   };
+
+  useEffect(() => {
+    if (frequency === "As needed") {
+      setTimesPerDay("");
+      setSpecificDays([]);
+    }
+  }, [frequency]);
 
   // Delete button is pressed
   const handleDelete = () => {
@@ -595,72 +617,97 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                     </Picker>
                   </View>
 
-                  <Text style={styles.label}>Times Per Day</Text>
-                  <View style={styles.pickerContainer}>
-                    <Picker
-                      selectedValue={timesPerDay}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setTimesPerDay(itemValue)
-                      }
-                      style={styles.picker}
-                    >
-                      <Picker.Item label="Once a day" value="Once a day" />
-                      <Picker.Item
-                        label="2 times a day"
-                        value="2 times a day"
-                      />
-                      <Picker.Item
-                        label="3 times a day"
-                        value="3 times a day"
-                      />
-                      <Picker.Item
-                        label="4 times a day"
-                        value="4 times a day"
-                      />
-                      <Picker.Item
-                        label="5 times a day"
-                        value="5 times a day"
-                      />
-                      <Picker.Item
-                        label="6 times a day"
-                        value="6 times a day"
-                      />
-                      <Picker.Item
-                        label="7 times a day"
-                        value="7 times a day"
-                      />
-                      <Picker.Item
-                        label="8 times a day"
-                        value="8 times a day"
-                      />
-                      <Picker.Item
-                        label="9 times a day"
-                        value="9 times a day"
-                      />
-                      <Picker.Item
-                        label="10 times a day"
-                        value="10 times a day"
-                      />
-                    </Picker>
-                  </View>
-
-                  <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Specific Days</Text>
-                    {specificDays.length === 0 ? (
+                  {/* Times per day is required when frequency is 'Every day' or 'Specific days' */}
+                  {frequency === "Every day" ||
+                  frequency === "Specific days" ? (
+                    <>
                       <Animated.Text
-                        entering={FadeInLeft.duration(500)}
-                        exiting={FadeOutRight.duration(500)}
-                        style={styles.errorMessage}
+                        entering={FadeInUp.duration(600)}
+                        style={styles.label}
                       >
-                        Required!
+                        Times Per Day
                       </Animated.Text>
-                    ) : null}
-                  </View>
 
-                  <DaySelector
-                    selectedDays={specificDays}
-                    setSelectedDays={setSpecificDays}
-                  />
+                      <Animated.View
+                        entering={FadeInUp.duration(600)}
+                        style={styles.pickerContainer}
+                      >
+                        <Picker
+                          selectedValue={timesPerDay}
+                          onValueChange={(itemValue, itemIndex) =>
+                            setTimesPerDay(itemValue)
+                          }
+                          style={styles.picker}
+                        >
+                          <Picker.Item label="Once a day" value="Once a day" />
+                          <Picker.Item
+                            label="2 times a day"
+                            value="2 times a day"
+                          />
+                          <Picker.Item
+                            label="3 times a day"
+                            value="3 times a day"
+                          />
+                          <Picker.Item
+                            label="4 times a day"
+                            value="4 times a day"
+                          />
+                          <Picker.Item
+                            label="5 times a day"
+                            value="5 times a day"
+                          />
+                          <Picker.Item
+                            label="6 times a day"
+                            value="6 times a day"
+                          />
+                          <Picker.Item
+                            label="7 times a day"
+                            value="7 times a day"
+                          />
+                          <Picker.Item
+                            label="8 times a day"
+                            value="8 times a day"
+                          />
+                          <Picker.Item
+                            label="9 times a day"
+                            value="9 times a day"
+                          />
+                          <Picker.Item
+                            label="10 times a day"
+                            value="10 times a day"
+                          />
+                        </Picker>
+                      </Animated.View>
+                    </>
+                  ) : null}
+
+                  {/* Specific days are required when frequency is 'Specific days' */}
+                  {frequency === "Specific days" ? (
+                    <>
+                      <View style={styles.titleWithError}>
+                        <Animated.Text
+                          entering={FadeInUp.duration(500)}
+                          style={styles.label}
+                        >
+                          Specific Days
+                        </Animated.Text>
+                        {specificDays.length === 0 ? (
+                          <Animated.Text
+                            entering={FadeInLeft.duration(500)}
+                            exiting={FadeOutRight.duration(500)}
+                            style={styles.errorMessage}
+                          >
+                            Required!
+                          </Animated.Text>
+                        ) : null}
+                      </View>
+
+                      <DaySelector
+                        selectedDays={specificDays}
+                        setSelectedDays={setSpecificDays}
+                      />
+                    </>
+                  ) : null}
 
                   <Text style={styles.label}>Prescriber (optional)</Text>
                   <TextInput
