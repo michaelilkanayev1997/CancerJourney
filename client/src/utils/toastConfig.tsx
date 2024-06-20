@@ -13,11 +13,13 @@ interface ConfigProps {
 interface ToastProps {
   type?: string;
   message: string;
+  values?: object;
 }
 
 export const ToastNotification = ({
   type = "Success",
   message,
+  values = {},
 }: ToastProps) => {
   return Toast.show({
     type,
@@ -26,6 +28,7 @@ export const ToastNotification = ({
     },
     visibilityTime: 3000,
     swipeable: false, // it has some bug where on swipe down it's not hiding the toast
+    ...values, // Spread additional props here
   });
 };
 
@@ -53,6 +56,21 @@ export const toastConfig = {
       <Entypo name="info" size={24} color={colors.INACTIVE_CONTRAST} />
       <View style={styles.messageContainer}>
         <Text style={styles.messageTitle}>Info</Text>
+        <Text style={styles.messageText}>{props.message}</Text>
+      </View>
+    </View>
+  ),
+  ModalError: ({ props }: ConfigProps) => (
+    <View
+      style={[
+        styles.notification,
+        styles.bottomNotification,
+        { backgroundColor: colors.ERROR },
+      ]}
+    >
+      <Entypo name="warning" size={24} color={colors.INACTIVE_CONTRAST} />
+      <View style={styles.messageContainer}>
+        <Text style={styles.messageTitle}>Error</Text>
         <Text style={styles.messageText}>{props.message}</Text>
       </View>
     </View>
@@ -90,5 +108,9 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 13,
     flexWrap: "wrap",
+  },
+  bottomNotification: {
+    width: "85%",
+    zIndex: 100000,
   },
 });
