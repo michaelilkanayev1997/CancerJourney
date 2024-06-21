@@ -12,8 +12,8 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IMedication } from "../../../server/src/models/Schedule";
 import { formatParagraph, formatText } from "@utils/helper";
-import { MedicationMoreOptionsModal } from "./ScheduleMoreOptionsModal";
 import LottieView from "lottie-react-native";
+import MedicationMoreOptionsModal from "./scheduleModal/MedicationMoreOptionsModal";
 
 const MedicationCard: React.FC<{ medication: IMedication }> = ({
   medication,
