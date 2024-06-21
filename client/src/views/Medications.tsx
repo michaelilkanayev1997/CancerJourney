@@ -14,7 +14,7 @@ import Loader from "@ui/Loader";
 import { useFetchSchedules } from "src/hooks/query";
 import MedicationCard from "@components/MedicationCard";
 import { IMedication } from "../../../server/src/models/Schedule";
-import { MedicationMoreOptionsModal } from "@components/ScheduleMoreOptionsModal";
+import MedicationMoreOptionsModal from "@components/scheduleModal/MedicationMoreOptionsModal";
 
 const Medications = () => {
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);

@@ -12,7 +12,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IAppointment } from "./../../../server/src/models/Schedule";
 import { formatParagraph, formatText } from "@utils/helper";
-import { AppointmentMoreOptionsModal } from "./ScheduleMoreOptionsModal";
+import AppointmentMoreOptionsModal from "./scheduleModal/AppointmentMoreOptionsModal";
 
 interface AppointmentCardProps {
   appointment: IAppointment;
