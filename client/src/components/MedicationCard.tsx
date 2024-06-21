@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -10,20 +11,25 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IMedication } from "../../../server/src/models/Schedule";
-import { useCallback, useState } from "react";
 import { formatParagraph, formatText } from "@utils/helper";
 import { MedicationMoreOptionsModal } from "./ScheduleMoreOptionsModal";
+import LottieView from "lottie-react-native";
 
 const MedicationCard: React.FC<{ medication: IMedication }> = ({
   medication,
 }) => {
   const [isOptionModalVisible, setOptionModalVisible] =
     useState<boolean>(false);
+  const [isImageLoading, setImageIsLoading] = useState<boolean>(true);
 
   const handleMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(true);
     Vibration.vibrate(60);
   }, []);
+
+  const imageSource = medication.photo?.url
+    ? { uri: medication.photo.url }
+    : require("@assets/Schedule/medicationPhotoPreview.jpg");
 
   return (
     <>
@@ -36,17 +42,37 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
           exiting={FadeOut.duration(250)}
           style={styles.card}
         >
-          {medication.photo ? (
-            <Image
-              source={{ uri: medication.photo.url }}
-              style={styles.photo}
-            />
-          ) : (
-            <Image
-              source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
-              style={styles.photo}
-            />
-          )}
+          <View style={styles.imageContainer}>
+            {isImageLoading ? (
+              <View style={styles.photo}>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut.duration(500)}
+                >
+                  <LottieView
+                    source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                    autoPlay
+                    loop
+                    resizeMode="cover"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignSelf: "center",
+                      justifyContent: "center",
+                    }}
+                  />
+                </Animated.View>
+                <Image
+                  source={imageSource}
+                  onLoad={() => setImageIsLoading(false)} // Image loaded successfully
+                  onError={() => setImageIsLoading(false)} // Image failed to load
+                />
+              </View>
+            ) : (
+              <Image source={imageSource} style={styles.photo} />
+            )}
+          </View>
+
           <View style={styles.header}>
             <View style={styles.detailRow}>
               <MaterialCommunityIcons name="pill" size={20} color="black" />
@@ -151,9 +177,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   photo: {
-    width: "85%",
+    width: "100%",
     height: 120,
-    borderRadius: 10,
+    borderRadius: 8,
     marginBottom: 10,
     alignSelf: "center",
   },
@@ -190,6 +216,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "gray",
     marginLeft: 5,
+  },
+  imageContainer: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "column",
+    overflow: "hidden",
+    width: "85%",
+    height: 120,
+    marginBottom: 10,
+    alignSelf: "center",
   },
 });
 

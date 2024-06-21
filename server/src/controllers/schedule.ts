@@ -78,7 +78,7 @@ export const addMedication: RequestHandler = async (req, res) => {
       date,
     };
 
-    // Check if req.file exists
+    // Check if photo exists
     if (req.file) {
       // Set medication photo
       newMedication.photo = { url: req.file.location, publicId: req.file.key };
@@ -173,7 +173,7 @@ export const scheduleRemove: RequestHandler = async (req, res) => {
       scheduleName === "medications" &&
       scheduleToRemove.photo
     ) {
-      // Delete the file from AWS S3
+      // Delete the photo from AWS S3
       await deleteS3Object(scheduleToRemove.photo.publicId);
     }
 
@@ -197,7 +197,7 @@ export const updateSchedule: RequestHandler = async (req, res) => {
 
   let updateResult;
   if (scheduleName === "appointments") {
-    // Accessing the request body
+    // Accessing the request body of appointment
     const { title, location, date, reminder, notes } = req.body;
 
     updateResult = await Schedule.findOneAndUpdate(
@@ -221,7 +221,7 @@ export const updateSchedule: RequestHandler = async (req, res) => {
       }
     );
   } else if (scheduleName === "medications") {
-    // Accessing the request body
+    // Accessing the request body of medication
     const { name, frequency, timesPerDay, specificDays, prescriber, notes } =
       req.body;
 

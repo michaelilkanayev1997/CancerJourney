@@ -13,7 +13,6 @@ import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
 import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
-
 import { IAppointment } from "../../../server/src/models/Schedule";
 import { AppointmentMoreOptionsModal } from "@components/ScheduleMoreOptionsModal";
 

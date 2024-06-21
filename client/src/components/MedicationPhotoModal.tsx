@@ -5,7 +5,6 @@ import * as ImagePicker from "expo-image-picker";
 import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
-import { updateProfile } from "src/store/auth";
 import ImageUpload from "./ImageUpload";
 
 interface Props {
@@ -43,13 +42,6 @@ const MedicationPhotoModal: FC<Props> = ({
       setIsLoading(true);
 
       const file = result.assets[0];
-
-      //   const formData = new FormData();
-      //   formData.append("avatar", {
-      //     uri: file.uri,
-      //     type: "image/jpeg",
-      //     name: "profile",
-      //   } as any);
 
       setPhoto(file);
 
@@ -94,13 +86,6 @@ const MedicationPhotoModal: FC<Props> = ({
       setIsLoading(true);
 
       const file = result.assets[0];
-
-      //   const formData = new FormData();
-      //   formData.append("avatar", {
-      //     uri: file.uri,
-      //     type: file.mimeType,
-      //     name: "profile",
-      //   } as any);
 
       setPhoto(file);
 
