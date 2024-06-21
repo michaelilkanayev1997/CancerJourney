@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Vibration,
+  Modal,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
@@ -21,11 +22,17 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
   const [isOptionModalVisible, setOptionModalVisible] =
     useState<boolean>(false);
   const [isImageLoading, setImageIsLoading] = useState<boolean>(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(true);
     Vibration.vibrate(60);
   }, []);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+    Vibration.vibrate(50);
+  };
 
   const imageSource = medication.photo?.url
     ? { uri: medication.photo.url }
@@ -42,36 +49,38 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
           exiting={FadeOut.duration(250)}
           style={styles.card}
         >
-          <View style={styles.imageContainer}>
-            {isImageLoading ? (
-              <View style={styles.photo}>
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut.duration(500)}
-                >
-                  <LottieView
-                    source={require("@assets/Animations/ImageLoadingAnimation.json")}
-                    autoPlay
-                    loop
-                    resizeMode="cover"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      alignSelf: "center",
-                      justifyContent: "center",
-                    }}
+          <TouchableOpacity activeOpacity={0.7} onPress={toggleModal}>
+            <View style={styles.imageContainer}>
+              {isImageLoading ? (
+                <View style={styles.photo}>
+                  <Animated.View
+                    entering={FadeIn}
+                    exiting={FadeOut.duration(500)}
+                  >
+                    <LottieView
+                      source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                      autoPlay
+                      loop
+                      resizeMode="cover"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                  </Animated.View>
+                  <Image
+                    source={imageSource}
+                    onLoad={() => setImageIsLoading(false)} // Image loaded successfully
+                    onError={() => setImageIsLoading(false)} // Image failed to load
                   />
-                </Animated.View>
-                <Image
-                  source={imageSource}
-                  onLoad={() => setImageIsLoading(false)} // Image loaded successfully
-                  onError={() => setImageIsLoading(false)} // Image failed to load
-                />
-              </View>
-            ) : (
-              <Image source={imageSource} style={styles.photo} />
-            )}
-          </View>
+                </View>
+              ) : (
+                <Image source={imageSource} style={styles.photo} />
+              )}
+            </View>
+          </TouchableOpacity>
 
           <View style={styles.header}>
             <View style={styles.detailRow}>
@@ -160,6 +169,27 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
         setOptionModalVisible={setOptionModalVisible}
         addMedicationModal={false}
       />
+
+      {/* Modal for displaying the image fullscreen */}
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        onRequestClose={toggleModal} // Back button on Android
+      >
+        <View style={styles.modalView}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={toggleModal}
+          >
+            <MaterialCommunityIcons name="close" size={30} color="white" />
+          </TouchableOpacity>
+          <Image
+            source={imageSource}
+            style={styles.modalImage}
+            resizeMode="contain"
+          />
+        </View>
+      </Modal>
     </>
   );
 };
@@ -231,6 +261,22 @@ const styles = StyleSheet.create({
     height: 120,
     marginBottom: 10,
     alignSelf: "center",
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalImage: {
+    width: "100%",
+    height: "80%",
+  },
+  modalCloseButton: {
+    position: "absolute",
+    top: 90,
+    right: 10,
+    zIndex: 1,
   },
 });
 
