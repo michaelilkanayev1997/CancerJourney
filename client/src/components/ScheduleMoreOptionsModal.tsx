@@ -130,16 +130,16 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
 
   const handleAddAppointment = async () => {
     if (title === "" || location === "" || date.toString() === "") {
+      ToastNotification({
+        type: "ModalError",
+        message: "Please enter all required fields!",
+      });
       return;
     }
     if (location.length < 3) {
       ToastNotification({
         type: "ModalError",
-        message: "Location has to be at least 3 characters",
-        values: {
-          position: "bottom",
-          bottomOffset: 40,
-        },
+        message: "Location has to be at least 3 characters!",
       });
       return;
     }
@@ -160,11 +160,6 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
       await client.post("/schedule/add-appointment", newAppointment);
 
       queryClient.invalidateQueries(["schedules", "appointments"]);
-
-      ToastNotification({
-        type: "Success",
-        message: "Appointment uploaded successfully!",
-      });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -175,6 +170,10 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
       setAddAppointmentLoading(false);
       handleCloseMoreOptionsPress();
       resetFields();
+
+      ToastNotification({
+        message: "Appointment uploaded successfully!",
+      });
     }
   };
 

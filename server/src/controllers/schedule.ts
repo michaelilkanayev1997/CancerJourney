@@ -3,6 +3,7 @@ import { RequestHandler } from "express";
 import User from "#/models/user";
 import { Schedule } from "#/models/Schedule";
 import { MedicationInput } from "#/@types/schedule";
+import { deleteS3Object } from "#/middleware/fileUpload";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {
@@ -155,19 +156,30 @@ export const scheduleRemove: RequestHandler = async (req, res) => {
 
     // Handle the case where no document is found
     if (!scheduleDocument) {
-      res.status(400).json({ error: "File not found" });
+      res.status(400).json({ error: "schedule not found" });
       return;
     }
 
     // schedule is an array and we want the first item
     const scheduleToRemove = scheduleDocument[scheduleName][0];
+
     const dbRemove = await Schedule.updateOne(
       { _id: scheduleDocument._id }, // Use the parent document's _id to identify it
       { $pull: { [scheduleName]: { _id: scheduleToRemove._id } } } // Pull operation to remove the specific file
     );
 
+    if (
+      dbRemove.acknowledged &&
+      scheduleName === "medications" &&
+      scheduleToRemove.photo
+    ) {
+      // Delete the file from AWS S3
+      await deleteS3Object(scheduleToRemove.photo.publicId);
+    }
+
     res.json({ success: true });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       error: "An error occurred while removing the schedule",
     });
