@@ -73,7 +73,7 @@ const Medications = () => {
         item={undefined}
         isOptionModalVisible={isAddModalVisible}
         setOptionModalVisible={setAddModalVisible}
-        addAppointmentModal={true}
+        addMedicationModal={true}
       />
     </>
   );

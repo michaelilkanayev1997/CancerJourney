@@ -22,6 +22,7 @@ interface Props {
   onCameraPress: () => Promise<void>;
   onGalleryPress: () => Promise<void>;
   onRemovePress: () => Promise<void>;
+  title?: string;
 }
 
 const ImageUpload: FC<Props> = ({
@@ -31,6 +32,7 @@ const ImageUpload: FC<Props> = ({
   onCameraPress,
   onGalleryPress,
   onRemovePress,
+  title = "Profile Photo",
 }) => {
   const screenWidth = Dimensions.get("window").width;
 
@@ -45,7 +47,7 @@ const ImageUpload: FC<Props> = ({
         <View style={styles.centeredView}>
           <TouchableWithoutFeedback>
             <View style={[styles.modalView, { width: screenWidth * 0.9 }]}>
-              <Text style={styles.modalTitle}>Profile Photo</Text>
+              <Text style={styles.modalTitle}>{title}</Text>
 
               {isLoading ? (
                 <Loader loaderStyle={{ height: 70 }} />

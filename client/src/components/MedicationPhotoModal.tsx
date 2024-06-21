@@ -156,6 +156,7 @@ const MedicationPhotoModal: FC<Props> = ({
       onCameraPress={onCameraPress}
       onGalleryPress={onGalleryPress}
       onRemovePress={onRemovePress}
+      title={"Medication Photo"}
     />
   );
 };

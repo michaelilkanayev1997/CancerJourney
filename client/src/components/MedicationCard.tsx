@@ -11,6 +11,8 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { IMedication } from "../../../server/src/models/Schedule";
 import { useCallback, useState } from "react";
+import { formatParagraph, formatText } from "@utils/helper";
+import { MedicationMoreOptionsModal } from "./ScheduleMoreOptionsModal";
 
 const MedicationCard: React.FC<{ medication: IMedication }> = ({
   medication,
@@ -24,93 +26,115 @@ const MedicationCard: React.FC<{ medication: IMedication }> = ({
   }, []);
 
   return (
-    <TouchableOpacity onLongPress={handleMoreOptionsPress} activeOpacity={0.9}>
-      <Animated.View
-        entering={FadeIn}
-        exiting={FadeOut.duration(500)}
-        style={styles.card}
+    <>
+      <TouchableOpacity
+        onLongPress={handleMoreOptionsPress}
+        activeOpacity={0.9}
       >
-        {medication.photo ? (
-          <Image source={{ uri: medication.photo.url }} style={styles.photo} />
-        ) : (
-          <Image
-            source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
-            style={styles.photo}
-          />
-        )}
-        <View style={styles.header}>
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="pill" size={20} color="black" />
-            <Text style={styles.name}>{medication.name}</Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.moreOption}
-            onPress={() => {
-              console.log("more");
-            }}
-          >
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="black"
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut.duration(250)}
+          style={styles.card}
+        >
+          {medication.photo ? (
+            <Image
+              source={{ uri: medication.photo.url }}
+              style={styles.photo}
             />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.detailRow}>
-          <MaterialCommunityIcons name="calendar" size={16} color="gray" />
-          <Text style={styles.frequency}>{medication.frequency}</Text>
-        </View>
-        {medication.timesPerDay && (
+          ) : (
+            <Image
+              source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+              style={styles.photo}
+            />
+          )}
+          <View style={styles.header}>
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="pill" size={20} color="black" />
+              <Text style={styles.name}>{formatText(medication.name, 22)}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.moreOption}
+              onPress={handleMoreOptionsPress}
+            >
+              <MaterialCommunityIcons
+                name="dots-vertical"
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.detailRow}>
+            <MaterialCommunityIcons name="calendar" size={16} color="gray" />
+            <Text style={styles.frequency}>
+              Frequency: {medication.frequency}
+            </Text>
+          </View>
+          {medication.timesPerDay && (
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="clock-outline"
+                size={16}
+                color="gray"
+              />
+              <Text style={styles.detail}>
+                Times per day: {medication.timesPerDay}
+              </Text>
+            </View>
+          )}
+          {medication.specificDays && medication.specificDays?.length !== 0 && (
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="calendar-check-outline"
+                size={16}
+                color="gray"
+              />
+              <Text style={styles.detail}>
+                Specific days: {medication.specificDays.join(", ")}
+              </Text>
+            </View>
+          )}
+          {medication.prescriber && (
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons name="doctor" size={16} color="gray" />
+              <Text style={styles.detail}>
+                Prescriber: {medication.prescriber}
+              </Text>
+            </View>
+          )}
+          {medication.notes && (
+            <View style={styles.detailRow}>
+              <MaterialCommunityIcons
+                name="note-outline"
+                size={16}
+                color="gray"
+              />
+              <Text style={styles.detail}>
+                Notes: {formatParagraph(medication.notes, 33, 90)}
+              </Text>
+            </View>
+          )}
           <View style={styles.detailRow}>
             <MaterialCommunityIcons
               name="clock-outline"
               size={16}
               color="gray"
             />
-            <Text style={styles.detail}>
-              Times per day: {medication.timesPerDay}
+            <Text style={styles.date}>
+              Upload Date: {new Date(medication.date).toDateString()}
             </Text>
           </View>
-        )}
-        {medication.specificDays && medication.specificDays?.length !== 0 && (
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons
-              name="calendar-check-outline"
-              size={16}
-              color="gray"
-            />
-            <Text style={styles.detail}>
-              Specific days: {medication.specificDays.join(", ")}
-            </Text>
-          </View>
-        )}
-        {medication.prescriber && (
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons name="doctor" size={16} color="gray" />
-            <Text style={styles.detail}>
-              Prescriber: {medication.prescriber}
-            </Text>
-          </View>
-        )}
-        {medication.notes && (
-          <View style={styles.detailRow}>
-            <MaterialCommunityIcons
-              name="note-outline"
-              size={16}
-              color="gray"
-            />
-            <Text style={styles.detail}>Notes: {medication.notes}</Text>
-          </View>
-        )}
-        <View style={styles.detailRow}>
-          <MaterialCommunityIcons name="clock-outline" size={16} color="gray" />
-          <Text style={styles.date}>
-            Upload Date: {new Date(medication.date).toDateString()}
-          </Text>
-        </View>
-      </Animated.View>
-    </TouchableOpacity>
+        </Animated.View>
+      </TouchableOpacity>
+
+      {/* Custom Modal for More Options */}
+      <MedicationMoreOptionsModal
+        item={medication}
+        isOptionModalVisible={isOptionModalVisible}
+        setOptionModalVisible={setOptionModalVisible}
+        addMedicationModal={false}
+      />
+    </>
   );
 };
 

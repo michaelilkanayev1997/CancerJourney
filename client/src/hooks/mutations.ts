@@ -4,7 +4,7 @@ import { ImageType } from "@components/ImageCard";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
-import { IAppointment } from "../../../server/src/models/Schedule";
+import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
 
 interface DeleteFileParams {
   fileId: string;
@@ -124,28 +124,43 @@ export const useFileMutations = () => {
   };
 };
 
-interface DeleteAppointmentParams {
+interface DeleteScheduleParams {
   scheduleId: string;
   scheduleName: string;
   handleCloseMoreOptionsPress: () => void;
 }
 
-interface UpdateAppointmentParams {
+interface UpdateScheduleParams {
   scheduleId: string;
   scheduleName: string;
-  title: string;
-  location: string;
-  date: Date;
+  title?: string;
+  location?: string;
+  date?: Date;
   notes?: string;
-  reminder: string;
+  reminder?: string;
+  name?: string;
+  frequency?: string;
+  timesPerDay?: string;
+  specificDays?: string[];
+  prescriber?: string;
   handleCloseMoreOptionsPress: () => void;
 }
+
+type ScheduleItem = IAppointment | IMedication;
+
+const isAppointment = (item: ScheduleItem): item is IAppointment => {
+  return (item as IAppointment).title !== undefined;
+};
+
+const isMedication = (item: ScheduleItem): item is IMedication => {
+  return (item as IMedication).name !== undefined;
+};
 
 export const useScheduleMutations = () => {
   const queryClient = useQueryClient();
 
   const { isLoading: deleteLoading, mutate: deleteScheduleMutation } =
-    useMutation<void, Error, DeleteAppointmentParams, unknown>(
+    useMutation<void, Error, DeleteScheduleParams, unknown>(
       async ({ scheduleId, scheduleName }) => {
         // Construct the URL with query parameters
         const url = `/schedule/schedule-delete?scheduleId=${scheduleId}&scheduleName=${scheduleName}`;
@@ -175,10 +190,6 @@ export const useScheduleMutations = () => {
               );
             }
           );
-
-          ToastNotification({
-            message: `${scheduleName.slice(0, -1)} deleted successfully`,
-          });
         },
         onError: (error) => {
           const errorMessage = catchAsyncError(error);
@@ -189,12 +200,19 @@ export const useScheduleMutations = () => {
         },
         onSettled: (data, error, variables) => {
           variables?.handleCloseMoreOptionsPress();
+
+          ToastNotification({
+            message: `${variables?.scheduleName.slice(
+              0,
+              -1
+            )} deleted successfully`,
+          });
         },
       }
     );
 
   const { isLoading: updateLoading, mutate: updateScheduleMutation } =
-    useMutation<void, Error, UpdateAppointmentParams, unknown>(
+    useMutation<void, Error, UpdateScheduleParams, unknown>(
       async ({
         scheduleId,
         scheduleName,
@@ -203,6 +221,11 @@ export const useScheduleMutations = () => {
         date,
         notes,
         reminder,
+        name,
+        frequency,
+        timesPerDay,
+        specificDays,
+        prescriber,
       }) => {
         const client = await getClient();
 
@@ -211,7 +234,20 @@ export const useScheduleMutations = () => {
           -1
         )}-update?scheduleId=${scheduleId}&scheduleName=${scheduleName}`;
 
-        return client.patch(url, { title, location, date, notes, reminder });
+        const updateData = {
+          title,
+          location,
+          date,
+          notes,
+          reminder,
+          name,
+          frequency,
+          timesPerDay,
+          specificDays,
+          prescriber,
+        };
+
+        return client.patch(url, updateData);
       },
       {
         onSuccess: (data, variables) => {
@@ -223,32 +259,45 @@ export const useScheduleMutations = () => {
             date,
             notes,
             reminder,
+            name,
+            frequency,
+            timesPerDay,
+            specificDays,
+            prescriber,
           } = variables;
 
           // Optimistically update the local cache
-          queryClient.setQueryData<IAppointment[]>(
+          queryClient.setQueryData<ScheduleItem[]>(
             ["schedules", scheduleName],
             (oldData) => {
               if (!oldData) return [];
               return oldData.map((schedule) => {
                 if (schedule._id.toString() === scheduleId) {
-                  return {
-                    ...schedule,
-                    title,
-                    location,
-                    date,
-                    notes,
-                    reminder,
-                  } as IAppointment;
+                  if (isAppointment(schedule)) {
+                    return {
+                      ...schedule,
+                      title: title,
+                      location: location,
+                      date: date,
+                      notes: notes,
+                      reminder: reminder,
+                    } as IAppointment;
+                  } else if (isMedication(schedule)) {
+                    return {
+                      ...schedule,
+                      name: name,
+                      frequency: frequency,
+                      timesPerDay: timesPerDay,
+                      specificDays: specificDays,
+                      prescriber: prescriber,
+                      notes: notes,
+                    } as IMedication;
+                  }
                 }
                 return schedule;
               });
             }
           );
-
-          ToastNotification({
-            message: `${scheduleName.slice(0, -1)} updated successfully`,
-          });
         },
         onError: (error) => {
           const errorMessage = catchAsyncError(error);
@@ -259,6 +308,13 @@ export const useScheduleMutations = () => {
         },
         onSettled: (data, error, variables) => {
           variables?.handleCloseMoreOptionsPress();
+
+          ToastNotification({
+            message: `${variables?.scheduleName.slice(
+              0,
+              -1
+            )} updated successfully`,
+          });
         },
       }
     );
