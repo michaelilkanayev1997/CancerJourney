@@ -39,7 +39,6 @@ import { ToastNotification, toastConfig } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import DaySelector from "./DaySelector";
-import ProfilePhotoModal from "./ProfilePhotoModal";
 import Toast from "react-native-toast-message";
 import MedicationPhotoModal from "./MedicationPhotoModal";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -399,14 +398,14 @@ interface MedicationMoreOptionsProps {
   item?: IMedication;
   isOptionModalVisible: boolean;
   setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
-  addAppointmentModal: boolean;
+  addMedicationModal: boolean;
 }
 
 const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   item,
   isOptionModalVisible,
   setOptionModalVisible,
-  addAppointmentModal = false,
+  addMedicationModal = false,
 }) => {
   const [name, setName] = useState<string>(item?.name || "");
   const [frequency, setFrequency] = useState<string>(
@@ -484,23 +483,35 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     });
   };
 
-  //   // Update button is pressed
-  //   const handleUpdate = async () => {
-  //     if (title === "" || location === "" || date.toString() === "") {
-  //       return;
-  //     } else if (!item) return;
+  // Update button is pressed
+  const handleUpdate = async () => {
+    if (name === "") {
+      ToastNotification({
+        type: "ModalError",
+        message: "Name is required!",
+      });
+      return;
+    } else if (frequency === "Specific days" && specificDays.length === 0) {
+      ToastNotification({
+        type: "ModalError",
+        message: "Please select specific days!",
+      });
+      return;
+    } else if (!item) return;
 
-  //     updateScheduleMutation({
-  //       scheduleId: item?._id.toString(),
-  //       scheduleName: "medications",
-  //       title,
-  //       location,
-  //       date: new Date(date),
-  //       notes,
-  //       reminder,
-  //       handleCloseMoreOptionsPress,
-  //     });
-  //   };
+    updateScheduleMutation({
+      scheduleId: item?._id.toString(),
+      scheduleName: "medications",
+      name,
+      frequency,
+      timesPerDay,
+      specificDays,
+      prescriber,
+      notes,
+      date: new Date(), // To avoid Validation errors
+      handleCloseMoreOptionsPress,
+    });
+  };
 
   const handleAddMedication = async () => {
     if (name === "") {
@@ -550,11 +561,6 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       }
 
       queryClient.invalidateQueries(["schedules", "medications"]);
-
-      ToastNotification({
-        type: "Success",
-        message: "Medication uploaded successfully!",
-      });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -565,6 +571,9 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       setAddMedicationLoading(false);
       handleCloseMoreOptionsPress();
       resetFields();
+      ToastNotification({
+        message: "Medication uploaded successfully!",
+      });
     }
   };
 
@@ -770,31 +779,36 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                     ) : null}
 
                     {/* Photo Upload Icon */}
-                    <Text style={styles.label}>Photo (optional)</Text>
-                    <View style={styles.photoUploadContainer}>
-                      <TouchableOpacity
-                        onPress={toggleModalVisible}
-                        style={styles.photoUploadButton}
-                      >
-                        <MaterialCommunityIcons
-                          name="camera-outline"
-                          size={20}
-                          color="white"
-                        />
-                        {/* <Text style={styles.photoUploadText}>Upload Photo</Text> */}
-                      </TouchableOpacity>
-                      {photo ? (
-                        <Image
-                          source={{ uri: photo.uri }}
-                          style={styles.photoPreview}
-                        />
-                      ) : (
-                        <Image
-                          source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
-                          style={styles.photoPreview}
-                        />
-                      )}
-                    </View>
+
+                    {addMedicationModal ? (
+                      <>
+                        <Text style={styles.label}>Photo (optional)</Text>
+                        <View style={styles.photoUploadContainer}>
+                          <TouchableOpacity
+                            onPress={toggleModalVisible}
+                            style={styles.photoUploadButton}
+                          >
+                            <MaterialCommunityIcons
+                              name="camera-outline"
+                              size={20}
+                              color="white"
+                            />
+                            {/* <Text style={styles.photoUploadText}>Upload Photo</Text> */}
+                          </TouchableOpacity>
+                          {photo ? (
+                            <Image
+                              source={{ uri: photo.uri }}
+                              style={styles.photoPreview}
+                            />
+                          ) : (
+                            <Image
+                              source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+                              style={styles.photoPreview}
+                            />
+                          )}
+                        </View>
+                      </>
+                    ) : null}
 
                     <Text style={styles.label}>Prescriber (optional)</Text>
                     <TextInput
@@ -814,7 +828,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                       multiline
                     />
 
-                    {addAppointmentModal ? (
+                    {addMedicationModal ? (
                       <View style={styles.buttonContainer}>
                         <TouchableOpacity
                           disabled={addMedicationLoading}
@@ -845,7 +859,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                         </TouchableOpacity>
                         <TouchableOpacity
                           disabled={deleteLoading || updateLoading}
-                          // onPress={handleUpdate}
+                          onPress={handleUpdate}
                           style={styles.modalActionButton}
                         >
                           <MaterialCommunityIcons

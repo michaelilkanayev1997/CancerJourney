@@ -56,12 +56,14 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
           </View>
           <View style={styles.detailRow}>
             <MaterialCommunityIcons name="map-marker" size={16} color="gray" />
-            <Text style={styles.location}>{appointment.location}</Text>
+            <Text style={styles.location}>
+              Location: {appointment.location}
+            </Text>
           </View>
           <View style={styles.detailRow}>
             <MaterialCommunityIcons name="calendar" size={16} color="gray" />
             <Text style={styles.dateText}>
-              {new Date(appointment.date).toDateString()}
+              Date: {new Date(appointment.date).toDateString()}
             </Text>
           </View>
           {appointment.notes && (
@@ -72,14 +74,16 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
                 color="gray"
               />
               <Text style={styles.notes}>
-                {formatParagraph(appointment.notes, 33, 90)}
+                Notes: {formatParagraph(appointment.notes, 33, 90)}
               </Text>
             </View>
           )}
           {appointment.reminder && (
             <View style={styles.reminderContainer}>
               <MaterialIcons name="notifications" size={16} color="gray" />
-              <Text style={styles.reminderText}>{appointment.reminder}</Text>
+              <Text style={styles.reminderText}>
+                Reminder: {appointment.reminder}
+              </Text>
             </View>
           )}
         </Animated.View>

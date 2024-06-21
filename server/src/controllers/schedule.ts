@@ -210,15 +210,8 @@ export const updateSchedule: RequestHandler = async (req, res) => {
     );
   } else if (scheduleName === "medications") {
     // Accessing the request body
-    const {
-      name,
-      frequency,
-      timesPerDay,
-      specificDays,
-      prescriber,
-      notes,
-      date,
-    } = req.body;
+    const { name, frequency, timesPerDay, specificDays, prescriber, notes } =
+      req.body;
 
     updateResult = await Schedule.findOneAndUpdate(
       {
@@ -234,7 +227,6 @@ export const updateSchedule: RequestHandler = async (req, res) => {
           [`${scheduleName}.$.specificDays`]: specificDays,
           [`${scheduleName}.$.prescriber`]: prescriber,
           [`${scheduleName}.$.notes`]: notes,
-          [`${scheduleName}.$.date`]: date,
         },
       },
       {
