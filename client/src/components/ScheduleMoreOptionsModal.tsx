@@ -463,6 +463,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     setSpecificDays([]);
     handlePrescriberChange("");
     handleNotesChange("");
+    setPhoto(null);
   };
 
   useEffect(() => {
@@ -533,8 +534,8 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       if (photo) {
         formData.append("file", {
           uri: photo.uri,
-          type: photo.type,
-          name: "image",
+          type: photo.mimeType,
+          name: "image.jpg",
         } as any);
       }
 
@@ -543,21 +544,10 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       });
 
       const { data } = await client.post("/schedule/add-medication", formData);
-      console.log(data);
-      if (!data?.success) {
-        throw new Error("Failed to upload file");
-      }
 
-      // // New Medication Object
-      // const newMedication = {
-      //   name,
-      //   frequency,
-      //   timesPerDay,
-      //   specificDays,
-      //   prescriber,
-      //   notes,
-      //   date: new Date(),
-      // };
+      if (!data?.success) {
+        throw new Error("Failed to add the medication");
+      }
 
       queryClient.invalidateQueries(["schedules", "medications"]);
 
