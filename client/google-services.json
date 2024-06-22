@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "133852694129",
+    "project_id": "cancerjourney-231cd",
+    "storage_bucket": "cancerjourney-231cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133852694129:android:3964788ce70f9d85fdbdd0",
+        "android_client_info": {
+          "package_name": "com.michaelilkanayev.client"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7KfNx97n1uVEi4uFcYzuamclA6TBCgS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
