@@ -11,6 +11,7 @@ import store from "./src/store";
 import AppNavigator from "src/navigation";
 import AppContainer from "@components/AppContainer";
 import PreloadIcons from "@components/PreloadIcons";
+import { usePushNotifications } from "src/hooks/usePushNotifications";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -22,6 +23,11 @@ const queryClient = new QueryClient();
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const [splashAnimationFinished, setSplashAnimationFinished] = useState(false);
+
+  const { expoPushToken, notification } = usePushNotifications();
+
+  console.log("notification", JSON.stringify(notification, undefined, 2));
+  console.log("expoPushToken", expoPushToken?.data);
 
   useEffect(() => {
     async function prepare() {
