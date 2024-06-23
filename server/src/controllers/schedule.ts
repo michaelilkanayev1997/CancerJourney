@@ -4,6 +4,7 @@ import User from "#/models/user";
 import { Schedule } from "#/models/Schedule";
 import { MedicationInput } from "#/@types/schedule";
 import { deleteS3Object } from "#/middleware/fileUpload";
+import { appointmentNotification } from "#/utils/notification";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {
@@ -20,6 +21,16 @@ export const addAppointment: RequestHandler = async (req, res) => {
       reminder,
       notes,
     };
+
+    try {
+      await appointmentNotification(newAppointment, user);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(500).json({
+          error: `${error.message}`,
+        });
+      }
+    }
 
     // Update or insert document with the new appointment
     await Schedule.updateOne(
