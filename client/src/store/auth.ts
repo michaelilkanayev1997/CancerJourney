@@ -18,6 +18,8 @@ export interface UserProfile {
   gender: string;
   birthDate: Date | null;
   country: { cca2: string; name: string };
+
+  expoPushToken: string;
 }
 
 interface AuthState {

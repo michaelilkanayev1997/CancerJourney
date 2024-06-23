@@ -419,3 +419,28 @@ export const updateProfile: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const updatePushToken: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    // Accessing the request body
+    const { newToken } = req.body;
+
+    if (typeof newToken !== "string") {
+      return res.status(400).json({ error: "newToken must be a string" });
+    }
+
+    await User.findByIdAndUpdate(
+      user.id,
+      { expoPushToken: newToken },
+      { upsert: true }
+    );
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while updating the user PushToken",
+    });
+  }
+};

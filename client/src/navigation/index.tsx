@@ -1,5 +1,5 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -23,6 +23,7 @@ import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
 import { toastConfig } from "@utils/toastConfig";
 import DrawerNavigator from "./DrawerNavigator";
+import { usePushNotifications } from "src/hooks/usePushNotifications";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;
@@ -38,7 +39,9 @@ const AppTheme = {
 };
 
 const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
-  const { loggedIn, busy, viewedOnBoarding } = useSelector(getAuthState);
+  const { loggedIn, busy, viewedOnBoarding, profile } =
+    useSelector(getAuthState);
+
   const dispatch = useDispatch();
 
   //clearAsyncStorage();
@@ -72,6 +75,19 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
 
     fetchAuthInfo();
   }, []);
+
+  // Register for push notifications and update token if necessary
+  const { expoPushToken, notification } = usePushNotifications(
+    profile?.expoPushToken || "",
+    profile?.id || null
+  );
+
+  useEffect(() => {
+    if (profile) {
+      console.log("notification", JSON.stringify(notification, undefined, 2));
+      console.log("expoPushToken", expoPushToken?.data);
+    }
+  }, [profile, notification, expoPushToken]);
 
   return (
     <>
