@@ -1,9 +1,10 @@
-import { FC } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+
 import { convertDateFormat } from "@utils/helper";
 
 interface Props {
@@ -23,12 +24,31 @@ const DatePicker: FC<Props> = ({
   appointmentDate = false,
   style,
 }) => {
+  const [mode, setMode] = useState<"date" | "time">("date");
+  const [tempDate, setTempDate] = useState<Date | undefined>(undefined);
+
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === "dismissed") {
       setShowDateModal(false);
       return;
     }
-    if (selectedDate) {
+    if (selectedDate && appointmentDate) {
+      if (mode === "date") {
+        setTempDate(selectedDate);
+        setMode("time");
+      } else {
+        const combinedDate = new Date(
+          (tempDate || selectedDate).setHours(
+            selectedDate.getHours(),
+            selectedDate.getMinutes()
+          )
+        );
+
+        setShowDateModal(false);
+        setMode("date");
+        setDate(combinedDate);
+      }
+    } else if (selectedDate && appointmentDate) {
       setShowDateModal(Platform.OS === "ios");
       setDate(selectedDate);
     }
@@ -39,6 +59,15 @@ const DatePicker: FC<Props> = ({
   const displayDate = !isNaN(parsedDate.getTime())
     ? convertDateFormat(date)
     : date;
+
+  //toLocaleString Options
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
   return (
     <>
@@ -53,7 +82,9 @@ const DatePicker: FC<Props> = ({
         <Text
           style={[styles.buttonText, !appointmentDate && { marginLeft: 10 }]}
         >
-          {displayDate?.toString()}
+          {appointmentDate
+            ? date.toLocaleString(undefined, options)
+            : displayDate?.toString()}
         </Text>
         <MaterialIcons
           name="arrow-drop-down"
@@ -65,7 +96,7 @@ const DatePicker: FC<Props> = ({
       {showDateModal && (
         <DateTimePicker
           value={new Date()}
-          mode="date"
+          mode={mode}
           onChange={onDateChange}
           style={{ backgroundColor: "white" }}
           maximumDate={appointmentDate ? undefined : new Date()}
@@ -79,7 +110,7 @@ const DatePicker: FC<Props> = ({
 
 const styles = StyleSheet.create({
   rowInput: {
-    flex: 2, // Take up 2/3 of the space
+    flex: 2,
     borderWidth: 1,
     borderColor: "#e1e1e1",
     padding: 5,
