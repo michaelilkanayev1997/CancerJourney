@@ -6,6 +6,7 @@ import Constants from "expo-constants";
 
 import { Platform } from "react-native";
 import { getClient } from "src/api/client";
+import { useNavigation } from "@react-navigation/native";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
@@ -34,6 +35,8 @@ export const usePushNotifications = (
 
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
+
+  // const navigation = useNavigation();
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -78,8 +81,8 @@ export const usePushNotifications = (
     const updatePushToken = async (newToken: string) => {
       try {
         const client = await getClient();
-        console.log("newToken", newToken);
-        const { data } = await client.post("/auth/update-push-token", {
+
+        await client.post("/auth/update-push-token", {
           newToken,
         });
       } catch (error) {
@@ -90,21 +93,51 @@ export const usePushNotifications = (
     registerForPushNotificationsAsync().then((token) => {
       if (token) {
         setExpoPushToken(token);
+
         if (token.data !== currentExpoPushToken) {
           updatePushToken(token.data);
         }
       }
     });
 
+    // Handle incoming notifications
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
       });
 
+    // Handle notification responses
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        const appointment =
+          response.notification.request.content.data.appointment;
+
+        if (appointment) {
+          console.log("appointment", appointment);
+          // Navigate to the appointment card screen
+          // navigation.navigate("Appointments");
+        }
       });
+
+    // Check if the app was opened by a notification
+    Notifications.getLastNotificationResponseAsync().then((response) => {
+      if (response) {
+        const dataString = response.notification?.request?.content?.dataString;
+        if (dataString) {
+          try {
+            const data = JSON.parse(dataString);
+            const appointment = data.appointment;
+            if (appointment) {
+              console.log("Appointment data :", appointment);
+              // Navigate to the appointment screen
+              // navigation.navigate("Appointments", { appointment });
+            }
+          } catch (error) {
+            console.error("Failed to parse notification data:", error);
+          }
+        }
+      }
+    });
 
     return () => {
       Notifications.removeNotificationSubscription(

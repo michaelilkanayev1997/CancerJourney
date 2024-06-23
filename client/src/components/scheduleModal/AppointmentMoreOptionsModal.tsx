@@ -128,6 +128,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
       });
       return;
     }
+    let isSuccessful = false;
 
     try {
       setAddAppointmentLoading(true);
@@ -145,6 +146,8 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
       await client.post("/schedule/add-appointment", newAppointment);
 
       queryClient.invalidateQueries(["schedules", "appointments"]);
+
+      isSuccessful = true;
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -153,12 +156,14 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
       });
     } finally {
       setAddAppointmentLoading(false);
-      handleCloseMoreOptionsPress();
-      resetFields();
 
-      ToastNotification({
-        message: "Appointment uploaded successfully!",
-      });
+      if (isSuccessful) {
+        handleCloseMoreOptionsPress();
+        resetFields();
+        ToastNotification({
+          message: "Appointment uploaded successfully!",
+        });
+      }
     }
   };
 
@@ -237,7 +242,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Title is Required!
+                        Required!
                       </Animated.Text>
                     ) : null}
                   </View>
@@ -257,7 +262,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Location is Required!
+                        Required!
                       </Animated.Text>
                     ) : null}
                   </View>
@@ -270,14 +275,14 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                   />
 
                   <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Date</Text>
+                    <Text style={styles.label}>Date and Time</Text>
                     {date.toString().length === 0 ? (
                       <Animated.Text
                         entering={FadeInLeft.duration(500)}
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Date is Required!
+                        Required!
                       </Animated.Text>
                     ) : null}
                   </View>

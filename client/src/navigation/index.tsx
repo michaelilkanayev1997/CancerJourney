@@ -77,17 +77,7 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
   }, []);
 
   // Register for push notifications and update token if necessary
-  const { expoPushToken, notification } = usePushNotifications(
-    profile?.expoPushToken || "",
-    profile?.id || null
-  );
-
-  useEffect(() => {
-    if (profile) {
-      console.log("notification", JSON.stringify(notification, undefined, 2));
-      console.log("expoPushToken", expoPushToken?.data);
-    }
-  }, [profile, notification, expoPushToken]);
+  usePushNotifications(profile?.expoPushToken || "", profile?.id || null);
 
   return (
     <>
