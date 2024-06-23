@@ -52,6 +52,8 @@ export const mustAuth: RequestHandler = async (req, res, next) => {
     diagnosisDate: user.diagnosisDate,
     stage: user.stage,
     country: user.country,
+
+    expoPushToken: user.expoPushToken,
   };
 
   req.token = token;

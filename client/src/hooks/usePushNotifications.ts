@@ -5,13 +5,17 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
 import { Platform } from "react-native";
+import { getClient } from "src/api/client";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
   notification?: Notifications.Notification;
 }
 
-export const usePushNotifications = (): PushNotificationState => {
+export const usePushNotifications = (
+  currentExpoPushToken: string,
+  userId: string | null
+): PushNotificationState => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldPlaySound: true,
@@ -67,8 +71,29 @@ export const usePushNotifications = (): PushNotificationState => {
   }
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
+
+    const updatePushToken = async (newToken: string) => {
+      try {
+        const client = await getClient();
+        console.log("newToken", newToken);
+        const { data } = await client.post("/auth/update-push-token", {
+          newToken,
+        });
+      } catch (error) {
+        console.error("Failed to update push token:", error);
+      }
+    };
+
     registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
+      if (token) {
+        setExpoPushToken(token);
+        if (token.data !== currentExpoPushToken) {
+          updatePushToken(token.data);
+        }
+      }
     });
 
     notificationListener.current =
@@ -88,7 +113,7 @@ export const usePushNotifications = (): PushNotificationState => {
 
       Notifications.removeNotificationSubscription(responseListener.current!);
     };
-  }, []);
+  }, [currentExpoPushToken, userId]);
 
   return {
     expoPushToken,

@@ -24,6 +24,8 @@ interface UserDocument {
   subtype?: string;
   stage?: string;
   country?: { cca2: string; name: string };
+
+  expoPushToken: string;
 }
 
 //Methods interface is used to define schema methods
@@ -92,6 +94,8 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       cca2: String,
       name: String,
     },
+
+    expoPushToken: { type: String, default: "" },
   },
   {
     timestamps: true,

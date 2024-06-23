@@ -12,6 +12,7 @@ import {
   signIn,
   updatePassword,
   updateProfile,
+  updatePushToken,
   verifyEmail,
 } from "#/controllers/auth";
 import { validate } from "#/middleware/validator";
@@ -64,5 +65,6 @@ router.post(
   validate(ProfileUpdateSchema),
   updateProfile
 );
+router.post("/update-push-token", mustAuth, updatePushToken);
 
 export default router;
