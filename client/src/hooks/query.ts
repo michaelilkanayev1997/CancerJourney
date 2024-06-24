@@ -32,7 +32,7 @@ const fetchFolderFiles = async (folderName: string): Promise<ImageType[]> => {
   const client = await getClient();
   const { data } = await client.get(`/file/${folderName}`);
 
-  console.log("fetching files...");
+  //console.log("fetching files...");
   return data;
 };
 
@@ -58,7 +58,7 @@ const fetchSchedules = async (
   const client = await getClient();
   const { data } = await client.get(`/schedule/${scheduleName}`);
 
-  console.log(`fetching ${scheduleName}...`);
+  //console.log(`fetching ${scheduleName}...`);
   return data;
 };
 
