@@ -31,7 +31,6 @@ import Animated, {
 import { Picker } from "@react-native-picker/picker";
 import Toast from "react-native-toast-message";
 
-import { IMedication } from "../../../../server/src/models/Schedule";
 import { useScheduleMutations } from "src/hooks/mutations";
 import { ToastNotification, toastConfig } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
@@ -41,12 +40,14 @@ import DaySelector from "@components/DaySelector";
 import MedicationPhotoModal from "@components/MedicationPhotoModal";
 import { styles } from "./MoreOptionsModalStyles";
 import colors from "@utils/colors";
+import { IMedication } from "src/@types/schedule";
 
 interface MedicationMoreOptionsProps {
   item?: IMedication;
   isOptionModalVisible: boolean;
   setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
   addMedicationModal: boolean;
+  openFromNotification?: boolean;
 }
 
 const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
@@ -54,6 +55,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   isOptionModalVisible,
   setOptionModalVisible,
   addMedicationModal = false,
+  openFromNotification = false,
 }) => {
   const [name, setName] = useState<string>(item?.name || "");
   const [frequency, setFrequency] = useState<string>(
@@ -80,6 +82,23 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     updateScheduleMutation,
     updateLoading,
   } = useScheduleMutations();
+
+  useEffect(() => {
+    if (openFromNotification && item) {
+      setOptionModalVisible(true);
+    }
+  }, [openFromNotification, item, setOptionModalVisible]);
+
+  useEffect(() => {
+    if (item) {
+      setName(item.name);
+      setFrequency(item.frequency);
+      setTimesPerDay(item.timesPerDay || "");
+      setSpecificDays(item.specificDays || []);
+      setPrescriber(item.prescriber || "");
+      setNotes(item.notes || "");
+    }
+  }, [item]);
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);
@@ -382,22 +401,6 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                             <Picker.Item
                               label="6 times a day"
                               value="6 times a day"
-                            />
-                            <Picker.Item
-                              label="7 times a day"
-                              value="7 times a day"
-                            />
-                            <Picker.Item
-                              label="8 times a day"
-                              value="8 times a day"
-                            />
-                            <Picker.Item
-                              label="9 times a day"
-                              value="9 times a day"
-                            />
-                            <Picker.Item
-                              label="10 times a day"
-                              value="10 times a day"
                             />
                           </Picker>
                         </Animated.View>

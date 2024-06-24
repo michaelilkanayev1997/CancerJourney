@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 5,
+    textAlign: "left",
   },
   moreOption: {
     marginLeft: "auto",
