@@ -9,11 +9,15 @@ import TabNavigator from "./TabNavigator";
 import RegistrationForm from "@views/RegistrationForm";
 import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
+import { usePushNotifications } from "src/hooks/usePushNotifications";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const { profile } = useSelector(getAuthState);
+
+  // Register for push notifications and update token if necessary
+  usePushNotifications(profile?.expoPushToken || "", profile?.id || null);
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}

@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { Expo } from "expo-server-sdk";
+
 import { IAppointment } from "#/models/Schedule";
 import { UserDocument } from "#/models/user";
 

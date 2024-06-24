@@ -5,6 +5,7 @@ import { Schedule } from "#/models/Schedule";
 import { MedicationInput } from "#/@types/schedule";
 import { deleteS3Object } from "#/middleware/fileUpload";
 import { appointmentNotification } from "#/utils/notification";
+import mongoose from "mongoose";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {
@@ -14,7 +15,11 @@ export const addAppointment: RequestHandler = async (req, res) => {
     // Accessing the request body
     const { title, location, date, reminder, notes } = req.body;
 
-    const newAppointment = {
+    // Generate a new ObjectId for the appointment
+    const newAppointmentId = new mongoose.Types.ObjectId();
+
+    const newAppointment: any = {
+      _id: newAppointmentId,
       title,
       location,
       date,
@@ -22,13 +27,15 @@ export const addAppointment: RequestHandler = async (req, res) => {
       notes,
     };
 
-    try {
-      await appointmentNotification(newAppointment, user);
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({
-          error: `${error.message}`,
-        });
+    if (reminder !== "No Reminder") {
+      try {
+        await appointmentNotification(newAppointment, user);
+      } catch (error) {
+        if (error instanceof Error) {
+          return res.status(500).json({
+            error: `${error.message}`,
+          });
+        }
       }
     }
 

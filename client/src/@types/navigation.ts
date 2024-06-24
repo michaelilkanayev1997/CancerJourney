@@ -1,3 +1,6 @@
+import { NavigatorScreenParams } from "@react-navigation/native";
+import { IAppointment } from "./schedule";
+
 interface NewUserResponse {
   id: string;
   name: string;
@@ -29,4 +32,19 @@ export type UploadStackParamList = {
     fileType: string;
     folderName: string;
   };
+};
+
+export type ScheduleStackParamList = {
+  Appointments: {
+    appointment: IAppointment;
+  };
+  Medications: undefined;
+};
+
+export type BottomTabParamList = {
+  HomeScreen: undefined;
+  ProfileScreen: undefined;
+  PostScreen: undefined;
+  UploadScreen: undefined;
+  Schedule: NavigatorScreenParams<ScheduleStackParamList>; // Specify nested navigator
 };
