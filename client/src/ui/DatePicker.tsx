@@ -69,6 +69,12 @@ const DatePicker: FC<Props> = ({
     minute: "2-digit",
   };
 
+  if (date instanceof Date) {
+    date = date.toLocaleString(undefined, options);
+  } else if (date !== "DD/MM/YYYY") {
+    date = new Date(date).toLocaleString(undefined, options);
+  }
+
   return (
     <>
       <TouchableOpacity
@@ -82,9 +88,7 @@ const DatePicker: FC<Props> = ({
         <Text
           style={[styles.buttonText, !appointmentDate && { marginLeft: 10 }]}
         >
-          {appointmentDate
-            ? date.toLocaleString(undefined, options)
-            : displayDate?.toString()}
+          {appointmentDate ? date : displayDate?.toString()}
         </Text>
         <MaterialIcons
           name="arrow-drop-down"

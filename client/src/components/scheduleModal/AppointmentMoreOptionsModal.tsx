@@ -1,4 +1,11 @@
-import { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   View,
   Modal,
@@ -21,18 +28,19 @@ import Toast from "react-native-toast-message";
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
 import { useScheduleMutations } from "src/hooks/mutations";
-import { IAppointment } from "../../../../server/src/models/Schedule";
 import DatePicker from "@ui/DatePicker";
 import { ToastNotification, toastConfig } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { styles } from "./MoreOptionsModalStyles";
+import { IAppointment } from "src/@types/schedule";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
   isOptionModalVisible: boolean;
   setOptionModalVisible: Dispatch<SetStateAction<boolean>>;
   addAppointmentModal: boolean;
+  openFromNotification?: boolean;
 }
 
 const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
@@ -40,6 +48,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
   isOptionModalVisible,
   setOptionModalVisible,
   addAppointmentModal = false,
+  openFromNotification = false,
 }) => {
   const [title, setTitle] = useState<string>(item?.title || "");
   const [location, setLocation] = useState<string>(item?.location || "");
@@ -58,6 +67,22 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
     updateScheduleMutation,
     updateLoading,
   } = useScheduleMutations();
+
+  useEffect(() => {
+    if (openFromNotification && item) {
+      setOptionModalVisible(true);
+    }
+  }, [openFromNotification, item, setOptionModalVisible]);
+
+  useEffect(() => {
+    if (item) {
+      setTitle(item.title);
+      setLocation(item.location);
+      setDate(item.date);
+      setNotes(item.notes || "");
+      setReminder(item.reminder);
+    }
+  }, [item]);
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setOptionModalVisible(false);

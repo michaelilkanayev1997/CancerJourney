@@ -1,12 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-
 import Constants from "expo-constants";
-
 import { Platform } from "react-native";
+
 import { getClient } from "src/api/client";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { BottomTabParamList } from "src/@types/navigation";
+import {
+  Keys,
+  getFromAsyncStorage,
+  saveToAsyncStorage,
+} from "@utils/asyncStorage";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
@@ -33,10 +39,13 @@ export const usePushNotifications = (
     Notifications.Notification | undefined
   >();
 
+  const lastHandledNotificationId = useRef<string | null>(null);
+
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
-  // const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<BottomTabParamList>>();
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -111,29 +120,47 @@ export const usePushNotifications = (
       Notifications.addNotificationResponseReceivedListener((response) => {
         const appointment =
           response.notification.request.content.data.appointment;
-
+        console.log("Appointment data :", appointment);
         if (appointment) {
-          console.log("appointment", appointment);
-          // Navigate to the appointment card screen
-          // navigation.navigate("Appointments");
+          // Navigate to the nested screen
+          navigation.navigate("Schedule", {
+            screen: "Appointments",
+            params: { appointment },
+          });
         }
       });
 
     // Check if the app was opened by a notification
-    Notifications.getLastNotificationResponseAsync().then((response) => {
+    Notifications.getLastNotificationResponseAsync().then(async (response) => {
       if (response) {
-        const dataString = response.notification?.request?.content?.dataString;
-        if (dataString) {
-          try {
-            const data = JSON.parse(dataString);
-            const appointment = data.appointment;
-            if (appointment) {
-              console.log("Appointment data :", appointment);
-              // Navigate to the appointment screen
-              // navigation.navigate("Appointments", { appointment });
+        const notificationId = response.notification?.request.identifier;
+        const lastHandledNotificationId = await getFromAsyncStorage(
+          Keys.lastHandledNotificationId
+        );
+        const dataString = (response.notification?.request?.content as any)
+          ?.dataString;
+
+        if (notificationId !== lastHandledNotificationId) {
+          if (dataString) {
+            try {
+              const data = JSON.parse(dataString);
+              const appointment = data.appointment;
+              if (appointment) {
+                console.log("Appointment data :", appointment);
+                // Navigate to the nested screen
+                navigation.navigate("Schedule", {
+                  screen: "Appointments",
+                  params: { appointment },
+                });
+              }
+
+              await saveToAsyncStorage(
+                Keys.lastHandledNotificationId,
+                notificationId
+              ); // Save to AsyncStorage
+            } catch (error) {
+              console.error("Failed to parse notification data:", error);
             }
-          } catch (error) {
-            console.error("Failed to parse notification data:", error);
           }
         }
       }

@@ -23,7 +23,6 @@ import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
 import { toastConfig } from "@utils/toastConfig";
 import DrawerNavigator from "./DrawerNavigator";
-import { usePushNotifications } from "src/hooks/usePushNotifications";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;
@@ -75,9 +74,6 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
 
     fetchAuthInfo();
   }, []);
-
-  // Register for push notifications and update token if necessary
-  usePushNotifications(profile?.expoPushToken || "", profile?.id || null);
 
   return (
     <>

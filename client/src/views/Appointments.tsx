@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RouteProp, useRoute } from "@react-navigation/native";
 
 import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
@@ -15,9 +16,15 @@ import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
 import { IAppointment } from "../../../server/src/models/Schedule";
 import AppointmentMoreOptionsModal from "@components/scheduleModal/AppointmentMoreOptionsModal";
+import { ScheduleStackParamList } from "src/@types/navigation";
 
 const Appointments = () => {
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<
+    IAppointment | undefined
+  >(undefined);
+
+  const route = useRoute<RouteProp<ScheduleStackParamList, "Appointments">>();
 
   const {
     data: appointments = [], // Default to an empty array if data is undefined
@@ -28,6 +35,13 @@ const Appointments = () => {
     setAddModalVisible(true);
     Vibration.vibrate(60);
   }, []);
+
+  useEffect(() => {
+    if (route.params?.appointment) {
+      setSelectedAppointment(route.params.appointment);
+      setAddModalVisible(true);
+    }
+  }, [route.params]);
 
   if (isLoading) {
     return (
@@ -68,12 +82,13 @@ const Appointments = () => {
         </ScrollView>
       </View>
 
-      {/* Custom Modal for add Appointment */}
+      {/* Custom Modal for add or view Appointment */}
       <AppointmentMoreOptionsModal
-        item={undefined}
+        item={selectedAppointment}
         isOptionModalVisible={isAddModalVisible}
         setOptionModalVisible={setAddModalVisible}
-        addAppointmentModal={true}
+        addAppointmentModal={!selectedAppointment}
+        openFromNotification={!!selectedAppointment}
       />
     </>
   );
