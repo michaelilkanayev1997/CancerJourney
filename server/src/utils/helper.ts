@@ -26,3 +26,22 @@ export const verifyGoogleToken = async (token: string) => {
 export const sanitizeFolderName = (folderName: string) => {
   return folderName.toLowerCase().replace(/\s+/g, "");
 };
+
+export const timesPerDayToHours = (timesPerDay: string): string[] => {
+  switch (timesPerDay) {
+    case "Once a day":
+      return ["08:00"];
+    case "2 times a day":
+      return ["08:00", "14:00"];
+    case "3 times a day":
+      return ["08:00", "14:00", "18:00"];
+    case "4 times a day":
+      return ["06:00", "10:00", "14:00", "18:00"];
+    case "5 times a day":
+      return ["06:00", "10:00", "14:00", "18:00", "22:00"];
+    case "6 times a day":
+      return ["06:00", "10:00", "14:00", "18:00", "22:00", "02:00"];
+    default:
+      throw new Error("Invalid timesPerDay value.");
+  }
+};

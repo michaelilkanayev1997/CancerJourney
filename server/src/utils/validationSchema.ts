@@ -134,10 +134,6 @@ export const MedicationSchema = yup.object().shape({
         "4 times a day",
         "5 times a day",
         "6 times a day",
-        "7 times a day",
-        "8 times a day",
-        "9 times a day",
-        "10 times a day",
       ],
       "Invalid times per day"
     ),

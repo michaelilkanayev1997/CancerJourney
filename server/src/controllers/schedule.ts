@@ -1,11 +1,13 @@
 import { RequestHandler } from "express";
+import mongoose from "mongoose";
 
 import User from "#/models/user";
 import { Schedule } from "#/models/Schedule";
-import { MedicationInput } from "#/@types/schedule";
 import { deleteS3Object } from "#/middleware/fileUpload";
-import { appointmentNotification } from "#/utils/notification";
-import mongoose from "mongoose";
+import {
+  appointmentNotification,
+  medicationNotification,
+} from "#/utils/notification";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {
@@ -86,7 +88,11 @@ export const addMedication: RequestHandler = async (req, res) => {
       });
     }
 
-    const newMedication: MedicationInput = {
+    // Generate a new ObjectId for the appointment
+    const newMedicationId = new mongoose.Types.ObjectId();
+
+    const newMedication: any = {
+      _id: newMedicationId,
       name,
       frequency,
       timesPerDay,
@@ -100,6 +106,18 @@ export const addMedication: RequestHandler = async (req, res) => {
     if (req.file) {
       // Set medication photo
       newMedication.photo = { url: req.file.location, publicId: req.file.key };
+    }
+
+    if (frequency !== "As needed") {
+      try {
+        await medicationNotification(newMedication, user);
+      } catch (error) {
+        if (error instanceof Error) {
+          return res.status(500).json({
+            error: `${error.message}`,
+          });
+        }
+      }
     }
 
     // Update or insert Medication Schedule document

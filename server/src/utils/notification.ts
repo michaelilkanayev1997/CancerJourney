@@ -1,8 +1,9 @@
 import cron from "node-cron";
 import { Expo } from "expo-server-sdk";
 
-import { IAppointment } from "#/models/Schedule";
+import { IAppointment, IMedication } from "#/models/Schedule";
 import { UserDocument } from "#/models/user";
+import { timesPerDayToHours } from "./helper";
 
 const expo = new Expo();
 
@@ -86,5 +87,81 @@ export const appointmentNotification = async (
   });
 
   // Resolve immediately after scheduling the cron job
+  return Promise.resolve();
+};
+
+export const medicationNotification = async (
+  medication: IMedication,
+  user: UserDocument
+): Promise<void> => {
+  const { frequency, timesPerDay, specificDays } = medication;
+  const { expoPushToken: pushToken } = user;
+
+  if (!Expo.isExpoPushToken(pushToken)) {
+    throw new Error("Invalid Expo push token.");
+  }
+
+  let cronExpressions: string[] = [];
+  const timesArray = timesPerDayToHours(timesPerDay || "");
+
+  const generateCronExpressions = (times: string[]): string[] => {
+    return times.map((time) => {
+      const [hour, minute] = time.split(":").map(Number);
+      return `${minute} ${hour} * * *`; // For everyday frequency
+    });
+  };
+
+  if (frequency === "Every day") {
+    cronExpressions = generateCronExpressions(timesArray);
+  } else if (frequency === "Specific days") {
+    specificDays?.forEach((day) => {
+      const dayOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ].indexOf(day);
+      const dayCronExpressions = timesArray.map((time) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return `${minute} ${hour} * * ${dayOfWeek}`;
+      });
+      cronExpressions = cronExpressions.concat(dayCronExpressions);
+    });
+  }
+
+  // ****************  Test  **************** //
+  // const reminderTime = new Date(Date.now() + 60 * 1000);
+  // const minute = reminderTime.getMinutes();
+  // const hour = reminderTime.getHours();
+  // const dayOfMonth = reminderTime.getDate();
+  // const month = reminderTime.getMonth() + 1; // getMonth() returns 0-indexed month
+  // const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} *`;
+
+  cronExpressions.forEach((cronExpression) => {
+    console.log("cronExpression: ", cronExpression);
+
+    cron.schedule(cronExpression, async () => {
+      try {
+        await expo.sendPushNotificationsAsync([
+          {
+            to: pushToken,
+            sound: "default",
+            title: `Medication Reminder: ${medication.name}`,
+            body: `It's time to take your medication !`,
+            data: { medication },
+          },
+        ]);
+        console.log("Medication reminder scheduled successfully.");
+      } catch (error) {
+        console.error("Error scheduling medication reminder: ", error);
+        throw new Error(`Error scheduling medication reminder: ${error}`);
+      }
+    });
+  });
+
+  // Resolve immediately after scheduling the cron jobs
   return Promise.resolve();
 };

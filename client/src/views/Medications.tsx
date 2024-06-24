@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -13,11 +13,18 @@ import colors from "@utils/colors";
 import Loader from "@ui/Loader";
 import { useFetchSchedules } from "src/hooks/query";
 import MedicationCard from "@components/MedicationCard";
-import { IMedication } from "../../../server/src/models/Schedule";
 import MedicationMoreOptionsModal from "@components/scheduleModal/MedicationMoreOptionsModal";
+import { IMedication } from "src/@types/schedule";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { ScheduleStackParamList } from "src/@types/navigation";
 
 const Medications = () => {
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<
+    IMedication | undefined
+  >(undefined);
+
+  const route = useRoute<RouteProp<ScheduleStackParamList, "Medications">>();
 
   const {
     data: medications = [], // Default to an empty array if data is undefined
@@ -28,6 +35,13 @@ const Medications = () => {
     setAddModalVisible(true);
     Vibration.vibrate(60);
   }, []);
+
+  useEffect(() => {
+    if (route.params?.medication) {
+      setSelectedAppointment(route.params.medication);
+      setAddModalVisible(true);
+    }
+  }, [route.params]);
 
   if (isLoading) {
     return (
@@ -68,12 +82,13 @@ const Medications = () => {
         </ScrollView>
       </View>
 
-      {/* Custom Modal for add Medication */}
+      {/* Custom Modal for add or view Medication */}
       <MedicationMoreOptionsModal
-        item={undefined}
+        item={selectedAppointment}
         isOptionModalVisible={isAddModalVisible}
         setOptionModalVisible={setAddModalVisible}
-        addMedicationModal={true}
+        addMedicationModal={!selectedAppointment}
+        openFromNotification={!!selectedAppointment}
       />
     </>
   );

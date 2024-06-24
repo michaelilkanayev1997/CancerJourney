@@ -9,7 +9,7 @@ export interface IAppointment {
   reminder: string;
 }
 
-export interface IMedication extends Document {
+export interface IMedication {
   _id: ObjectId;
   name: string;
   frequency: string;

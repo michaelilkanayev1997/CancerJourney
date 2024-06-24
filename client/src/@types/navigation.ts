@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { IAppointment } from "./schedule";
+import { IAppointment, IMedication } from "./schedule";
 
 interface NewUserResponse {
   id: string;
@@ -38,7 +38,9 @@ export type ScheduleStackParamList = {
   Appointments: {
     appointment: IAppointment;
   };
-  Medications: undefined;
+  Medications: {
+    medication: IMedication;
+  };
 };
 
 export type BottomTabParamList = {

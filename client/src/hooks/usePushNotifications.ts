@@ -39,8 +39,6 @@ export const usePushNotifications = (
     Notifications.Notification | undefined
   >();
 
-  const lastHandledNotificationId = useRef<string | null>(null);
-
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
@@ -118,11 +116,19 @@ export const usePushNotifications = (
     // Handle notification responses
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        const appointment =
-          response.notification.request.content.data.appointment;
-        console.log("Appointment data :", appointment);
-        if (appointment) {
-          // Navigate to the nested screen
+        const { appointment, medication } =
+          response.notification.request.content.data;
+
+        if (medication) {
+          console.log("Medication data :", medication);
+          // Navigate to the nested Medications screen
+          navigation.navigate("Schedule", {
+            screen: "Medications",
+            params: { medication },
+          });
+        } else if (appointment) {
+          console.log("Appointment data :", appointment);
+          // Navigate to the nested Appointment screen
           navigation.navigate("Schedule", {
             screen: "Appointments",
             params: { appointment },
@@ -144,13 +150,22 @@ export const usePushNotifications = (
           if (dataString) {
             try {
               const data = JSON.parse(dataString);
-              const appointment = data.appointment;
+
+              const { appointment, medication } = data;
+
               if (appointment) {
                 console.log("Appointment data :", appointment);
                 // Navigate to the nested screen
                 navigation.navigate("Schedule", {
                   screen: "Appointments",
                   params: { appointment },
+                });
+              } else if (medication) {
+                console.log("Medication data :", medication);
+                // Navigate to the nested screen
+                navigation.navigate("Schedule", {
+                  screen: "Medications",
+                  params: { medication },
                 });
               }
 
