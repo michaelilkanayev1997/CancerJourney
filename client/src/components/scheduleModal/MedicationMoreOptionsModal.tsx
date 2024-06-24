@@ -175,6 +175,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       });
       return;
     }
+    let isSuccessful = false;
 
     try {
       setAddMedicationLoading(true);
@@ -209,6 +210,8 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       }
 
       queryClient.invalidateQueries(["schedules", "medications"]);
+
+      isSuccessful = true;
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -217,11 +220,14 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
       });
     } finally {
       setAddMedicationLoading(false);
-      handleCloseMoreOptionsPress();
-      resetFields();
-      ToastNotification({
-        message: "Medication uploaded successfully!",
-      });
+
+      if (isSuccessful) {
+        handleCloseMoreOptionsPress();
+        resetFields();
+        ToastNotification({
+          message: "Medication uploaded successfully!",
+        });
+      }
     }
   };
 

@@ -31,7 +31,7 @@ export const appointmentNotification = async (
   }
 
   // Test :
-  reminderTime = new Date(Date.now() + 60 * 1000);
+  // reminderTime = new Date(Date.now() + 60 * 1000);
 
   if (!(reminderTime instanceof Date) || isNaN(reminderTime.getTime())) {
     throw new Error("Invalid reminder Time. Appointment not scheduled.");
