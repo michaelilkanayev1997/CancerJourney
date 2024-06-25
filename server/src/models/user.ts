@@ -93,6 +93,7 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       type: Object,
       cca2: String,
       name: String,
+      flag: String,
     },
 
     expoPushToken: { type: String, default: "" },

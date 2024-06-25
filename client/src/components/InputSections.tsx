@@ -23,7 +23,7 @@ export interface NewProfile {
   name?: string;
   gender: string;
   birthDate: Date | null;
-  country: { cca2: string; name: string };
+  country: { cca2: string; name: string; flag: string };
 }
 
 interface CancerTypeRibbon {
@@ -149,7 +149,7 @@ const InputSections: FC<Props> = ({
               style={[styles.rowInput, { paddingVertical: 15 }]}
             >
               <Text
-                style={styles.buttonText}
+                style={styles.cancerTypeButtonText}
                 numberOfLines={1} // Ensure text is on one line
                 ellipsizeMode="tail" // Add ellipsis at the end if text is too long
               >
@@ -238,12 +238,12 @@ const InputSections: FC<Props> = ({
               ]}
             >
               <Text
-                style={styles.buttonText}
+                style={styles.countryButtonText}
                 numberOfLines={1} // Ensure text is on one line
                 ellipsizeMode="tail" // Add ellipsis at the end if text is too long
               >
                 {newProfile?.country.name !== ""
-                  ? newProfile.country.name
+                  ? `${newProfile.country.name}    ${newProfile.country.flag}`
                   : "Pick your location"}
               </Text>
 
@@ -251,15 +251,15 @@ const InputSections: FC<Props> = ({
                 <CountryPickerCustom
                   countryPickerVisible={countryPickerVisible}
                   setCountryPickerVisible={setCountryPickerVisible}
-                  setCountry={({ cca2, name }) => {
+                  setCountry={({ cca2, name, flag }) => {
                     setNewProfile({
                       ...newProfile,
-                      country: { ...newProfile.country, cca2, name },
+                      country: { ...newProfile.country, cca2, name, flag },
                     });
                   }}
-                  country={newProfile.country}
                 />
               </View>
+
               <MaterialIcons
                 name="arrow-drop-down"
                 size={24}
@@ -296,8 +296,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 12,
   },
-  buttonText: {
+  cancerTypeButtonText: {
     width: "69%",
+    fontSize: 16,
+    color: "#000",
+    marginLeft: 10,
+  },
+  countryButtonText: {
+    width: "80%",
     fontSize: 16,
     color: "#000",
     marginLeft: 10,

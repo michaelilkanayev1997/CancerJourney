@@ -40,7 +40,7 @@ const Profile: FC<Props> = (props) => {
     name: profile?.name || "",
     gender: profile?.gender || "Male",
     birthDate: profile?.birthDate || null,
-    country: profile?.country || { cca2: "US", name: "" },
+    country: profile?.country || { cca2: "US", name: "", flag: "" },
   });
 
   const newProfileRef = useRef(newProfile);

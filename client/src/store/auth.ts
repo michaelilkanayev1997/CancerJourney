@@ -17,7 +17,7 @@ export interface UserProfile {
   stage: string;
   gender: string;
   birthDate: Date | null;
-  country: { cca2: string; name: string };
+  country: { cca2: string; name: string; flag: string };
 
   expoPushToken: string;
 }
