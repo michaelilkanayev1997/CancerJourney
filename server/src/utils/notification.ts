@@ -7,6 +7,8 @@ import { timesPerDayToHours } from "./helper";
 
 const expo = new Expo();
 
+const scheduledJobs = new Map(); // Store references to scheduled jobs
+
 export const appointmentNotification = async (
   appointment: IAppointment,
   user: UserDocument
@@ -63,7 +65,7 @@ export const appointmentNotification = async (
   const formattedDate = date.toLocaleString(undefined, options);
 
   // Schedule the cron job and return immediately
-  cron.schedule(cronExpression, async () => {
+  const job = cron.schedule(cronExpression, async () => {
     try {
       if (Expo.isExpoPushToken(pushToken)) {
         await expo.sendPushNotificationsAsync([
@@ -85,6 +87,8 @@ export const appointmentNotification = async (
       throw new Error(`Error scheduling Appointment:  ${error}`);
     }
   });
+
+  scheduledJobs.set(appointment._id.toString(), job);
 
   // Resolve immediately after scheduling the cron job
   return Promise.resolve();
@@ -143,7 +147,7 @@ export const medicationNotification = async (
   cronExpressions.forEach((cronExpression) => {
     console.log("cronExpression: ", cronExpression);
 
-    cron.schedule(cronExpression, async () => {
+    const job = cron.schedule(cronExpression, async () => {
       try {
         await expo.sendPushNotificationsAsync([
           {
@@ -160,8 +164,18 @@ export const medicationNotification = async (
         throw new Error(`Error scheduling medication reminder: ${error}`);
       }
     });
-  });
 
+    scheduledJobs.set(medication._id.toString(), job);
+  });
   // Resolve immediately after scheduling the cron jobs
   return Promise.resolve();
+};
+
+// Function to cancel scheduled notifications
+export const cancelScheduledNotification = (id: string): void => {
+  const job = scheduledJobs.get(id);
+  if (job) {
+    job.stop();
+    scheduledJobs.delete(id);
+  }
 };

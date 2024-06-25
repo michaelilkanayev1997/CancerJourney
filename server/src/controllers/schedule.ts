@@ -6,6 +6,7 @@ import { Schedule } from "#/models/Schedule";
 import { deleteS3Object } from "#/middleware/fileUpload";
 import {
   appointmentNotification,
+  cancelScheduledNotification,
   medicationNotification,
 } from "#/utils/notification";
 
@@ -212,6 +213,8 @@ export const scheduleRemove: RequestHandler = async (req, res) => {
       // Delete the photo from AWS S3
       await deleteS3Object(scheduleToRemove.photo.publicId);
     }
+
+    cancelScheduledNotification(scheduleId); // Cancel the scheduled notification
 
     res.json({ success: true });
   } catch (error) {
