@@ -96,6 +96,7 @@ export const ProfileUpdateSchema = yup.object().shape({
     .shape({
       cca2: yup.string(),
       name: yup.string(),
+      flag: yup.string(),
     })
     .notRequired(),
 });
