@@ -36,17 +36,23 @@ export type UploadStackParamList = {
 
 export type ScheduleStackParamList = {
   Appointments: {
-    appointment: IAppointment;
+    appointment?: IAppointment;
   };
   Medications: {
-    medication: IMedication;
+    medication?: IMedication;
   };
+};
+
+export type SocialStackParamList = {
+  Main: undefined;
+  Posts: undefined;
+  Favorites: undefined;
 };
 
 export type BottomTabParamList = {
   HomeScreen: undefined;
-  ProfileScreen: undefined;
-  PostScreen: undefined;
+  ProfileScreen: NavigatorScreenParams<ProfileStackParamList>;
+  PostScreen: NavigatorScreenParams<SocialStackParamList>;
   UploadScreen: undefined;
-  Schedule: NavigatorScreenParams<ScheduleStackParamList>; // Specify nested navigator
+  Schedule: NavigatorScreenParams<ScheduleStackParamList>;
 };
