@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { View, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {}
 
@@ -35,6 +37,13 @@ const PreloadIcons: FC<Props> = (props) => {
           color="transparent"
         />
       ))}
+      <MaterialIcons name="add" size={1} color="transparent" />
+      <Ionicons name="cloud-upload" size={1} color="transparent" />
+      <Ionicons name="calendar" size={1} color="transparent" />
+      <Ionicons name="medkit" size={1} color="transparent" />
+      <Ionicons name="people" size={1} color="transparent" />
+      <Ionicons name="chatbox" size={1} color="transparent" />
+      <Ionicons name="settings" size={1} color="transparent" />
     </View>
   );
 };
