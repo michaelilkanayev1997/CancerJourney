@@ -1,10 +1,17 @@
 import { FC } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity as RNTouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 import { BottomTabParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
+
+const TouchableOpacity = Animated.createAnimatedComponent(RNTouchableOpacity);
 
 type Props = {
   screenWidth: number;
@@ -18,6 +25,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
   return (
     <>
       <TouchableOpacity
+        entering={FadeInUp.delay(100)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
@@ -30,6 +38,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        entering={FadeInUp.delay(200)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
@@ -47,6 +56,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        entering={FadeInUp.delay(300)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
@@ -64,6 +74,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        entering={FadeInUp.delay(400)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
@@ -80,6 +91,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        entering={FadeInUp.delay(500)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
@@ -96,13 +108,14 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        entering={FadeInUp.delay(600)}
         style={[
           styles.card,
           { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
         ]}
         activeOpacity={0.6}
         onPress={() =>
-          navigation.navigate("ProfileScreen", {
+          navigation.navigate("HomeScreen", {
             screen: "Settings",
           })
         }

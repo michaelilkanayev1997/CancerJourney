@@ -5,11 +5,12 @@ import {
   ScrollView,
   ImageBackground,
   Dimensions,
-  Animated,
+  Animated as RNAnimated,
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import Animated, { ZoomInRight } from "react-native-reanimated";
 
 import colors from "@utils/colors";
 import StudyCard, { Study } from "@components/StudyCard";
@@ -36,7 +37,7 @@ const Home: FC = () => {
   const navigation = useNavigation();
   const [studies, setStudies] = useState<Study[]>([]);
 
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollX = useRef(new RNAnimated.Value(0)).current;
 
   const screenWidth = Dimensions.get("window").width;
   const ITEM_SIZE = screenWidth * 0.72;
@@ -95,13 +96,16 @@ const Home: FC = () => {
     });
 
     return (
-      <View style={{ width: ITEM_SIZE }}>
+      <Animated.View
+        entering={ZoomInRight.duration(1000)}
+        style={{ width: ITEM_SIZE }}
+      >
         <StudyCard
           study={item}
           translateY={translateY}
           imageUrl={images[index % images.length]?.urls?.small}
         />
-      </View>
+      </Animated.View>
     );
   };
 
@@ -114,7 +118,7 @@ const Home: FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} overScrollMode="never">
       <ImageBackground
         source={require("@assets/Icons/cancerjourne-transparent.png")}
         style={styles.header}
@@ -130,7 +134,7 @@ const Home: FC = () => {
       </View>
       {studies?.length > 0 && !isLoading ? (
         <View style={styles.flatListContainer}>
-          <Animated.FlatList
+          <RNAnimated.FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
             data={studies}
@@ -144,7 +148,7 @@ const Home: FC = () => {
             overScrollMode="never"
             bounces={false}
             snapToAlignment="start"
-            onScroll={Animated.event(
+            onScroll={RNAnimated.event(
               [{ nativeEvent: { contentOffset: { x: scrollX } } }],
               { useNativeDriver: true }
             )}
@@ -168,8 +172,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    width: "90%",
-    paddingVertical: 40,
+    width: "70%",
+    paddingVertical: 22,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 0,
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     alignItems: "center",
-    marginTop: -40,
+    marginTop: -43,
     paddingBottom: 150,
   },
 });
