@@ -6,6 +6,9 @@ import { getClient } from "src/api/client";
 import { FoldersLength } from "src/@types/file";
 import { ImageType } from "@components/ImageCard";
 import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
+import axios from "axios";
+import { UnsplashImage } from "@views/bottomTab/home/Home";
+import { getFromAsyncStorage, saveToAsyncStorage } from "@utils/asyncStorage";
 
 const fetchFoldersLength = async (): Promise<FoldersLength> => {
   const client = await getClient();
@@ -75,5 +78,41 @@ export const useFetchSchedules = (scheduleName: string) => {
         message: errorMessage,
       });
     },
+  });
+};
+
+const fetchStudyImages = async (
+  UNSPLASH_URL: string
+): Promise<UnsplashImage[]> => {
+  const { data } = await axios.get(UNSPLASH_URL);
+
+  return data;
+};
+
+export const useFetchStudyImages = (UNSPLASH_URL: string) => {
+  const ONE_WEEK_IN_MS = 1000 * 60 * 60 * 24 * 7;
+  return useQuery(["study-images"], async () => {
+    const lastFetch = await getFromAsyncStorage(
+      "last-unsplash-fetch-timestamp"
+    );
+    const currentTime = new Date().getTime();
+    const isCacheExpired = lastFetch
+      ? currentTime - parseInt(lastFetch) > ONE_WEEK_IN_MS
+      : true;
+
+    if (!isCacheExpired) {
+      const cachedImages = await getFromAsyncStorage("study-images");
+      if (cachedImages) {
+        return JSON.parse(cachedImages);
+      }
+    }
+
+    const data = await fetchStudyImages(UNSPLASH_URL);
+    await saveToAsyncStorage("study-images", JSON.stringify(data));
+    await saveToAsyncStorage(
+      "last-unsplash-fetch-timestamp",
+      currentTime.toString()
+    );
+    return data;
   });
 };
