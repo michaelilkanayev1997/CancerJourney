@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -5,23 +6,35 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { BottomTabParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
 
-type Props = {};
+type Props = {
+  screenWidth: number;
+};
 
-const HomeCards = (props: Props) => {
+const HomeCards: FC<Props> = ({ screenWidth }) => {
   const navigation = useNavigation<NavigationProp<BottomTabParamList>>();
+
+  const oneThirdScreenWidth = screenWidth / 3.7;
 
   return (
     <>
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() => navigation.navigate("UploadScreen")}
       >
-        <Ionicons name="cloud-upload" size={50} color={colors.LIGHT_BLUE} />
+        <Ionicons name="cloud-upload" size={30} color={colors.LIGHT_BLUE} />
         <Text style={styles.cardText}>Upload Files & Images</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("Schedule", {
             screen: "Appointments",
@@ -29,12 +42,16 @@ const HomeCards = (props: Props) => {
           })
         }
       >
-        <Ionicons name="calendar" size={50} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Manage Appointments</Text>
+        <Ionicons name="calendar" size={30} color={colors.LIGHT_BLUE} />
+        <Text style={styles.cardText}>Manage{"\n"}Appointments</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("Schedule", {
             screen: "Medications",
@@ -42,43 +59,55 @@ const HomeCards = (props: Props) => {
           })
         }
       >
-        <Ionicons name="medkit" size={50} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Manage Medications</Text>
+        <Ionicons name="medkit" size={30} color={colors.LIGHT_BLUE} />
+        <Text style={styles.cardText}>Manage{"\n"}Medications</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("PostScreen", {
             screen: "Main",
           })
         }
       >
-        <Ionicons name="people" size={50} color={colors.LIGHT_BLUE} />
+        <Ionicons name="people" size={30} color={colors.LIGHT_BLUE} />
         <Text style={styles.cardText}>Social Forum</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("PostScreen", {
             screen: "Posts",
           })
         }
       >
-        <Ionicons name="chatbox" size={50} color={colors.LIGHT_BLUE} />
+        <Ionicons name="chatbox" size={30} color={colors.LIGHT_BLUE} />
         <Text style={styles.cardText}>Social Posts</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          { width: oneThirdScreenWidth, height: oneThirdScreenWidth },
+        ]}
+        activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("ProfileScreen", {
             screen: "Settings",
           })
         }
       >
-        <Ionicons name="settings" size={50} color={colors.LIGHT_BLUE} />
+        <Ionicons name="settings" size={30} color={colors.LIGHT_BLUE} />
         <Text style={styles.cardText}>Settings</Text>
       </TouchableOpacity>
     </>
@@ -89,8 +118,6 @@ export default HomeCards;
 
 const styles = StyleSheet.create({
   card: {
-    width: "45%",
-    height: 150,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
@@ -101,12 +128,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    padding: 10,
+    padding: 3,
   },
   cardText: {
-    marginTop: 5,
-    fontSize: 16,
+    marginTop: 1,
+    fontSize: 14,
     textAlign: "center",
-    color: "#333",
+    color: colors.LIGHT_BLUE,
   },
 });

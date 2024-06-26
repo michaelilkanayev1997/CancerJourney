@@ -1,5 +1,6 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { IAppointment, IMedication } from "./schedule";
+import { Study } from "@components/StudyCard";
 
 interface NewUserResponse {
   id: string;
@@ -16,13 +17,21 @@ export type AuthStackParamList = {
   Welcome: undefined;
 };
 
+export type HomeStackParamList = {
+  Home: undefined;
+  StudyDetails: {
+    study: Study;
+    imageUrl: string;
+  };
+};
+
 export type ProfileStackParamList = {
   Profile: undefined;
   Settings: undefined;
 };
 
 export type UploadStackParamList = {
-  FolderGrid: undefined;
+  FolderGrid?: undefined;
   FolderDetails: {
     folderName: string;
     toggleLayout?: boolean;
@@ -50,9 +59,9 @@ export type SocialStackParamList = {
 };
 
 export type BottomTabParamList = {
-  HomeScreen: undefined;
+  HomeScreen: NavigatorScreenParams<HomeStackParamList>;
   ProfileScreen: NavigatorScreenParams<ProfileStackParamList>;
   PostScreen: NavigatorScreenParams<SocialStackParamList>;
-  UploadScreen: undefined;
+  UploadScreen: NavigatorScreenParams<UploadStackParamList>;
   Schedule: NavigatorScreenParams<ScheduleStackParamList>;
 };
