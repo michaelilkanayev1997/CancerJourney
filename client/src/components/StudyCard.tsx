@@ -1,8 +1,19 @@
 import { FC } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { HomeStackParamList } from "src/@types/navigation";
 
 export interface Study {
+  key?: string;
   protocolSection: {
     identificationModule: {
       nctId: string;
@@ -31,72 +42,85 @@ export interface Study {
 
 interface Props {
   study: Study;
+  translateY: Animated.AnimatedInterpolation<string | number>;
+  imageUrl: string;
 }
 
-const StudyCard: FC<Props> = ({ study }) => {
+const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const {
-    identificationModule: { nctId, briefTitle, organization },
-    statusModule: { overallStatus, startDateStruct, completionDateStruct },
-    descriptionModule: { briefSummary },
+    identificationModule: { briefTitle, organization },
+    statusModule: { startDateStruct, completionDateStruct },
     conditionsModule: { conditions },
   } = study.protocolSection;
 
-  const imageUrl = require("@assets/Schedule/medicationPhotoPreview.jpg");
+  const imageUrlBackUp = require("@assets/cancerstudy.jpg");
 
   return (
-    <View style={styles.card}>
-      <View style={styles.imageView}>
-        <Image source={imageUrl} style={styles.image} />
-      </View>
-      <Text style={styles.title}>{briefTitle}</Text>
-      {/* <View style={styles.infoRow}>
-        <Ionicons name="medkit-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Study ID: ${nctId}`}</Text>
-      </View> */}
-      <View style={styles.infoRow}>
-        <Ionicons name="business-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Organization: ${organization.fullName}`}</Text>
-      </View>
-      {/* <View style={styles.infoRow}>
-        <Ionicons name="pulse-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Status: ${overallStatus}`}</Text>
-      </View> */}
-      <View style={styles.infoRow}>
-        <Ionicons name="calendar-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Start: ${startDateStruct.date}`}</Text>
-      </View>
-      <View style={styles.infoRow}>
-        <Ionicons name="calendar-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Completion: ${completionDateStruct.date}`}</Text>
-      </View>
-      <View style={styles.infoRow}>
-        <Ionicons name="alert-circle-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Conditions: ${conditions.join(
-          ", "
-        )}`}</Text>
-      </View>
-      {/* <Text style={styles.summary}>{briefSummary}</Text> */}
-    </View>
+    <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("StudyDetails", { study, imageUrl })}
+      >
+        <View style={styles.imageView}>
+          <Image
+            source={imageUrl ? { uri: imageUrl } : imageUrlBackUp}
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.title} numberOfLines={3} ellipsizeMode="tail">
+          {briefTitle}
+        </Text>
+        <View style={styles.infoRow}>
+          <Ionicons name="business-outline" size={16} color="#555" />
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={styles.infoText}
+          >{`Organization: ${organization.fullName}`}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="calendar-outline" size={16} color="#555" />
+          <Text
+            style={styles.infoText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >{`Start: ${startDateStruct?.date}`}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="calendar-outline" size={16} color="#555" />
+          <Text
+            style={styles.infoText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >{`Completion: ${completionDateStruct?.date}`}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="alert-circle-outline" size={16} color="#555" />
+          <Text
+            style={styles.infoText}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >{`Conditions: ${conditions.join(", ")}`}</Text>
+        </View>
+        {/* <Text style={styles.summary}>{briefSummary}</Text> */}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    marginHorizontal: 10,
     padding: 12,
-    margin: 10,
-    borderRadius: 10,
+    backgroundColor: "white",
+    borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-    width: 250,
-    height: 290,
+    height: 270,
   },
   imageView: {
     alignItems: "center",
@@ -106,10 +130,10 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 75,
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   title: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "bold",
     marginBottom: 5,
   },
@@ -122,11 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#555",
     marginLeft: 5,
-  },
-  summary: {
-    fontSize: 12,
-    color: "#333",
-    marginTop: 10,
+    width: "92%",
   },
 });
 
