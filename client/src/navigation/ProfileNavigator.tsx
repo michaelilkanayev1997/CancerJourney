@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Settings from "@views/bottomTab/Settings";
-import Profile from "@views/bottomTab/Profile";
+import Profile from "@views/bottomTab/profile/Profile";
+import Settings from "@views/bottomTab/profile/Settings";
 import { ProfileStackParamList } from "src/@types/navigation";
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();

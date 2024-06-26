@@ -2,8 +2,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { StyleSheet } from "react-native";
 
 import colors from "@utils/colors";
-import Appointments from "@views/Appointments";
-import Medications from "@views/Medications";
+import Medications from "@views/bottomTab/schedule/Medications";
+import Appointments from "@views/bottomTab/schedule/Appointments";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -23,11 +23,12 @@ const ScheduleNavigator = () => {
 
 const styles = StyleSheet.create({
   tabbarStyle: {
-    backgroundColor: colors.LIGHT_GREEN,
+    backgroundColor: "white",
   },
   tabbarLabelStyle: {
     color: colors.CONTRAST,
     fontSize: 12,
+    fontWeight: "600",
   },
 });
 

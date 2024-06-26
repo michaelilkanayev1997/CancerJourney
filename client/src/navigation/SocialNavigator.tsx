@@ -2,7 +2,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { StyleSheet } from "react-native";
 
 import colors from "@utils/colors";
-import Posts from "@views/bottomTab/Posts";
+import Posts from "@views/bottomTab/posts/Posts";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -23,11 +23,12 @@ const SocialNavigator = () => {
 
 const styles = StyleSheet.create({
   tabbarStyle: {
-    backgroundColor: colors.LIGHT_GREEN,
+    backgroundColor: "white",
   },
   tabbarLabelStyle: {
     color: colors.CONTRAST,
     fontSize: 12,
+    fontWeight: "600",
   },
 });
 
