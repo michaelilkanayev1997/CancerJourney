@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   title: {
     paddingLeft: 10,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   location: {
     fontSize: 16,
