@@ -23,6 +23,7 @@ export type HomeStackParamList = {
     study: Study;
     imageUrl: string;
   };
+  Settings: undefined;
 };
 
 export type ProfileStackParamList = {
