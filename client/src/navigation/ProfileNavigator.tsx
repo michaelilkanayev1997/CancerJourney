@@ -14,7 +14,14 @@ const ProfileNavigator = () => {
       }}
     >
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerTransparent: false,
+          headerShown: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };
