@@ -1,8 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Entypo } from "@expo/vector-icons";
 
-import Profile from "@views/bottomTab/Profile";
-import Upload from "@views/bottomTab/Upload";
+import Upload from "@views/bottomTab/upload/Upload";
 import CustomDrawer from "@components/CustomDrawer";
 import colors from "@utils/colors";
 import TabNavigator from "./TabNavigator";
@@ -10,6 +9,7 @@ import RegistrationForm from "@views/RegistrationForm";
 import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
 import { usePushNotifications } from "src/hooks/usePushNotifications";
+import Profile from "@views/bottomTab/profile/Profile";
 
 const Drawer = createDrawerNavigator();
 

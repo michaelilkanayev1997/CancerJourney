@@ -4,10 +4,10 @@ import { Image, StyleSheet } from "react-native";
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
 import UploadFileNavigator from "./UploadFileNavigator";
-import Home from "@views/bottomTab/Home";
 import SocialNavigator from "./SocialNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
+import HomeNavigator from "./HomeNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +25,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="HomeScreen"
-        component={Home}
+        component={HomeNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon label="Home" icon="home" size={size} color={color} />

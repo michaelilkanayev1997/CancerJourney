@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import FolderDetails from "@views/FolderDetails";
-import Upload from "@views/bottomTab/Upload";
+import FolderDetails from "@views/bottomTab/upload/FolderDetails";
+import Upload from "@views/bottomTab/upload/Upload";
 import { UploadStackParamList } from "src/@types/navigation";
-import FilePreview from "@views/FilePreview";
+import FilePreview from "@views/bottomTab/upload/FilePreview";
 
 const Stack = createNativeStackNavigator<UploadStackParamList>();
 
