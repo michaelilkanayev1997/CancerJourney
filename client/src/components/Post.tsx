@@ -18,11 +18,11 @@ const Post: FC<PostProps> = ({ title, content, likes, onLike, onComment }) => {
       <Text style={styles.content}>{content}</Text>
       <View style={styles.footer}>
         <TouchableOpacity onPress={onLike} style={styles.button}>
-          <MaterialCommunityIcons name="heart" size={20} color={"black"} />
+          <MaterialCommunityIcons name="heart" size={20} color={"red"} />
           <Text style={styles.buttonText}> {likes}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onComment} style={styles.button}>
-          <MaterialCommunityIcons name="comment" size={20} color={"black"} />
+          <MaterialCommunityIcons name="comment" size={20} color={"blue"} />
           <Text style={styles.buttonText}> Comment</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
