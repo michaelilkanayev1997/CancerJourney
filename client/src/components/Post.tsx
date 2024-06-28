@@ -18,27 +18,15 @@ const Post: FC<PostProps> = ({ title, content, likes, onLike, onComment }) => {
       <Text style={styles.content}>{content}</Text>
       <View style={styles.footer}>
         <TouchableOpacity onPress={onLike} style={styles.button}>
-          <MaterialCommunityIcons
-            name="heart"
-            size={20}
-            color={colors.primary}
-          />
+          <MaterialCommunityIcons name="heart" size={20} color={"black"} />
           <Text style={styles.buttonText}> {likes}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onComment} style={styles.button}>
-          <MaterialCommunityIcons
-            name="comment"
-            size={20}
-            color={colors.primary}
-          />
+          <MaterialCommunityIcons name="comment" size={20} color={"black"} />
           <Text style={styles.buttonText}> Comment</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <MaterialCommunityIcons
-            name="share"
-            size={20}
-            color={colors.primary}
-          />
+          <MaterialCommunityIcons name="share" size={20} color={"black"} />
           <Text style={styles.buttonText}> Share</Text>
         </TouchableOpacity>
       </View>
@@ -52,7 +40,7 @@ const styles = StyleSheet.create({
     padding: 16,
     margin: 8,
     borderRadius: 8,
-    shadowColor: colors.primary,
+    shadowColor: colors.CONTRAST,
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 3,
@@ -60,12 +48,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.text,
+    color: colors.CONTRAST,
     marginBottom: 8,
   },
   content: {
     fontSize: 14,
-    color: colors.placeholder,
+    color: colors.CONTRAST,
     marginBottom: 16,
   },
   footer: {
@@ -78,7 +66,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginLeft: 4,
-    color: colors.text,
+    color: colors.LIGHT_BLUE,
     fontWeight: "bold",
   },
 });
