@@ -1,5 +1,5 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -38,8 +38,7 @@ const AppTheme = {
 };
 
 const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
-  const { loggedIn, busy, viewedOnBoarding, profile } =
-    useSelector(getAuthState);
+  const { loggedIn, busy, viewedOnBoarding } = useSelector(getAuthState);
 
   const dispatch = useDispatch();
 
