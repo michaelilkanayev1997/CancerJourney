@@ -46,6 +46,7 @@ const replySchema = new Schema<IReply>({
 });
 
 const postSchema = new Schema<IPost>({
+  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   description: {
     type: String,
     required: true,
@@ -58,7 +59,6 @@ const postSchema = new Schema<IPost>({
       type: String,
     },
   },
-  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   likes: [likeSchema],
   replies: [replySchema],
   createdAt: {
@@ -67,4 +67,4 @@ const postSchema = new Schema<IPost>({
   },
 });
 
-export const Files = mongoose.model<IPost>("Posts", postSchema);
+export const Posts = mongoose.model<IPost>("Posts", postSchema);
