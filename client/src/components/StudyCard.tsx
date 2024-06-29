@@ -85,15 +85,20 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
             style={styles.infoText}
             numberOfLines={1}
             ellipsizeMode="tail"
-          >{`Start: ${startDateStruct?.date}`}</Text>
+          >{`Start: ${
+            startDateStruct?.date ? startDateStruct.date : "Date not available"
+          }`}</Text>
         </View>
         <View style={styles.infoRow}>
           <Ionicons name="calendar-outline" size={16} color="#555" />
-          <Text
-            style={styles.infoText}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >{`Completion: ${completionDateStruct?.date}`}</Text>
+          <Text style={styles.infoText} numberOfLines={1} ellipsizeMode="tail">
+            {" "}
+            {`Completion: ${
+              completionDateStruct?.date
+                ? completionDateStruct.date
+                : "Date not available"
+            }`}
+          </Text>
         </View>
         <View style={styles.infoRow}>
           <Ionicons name="alert-circle-outline" size={16} color="#555" />
@@ -103,7 +108,6 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
             ellipsizeMode="tail"
           >{`Conditions: ${conditions.join(", ")}`}</Text>
         </View>
-        {/* <Text style={styles.summary}>{briefSummary}</Text> */}
       </TouchableOpacity>
     </Animated.View>
   );
