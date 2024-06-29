@@ -1,9 +1,9 @@
 import cron from "node-cron";
 import { Expo } from "expo-server-sdk";
 
-import { IAppointment, IMedication } from "#/models/Schedule";
 import { UserDocument } from "#/models/user";
 import { timesPerDayToHours } from "./helper";
+import { IAppointment, IMedication } from "#/models/Schedule";
 
 const expo = new Expo();
 
