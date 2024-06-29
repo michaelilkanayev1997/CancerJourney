@@ -42,15 +42,17 @@ const StudyDetails = () => {
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="calendar-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Start Date: ${startDateStruct.date}`}</Text>
+        <Text style={styles.infoText}>{`Start Date: ${
+          startDateStruct?.date || "Date not available"
+        }`}</Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="calendar-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Completion Date: ${completionDateStruct.date}`}</Text>
+        <Text style={styles.infoText}>
+          {`Completion Date: ${
+            completionDateStruct?.date || "Date not available"
+          }`}
+        </Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="alert-circle-outline" size={16} color="#555" />
