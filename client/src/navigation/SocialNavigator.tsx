@@ -25,11 +25,13 @@ const SocialNavigator = () => {
 const styles = StyleSheet.create({
   tabbarStyle: {
     backgroundColor: "white",
+    height: 42,
   },
   tabbarLabelStyle: {
     color: colors.CONTRAST,
     fontSize: 12,
     fontWeight: "600",
+    textTransform: "none",
   },
 });
 
