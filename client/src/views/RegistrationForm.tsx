@@ -1,7 +1,8 @@
 import { FC, useState } from "react";
-import { Text, StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Feather } from "@expo/vector-icons";
+import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
 
 import InputSections, { NewProfile } from "@components/InputSections";
 import AppButton from "@ui/AppButton";
@@ -9,11 +10,6 @@ import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import { updateProfile } from "src/store/auth";
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInRight,
-} from "react-native-reanimated";
 
 interface Props {}
 
@@ -25,8 +21,9 @@ const RegistrationForm: FC<Props> = (props) => {
     cancerType: "other",
     diagnosisDate: null,
     stage: "",
-    country: { cca2: "", name: "" },
+    country: { cca2: "", name: "", flag: "" },
   });
+
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const dispatch = useDispatch();
 
