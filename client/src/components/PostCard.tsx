@@ -6,45 +6,41 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
-  ImageSourcePropType,
   LayoutChangeEvent,
 } from "react-native";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-  Entypo,
-  Feather,
-  FontAwesome,
-  SimpleLineIcons,
-  AntDesign,
-} from "@expo/vector-icons";
 
 import colors from "../utils/colors";
+import { calculateTimeDifference } from "@utils/helper";
+import { Avatar, Like, Reply, User } from "src/@types/post";
+import { getAuthState } from "src/store/auth";
+import { useSelector } from "react-redux";
 
 interface PostProps {
-  title: string;
   description: string;
-  likes: number;
-  user: {
-    profileImage: string;
-    name: string;
+  image: {
+    public_id: string;
+    url: string;
   };
+  likes: Like[];
+  owner: User;
   createdAt: string;
-  imageUrl: string;
+  replies: Reply[];
   onLike: () => void;
   onComment: () => void;
 }
 
 const PostCard: FC<PostProps> = ({
-  title,
   description,
+  image,
   likes,
-  user,
+  owner,
   createdAt,
-  imageUrl,
   onLike,
   onComment,
+  replies,
 }) => {
+  const { profile } = useSelector(getAuthState);
+
   const [showFullText, setShowFullText] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isTextLong, setIsTextLong] = useState(false);
@@ -71,23 +67,35 @@ const PostCard: FC<PostProps> = ({
         <View style={styles.userDetails}>
           <Image
             style={styles.profileImage}
-            source={{ uri: user?.profileImage }}
+            source={
+              owner?.avatar?.url
+                ? { uri: owner?.avatar?.url }
+                : require("@assets/user_profile.png")
+            }
           />
           <View style={{ flexDirection: "column", gap: 2 }}>
-            <Text style={styles.userName}>{user?.name}</Text>
+            <Text style={styles.userName}>{owner?.name}</Text>
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.userTitle}
+              style={styles.userType}
             >
-              Engineer Graduate | LinkedIn Member
+              {owner?.userType}
             </Text>
-            <Text style={styles.date}>{createdAt?.toString()}</Text>
           </View>
         </View>
-        <View style={styles.headerIcons}>
-          <Entypo name="dots-three-vertical" size={20} color="black" />
-          <Feather name="x" size={20} color="black" />
+
+        <View style={styles.TimeAndOptions}>
+          <Text style={styles.durationText}>
+            {calculateTimeDifference(createdAt)}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              // item.user._id === user._id && setOpenModal(true)
+            }}
+          >
+            <Text style={styles.ellipsisText}>...</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -108,69 +116,117 @@ const PostCard: FC<PostProps> = ({
         )}
       </View>
 
-      {imageUrl ? (
+      {image?.url ? (
         <Image
           style={styles.postImage}
           source={{
-            uri: imageUrl,
+            uri: image.url,
           }}
         />
       ) : null}
 
-      {likes?.length > 0 && (
-        <View style={styles.likesContainer}>
-          <SimpleLineIcons name="like" size={16} color={colors.PRIMARY_BTN} />
-          <Text style={styles.likesText}>{likes}</Text>
+      <View style={styles.footer}>
+        <View style={styles.socialActivity}>
+          <TouchableOpacity
+          // onPress={() => reactsHandler(item)}
+          >
+            {likes?.length > 0 ? (
+              <>
+                {likes.find((i: Like) => i.userId._id === profile?.id) ? (
+                  <Image
+                    source={{
+                      uri: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png",
+                    }}
+                    style={styles.icon}
+                  />
+                ) : (
+                  <Image
+                    source={{
+                      uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                    }}
+                    style={styles.icon}
+                  />
+                )}
+              </>
+            ) : (
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                }}
+                style={styles.icon}
+              />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+          // onPress={() => {
+          //   navigation.navigate("CreateReplies", {
+          //     item: item,
+          //     navigation: navigation,
+          //     postId: postId,
+          //   });
+          // }}
+          >
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/5948/5948565.png",
+              }}
+              style={[styles.icon, styles.smallIcon, styles.marginLeft]}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/10863/10863770.png",
+              }}
+              style={[styles.icon, styles.mediumIcon, styles.marginLeft]}
+            />
+          </TouchableOpacity>
         </View>
-      )}
+
+        {(likes.length !== 0 || replies.length !== 0) && (
+          <View style={styles.replyContainer}>
+            <TouchableOpacity
+            // onPress={() =>{
+            //   // item.likes.length !== 0 &&
+            //   // navigation.navigate('PostLikeCard', {
+            //   //   item: item.likes,
+            //   //   navigation: navigation,
+            //   // })
+            // }
+            >
+              <Text style={styles.replyText}>
+                {likes.length}{" "}
+                {likes.length > 1 || likes.length === 0 ? "likes ·" : "like ·"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+            // onPress={() =>{
+            //   // navigation.navigate('PostDetails', {
+            //   //   data: item,
+            //   // })
+            // }
+            >
+              <Text style={styles.replyText}>
+                {`${replies?.length} replies`}{" "}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
 
       <View style={styles.separator} />
-
-      <View style={styles.footer}>
-        <Pressable onPress={handleLikePost} style={styles.footerButton}>
-          <AntDesign
-            name="like2"
-            size={24}
-            color={isLiked ? colors.PRIMARY_BTN : "gray"}
-          />
-          <Text
-            style={[
-              styles.footerButtonText,
-              { color: isLiked ? colors.PRIMARY_BTN : "gray" },
-            ]}
-          >
-            Like
-          </Text>
-        </Pressable>
-        <Pressable onPress={onComment} style={styles.footerButton}>
-          <FontAwesome name="comment-o" size={20} color="gray" />
-          <Text style={styles.footerButtonText}>Comment</Text>
-        </Pressable>
-
-        <Pressable style={styles.footerButton}>
-          <Feather name="send" size={20} color="gray" />
-          <Text style={styles.footerButtonText}>Send</Text>
-        </Pressable>
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  postContainer: {
-    backgroundColor: colors.PRIMARY_LIGHT,
-    padding: 16,
-    margin: 8,
-    borderRadius: 8,
-    shadowColor: colors.CONTRAST,
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 3,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingTop: 5,
   },
   userDetails: {
     flexDirection: "row",
@@ -186,20 +242,30 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
   },
-  userTitle: {
+  userType: {
     width: 200,
     color: "gray",
     fontSize: 15,
     fontWeight: "400",
   },
-  date: {
-    color: "gray",
-  },
-  headerIcons: {
+  TimeAndOptions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    marginLeft: -15,
+    marginBottom: 12,
+    marginLeft: "-10%",
+  },
+  durationText: {
+    color: "#000000b6",
+  },
+  ellipsisText: {
+    color: "#000",
+    paddingLeft: 16,
+    fontWeight: "900",
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  date: {
+    color: "gray",
   },
   contentContainer: {
     marginTop: 10,
@@ -217,34 +283,47 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
   },
-  likesContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    gap: 6,
-  },
-  likesText: {
-    color: "gray",
-    marginLeft: 6,
-  },
   separator: {
-    height: 3,
+    height: 2,
     backgroundColor: "#E0E0E0",
     marginVertical: 10,
   },
   footer: {
     flexDirection: "row",
-    justifyContent: "space-around",
     alignItems: "center",
-    marginVertical: 6,
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginVertical: 8,
   },
-  footerButton: {
+  icon: {
+    width: 30,
+    height: 30,
+    marginHorizontal: 10,
+  },
+  smallIcon: {
+    width: 22,
+    height: 22,
+  },
+  mediumIcon: {
+    width: 25,
+    height: 25,
+  },
+  marginLeft: {
+    marginLeft: 20,
+  },
+  replyContainer: {
+    flexDirection: "row",
+    marginRight: -10,
+  },
+  socialActivity: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
-  footerButtonText: {
-    marginTop: 2,
-    fontSize: 12,
-    color: "gray",
+  replyText: {
+    fontSize: 16,
+    color: "#0000009b",
+    marginRight: 8,
   },
 });
 
