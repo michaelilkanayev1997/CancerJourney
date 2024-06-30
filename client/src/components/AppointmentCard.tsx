@@ -10,7 +10,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { IAppointment } from "./../../../server/src/models/Schedule";
+import { IAppointment } from "../../../server/src/models/schedule";
 import { formatParagraph, formatText } from "@utils/helper";
 import AppointmentMoreOptionsModal from "./scheduleModal/AppointmentMoreOptionsModal";
 

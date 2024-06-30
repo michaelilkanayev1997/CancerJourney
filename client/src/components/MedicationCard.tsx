@@ -11,7 +11,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { IMedication } from "../../../server/src/models/Schedule";
+import { IMedication } from "../../../server/src/models/schedule";
 import { formatParagraph, formatText } from "@utils/helper";
 import LottieView from "lottie-react-native";
 import MedicationMoreOptionsModal from "./scheduleModal/MedicationMoreOptionsModal";
