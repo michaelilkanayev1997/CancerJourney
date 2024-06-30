@@ -5,10 +5,11 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { FoldersLength } from "src/@types/file";
 import { ImageType } from "@components/ImageCard";
-import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
+import { IAppointment, IMedication } from "../../../server/src/models/schedule";
 import axios from "axios";
 import { UnsplashImage } from "@views/bottomTab/home/Home";
 import { getFromAsyncStorage, saveToAsyncStorage } from "@utils/asyncStorage";
+import { Post } from "src/@types/post";
 
 const fetchFoldersLength = async (): Promise<FoldersLength> => {
   const client = await getClient();
@@ -114,5 +115,26 @@ export const useFetchStudyImages = (UNSPLASH_URL: string) => {
       currentTime.toString()
     );
     return data;
+  });
+};
+
+export const fetchPosts = async (limit = 6, pageNo = 0): Promise<Post[]> => {
+  const client = await getClient();
+  const { data } = await client.get(
+    `/post/get-posts?limit=${limit}&pageNo=${pageNo}`
+  );
+  return data;
+};
+
+export const useFetchPosts = () => {
+  return useQuery(["posts"], {
+    queryFn: () => fetchPosts(),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
   });
 };

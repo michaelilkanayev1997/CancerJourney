@@ -4,7 +4,7 @@ import { ImageType } from "@components/ImageCard";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
-import { IAppointment, IMedication } from "../../../server/src/models/Schedule";
+import { IAppointment, IMedication } from "../../../server/src/models/schedule";
 
 interface DeleteFileParams {
   fileId: string;

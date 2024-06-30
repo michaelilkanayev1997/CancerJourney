@@ -25,7 +25,6 @@ export const getPosts: RequestHandler = async (req, res) => {
         select: "name userType avatar",
       }); // Populate replies likes userId with name and profileImage
 
-    console.log("Fetched Posts:", data);
     res.json(data);
   } catch (error) {
     return res.status(500).json({
