@@ -45,26 +45,25 @@ const replySchema = new Schema<IReply>({
   },
 });
 
-const postSchema = new Schema<IPost>({
-  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  description: {
-    type: String,
-    required: true,
-  },
-  image: {
-    public_id: {
+const postSchema = new Schema<IPost>(
+  {
+    owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    description: {
       type: String,
+      required: true,
     },
-    url: {
-      type: String,
+    image: {
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
     },
+    likes: [likeSchema],
+    replies: [replySchema],
   },
-  likes: [likeSchema],
-  replies: [replySchema],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 export const Posts = mongoose.model<IPost>("Posts", postSchema);
