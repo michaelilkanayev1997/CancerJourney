@@ -32,6 +32,7 @@ const DatePicker: FC<Props> = ({
       setShowDateModal(false);
       return;
     }
+
     if (selectedDate && appointmentDate) {
       if (mode === "date") {
         setTempDate(selectedDate);
@@ -48,7 +49,7 @@ const DatePicker: FC<Props> = ({
         setMode("date");
         setDate(combinedDate);
       }
-    } else if (selectedDate && appointmentDate) {
+    } else if (selectedDate) {
       setShowDateModal(Platform.OS === "ios");
       setDate(selectedDate);
     }

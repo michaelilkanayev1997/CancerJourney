@@ -45,3 +45,11 @@ export const timesPerDayToHours = (timesPerDay: string): string[] => {
       throw new Error("Invalid timesPerDay value.");
   }
 };
+
+// Function to get yesterday's date
+export const getTomorrow = () => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  return tomorrow;
+};

@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     backgroundColor: "#FFF",
-    paddingBottom: 77,
+    paddingBottom: 76,
   },
   imagesContainer: {
     paddingHorizontal: 10,

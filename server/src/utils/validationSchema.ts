@@ -1,5 +1,6 @@
 import { isValidObjectId } from "mongoose";
 import * as yup from "yup";
+import { getTomorrow } from "./helper";
 
 export const CreateUserSchema = yup.object().shape({
   name: yup
@@ -88,7 +89,7 @@ export const ProfileUpdateSchema = yup.object().shape({
   birthDate: yup
     .date()
     .required("Birth Date is missing!")
-    .max(new Date(), "birthDate cannot be in the future"),
+    .max(getTomorrow(), "birth Date cannot be in the future"),
   diagnosisDate: yup.date().nullable().notRequired(),
   stage: yup.string(),
   country: yup
