@@ -131,7 +131,7 @@ const Profile: FC<Props> = (props) => {
     <View
       style={[
         styles.container,
-        { marginBottom: loadingUpdate ? 0 : keyboardIsShown ? 15 : 105 },
+        { marginBottom: loadingUpdate ? 0 : keyboardIsShown ? 15 : 100 },
       ]}
     >
       <ScrollView style={styles.container}>

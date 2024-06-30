@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
-    marginHorizontal: 10,
+    marginHorizontal: 2,
   },
   smallIcon: {
     width: 22,
