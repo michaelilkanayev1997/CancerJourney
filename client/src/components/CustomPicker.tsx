@@ -20,7 +20,7 @@ interface Props {
   setPickerVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-const cancerTypes = [
+export const cancerTypes = [
   {
     label: "Breast Cancer",
     value: "breast",

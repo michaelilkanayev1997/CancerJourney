@@ -1,7 +1,6 @@
-import PostCard from "@components/PostCard";
-import colors from "@utils/colors";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
+  Button,
   FlatList,
   Image,
   Pressable,
@@ -9,35 +8,41 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
+  Vibration,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { useQueryClient } from "react-query";
+import { Ionicons, Entypo } from "@expo/vector-icons";
+
 import Loader from "@ui/Loader";
 import { Post } from "src/@types/post";
 import { fetchPosts, useFetchPosts } from "src/hooks/query";
-import { useQueryClient } from "react-query";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
+import PostCard from "@components/PostCard";
+import colors from "@utils/colors";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 type Props = {};
 
 let pageNo = 0;
 const limit = 6;
 
-const Main = () => {
+const Main = ({ navigation }) => {
   const { data, isFetching, isLoading } = useFetchPosts();
   const queryClient = useQueryClient();
-
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+
   // console.log(data?.length);
   // console.log("isFetchingMore", isFetchingMore);
   // console.log("hasMore", hasMore);
 
   const handleOnEndReached = async () => {
-    if (isFetchingMore || !hasMore) return;
-    if (!data) return;
+    if (!data || isFetchingMore || !hasMore) return;
+
     setIsFetchingMore(true);
     try {
       pageNo += 1;
@@ -60,23 +65,26 @@ const Main = () => {
     setIsFetchingMore(false);
   };
 
-  const handleOnRefresh = () => {
+  const handleOnRefresh = useCallback(() => {
     pageNo = 0;
     setHasMore(true);
     queryClient.invalidateQueries(["posts"]);
-  };
+  }, [queryClient]);
 
-  const renderPost = ({ item }: { item: Post }) => (
-    <PostCard
-      description={item.description}
-      image={item.image}
-      likes={item.likes}
-      replies={item.replies}
-      createdAt={item.createdAt}
-      onLike={() => {}}
-      onComment={() => {}}
-      owner={item.owner}
-    />
+  const renderPost = useCallback(
+    ({ item }: { item: Post }) => (
+      <PostCard
+        description={item.description}
+        image={item.image}
+        likes={item.likes}
+        replies={item.replies}
+        createdAt={item.createdAt}
+        onLike={() => {}}
+        onComment={() => {}}
+        owner={item.owner}
+      />
+    ),
+    []
   );
 
   const renderHeader = () => (
@@ -91,6 +99,8 @@ const Main = () => {
     ) : null;
   };
 
+  const keyExtractor = useCallback((item: Post) => item._id.toString(), []);
+
   return (
     <>
       {isLoading ? (
@@ -104,14 +114,16 @@ const Main = () => {
       ) : (
         <View style={styles.mainContainer}>
           <View style={styles.header}>
-            <Pressable onPress={() => {}}>
-              <Image
-                style={styles.profileImage}
-                source={{
-                  uri: "https://lh3.googleusercontent.com/a/ACg8ocLedYC3JvvFb_cuJLfPLpCDFBKnck-pB3DMXDkFRRxUfe-kfAQY=s418-c-no",
-                }}
-              />
-            </Pressable>
+            <TouchableOpacity
+              onPress={() => {
+                Vibration.vibrate(50);
+                navigation.openDrawer();
+              }}
+              style={styles.menuButton}
+            >
+              <Entypo name="menu" size={24} color={colors.ICON} />
+              <Text style={styles.menuButtonText}>Forum</Text>
+            </TouchableOpacity>
 
             <Pressable style={styles.searchContainer}>
               <AntDesign
@@ -139,7 +151,7 @@ const Main = () => {
             contentContainerStyle={[styles.container]}
             data={data}
             renderItem={renderPost}
-            keyExtractor={(item) => item._id}
+            keyExtractor={keyExtractor}
             refreshControl={
               <RefreshControl
                 refreshing={!isLoading && isFetching}
@@ -152,6 +164,7 @@ const Main = () => {
             ListHeaderComponent={renderHeader}
             ListFooterComponent={renderFooter}
             onEndReached={handleOnEndReached}
+            initialNumToRender={6}
           />
         </View>
       )}
@@ -227,6 +240,19 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
+  },
+  menuButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.PRIMARY_LIGHT,
+    padding: 10,
+    borderRadius: 5,
+  },
+  menuButtonText: {
+    marginLeft: 5,
+    color: colors.ICON,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

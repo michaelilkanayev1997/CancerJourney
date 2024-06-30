@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { I18nManager, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
@@ -42,27 +43,29 @@ const App = () => {
   const showAnimatedSplash = !appIsReady || !splashAnimationFinished;
 
   return (
-    <Animated.View style={styles.container}>
-      <PreloadIcons />
-      {showAnimatedSplash ? (
-        <LottieAnimation
-          onAnimationFinish={(isCancelled) => {
-            if (!isCancelled) {
-              setSplashAnimationFinished(true);
-            }
-          }}
-        />
-      ) : (
-        <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <AppContainer>
-              <AppNavigator />
-            </AppContainer>
-          </QueryClientProvider>
-        </Provider>
-      )}
-      <StatusBar style="auto" />
-    </Animated.View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Animated.View style={styles.container}>
+        <PreloadIcons />
+        {showAnimatedSplash ? (
+          <LottieAnimation
+            onAnimationFinish={(isCancelled) => {
+              if (!isCancelled) {
+                setSplashAnimationFinished(true);
+              }
+            }}
+          />
+        ) : (
+          <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+              <AppContainer>
+                <AppNavigator />
+              </AppContainer>
+            </QueryClientProvider>
+          </Provider>
+        )}
+        <StatusBar style="auto" />
+      </Animated.View>
+    </GestureHandlerRootView>
   );
 };
 

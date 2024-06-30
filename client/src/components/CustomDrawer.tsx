@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import {
   View,
   StyleSheet,
@@ -10,52 +10,64 @@ import {
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItemList,
 } from "@react-navigation/drawer";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { getAuthState } from "src/store/auth";
+import { cancerTypes } from "./CustomPicker";
 
-const CustomDrawer: FC<DrawerContentComponentProps> = (drawerItemListProps) => {
+const CustomDrawer: FC<DrawerContentComponentProps> = () => {
   const { profile } = useSelector(getAuthState);
 
   return (
     <View style={styles.container}>
-      <DrawerContentScrollView
-        {...drawerItemListProps}
-        contentContainerStyle={styles.drawerContentScrollView}
-      >
+      <>
         <ImageBackground
           source={require("@assets/green-gradient.jpg")}
-          style={styles.userInfo}
+          style={styles.header}
           resizeMode="cover"
         >
           <Image
-            source={require("@assets/user_profile.png")}
+            source={require("@assets/CancerType/other-cancer.png")}
             style={styles.profileImage}
           />
-          <Text style={styles.userName}>{profile?.name}</Text>
-          <View style={styles.emailContainer}>
-            <Text style={styles.emailText}>{profile?.email}</Text>
-            <Entypo
-              name="mail"
-              size={17}
-              color={colors.INFO}
-              style={styles.emailIcon}
-            />
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Forum Type</Text>
           </View>
         </ImageBackground>
         <View style={styles.drawerItemListContainer}>
-          <DrawerItemList {...drawerItemListProps} />
+          <DrawerContentScrollView scrollEnabled={true}>
+            <View>
+              {cancerTypes.map((type, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.drawerItem}
+                  onPress={() => {
+                    // props.navigation.navigate('Main', { cancerType: type });
+                    // props.navigation.closeDrawer();
+                  }}
+                >
+                  <Image
+                    source={
+                      type.imageUrl ||
+                      require("@assets/CancerType/other-cancer.png")
+                    }
+                    style={{ width: 25, height: 25, marginRight: 10 }}
+                  />
+                  <Text style={styles.drawerItemLabel}>{type.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </DrawerContentScrollView>
         </View>
-      </DrawerContentScrollView>
+      </>
       <View style={styles.footerContainer}>
         <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
           <View style={styles.footerButtonContent}>
-            <Ionicons name="share-social-outline" size={22} color="black" />
-            <Text style={styles.footerButtonText}>Share with Friends</Text>
+            <MaterialIcons name="trending-up" size={22} color="black" />
+            <Text style={styles.footerButtonText}>Popular Posts</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
@@ -76,13 +88,14 @@ const styles = StyleSheet.create({
   drawerContentScrollView: {
     backgroundColor: "#d6ede7",
   },
-  userInfo: {
-    padding: 20,
+  header: {
+    padding: 15,
+    justifyContent: "center",
+    alignItems: "center",
   },
   profileImage: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
+    height: 60,
+    width: 60,
     marginBottom: 10,
   },
   userName: {
@@ -90,28 +103,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
   },
-  emailContainer: {
+  headerContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
-  emailText: {
+  headerText: {
     color: colors.INFO,
   },
-  emailIcon: {
+  headerIcon: {
     marginLeft: 10,
   },
   drawerItemListContainer: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 10,
+    paddingTop: 0,
   },
   footerContainer: {
-    padding: 20,
+    padding: 10,
+    paddingBottom: 75,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
   },
   footerButton: {
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
   footerButtonContent: {
     flexDirection: "row",
@@ -121,6 +135,26 @@ const styles = StyleSheet.create({
   footerButtonText: {
     fontSize: 15,
     marginLeft: 5,
+  },
+  sectionHeader: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginLeft: 16,
+    paddingTop: 10,
+  },
+  drawerItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  drawerItemIcon: {
+    marginRight: 10,
+  },
+  drawerItemLabel: {
+    fontSize: 16,
+    color: colors.CONTRAST,
   },
 });
 

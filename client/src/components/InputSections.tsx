@@ -30,7 +30,7 @@ interface CancerTypeRibbon {
   [key: string]: number; // Use `number` since `require()` returns a number for local assets
 }
 
-const cancerTypeRibbon: CancerTypeRibbon = {
+export const cancerTypeRibbon: CancerTypeRibbon = {
   bone: require("@assets/CancerType/bone-cancer.png"),
   breast: require("@assets/CancerType/breast-cancer.png"),
   lung: require("@assets/CancerType/lung-cancer.png"),

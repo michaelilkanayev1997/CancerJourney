@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
@@ -8,10 +9,18 @@ import SocialNavigator from "./SocialNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
 import HomeNavigator from "./HomeNavigator";
+import { getAuthState } from "src/store/auth";
+import { usePushNotifications } from "src/hooks/usePushNotifications";
+import RegistrationForm from "@views/RegistrationForm";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+  const { profile } = useSelector(getAuthState);
+
+  // Register for push notifications and update token if necessary
+  usePushNotifications(profile?.expoPushToken || "", profile?.id || null);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -23,6 +32,11 @@ const TabNavigator = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
+      {/* If User dont have userType show RegistrationForm */}
+      {profile?.userType === "" && (
+        <Tab.Screen name="RegistrationForm" component={RegistrationForm} />
+      )}
+
       <Tab.Screen
         name="HomeScreen"
         component={HomeNavigator}

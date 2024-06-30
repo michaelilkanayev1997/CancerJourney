@@ -7,8 +7,7 @@ import {
   Dimensions,
   Animated as RNAnimated,
 } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Animated, { ZoomInRight } from "react-native-reanimated";
 
@@ -34,7 +33,6 @@ interface flatListRenderProps {
 }
 
 const Home: FC = () => {
-  const navigation = useNavigation();
   const [studies, setStudies] = useState<Study[]>([]);
 
   const scrollX = useRef(new RNAnimated.Value(0)).current;
@@ -47,19 +45,6 @@ const Home: FC = () => {
     data: images = [], // Default to an empty array if data is undefined
     isLoading,
   } = useFetchStudyImages(UNSPLASH_URL);
-
-  useFocusEffect(
-    useCallback(() => {
-      // Enable the drawer gesture and header when HomeScreen is focused
-      const parent = navigation.getParent();
-      //parent?.setOptions({ swipeEnabled: true, headerShown: true });
-
-      return () => {
-        // Disable the drawer gesture and header when HomeScreen is not focused
-        parent?.setOptions({ swipeEnabled: false, headerShown: false });
-      };
-    }, [navigation])
-  );
 
   useEffect(() => {
     const fetchStudies = async () => {
