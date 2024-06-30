@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.PRIMARY_LIGHT, //inactive contrast ?
     padding: 8,
-    paddingBottom: 125,
+    paddingBottom: 116,
   },
   sectionTitle: {
     fontSize: 16,
