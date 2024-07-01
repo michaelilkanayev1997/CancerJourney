@@ -17,6 +17,8 @@ import { CLINICAL_TRIALS_URL, UNSPLASH_ACCESS_KEY } from "@env";
 import HomeCards from "@components/HomeCards";
 import { useFetchStudyImages } from "src/hooks/query";
 import Loader from "@ui/Loader";
+import { useTranslation } from "react-i18next";
+import LanguageSettingsModal from "@components/LanguageSettingsModal";
 
 const UNSPLASH_URL = `https://api.unsplash.com/photos/random?query=cancer studies&count=10&client_id=${UNSPLASH_ACCESS_KEY}`;
 
@@ -34,6 +36,7 @@ interface flatListRenderProps {
 
 const Home: FC = () => {
   const [studies, setStudies] = useState<Study[]>([]);
+  const { t } = useTranslation();
 
   const scrollX = useRef(new RNAnimated.Value(0)).current;
 
@@ -115,7 +118,7 @@ const Home: FC = () => {
       </View>
 
       <View style={styles.titleView}>
-        <Text style={styles.title}>Latest Studies</Text>
+        <Text style={styles.title}>{t("latest-studies")}</Text>
       </View>
       {studies?.length > 0 && !isLoading ? (
         <View style={styles.flatListContainer}>

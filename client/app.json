@@ -42,7 +42,8 @@
         }
       ],
       "@config-plugins/react-native-blob-util",
-      "@config-plugins/react-native-pdf"
+      "@config-plugins/react-native-pdf",
+      "expo-localization"
     ],
     "scheme": "com.michaelilkanayev.client"
   }

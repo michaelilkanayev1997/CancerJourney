@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import Animated from "react-native-reanimated";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { I18nextProvider } from "react-i18next";
 
 import LottieAnimation from "@components/LottieAnimation";
 import store from "./src/store";
 import AppNavigator from "src/navigation";
 import AppContainer from "@components/AppContainer";
 import PreloadIcons from "@components/PreloadIcons";
+import i18n from "src/i18n/i18n";
 
 // Force LTR text direction
 I18nManager.allowRTL(false);
@@ -55,13 +57,15 @@ const App = () => {
             }}
           />
         ) : (
-          <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <AppContainer>
-                <AppNavigator />
-              </AppContainer>
-            </QueryClientProvider>
-          </Provider>
+          <I18nextProvider i18n={i18n}>
+            <Provider store={store}>
+              <QueryClientProvider client={queryClient}>
+                <AppContainer>
+                  <AppNavigator />
+                </AppContainer>
+              </QueryClientProvider>
+            </Provider>
+          </I18nextProvider>
         )}
         <StatusBar style="auto" />
       </Animated.View>
