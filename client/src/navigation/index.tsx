@@ -22,7 +22,7 @@ import Loader from "@ui/Loader";
 import colors from "@utils/colors";
 import OnboardingNavigator from "./OnboardingNavigator";
 import { toastConfig } from "@utils/toastConfig";
-import DrawerNavigator from "./DrawerNavigator";
+import TabNavigator from "./TabNavigator";
 
 interface Props {
   setSafeAreaColor?: (color: string) => void;
@@ -82,7 +82,7 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
             <Loader />
           </View>
         ) : loggedIn ? (
-          <DrawerNavigator />
+          <TabNavigator />
         ) : !viewedOnBoarding ? (
           <OnboardingNavigator setSafeAreaColor={setSafeAreaColor} />
         ) : (

@@ -7,8 +7,7 @@ import {
   Dimensions,
   Animated as RNAnimated,
 } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Animated, { ZoomInRight } from "react-native-reanimated";
 
@@ -18,6 +17,8 @@ import { CLINICAL_TRIALS_URL, UNSPLASH_ACCESS_KEY } from "@env";
 import HomeCards from "@components/HomeCards";
 import { useFetchStudyImages } from "src/hooks/query";
 import Loader from "@ui/Loader";
+import { useTranslation } from "react-i18next";
+import LanguageSettingsModal from "@components/LanguageSettingsModal";
 
 const UNSPLASH_URL = `https://api.unsplash.com/photos/random?query=cancer studies&count=10&client_id=${UNSPLASH_ACCESS_KEY}`;
 
@@ -34,8 +35,8 @@ interface flatListRenderProps {
 }
 
 const Home: FC = () => {
-  const navigation = useNavigation();
   const [studies, setStudies] = useState<Study[]>([]);
+  const { t } = useTranslation();
 
   const scrollX = useRef(new RNAnimated.Value(0)).current;
 
@@ -47,19 +48,6 @@ const Home: FC = () => {
     data: images = [], // Default to an empty array if data is undefined
     isLoading,
   } = useFetchStudyImages(UNSPLASH_URL);
-
-  useFocusEffect(
-    useCallback(() => {
-      // Enable the drawer gesture and header when HomeScreen is focused
-      const parent = navigation.getParent();
-      //parent?.setOptions({ swipeEnabled: true, headerShown: true });
-
-      return () => {
-        // Disable the drawer gesture and header when HomeScreen is not focused
-        parent?.setOptions({ swipeEnabled: false, headerShown: false });
-      };
-    }, [navigation])
-  );
 
   useEffect(() => {
     const fetchStudies = async () => {
@@ -130,7 +118,7 @@ const Home: FC = () => {
       </View>
 
       <View style={styles.titleView}>
-        <Text style={styles.title}>Latest Studies</Text>
+        <Text style={styles.title}>{t("latest-studies")}</Text>
       </View>
       {studies?.length > 0 && !isLoading ? (
         <View style={styles.flatListContainer}>

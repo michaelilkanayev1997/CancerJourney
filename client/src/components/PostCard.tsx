@@ -7,6 +7,7 @@ import {
   Pressable,
   Image,
   LayoutChangeEvent,
+  Vibration,
 } from "react-native";
 
 import colors from "../utils/colors";
@@ -14,6 +15,7 @@ import { calculateTimeDifference } from "@utils/helper";
 import { Avatar, Like, Reply, User } from "src/@types/post";
 import { getAuthState } from "src/store/auth";
 import { useSelector } from "react-redux";
+import BasicOptionsModal from "./BasicOptionsModal";
 
 interface PostProps {
   description: string;
@@ -40,10 +42,10 @@ const PostCard: FC<PostProps> = ({
   replies,
 }) => {
   const { profile } = useSelector(getAuthState);
-
   const [showFullText, setShowFullText] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isTextLong, setIsTextLong] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const MAX_LINES = 3;
 
@@ -91,7 +93,8 @@ const PostCard: FC<PostProps> = ({
           </Text>
           <TouchableOpacity
             onPress={() => {
-              // item.user._id === user._id && setOpenModal(true)
+              setModalVisible(true);
+              Vibration.vibrate(50);
             }}
           >
             <Text style={styles.ellipsisText}>...</Text>
@@ -217,6 +220,15 @@ const PostCard: FC<PostProps> = ({
       </View>
 
       <View style={styles.separator} />
+
+      <BasicOptionsModal
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+        postTitle={description.slice(0, 20)}
+        // onUpdate={handleUpdate}
+        // onReport={handleReport}
+        // onDelete={handleDelete}
+      />
     </View>
   );
 };
