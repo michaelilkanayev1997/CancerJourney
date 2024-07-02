@@ -21,7 +21,7 @@ interface IPost extends Document {
   };
   owner: mongoose.Types.ObjectId;
   likes: ILike[];
-  replies: IReply[];
+  replies: mongoose.Types.DocumentArray<IReply>;
   createdAt: Date;
   forumType: string;
 }

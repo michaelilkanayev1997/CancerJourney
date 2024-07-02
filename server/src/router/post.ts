@@ -4,7 +4,9 @@ import {
   addPost,
   addReply,
   getPosts,
-  toggleFavorite,
+  removeReply,
+  togglePostFavorite,
+  toggleReplyFavorite,
   updatePost,
 } from "#/controllers/post";
 import { mustAuth } from "#/middleware/auth";
@@ -31,7 +33,9 @@ router.patch(
   validate(PostSchema),
   updatePost
 );
-router.post("/update-favorite", mustAuth, toggleFavorite);
+router.post("/update-post-favorite", mustAuth, togglePostFavorite);
 router.post("/add-reply", mustAuth, validate(replyValidationSchema), addReply);
+router.delete("/reply-delete", mustAuth, removeReply);
+router.post("/update-reply-favorite", mustAuth, toggleReplyFavorite);
 
 export default router;
