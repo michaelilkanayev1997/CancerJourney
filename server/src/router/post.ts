@@ -1,6 +1,11 @@
 import { Router } from "express";
 
-import { addPost, getPosts, updatePost } from "#/controllers/post";
+import {
+  addPost,
+  getPosts,
+  toggleFavorite,
+  updatePost,
+} from "#/controllers/post";
 import { mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validator";
 import { PostSchema } from "#/utils/validationSchema";
@@ -25,5 +30,6 @@ router.patch(
   validate(PostSchema),
   updatePost
 );
+router.post("/update-favorite", mustAuth, toggleFavorite);
 
 export default router;

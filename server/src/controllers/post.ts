@@ -158,3 +158,57 @@ export const updatePost: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const toggleFavorite: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { postId } = req.query;
+
+    if (!isValidObjectId(postId))
+      return res.status(422).json({ error: "Invalid post id!" });
+
+    let status: "added" | "removed";
+
+    const post = await Posts.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found!" });
+
+    const alreadyLiked = await Posts.findOne({
+      _id: postId,
+      likes: { $elemMatch: { userId: user.id } },
+    });
+
+    if (alreadyLiked) {
+      // Unfollow
+      await Posts.updateOne(
+        {
+          _id: postId,
+        },
+        {
+          $pull: { likes: { userId: user.id } },
+        }
+      );
+
+      status = "removed";
+    } else {
+      // Not Liked -> add a Like
+      await Posts.updateOne(
+        {
+          _id: postId,
+        },
+        {
+          $addToSet: { likes: { userId: user.id, createdAt: new Date() } },
+        }
+      );
+
+      status = "added";
+    }
+
+    res.json({ status });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while updating Favorite",
+    });
+  }
+};
