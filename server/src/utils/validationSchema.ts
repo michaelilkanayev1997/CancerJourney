@@ -176,3 +176,10 @@ export const PostSchema = yup.object().shape({
     .oneOf(cancerTypes, "Invalid cancer type")
     .required("Forum type is required"),
 });
+
+export const replyValidationSchema = yup.object().shape({
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(1, "Description must be at least 1 character long"),
+});

@@ -212,3 +212,33 @@ export const toggleFavorite: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const addReply: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { postId } = req.query;
+
+    if (!isValidObjectId(postId))
+      return res.status(422).json({ error: "Invalid post id!" });
+
+    // Accessing the request body
+    const { description } = req.body;
+
+    const newReply: any = {
+      owner: user.id,
+      description,
+      likes: [],
+      createdAt: new Date(),
+    };
+
+    await Posts.updateOne({ _id: postId }, { $push: { replies: newReply } });
+
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while adding the reply",
+    });
+  }
+};

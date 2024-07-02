@@ -2,13 +2,14 @@ import { Router } from "express";
 
 import {
   addPost,
+  addReply,
   getPosts,
   toggleFavorite,
   updatePost,
 } from "#/controllers/post";
 import { mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validator";
-import { PostSchema } from "#/utils/validationSchema";
+import { PostSchema, replyValidationSchema } from "#/utils/validationSchema";
 import { postImageUpload } from "#/middleware/fileUpload";
 import { removePost } from "./../controllers/post";
 
@@ -31,5 +32,6 @@ router.patch(
   updatePost
 );
 router.post("/update-favorite", mustAuth, toggleFavorite);
+router.post("/add-reply", mustAuth, validate(replyValidationSchema), addReply);
 
 export default router;
