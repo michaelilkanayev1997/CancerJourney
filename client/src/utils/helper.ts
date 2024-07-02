@@ -1,3 +1,5 @@
+import * as Updates from "expo-updates";
+
 // Calculate the compression level
 export const calculateCompression = (size: number) => {
   if (size > 4000000) {
@@ -68,4 +70,9 @@ export const calculateTimeDifference = (date: string) => {
   } else {
     return diffInDays + " days";
   }
+};
+
+export const restartApp = async () => {
+  console.log("test");
+  await Updates.reloadAsync();
 };

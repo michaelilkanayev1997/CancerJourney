@@ -20,5 +20,6 @@ export enum Keys {
   AUTH_TOKEN = "AUTH_TOKEN",
   VIEWED_ON_BOARDING = "@viewedOnBoarding",
   UPLOAD_FOLDERS_LAYOUT = "UPLOAD_FOLDERS_LAYOUT",
-  lastHandledNotificationId = "NotificationId",
+  LAST_HANDLED_NOTIFICATION_ID = "NotificationId",
+  USER_LANGUAGE = "USER_LANGUAGE",
 }

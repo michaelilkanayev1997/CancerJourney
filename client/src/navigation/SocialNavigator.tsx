@@ -37,7 +37,7 @@ const SocialNavigator = () => {
         drawerLabelStyle: { marginLeft: -25, fontSize: 15 },
         swipeEnabled: false,
         drawerStyle: {
-          width: 220, // Width of the drawer
+          width: 240, // Width of the drawer
         },
       }}
     >
