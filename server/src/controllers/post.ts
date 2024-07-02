@@ -242,3 +242,44 @@ export const addReply: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const removeReply: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { postId, replyId } = req.query;
+
+    if (!isValidObjectId(postId))
+      return res.status(422).json({ error: "Invalid post id!" });
+
+    if (!isValidObjectId(replyId))
+      return res.status(422).json({ error: "Invalid reply id!" });
+
+    const post = await Posts.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found!" });
+
+    // Find the reply in the post's replies array
+    const reply = post.replies.find((r: any) => r._id.equals(replyId));
+    if (!reply) return res.status(404).json({ error: "Reply not found!" });
+
+    if (!reply.owner.equals(user.id)) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized: You are not the owner of this reply!" });
+    }
+
+    // Use $pull to remove the reply
+    await Posts.updateOne(
+      { _id: postId },
+      { $pull: { replies: { _id: replyId } } }
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error occurred:", error); // Log the error for debugging
+    return res.status(500).json({
+      error: "An error occurred while deleting the reply",
+    });
+  }
+};

@@ -4,6 +4,7 @@ import {
   addPost,
   addReply,
   getPosts,
+  removeReply,
   toggleFavorite,
   updatePost,
 } from "#/controllers/post";
@@ -33,5 +34,6 @@ router.patch(
 );
 router.post("/update-favorite", mustAuth, toggleFavorite);
 router.post("/add-reply", mustAuth, validate(replyValidationSchema), addReply);
+router.delete("/reply-delete", mustAuth, removeReply);
 
 export default router;
