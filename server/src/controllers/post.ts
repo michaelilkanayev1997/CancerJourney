@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 
 import { paginationQuery } from "#/@types/post";
 import { Posts } from "#/models/post";
+import User from "#/models/user";
 
 export const getPosts: RequestHandler = async (req, res) => {
   const { limit = "10", pageNo = "0" } = req.query as paginationQuery;
@@ -29,6 +30,39 @@ export const getPosts: RequestHandler = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "An error occurred while adding the appointment",
+    });
+  }
+};
+
+export const addPost: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    // Accessing the request body
+    const { description, forumType } = req.body;
+
+    const newPost: any = {
+      owner: user.id,
+      description,
+      forumType,
+      likes: [],
+      replies: [],
+    };
+
+    // Check if image exists
+    if (req.file) {
+      // Set post image
+      newPost.image = { url: req.file.location, public_id: req.file.key };
+    }
+
+    // Create a new Post document
+    await Posts.create(newPost);
+
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while adding Post",
     });
   }
 };

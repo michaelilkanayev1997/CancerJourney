@@ -1,3 +1,4 @@
+import { cancerTypes } from "#/utils/enums";
 import mongoose, { Schema } from "mongoose";
 
 interface ILike extends Document {
@@ -22,6 +23,7 @@ interface IPost extends Document {
   likes: ILike[];
   replies: IReply[];
   createdAt: Date;
+  forumType: string;
 }
 
 const likeSchema = new Schema<ILike>({
@@ -62,6 +64,11 @@ const postSchema = new Schema<IPost>(
     },
     likes: [likeSchema],
     replies: [replySchema],
+    forumType: {
+      type: String,
+      required: true,
+      enum: cancerTypes,
+    },
   },
   { timestamps: true }
 );
