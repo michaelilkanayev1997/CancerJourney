@@ -1,6 +1,7 @@
 import { isValidObjectId } from "mongoose";
 import * as yup from "yup";
 import { getTomorrow } from "./helper";
+import { cancerTypes } from "./enums";
 
 export const CreateUserSchema = yup.object().shape({
   name: yup
@@ -163,4 +164,15 @@ export const MedicationSchema = yup.object().shape({
     .notRequired(),
   notes: yup.string().notRequired(),
   date: yup.date().required("date is missing!"),
+});
+
+export const PostSchema = yup.object().shape({
+  description: yup
+    .string()
+    .required("Description is missing!")
+    .min(10, "Description should be at least 10 characters long"),
+  forumType: yup
+    .string()
+    .oneOf(cancerTypes, "Invalid cancer type")
+    .required("Forum type is required"),
 });
