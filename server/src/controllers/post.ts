@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 
 import { paginationQuery } from "#/@types/post";
-import { Posts } from "#/models/post";
+import { IReply, Posts } from "#/models/post";
 import User from "#/models/user";
-import { isValidObjectId } from "mongoose";
+import { Types, isValidObjectId } from "mongoose";
 import { deleteS3Object } from "#/middleware/fileUpload";
 
 export const getPosts: RequestHandler = async (req, res) => {
@@ -159,7 +159,7 @@ export const updatePost: RequestHandler = async (req, res) => {
   }
 };
 
-export const toggleFavorite: RequestHandler = async (req, res) => {
+export const togglePostFavorite: RequestHandler = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) throw new Error("Something went wrong, user not found!");
@@ -180,7 +180,7 @@ export const toggleFavorite: RequestHandler = async (req, res) => {
     });
 
     if (alreadyLiked) {
-      // Unfollow
+      // Remove the like
       await Posts.updateOne(
         {
           _id: postId,
@@ -192,7 +192,7 @@ export const toggleFavorite: RequestHandler = async (req, res) => {
 
       status = "removed";
     } else {
-      // Not Liked -> add a Like
+      // add a Like
       await Posts.updateOne(
         {
           _id: postId,
@@ -260,7 +260,7 @@ export const removeReply: RequestHandler = async (req, res) => {
     if (!post) return res.status(404).json({ error: "Post not found!" });
 
     // Find the reply in the post's replies array
-    const reply = post.replies.find((r: any) => r._id.equals(replyId));
+    const reply = post.replies.id(replyId) as any;
     if (!reply) return res.status(404).json({ error: "Reply not found!" });
 
     if (!reply.owner.equals(user.id)) {
@@ -280,6 +280,68 @@ export const removeReply: RequestHandler = async (req, res) => {
     console.error("Error occurred:", error); // Log the error for debugging
     return res.status(500).json({
       error: "An error occurred while deleting the reply",
+    });
+  }
+};
+
+export const toggleReplyFavorite: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { postId, replyId } = req.query;
+
+    if (!isValidObjectId(postId))
+      return res.status(422).json({ error: "Invalid post id!" });
+
+    if (!isValidObjectId(replyId))
+      return res.status(422).json({ error: "Invalid reply id!" });
+
+    const post = await Posts.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found!" });
+
+    // Find the reply in the post's replies array
+    const reply = post.replies.id(replyId);
+    if (!reply) return res.status(404).json({ error: "Reply not found!" });
+
+    let status: "added" | "removed";
+
+    const alreadyLiked = await Posts.findOne({
+      _id: postId,
+      replies: {
+        $elemMatch: {
+          _id: replyId,
+          "likes.userId": user.id,
+        },
+      },
+    });
+    console.log(alreadyLiked);
+    if (alreadyLiked) {
+      // Remove the like
+      await Posts.updateOne(
+        { _id: postId, "replies._id": replyId },
+        { $pull: { "replies.$.likes": { userId: user.id } } }
+      );
+
+      status = "removed";
+    } else {
+      // Add the like
+      await Posts.updateOne(
+        { _id: postId, "replies._id": replyId },
+        {
+          $addToSet: {
+            "replies.$.likes": { userId: user.id, createdAt: new Date() },
+          },
+        }
+      );
+
+      status = "added";
+    }
+
+    res.json({ status });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while updating Favorite",
     });
   }
 };
