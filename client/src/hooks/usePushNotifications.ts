@@ -141,7 +141,7 @@ export const usePushNotifications = (
       if (response) {
         const notificationId = response.notification?.request.identifier;
         const lastHandledNotificationId = await getFromAsyncStorage(
-          Keys.lastHandledNotificationId
+          Keys.LAST_HANDLED_NOTIFICATION_ID
         );
         const dataString = (response.notification?.request?.content as any)
           ?.dataString;
@@ -170,7 +170,7 @@ export const usePushNotifications = (
               }
 
               await saveToAsyncStorage(
-                Keys.lastHandledNotificationId,
+                Keys.LAST_HANDLED_NOTIFICATION_ID,
                 notificationId
               ); // Save to AsyncStorage
             } catch (error) {

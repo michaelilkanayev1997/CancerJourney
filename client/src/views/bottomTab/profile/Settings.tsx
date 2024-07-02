@@ -1,7 +1,8 @@
-import { FC } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { FC, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import {
@@ -15,11 +16,14 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
 import { useQueryClient } from "react-query";
+import LanguageSettingsModal from "@components/LanguageSettingsModal";
 
 interface Props {}
 
 const Settings: FC<Props> = (props) => {
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+
   const queryClient = useQueryClient();
   const { profile } = useSelector(getAuthState);
 
@@ -46,45 +50,59 @@ const Settings: FC<Props> = (props) => {
     }
     dispatch(updateBusyState(false));
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Profile Settings</Text>
       </View>
 
+      <View style={styles.settingOptionsContainer}>
+        <TouchableOpacity
+          onPress={() => console.log("Remove All Posts")}
+          style={styles.buttonContainer}
+        >
+          <AntDesign name="delete" size={20} color={colors.CONTRAST} />
+          <Text style={styles.buttonTitle}>Remove All Posts</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>History</Text>
+        <Text style={styles.title}>App Preferences</Text>
       </View>
 
       <View style={styles.settingOptionsContainer}>
-        <Pressable
-          onPress={() => console.log("first")}
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
           style={styles.buttonContainer}
         >
-          <Text style={styles.buttonTitle}>Clear All</Text>
-        </Pressable>
+          <Ionicons name="language-outline" size={20} color={colors.CONTRAST} />
+          <Text style={styles.buttonTitle}>Change Language</Text>
+        </TouchableOpacity>
       </View>
-
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Logout</Text>
       </View>
-
       <View style={styles.settingOptionsContainer}>
-        <Pressable
+        <TouchableOpacity
           onPress={() => handleLoggout(true)}
           style={styles.buttonContainer}
         >
           <AntDesign name="logout" size={20} color={colors.CONTRAST} />
           <Text style={styles.buttonTitle}>Logout From All</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => handleLoggout()}
           style={styles.buttonContainer}
         >
           <AntDesign name="logout" size={20} color={colors.CONTRAST} />
           <Text style={styles.buttonTitle}>Logout</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
+      <LanguageSettingsModal
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      />
     </View>
   );
 };
