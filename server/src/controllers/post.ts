@@ -3,6 +3,7 @@ import { RequestHandler } from "express";
 import { paginationQuery } from "#/@types/post";
 import { Posts } from "#/models/post";
 import User from "#/models/user";
+import { isValidObjectId } from "mongoose";
 
 export const getPosts: RequestHandler = async (req, res) => {
   const { limit = "10", pageNo = "0" } = req.query as paginationQuery;
@@ -63,6 +64,38 @@ export const addPost: RequestHandler = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "An error occurred while adding Post",
+    });
+  }
+};
+
+export const removePost: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    const { postId, ownerId } = req.query;
+
+    if (!isValidObjectId(postId))
+      return res.status(422).json({ error: "Invalid post id!" });
+
+    if (!isValidObjectId(ownerId))
+      return res.status(422).json({ error: "Invalid owner id!" });
+
+    if (user.id === ownerId) {
+    }
+
+    // Remove entire post
+    const post = await Posts.findOneAndDelete({
+      _id: postId,
+      owner: user.id,
+    });
+
+    if (!post) return res.status(404).json({ error: "Post not found!" });
+
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while deleting Post",
     });
   }
 };

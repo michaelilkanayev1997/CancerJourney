@@ -5,6 +5,7 @@ import { mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validator";
 import { PostSchema } from "#/utils/validationSchema";
 import { postImageUpload } from "#/middleware/fileUpload";
+import { removePost } from "./../controllers/post";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.post(
   validate(PostSchema),
   addPost
 );
+router.delete("/post-delete", mustAuth, removePost);
 
 export default router;
