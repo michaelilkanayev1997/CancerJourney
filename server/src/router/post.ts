@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { addPost, getPosts } from "#/controllers/post";
+import { addPost, getPosts, updatePost } from "#/controllers/post";
 import { mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validator";
 import { PostSchema } from "#/utils/validationSchema";
@@ -18,5 +18,12 @@ router.post(
   addPost
 );
 router.delete("/post-delete", mustAuth, removePost);
+router.patch(
+  "/",
+  mustAuth,
+  postImageUpload.single("image"),
+  validate(PostSchema),
+  updatePost
+);
 
 export default router;
