@@ -6,10 +6,11 @@ import {
   ImageBackground,
   Dimensions,
   Animated as RNAnimated,
+  I18nManager,
 } from "react-native";
 import { FC, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Animated, { ZoomInRight } from "react-native-reanimated";
+import Animated, { ZoomInLeft, ZoomInRight } from "react-native-reanimated";
 
 import colors from "@utils/colors";
 import StudyCard, { Study } from "@components/StudyCard";
@@ -85,7 +86,11 @@ const Home: FC = () => {
 
     return (
       <Animated.View
-        entering={ZoomInRight.duration(1000)}
+        entering={
+          I18nManager.isRTL
+            ? ZoomInLeft.duration(1000)
+            : ZoomInRight.duration(1000)
+        }
         style={{ width: ITEM_SIZE }}
       >
         <StudyCard
@@ -128,7 +133,10 @@ const Home: FC = () => {
             data={studies}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
-            contentContainerStyle={styles.flatList}
+            contentContainerStyle={[
+              styles.flatList,
+              { flexDirection: I18nManager.isRTL ? "row-reverse" : "row" }, // Fixing RTL Problem
+            ]}
             snapToInterval={ITEM_SIZE}
             decelerationRate={0}
             renderToHardwareTextureAndroid
@@ -188,8 +196,8 @@ const styles = StyleSheet.create({
   },
   flatList: {
     alignItems: "center",
-    marginTop: -43,
-    paddingBottom: 150,
+    marginTop: -38,
+    paddingBottom: 120,
   },
 });
 

@@ -1,3 +1,9 @@
 {
     "latest-studies": "Latest Studies",
+    "organization": "Organization",
+    "start-date": "Start",
+    "completion-date": "Completion",
+    "conditions": "Conditions",
+    "overall-status": "Overall Status",
+    "date-not-available": "Date not available"
 }

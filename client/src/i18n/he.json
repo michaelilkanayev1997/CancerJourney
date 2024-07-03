@@ -1,3 +1,9 @@
 {
     "latest-studies": "מחקרים אחרונים",
+    "organization": "ארגון",
+    "start-date": "תאריך התחלה",
+    "completion-date": "תאריך סיום",
+    "conditions": "אבחונים",
+    "overall-status": "סטטוס כללי",
+    "date-not-available": "תאריך לא זמין"
 }

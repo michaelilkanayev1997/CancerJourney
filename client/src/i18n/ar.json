@@ -1,3 +1,9 @@
 {
-    "latest-studies": "أحدث الدراسات"
+    "latest-studies": "أحدث الدراسات",
+    "organization": "المنظمة",
+    "start-date": "تاريخ البدء",
+    "completion-date": "تاريخ الانتهاء",
+    "conditions": "الشروط",
+    "overall-status": "الحالة العامة",
+    "date-not-available": "التاريخ غير متوفر"
 }
