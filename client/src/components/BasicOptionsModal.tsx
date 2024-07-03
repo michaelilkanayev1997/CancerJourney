@@ -20,7 +20,6 @@ interface Props {
 const BasicOptionsModal: FC<Props> = ({
   visible,
   onRequestClose,
-  postTitle,
   onUpdate,
   onReport,
   onDelete,
@@ -36,9 +35,6 @@ const BasicOptionsModal: FC<Props> = ({
         <View style={styles.modalBackground}>
           <TouchableWithoutFeedback>
             <View style={styles.container}>
-              <Text style={styles.modalTitle}>Options:</Text>
-              <Text style={styles.modalTitle}>Creator: Michael Ilkanayev</Text>
-              <Text style={styles.modalTitle}>Upload: 25/04/12</Text>
               <TouchableOpacity style={styles.option} onPress={onUpdate}>
                 <MaterialIcons
                   name="edit"
@@ -52,7 +48,7 @@ const BasicOptionsModal: FC<Props> = ({
                 <MaterialIcons
                   name="report"
                   size={24}
-                  color="#f44336"
+                  color="#ff9800"
                   style={styles.icon}
                 />
                 <Text style={styles.optionText}>Report</Text>
@@ -61,7 +57,7 @@ const BasicOptionsModal: FC<Props> = ({
                 <MaterialIcons
                   name="delete"
                   size={24}
-                  color="#ff9800"
+                  color="#f44336"
                   style={styles.icon}
                 />
                 <Text style={styles.optionText}>Delete</Text>
@@ -82,11 +78,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   container: {
+    alignItems: "center",
     backgroundColor: "white",
-    borderRadius: 10,
-    width: "80%",
-    padding: 20,
-    elevation: 5,
+    borderRadius: 20,
+    width: "50%",
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
   option: {
     flexDirection: "row",
@@ -97,17 +99,19 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 18,
-    marginLeft: 10,
-    color: "#000", // Text color
+    marginLeft: 20,
+    color: "#333",
+    fontWeight: "500",
   },
   icon: {
     width: 24,
     height: 24,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 20,
+    textAlign: "center",
   },
 });
 
