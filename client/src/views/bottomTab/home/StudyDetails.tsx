@@ -3,6 +3,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Study } from "@components/StudyCard";
+import { useTranslation } from "react-i18next";
 
 interface StudyDetailsRouteParams {
   study: Study;
@@ -17,7 +18,7 @@ type StudyDetailsRouteProp = RouteProp<
 const StudyDetails = () => {
   const route = useRoute<StudyDetailsRouteProp>();
   const { study, imageUrl } = route.params;
-
+  const { t } = useTranslation();
   const {
     identificationModule: { briefTitle, organization },
     statusModule: { overallStatus, startDateStruct, completionDateStruct },
@@ -36,35 +37,37 @@ const StudyDetails = () => {
       <Text style={styles.title}>{briefTitle}</Text>
       <View style={styles.infoRow}>
         <Ionicons name="business-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Organization: ${organization.fullName}`}</Text>
+        <Text style={styles.infoText}>
+          {t("organization") + ": " + organization.fullName}
+        </Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="calendar-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Start Date: ${
-          startDateStruct?.date || "Date not available"
+        <Text style={styles.infoText}>{`${t("start-date")}: ${
+          startDateStruct?.date ? startDateStruct.date : t("date-not-available")
         }`}</Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="calendar-outline" size={16} color="#555" />
         <Text style={styles.infoText}>
-          {`Completion Date: ${
-            completionDateStruct?.date || "Date not available"
+          {`${t("completion-date")}: ${
+            completionDateStruct?.date
+              ? completionDateStruct.date
+              : t("date-not-available")
           }`}
         </Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="alert-circle-outline" size={16} color="#555" />
-        <Text
-          style={styles.infoText}
-        >{`Overall Status: ${overallStatus}`}</Text>
+        <Text style={styles.infoText}>{`${t(
+          "overall-status"
+        )}: ${overallStatus}`}</Text>
       </View>
       <View style={styles.infoRow}>
         <Ionicons name="medkit-outline" size={16} color="#555" />
-        <Text style={styles.infoText}>{`Conditions: ${conditions.join(
-          ", "
-        )}`}</Text>
+        <Text style={styles.infoText}>
+          {t("conditions") + `: ${conditions.join(", ")}`}
+        </Text>
       </View>
       <Text style={styles.summary}>{briefSummary}</Text>
     </ScrollView>

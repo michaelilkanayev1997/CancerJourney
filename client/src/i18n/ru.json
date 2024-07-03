@@ -1,3 +1,9 @@
 {
-    "latest-studies": "Последние исследования"
+    "latest-studies": "Последние исследования",
+    "organization": "Организация",
+    "start-date": "Дата начала",
+    "completion-date": "Дата завершения",
+    "conditions": "Условия",
+    "overall-status": "Общий статус",
+    "date-not-available": "Дата не доступна"
 }
