@@ -4,8 +4,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import colors from "@utils/colors";
 import Main from "@views/bottomTab/posts/Main";
-import MyPosts from "@views/bottomTab/posts/MyPosts";
 import CustomDrawer from "@components/CustomDrawer";
+import NewPost from "@views/bottomTab/posts/NewPost";
 
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -19,8 +19,8 @@ const SocialTabs = () => {
       }}
     >
       <Tab.Screen name="Main" component={Main} />
-      <Tab.Screen name="My Posts" component={MyPosts} />
-      <Tab.Screen name="Favorites" component={MyPosts} />
+      <Tab.Screen name="New Post" component={NewPost} />
+      <Tab.Screen name="Favorites" component={NewPost} />
     </Tab.Navigator>
   );
 };
