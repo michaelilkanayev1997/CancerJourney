@@ -16,6 +16,8 @@ import {
   LayoutChangeEvent,
   Vibration,
   Alert,
+  UIManager,
+  Dimensions,
 } from "react-native";
 
 import colors from "../utils/colors";
@@ -25,6 +27,7 @@ import { getAuthState } from "src/store/auth";
 import { useSelector } from "react-redux";
 import BasicOptionsModal from "./BasicOptionsModal";
 import { usePostMutations } from "src/hooks/mutations";
+import PopupMenu from "./PopupMenu";
 
 interface PostProps {
   _id: string;
@@ -58,6 +61,20 @@ const PostCard: FC<PostProps> = memo(
     const [isLiked, setIsLiked] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
+
+    const handleOptionsPress = (event: { nativeEvent: { pageY: any } }) => {
+      const yPosition = event.nativeEvent.pageY;
+
+      if (yPosition > 580) return;
+
+      setModalVisible(true);
+      setPopupPosition({
+        top: event.nativeEvent.pageY - 10,
+        right: 20,
+      });
+      Vibration.vibrate(50);
+    };
 
     const MAX_LINES = 3;
 
@@ -142,12 +159,7 @@ const PostCard: FC<PostProps> = memo(
             <Text style={styles.durationText}>
               {calculateTimeDifference(createdAt)}
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setModalVisible(true);
-                Vibration.vibrate(50);
-              }}
-            >
+            <TouchableOpacity onPress={handleOptionsPress}>
               <Text style={styles.ellipsisText}>...</Text>
             </TouchableOpacity>
           </View>
@@ -274,13 +286,23 @@ const PostCard: FC<PostProps> = memo(
 
         <View style={styles.separator} />
 
-        <BasicOptionsModal
+        {/* <BasicOptionsModal
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
           deleteLoading={deleteLoading}
           // onUpdate={handleUpdate}
           // onReport={handleReport}
           onDelete={handleDelete}
+        /> */}
+
+        <PopupMenu
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+          deleteLoading={deleteLoading}
+          // onUpdate={handleUpdate}
+          // onReport={handleReport}
+          onDelete={handleDelete}
+          position={popupPosition}
         />
       </View>
     );
