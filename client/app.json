@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "client",
+    "name": "CancerJourney",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,20 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.michaelilkanayev.client",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,8 +56,31 @@
       ],
       "@config-plugins/react-native-blob-util",
       "@config-plugins/react-native-pdf",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "michaelilkanayev"
+        }
+      ]
     ],
-    "scheme": "com.michaelilkanayev.client"
+    "scheme": "com.michaelilkanayev.client",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/659d5dcf-f970-42c1-af82-cf8c0ded5f9e",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }
