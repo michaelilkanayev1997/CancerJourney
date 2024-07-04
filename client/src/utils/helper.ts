@@ -73,6 +73,9 @@ export const calculateTimeDifference = (date: string) => {
 };
 
 export const restartApp = async () => {
-  console.log("test");
+  if (__DEV__) {
+    console.log("Skipping reloadAsync in development mode");
+    return;
+  }
   await Updates.reloadAsync();
 };

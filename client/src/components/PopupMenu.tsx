@@ -15,9 +15,9 @@ interface Props {
   visible: boolean;
   onRequestClose: () => void;
   deleteLoading: boolean;
-  onUpdate: () => void;
-  onReport: () => void;
-  onDelete: () => void;
+  onUpdate?: () => void;
+  onReport?: () => void;
+  onDelete?: () => void;
   position: { top: number; right: number };
 }
 
@@ -44,33 +44,41 @@ const PopupMenu: FC<Props> = ({
         <View style={styles.modalBackground}>
           <TouchableWithoutFeedback>
             <View style={[styles.popup, position]}>
-              <TouchableOpacity style={styles.option} onPress={onUpdate}>
-                <MaterialIcons
-                  name="edit"
-                  size={24}
-                  color="#4caf50"
-                  style={styles.icon}
-                />
-                <Text style={styles.optionText}>Update</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.option} onPress={onReport}>
-                <MaterialIcons
-                  name="report"
-                  size={24}
-                  color="#ff9800"
-                  style={styles.icon}
-                />
-                <Text style={styles.optionText}>Report</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.option} onPress={onDelete}>
-                <MaterialIcons
-                  name="delete"
-                  size={24}
-                  color="#f44336"
-                  style={styles.icon}
-                />
-                <Text style={styles.optionText}>Delete</Text>
-              </TouchableOpacity>
+              {onUpdate && (
+                <TouchableOpacity style={styles.option} onPress={onUpdate}>
+                  <MaterialIcons
+                    name="edit"
+                    size={24}
+                    color="#4caf50"
+                    style={styles.icon}
+                  />
+                  <Text style={styles.optionText}>Update</Text>
+                </TouchableOpacity>
+              )}
+
+              {onReport && (
+                <TouchableOpacity style={styles.option} onPress={onReport}>
+                  <MaterialIcons
+                    name="report"
+                    size={24}
+                    color="#ff9800"
+                    style={styles.icon}
+                  />
+                  <Text style={styles.optionText}>Report</Text>
+                </TouchableOpacity>
+              )}
+
+              {onDelete && (
+                <TouchableOpacity style={styles.option} onPress={onDelete}>
+                  <MaterialIcons
+                    name="delete"
+                    size={24}
+                    color="#f44336"
+                    style={styles.icon}
+                  />
+                  <Text style={styles.optionText}>Delete</Text>
+                </TouchableOpacity>
+              )}
 
               {/* Loader Component */}
               {deleteLoading && (

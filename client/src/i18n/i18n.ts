@@ -7,9 +7,12 @@ import en from "./en.json";
 import he from "./he.json";
 import ar from "./ar.json";
 import ru from "./ru.json";
-import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
+import {
+  getFromAsyncStorage,
+  Keys,
+  saveToAsyncStorage,
+} from "@utils/asyncStorage";
 import { restartApp } from "@utils/helper";
-import { useNavigation } from "@react-navigation/native";
 
 const resources = {
   en: { translation: en },
@@ -37,17 +40,25 @@ i18n.use(initReactI18next).init({
 });
 
 // Update the app's RTL layout based on the selected language
-const updateLayoutDirection = (language: string) => {
+const updateLayoutDirection = async (language: string) => {
   const isRTL = ["he", "ar"].includes(language);
+
+  const previousIsRTL = (await getFromAsyncStorage(Keys.IS_RTL)) === "true";
 
   // Force RTL if the language is Hebrew or Arabic
   I18nManager.forceRTL(isRTL);
   // Allow RTL if the language is Hebrew or Arabic, otherwise allow LTR
   I18nManager.allowRTL(isRTL);
 
-  if (I18nManager.isRTL) {
+  await saveToAsyncStorage(Keys.IS_RTL, isRTL.toString());
+
+  if (previousIsRTL !== isRTL) {
     restartApp(); // Restart the app to apply RTL change
+    console.log("restartApp ! ! ! ");
   }
+
+  console.log("previousIsRTL: ", previousIsRTL);
+  console.log("isRTL: ", isRTL);
 };
 
 i18n.on("languageChanged", async (lng) => {

@@ -63,14 +63,21 @@ const PostCard: FC<PostProps> = memo(
     const [modalVisible, setModalVisible] = useState(false);
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
 
+    // Check if the current post belongs to the logged-in user
+    const isOwnPost = profile?.id === owner?._id.toString();
+
     const handleOptionsPress = (event: { nativeEvent: { pageY: any } }) => {
       const yPosition = event.nativeEvent.pageY;
-
-      if (yPosition > 580) return;
+      const popupHeight = 150; // Estimated height of the popup menu
+      const windowHeight = Dimensions.get("window").height;
+      const adjustedTop =
+        yPosition + popupHeight > windowHeight
+          ? windowHeight - popupHeight
+          : yPosition;
 
       setModalVisible(true);
       setPopupPosition({
-        top: event.nativeEvent.pageY - 10,
+        top: adjustedTop - 10,
         right: 20,
       });
       Vibration.vibrate(50);
@@ -103,6 +110,10 @@ const PostCard: FC<PostProps> = memo(
       setIsLiked(!isLiked);
       onLike();
     };
+
+    const handleUpdate = () => {};
+
+    const handleReport = () => {};
 
     // Delete button is pressed
     const handleDelete = () => {
@@ -286,22 +297,13 @@ const PostCard: FC<PostProps> = memo(
 
         <View style={styles.separator} />
 
-        {/* <BasicOptionsModal
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-          deleteLoading={deleteLoading}
-          // onUpdate={handleUpdate}
-          // onReport={handleReport}
-          onDelete={handleDelete}
-        /> */}
-
         <PopupMenu
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
-          deleteLoading={deleteLoading}
-          // onUpdate={handleUpdate}
-          // onReport={handleReport}
-          onDelete={handleDelete}
+          deleteLoading={isOwnPost && deleteLoading}
+          onUpdate={isOwnPost ? handleUpdate : undefined}
+          onReport={!isOwnPost ? handleReport : undefined}
+          onDelete={isOwnPost ? handleDelete : undefined}
           position={popupPosition}
         />
       </View>
