@@ -1,8 +1,6 @@
 import { useCallback, useState } from "react";
 import {
-  Button,
   FlatList,
-  Image,
   Pressable,
   RefreshControl,
   StyleSheet,
@@ -15,6 +13,8 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useQueryClient } from "react-query";
 import { Ionicons, Entypo } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 import Loader from "@ui/Loader";
 import { Post } from "src/@types/post";
@@ -23,18 +23,20 @@ import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import PostCard from "@components/PostCard";
 import colors from "@utils/colors";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { DrawerParamList } from "src/@types/navigation";
 
 type Props = {};
 
 let pageNo = 0;
 const limit = 6;
 
-const Main = ({ navigation }) => {
+const Main = () => {
   const { data, isFetching, isLoading } = useFetchPosts();
   const queryClient = useQueryClient();
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
   // console.log(data?.length);
   // console.log("isFetchingMore", isFetchingMore);
@@ -74,6 +76,7 @@ const Main = ({ navigation }) => {
   const renderPost = useCallback(
     ({ item }: { item: Post }) => (
       <PostCard
+        _id={item._id}
         description={item.description}
         image={item.image}
         likes={item.likes}
@@ -165,6 +168,7 @@ const Main = ({ navigation }) => {
             ListFooterComponent={renderFooter}
             onEndReached={handleOnEndReached}
             initialNumToRender={6}
+            maxToRenderPerBatch={10}
           />
         </View>
       )}

@@ -8,10 +8,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import Loader from "@ui/Loader";
 
 interface Props {
   visible: boolean;
   onRequestClose(): void;
+  deleteLoading: boolean;
   onUpdate: () => void;
   onReport: () => void;
   onDelete: () => void;
@@ -20,6 +22,7 @@ interface Props {
 const BasicOptionsModal: FC<Props> = ({
   visible,
   onRequestClose,
+  deleteLoading,
   onUpdate,
   onReport,
   onDelete,
@@ -29,9 +32,12 @@ const BasicOptionsModal: FC<Props> = ({
       visible={visible}
       transparent={true}
       animationType="fade"
-      onRequestClose={onRequestClose}
+      onRequestClose={deleteLoading ? undefined : onRequestClose} // Android back button
     >
-      <TouchableWithoutFeedback onPress={onRequestClose}>
+      <TouchableWithoutFeedback
+        disabled={deleteLoading}
+        onPress={onRequestClose}
+      >
         <View style={styles.modalBackground}>
           <TouchableWithoutFeedback>
             <View style={styles.container}>
@@ -62,6 +68,18 @@ const BasicOptionsModal: FC<Props> = ({
                 />
                 <Text style={styles.optionText}>Delete</Text>
               </TouchableOpacity>
+
+              {/* Loader Component */}
+              {deleteLoading && (
+                <View style={styles.loaderOverlay}>
+                  <Loader
+                    loaderStyle={{
+                      width: 150,
+                      height: 150,
+                    }}
+                  />
+                </View>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -81,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     borderRadius: 20,
-    width: "50%",
+    width: "45%",
     paddingVertical: 30,
     paddingHorizontal: 20,
     elevation: 10,
@@ -107,11 +125,17 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1, // Ensure loader is above the overlay
+    backgroundColor: "rgba(255, 255, 255, 0.9)", // Semi-transparent overlay
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20, // Match modalContent's borderRadius
   },
 });
 

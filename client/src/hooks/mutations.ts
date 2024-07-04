@@ -5,6 +5,7 @@ import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { IAppointment, IMedication } from "../../../server/src/models/schedule";
+import { Post } from "src/@types/post";
 
 interface DeleteFileParams {
   fileId: string;
@@ -298,15 +299,8 @@ export const useScheduleMutations = () => {
               });
             }
           );
-        },
-        onError: (error) => {
-          const errorMessage = catchAsyncError(error);
-          ToastNotification({
-            type: "Error",
-            message: errorMessage,
-          });
-        },
-        onSettled: (data, error, variables) => {
+
+          // close Modal
           variables?.handleCloseMoreOptionsPress();
 
           ToastNotification({
@@ -316,6 +310,16 @@ export const useScheduleMutations = () => {
             )} updated successfully`,
           });
         },
+        onError: (error, variables) => {
+          // close Modal
+          variables?.handleCloseMoreOptionsPress();
+
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
       }
     );
 
@@ -323,6 +327,130 @@ export const useScheduleMutations = () => {
     deleteScheduleMutation,
     deleteLoading,
     updateScheduleMutation,
+    updateLoading,
+  };
+};
+
+interface DeletePostParams {
+  postId: string;
+  ownerId: string;
+  handleCloseMoreOptionsPress: () => void;
+}
+
+export const usePostMutations = () => {
+  const queryClient = useQueryClient();
+
+  const { isLoading: deleteLoading, mutate: deletePostMutation } = useMutation<
+    void,
+    Error,
+    DeletePostParams,
+    unknown
+  >(
+    async ({ postId, ownerId }) => {
+      // Construct the URL with query parameters
+      const url = `/post/post-delete?postId=${postId}&ownerId=${ownerId}`;
+      const client = await getClient();
+      await client.delete(url);
+    },
+    {
+      onMutate: async (variables) => {
+        return { ...variables };
+      },
+      // Invalidate related queries on success to refresh the UI
+      onSuccess: (data, variables) => {
+        const { postId } = variables;
+
+        queryClient.setQueryData(["posts"], (oldData: Post[] | undefined) => {
+          if (!oldData) {
+            return [];
+          }
+
+          // Filter out the deleted post
+          return (
+            oldData?.filter((post) => post._id.toString() !== postId) ?? []
+          );
+        });
+        // close Modal
+        variables?.handleCloseMoreOptionsPress();
+
+        ToastNotification({
+          message: "Your post has been deleted successfully",
+        });
+      },
+      onError: (error, variables) => {
+        // close Modal
+        variables?.handleCloseMoreOptionsPress();
+
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
+        });
+      },
+    }
+  );
+
+  interface UpdatePostParams {
+    postId: string;
+    ownerId: string;
+    formData: FormData;
+    handleCloseMoreOptionsPress: () => void;
+  }
+
+  const { isLoading: updateLoading, mutate: updatePostMutation } = useMutation<
+    void,
+    Error,
+    UpdatePostParams,
+    unknown
+  >(
+    async ({ postId, ownerId, formData }) => {
+      const client = await getClient();
+
+      const url = `/post/?postId=${postId}&ownerId=${ownerId}`;
+
+      return client.patch(url, formData);
+    },
+    {
+      onSuccess: (data, variables) => {
+        const { postId, ownerId, formData } = variables;
+
+        // Optimistically update the local cache
+        queryClient.setQueryData<Post[]>(["posts"], (oldData) => {
+          if (!oldData) return [];
+          return oldData.map((post) => {
+            if (post._id.toString() === postId) {
+              return {
+                ...post,
+                description: description,
+                forumType: forumType,
+                image: image,
+              };
+            }
+            return post;
+          });
+        });
+      },
+      onError: (error) => {
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
+        });
+      },
+      onSettled: (data, error, variables) => {
+        variables?.handleCloseMoreOptionsPress();
+
+        ToastNotification({
+          message: `your post has been updated successfully`,
+        });
+      },
+    }
+  );
+
+  return {
+    deletePostMutation,
+    deleteLoading,
+    updatePostMutation,
     updateLoading,
   };
 };
