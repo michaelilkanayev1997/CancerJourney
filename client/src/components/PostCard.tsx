@@ -1,4 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -8,16 +15,19 @@ import {
   Image,
   LayoutChangeEvent,
   Vibration,
+  Alert,
 } from "react-native";
 
 import colors from "../utils/colors";
 import { calculateTimeDifference } from "@utils/helper";
-import { Avatar, Like, Reply, User } from "src/@types/post";
+import { Like, Reply, User } from "src/@types/post";
 import { getAuthState } from "src/store/auth";
 import { useSelector } from "react-redux";
 import BasicOptionsModal from "./BasicOptionsModal";
+import { usePostMutations } from "src/hooks/mutations";
 
 interface PostProps {
+  _id: string;
   description: string;
   image: {
     public_id: string;
@@ -31,207 +41,251 @@ interface PostProps {
   onComment: () => void;
 }
 
-const PostCard: FC<PostProps> = ({
-  description,
-  image,
-  likes,
-  owner,
-  createdAt,
-  onLike,
-  onComment,
-  replies,
-}) => {
-  const { profile } = useSelector(getAuthState);
-  const [showFullText, setShowFullText] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isTextLong, setIsTextLong] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+const PostCard: FC<PostProps> = memo(
+  ({
+    _id,
+    description,
+    image,
+    likes,
+    owner,
+    createdAt,
+    onLike,
+    onComment,
+    replies,
+  }) => {
+    const { profile } = useSelector(getAuthState);
+    const [showFullText, setShowFullText] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [isTextLong, setIsTextLong] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
-  const MAX_LINES = 3;
+    const MAX_LINES = 3;
 
-  const handleTextLayout = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    setIsTextLong(height > 52); //Threshold for 3 lines of text
-  };
+    const {
+      deletePostMutation,
+      deleteLoading,
+      updatePostMutation,
+      updateLoading,
+    } = usePostMutations();
 
-  const toggleShowFullText = () => {
-    setShowFullText(!showFullText);
-  };
+    const handleCloseMoreOptionsPress = useCallback(() => {
+      setModalVisible(false);
+      Vibration.vibrate(40);
+    }, [modalVisible]);
 
-  const handleLikePost = () => {
-    setIsLiked(!isLiked);
-    onLike();
-  };
+    const handleTextLayout = (event: LayoutChangeEvent) => {
+      const { height } = event.nativeEvent.layout;
+      setIsTextLong(height > 52); //Threshold for 3 lines of text
+    };
 
-  return (
-    <View>
-      <View style={styles.header}>
-        <View style={styles.userDetails}>
-          <Image
-            style={styles.profileImage}
-            source={
-              owner?.avatar?.url
-                ? { uri: owner?.avatar?.url }
-                : require("@assets/user_profile.png")
-            }
-          />
-          <View style={{ flexDirection: "column", gap: 2 }}>
-            <Text style={styles.userName}>{owner?.name}</Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.userType}
-            >
-              {owner?.userType}
+    const toggleShowFullText = () => {
+      setShowFullText(!showFullText);
+    };
+
+    const handleLikePost = () => {
+      setIsLiked(!isLiked);
+      onLike();
+    };
+
+    // Delete button is pressed
+    const handleDelete = () => {
+      if (!_id) return;
+
+      Alert.alert(
+        "Confirm Deletion",
+        "Are you sure you want to delete this post?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Delete",
+            onPress: () => {
+              deletePostMutation({
+                postId: _id.toString(),
+                ownerId: owner?._id,
+                handleCloseMoreOptionsPress,
+              });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    };
+
+    return (
+      <View>
+        <View style={styles.header}>
+          <View style={styles.userDetails}>
+            <Image
+              style={styles.profileImage}
+              source={
+                owner?.avatar?.url
+                  ? { uri: owner?.avatar?.url }
+                  : require("@assets/user_profile.png")
+              }
+            />
+            <View style={{ flexDirection: "column", gap: 2 }}>
+              <Text style={styles.userName}>{owner?.name}</Text>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.userType}
+              >
+                {owner?.userType}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.TimeAndOptions}>
+            <Text style={styles.durationText}>
+              {calculateTimeDifference(createdAt)}
             </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true);
+                Vibration.vibrate(50);
+              }}
+            >
+              <Text style={styles.ellipsisText}>...</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.TimeAndOptions}>
-          <Text style={styles.durationText}>
-            {calculateTimeDifference(createdAt)}
+        <View style={styles.contentContainer}>
+          <Text
+            style={styles.contentText}
+            numberOfLines={showFullText ? undefined : MAX_LINES}
+            onLayout={handleTextLayout}
+          >
+            {description}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setModalVisible(true);
-              Vibration.vibrate(50);
-            }}
-          >
-            <Text style={styles.ellipsisText}>...</Text>
-          </TouchableOpacity>
+          {isTextLong && (
+            <Pressable onPress={toggleShowFullText}>
+              <Text style={styles.seeMoreText}>
+                {showFullText ? "See less" : "See more"}
+              </Text>
+            </Pressable>
+          )}
         </View>
-      </View>
 
-      <View style={styles.contentContainer}>
-        <Text
-          style={styles.contentText}
-          numberOfLines={showFullText ? undefined : MAX_LINES}
-          onLayout={handleTextLayout}
-        >
-          {description}
-        </Text>
-        {isTextLong && (
-          <Pressable onPress={toggleShowFullText}>
-            <Text style={styles.seeMoreText}>
-              {showFullText ? "See less" : "See more"}
-            </Text>
-          </Pressable>
-        )}
-      </View>
+        {image?.url ? (
+          <Image
+            style={styles.postImage}
+            source={{
+              uri: image.url,
+            }}
+          />
+        ) : null}
 
-      {image?.url ? (
-        <Image
-          style={styles.postImage}
-          source={{
-            uri: image.url,
-          }}
-        />
-      ) : null}
-
-      <View style={styles.footer}>
-        <View style={styles.socialActivity}>
-          <TouchableOpacity
-          // onPress={() => reactsHandler(item)}
-          >
-            {likes?.length > 0 ? (
-              <>
-                {likes.find((i: Like) => i.userId._id === profile?.id) ? (
-                  <Image
-                    source={{
-                      uri: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png",
-                    }}
-                    style={styles.icon}
-                  />
-                ) : (
-                  <Image
-                    source={{
-                      uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
-                    }}
-                    style={styles.icon}
-                  />
-                )}
-              </>
-            ) : (
+        <View style={styles.footer}>
+          <View style={styles.socialActivity}>
+            <TouchableOpacity
+            // onPress={() => reactsHandler(item)}
+            >
+              {likes?.length > 0 ? (
+                <>
+                  {likes.find((i: Like) => i.userId._id === profile?.id) ? (
+                    <Image
+                      source={{
+                        uri: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png",
+                      }}
+                      style={styles.icon}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                      }}
+                      style={styles.icon}
+                    />
+                  )}
+                </>
+              ) : (
+                <Image
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                  }}
+                  style={styles.icon}
+                />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+            // onPress={() => {
+            //   navigation.navigate("CreateReplies", {
+            //     item: item,
+            //     navigation: navigation,
+            //     postId: postId,
+            //   });
+            // }}
+            >
               <Image
                 source={{
-                  uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                  uri: "https://cdn-icons-png.flaticon.com/512/5948/5948565.png",
                 }}
-                style={styles.icon}
+                style={[styles.icon, styles.smallIcon, styles.marginLeft]}
               />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("CreateReplies", {
-          //     item: item,
-          //     navigation: navigation,
-          //     postId: postId,
-          //   });
-          // }}
-          >
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/5948/5948565.png",
-              }}
-              style={[styles.icon, styles.smallIcon, styles.marginLeft]}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/10863/10863770.png",
-              }}
-              style={[styles.icon, styles.mediumIcon, styles.marginLeft]}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {(likes.length !== 0 || replies.length !== 0) && (
-          <View style={styles.replyContainer}>
-            <TouchableOpacity
-            // onPress={() =>{
-            //   // item.likes.length !== 0 &&
-            //   // navigation.navigate('PostLikeCard', {
-            //   //   item: item.likes,
-            //   //   navigation: navigation,
-            //   // })
-            // }
-            >
-              <Text style={styles.replyText}>
-                {likes.length}{" "}
-                {likes.length > 1 || likes.length === 0 ? "likes ·" : "like ·"}
-              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-            // onPress={() =>{
-            //   // navigation.navigate('PostDetails', {
-            //   //   data: item,
-            //   // })
-            // }
-            >
-              <Text style={styles.replyText}>
-                {`${replies?.length} replies`}{" "}
-              </Text>
+            <TouchableOpacity>
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/512/10863/10863770.png",
+                }}
+                style={[styles.icon, styles.mediumIcon, styles.marginLeft]}
+              />
             </TouchableOpacity>
           </View>
-        )}
+
+          {(likes.length !== 0 || replies.length !== 0) && (
+            <View style={styles.replyContainer}>
+              <TouchableOpacity
+              // onPress={() =>{
+              //   // item.likes.length !== 0 &&
+              //   // navigation.navigate('PostLikeCard', {
+              //   //   item: item.likes,
+              //   //   navigation: navigation,
+              //   // })
+              // }
+              >
+                <Text style={styles.replyText}>
+                  {likes.length}{" "}
+                  {likes.length > 1 || likes.length === 0
+                    ? "likes ·"
+                    : "like ·"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+              // onPress={() =>{
+              //   // navigation.navigate('PostDetails', {
+              //   //   data: item,
+              //   // })
+              // }
+              >
+                <Text style={styles.replyText}>
+                  {`${replies?.length} replies`}{" "}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.separator} />
+
+        <BasicOptionsModal
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+          deleteLoading={deleteLoading}
+          // onUpdate={handleUpdate}
+          // onReport={handleReport}
+          onDelete={handleDelete}
+        />
       </View>
-
-      <View style={styles.separator} />
-
-      <BasicOptionsModal
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        postTitle={description.slice(0, 20)}
-        // onUpdate={handleUpdate}
-        // onReport={handleReport}
-        // onDelete={handleDelete}
-      />
-    </View>
-  );
-};
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   header: {

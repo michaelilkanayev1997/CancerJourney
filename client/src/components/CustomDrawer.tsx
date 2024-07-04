@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
   drawerItemLabel: {
     fontSize: 16,
     color: colors.CONTRAST,
+    flexShrink: 1,
   },
 });
 

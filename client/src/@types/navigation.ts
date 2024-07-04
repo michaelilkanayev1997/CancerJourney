@@ -59,6 +59,10 @@ export type SocialStackParamList = {
   Favorites: undefined;
 };
 
+export type DrawerParamList = {
+  SocialTabs: undefined;
+};
+
 export type BottomTabParamList = {
   HomeScreen: NavigatorScreenParams<HomeStackParamList>;
   ProfileScreen: NavigatorScreenParams<ProfileStackParamList>;
