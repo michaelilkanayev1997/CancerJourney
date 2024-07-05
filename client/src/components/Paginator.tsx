@@ -19,10 +19,14 @@ interface SlideData {
 interface Props {
   data: SlideData[];
   scrollX: Animated.Value;
+  isRTL: boolean; // Add the isRTL prop
 }
 
-const Paginator: FC<Props> = ({ data, scrollX }) => {
+const Paginator: FC<Props> = ({ data, scrollX, isRTL }) => {
   const { width } = useWindowDimensions(); // Get the window's width to calculate the dot's position
+
+  // Reverse the data array if RTL is enabled
+  const slidesData = isRTL ? [...data].reverse() : data;
 
   return (
     <View
@@ -32,8 +36,14 @@ const Paginator: FC<Props> = ({ data, scrollX }) => {
         justifyContent: "center",
       }}
     >
-      {data.map((_, i) => {
-        const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
+      {slidesData.map((_, i) => {
+        // Calculate the actual index based on RTL
+        const actualIndex = isRTL ? data.length - 1 - i : i;
+        const inputRange = [
+          (actualIndex - 1) * width,
+          actualIndex * width,
+          (actualIndex + 1) * width,
+        ];
         const scale = scrollX.interpolate({
           inputRange,
           outputRange: [1.0, 1.4, 1.0],

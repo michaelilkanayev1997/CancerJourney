@@ -21,7 +21,7 @@ const resources = {
   ru: { translation: ru },
 };
 
-const getLocaleLanguage = () => {
+export const getLocaleLanguage = () => {
   // Get the current locale
   const locale = Localization.getLocales()[0].languageCode;
   // Map "iw" to "he"
@@ -53,7 +53,7 @@ const updateLayoutDirection = async (language: string) => {
   await saveToAsyncStorage(Keys.IS_RTL, isRTL.toString());
 
   if (previousIsRTL !== isRTL) {
-    restartApp(); // Restart the app to apply RTL change
+    restartApp(); // Restart the app to apply RTL/LTR change
     console.log("restartApp ! ! ! ");
   }
 
