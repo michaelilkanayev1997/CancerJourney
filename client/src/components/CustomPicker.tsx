@@ -12,121 +12,17 @@ import {
 } from "react-native";
 
 import { NewProfile } from "./InputSections";
+import { NewPost } from "@views/bottomTab/posts/NewPost";
+import { cancerTypes } from "@utils/enums";
 
 interface Props {
   visible: boolean;
-  newProfile: NewProfile;
-  setNewProfile: (profile: NewProfile) => void;
+  newProfile: NewProfile | NewPost;
+  setNewProfile:
+    | Dispatch<SetStateAction<NewProfile>>
+    | Dispatch<SetStateAction<NewPost>>;
   setPickerVisible: Dispatch<SetStateAction<boolean>>;
 }
-
-export const cancerTypes = [
-  {
-    label: "Breast Cancer",
-    value: "breast",
-    imageUrl: require("@assets/CancerType/breast-cancer.png"),
-  },
-  {
-    label: "Brain Cancer",
-    value: "brain",
-    imageUrl: require("@assets/CancerType/brain-cancer.png"),
-  },
-  {
-    label: "Appendix Cancer",
-    value: "appendix",
-    imageUrl: require("@assets/CancerType/appendix-cancer.png"),
-  },
-  {
-    label: "bladder Cancer",
-    value: "bladder",
-    imageUrl: require("@assets/CancerType/bladder-cancer.png"),
-  },
-  {
-    label: "Blood Cancer",
-    value: "blood",
-    imageUrl: require("@assets/CancerType/blood-cancer.png"),
-  },
-  {
-    label: "Kidney Cancer",
-    value: "kidney",
-    imageUrl: require("@assets/CancerType/kidney-cancer.png"),
-  },
-  {
-    label: "Bone Cancer",
-    value: "bone",
-    imageUrl: require("@assets/CancerType/bone-cancer.png"),
-  },
-  {
-    label: "Childhood Cancer",
-    value: "childhood",
-    imageUrl: require("@assets/CancerType/childhood-cancer.png"),
-  },
-  {
-    label: "Colorectal Cancer",
-    value: "colorectal",
-    imageUrl: require("@assets/CancerType/colorectal-cancer.png"),
-  },
-  {
-    label: "Gallbladder & Bile Duct Cancer",
-    value: "gallbladder-and-bile-duct",
-    imageUrl: require("@assets/CancerType/gallbladder-and-bile-duct-cancer.png"),
-  },
-  {
-    label: "Gastric Cancer",
-    value: "gastric",
-    imageUrl: require("@assets/CancerType/gastric-cancer.png"),
-  },
-  {
-    label: "Gynecological Cancer",
-    value: "gynecological",
-    imageUrl: require("@assets/CancerType/gynecological-cancer.png"),
-  },
-  {
-    label: "Head & Neck Cancer",
-    value: "head-and-neck",
-    imageUrl: require("@assets/CancerType/head-and-neck-cancer.png"),
-  },
-  {
-    label: "Liver Cancer",
-    value: "liver",
-    imageUrl: require("@assets/CancerType/liver-cancer.png"),
-  },
-  {
-    label: "Lung Cancer",
-    value: "lung",
-    imageUrl: require("@assets/CancerType/lung-cancer.png"),
-  },
-  {
-    label: "Pancreatic Cancer",
-    value: "pancreatic",
-    imageUrl: require("@assets/CancerType/pancreatic-cancer.png"),
-  },
-  {
-    label: "Prostate Cancer",
-    value: "prostate",
-    imageUrl: require("@assets/CancerType/prostate-cancer.png"),
-  },
-  {
-    label: "Skin Cancer",
-    value: "skin",
-    imageUrl: require("@assets/CancerType/skin-cancer.png"),
-  },
-  {
-    label: "Testicular Cancer",
-    value: "testicular",
-    imageUrl: require("@assets/CancerType/testicular-cancer.png"),
-  },
-  {
-    label: "Thyroid Cancer",
-    value: "thyroid",
-    imageUrl: require("@assets/CancerType/thyroid-cancer.png"),
-  },
-  {
-    label: "Other",
-    value: "other",
-    imageUrl: require("@assets/CancerType/other-cancer.png"),
-  },
-];
 
 const { width, height } = Dimensions.get("window");
 
@@ -155,7 +51,10 @@ const CustomPicker: FC<Props> = ({
                   <TouchableOpacity
                     style={styles.item}
                     onPress={() => {
-                      setNewProfile({ ...newProfile, cancerType: item.value });
+                      setNewProfile({
+                        ...(newProfile as any),
+                        cancerType: item.value,
+                      });
                       setPickerVisible(false);
                     }}
                   >

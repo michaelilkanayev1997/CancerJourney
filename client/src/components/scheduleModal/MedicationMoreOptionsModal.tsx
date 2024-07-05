@@ -37,10 +37,10 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import Loader from "@ui/Loader";
 import DaySelector from "@components/DaySelector";
-import MedicationPhotoModal from "@components/MedicationPhotoModal";
 import { styles } from "./MoreOptionsModalStyles";
 import colors from "@utils/colors";
 import { IMedication } from "src/@types/schedule";
+import PhotoModal from "@components/PhotoModal";
 
 interface MedicationMoreOptionsProps {
   item?: IMedication;
@@ -536,11 +536,12 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
         <Toast config={toastConfig} />
       </Modal>
 
-      <MedicationPhotoModal
+      <PhotoModal
         isVisible={PhotoModalVisible}
         toggleModalVisible={toggleModalVisible}
         setPhoto={setPhoto}
         photo={photo}
+        title={"Medication Photo"}
       />
     </>
   );

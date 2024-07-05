@@ -1,15 +1,16 @@
 import colors from "@utils/colors";
 import { FC, ReactNode } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ViewStyle, StyleProp } from "react-native";
 
 interface Props {
   title: string;
   children: ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-const InputRowContainer: FC<Props> = ({ title, children }) => {
+const InputRowContainer: FC<Props> = ({ title, children, style }) => {
   return (
-    <View style={styles.inputRowContainer}>
+    <View style={[styles.inputRowContainer, style]}>
       <Text style={styles.rowLabel}>{title}</Text>
 
       {children}

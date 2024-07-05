@@ -14,6 +14,7 @@ import CustomPicker from "./CustomPicker";
 import InputRowContainer from "@ui/InputRowContainer";
 import DatePicker from "@ui/DatePicker";
 import CountryPickerCustom from "./CountryPickerCustom";
+import { cancerTypeRibbon } from "@utils/enums";
 
 export interface NewProfile {
   userType: string;
@@ -25,34 +26,6 @@ export interface NewProfile {
   birthDate: Date | null;
   country: { cca2: string; name: string; flag: string };
 }
-
-interface CancerTypeRibbon {
-  [key: string]: number; // Use `number` since `require()` returns a number for local assets
-}
-
-export const cancerTypeRibbon: CancerTypeRibbon = {
-  bone: require("@assets/CancerType/bone-cancer.png"),
-  breast: require("@assets/CancerType/breast-cancer.png"),
-  lung: require("@assets/CancerType/lung-cancer.png"),
-  appendix: require("@assets/CancerType/appendix-cancer.png"),
-  brain: require("@assets/CancerType/brain-cancer.png"),
-  bladder: require("@assets/CancerType/bladder-cancer.png"),
-  blood: require("@assets/CancerType/blood-cancer.png"),
-  kidney: require("@assets/CancerType/kidney-cancer.png"),
-  childhood: require("@assets/CancerType/childhood-cancer.png"),
-  colorectal: require("@assets/CancerType/colorectal-cancer.png"),
-  "gallbladder-and-bile-duct": require("@assets/CancerType/gallbladder-and-bile-duct-cancer.png"),
-  gastric: require("@assets/CancerType/gastric-cancer.png"),
-  gynecological: require("@assets/CancerType/gynecological-cancer.png"),
-  "head-and-neck": require("@assets/CancerType/head-and-neck-cancer.png"),
-  liver: require("@assets/CancerType/liver-cancer.png"),
-  pancreatic: require("@assets/CancerType/pancreatic-cancer.png"),
-  prostate: require("@assets/CancerType/prostate-cancer.png"),
-  skin: require("@assets/CancerType/skin-cancer.png"),
-  testicular: require("@assets/CancerType/testicular-cancer.png"),
-  thyroid: require("@assets/CancerType/thyroid-cancer.png"),
-  other: require("@assets/CancerType/other-cancer.png"),
-};
 
 interface Props {
   newProfile: NewProfile;
