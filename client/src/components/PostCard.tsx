@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, memo, useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -16,7 +9,6 @@ import {
   LayoutChangeEvent,
   Vibration,
   Alert,
-  UIManager,
   Dimensions,
 } from "react-native";
 
@@ -25,9 +17,10 @@ import { calculateTimeDifference } from "@utils/helper";
 import { Like, Reply, User } from "src/@types/post";
 import { getAuthState } from "src/store/auth";
 import { useSelector } from "react-redux";
-import BasicOptionsModal from "./BasicOptionsModal";
+
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
+import { useQueryClient } from "react-query";
 
 interface PostProps {
   _id: string;
@@ -58,7 +51,6 @@ const PostCard: FC<PostProps> = memo(
   }) => {
     const { profile } = useSelector(getAuthState);
     const [showFullText, setShowFullText] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
@@ -90,6 +82,7 @@ const PostCard: FC<PostProps> = memo(
       deleteLoading,
       updatePostMutation,
       updateLoading,
+      favoritePostMutation,
     } = usePostMutations();
 
     const handleCloseMoreOptionsPress = useCallback(() => {
@@ -104,11 +97,6 @@ const PostCard: FC<PostProps> = memo(
 
     const toggleShowFullText = () => {
       setShowFullText(!showFullText);
-    };
-
-    const handleLikePost = () => {
-      setIsLiked(!isLiked);
-      onLike();
     };
 
     const handleUpdate = () => {};
@@ -205,34 +193,21 @@ const PostCard: FC<PostProps> = memo(
         <View style={styles.footer}>
           <View style={styles.socialActivity}>
             <TouchableOpacity
-            // onPress={() => reactsHandler(item)}
+              onPress={() =>
+                favoritePostMutation({
+                  postId: _id.toString(),
+                  profile,
+                })
+              }
             >
-              {likes?.length > 0 ? (
-                <>
-                  {likes.find((i: Like) => i.userId._id === profile?.id) ? (
-                    <Image
-                      source={{
-                        uri: "https://cdn-icons-png.flaticon.com/512/2589/2589175.png",
-                      }}
-                      style={styles.icon}
-                    />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
-                      }}
-                      style={styles.icon}
-                    />
-                  )}
-                </>
-              ) : (
-                <Image
-                  source={{
-                    uri: "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
-                  }}
-                  style={styles.icon}
-                />
-              )}
+              <Image
+                source={{
+                  uri: likes.find((like) => like.userId?._id === profile?.id)
+                    ? "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
+                    : "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                }}
+                style={styles.icon}
+              />
             </TouchableOpacity>
             <TouchableOpacity
             // onPress={() => {

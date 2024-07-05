@@ -1,4 +1,5 @@
 import * as Updates from "expo-updates";
+import { ObjectId } from "bson";
 
 // Calculate the compression level
 export const calculateCompression = (size: number) => {
@@ -79,3 +80,6 @@ export const restartApp = async () => {
   }
   await Updates.reloadAsync();
 };
+
+// Function to generate a unique ObjectId
+export const generateObjectId = () => new ObjectId().toString();
