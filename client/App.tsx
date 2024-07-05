@@ -14,7 +14,7 @@ import store from "./src/store";
 import AppNavigator from "src/navigation";
 import AppContainer from "@components/AppContainer";
 import PreloadIcons from "@components/PreloadIcons";
-import i18n from "src/i18n/i18n";
+import i18n, { getLocaleLanguage } from "src/i18n/i18n";
 import {
   Keys,
   getFromAsyncStorage,
@@ -22,8 +22,8 @@ import {
 } from "@utils/asyncStorage";
 
 // Force LTR text direction
-I18nManager.allowRTL(false);
-I18nManager.forceRTL(false);
+// I18nManager.allowRTL(false);
+// I18nManager.forceRTL(false);
 
 // Create a client
 const queryClient = new QueryClient();
@@ -45,7 +45,6 @@ const App = () => {
         await Updates.reloadAsync();
       }
     } catch (error) {
-      // You can also add an alert() to see the error message in case of an error when fetching updates.
       console.log(`Error fetching latest Expo update: ${error}`);
     }
   }
@@ -57,13 +56,25 @@ const App = () => {
         onFetchUpdateAsync();
         const userLanguage = await getFromAsyncStorage(Keys.USER_LANGUAGE);
         const isRTL = await getFromAsyncStorage(Keys.IS_RTL);
+
+        console.log("userLanguage 1: ", userLanguage);
+        console.log("isRTL 1: ", isRTL);
+
+        const lng: string = userLanguage || getLocaleLanguage() || "en";
+        const isLanguageRTL = ["he", "ar"].includes(lng);
+
         if (isRTL === null) {
-          // Initialize with the current RTL setting
-          const currentIsRTL = I18nManager.isRTL;
-          await saveToAsyncStorage(Keys.IS_RTL, currentIsRTL.toString());
+          console.log(
+            `Initial RTL Setting for language ${lng}: ${isLanguageRTL}`
+          );
+          I18nManager.forceRTL(isLanguageRTL);
+          I18nManager.allowRTL(isLanguageRTL);
+          await saveToAsyncStorage(Keys.IS_RTL, isLanguageRTL.toString());
         }
 
-        if (userLanguage) {
+        if (userLanguage === null) {
+          await saveToAsyncStorage(Keys.USER_LANGUAGE, lng);
+        } else {
           i18n.changeLanguage(userLanguage);
         }
       } catch (e) {

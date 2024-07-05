@@ -191,15 +191,7 @@ export const useScheduleMutations = () => {
               );
             }
           );
-        },
-        onError: (error) => {
-          const errorMessage = catchAsyncError(error);
-          ToastNotification({
-            type: "Error",
-            message: errorMessage,
-          });
-        },
-        onSettled: (data, error, variables) => {
+
           variables?.handleCloseMoreOptionsPress();
 
           ToastNotification({
@@ -207,6 +199,15 @@ export const useScheduleMutations = () => {
               0,
               -1
             )} deleted successfully`,
+          });
+        },
+        onError: (error, variables) => {
+          variables?.handleCloseMoreOptionsPress();
+
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
           });
         },
       }
@@ -429,19 +430,20 @@ export const usePostMutations = () => {
             return post;
           });
         });
-      },
-      onError: (error) => {
-        const errorMessage = catchAsyncError(error);
-        ToastNotification({
-          type: "Error",
-          message: errorMessage,
-        });
-      },
-      onSettled: (data, error, variables) => {
+
         variables?.handleCloseMoreOptionsPress();
 
         ToastNotification({
           message: `your post has been updated successfully`,
+        });
+      },
+      onError: (error, variables) => {
+        variables?.handleCloseMoreOptionsPress();
+
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
         });
       },
     }

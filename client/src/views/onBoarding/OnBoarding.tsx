@@ -4,6 +4,7 @@ import {
   StyleSheet,
   FlatList,
   Animated as RNAnimated,
+  I18nManager,
 } from "react-native";
 import Animated, {
   FadeIn,
@@ -103,6 +104,9 @@ const OnBoarding: FC<Props> = (props) => {
               useNativeDriver: false,
             }
           )}
+          contentContainerStyle={[
+            { flexDirection: I18nManager.isRTL ? "row" : "row" }, // Fixing RTL Problem
+          ]}
           onViewableItemsChanged={viewableItemsChanged}
           ref={slidesRef}
         />
@@ -131,7 +135,11 @@ const OnBoarding: FC<Props> = (props) => {
       </Animated.View>
 
       <Animated.View entering={ZoomIn.duration(800)} style={{ flex: 0.5 }}>
-        <Paginator data={slidesData} scrollX={scrollX} />
+        <Paginator
+          data={slidesData}
+          scrollX={scrollX}
+          isRTL={I18nManager.isRTL}
+        />
       </Animated.View>
     </Animated.View>
   );
