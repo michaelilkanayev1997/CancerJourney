@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import React, { useState } from "react";
 import {
   View,
@@ -9,11 +9,10 @@ import {
   Image,
   ScrollView,
   Vibration,
-  ActivityIndicator,
   BackHandler,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";

@@ -6,6 +6,8 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { IAppointment, IMedication } from "../../../server/src/models/schedule";
 import { Post } from "src/@types/post";
+import { UserProfile } from "src/store/auth";
+import { generateObjectId } from "@utils/helper";
 
 interface DeleteFileParams {
   fileId: string;
@@ -449,10 +451,79 @@ export const usePostMutations = () => {
     }
   );
 
+  interface FavoritePostParams {
+    postId: string;
+    profile: UserProfile | null;
+  }
+
+  const { isLoading: favoriteLoading, mutate: favoritePostMutation } =
+    useMutation<void, Error, FavoritePostParams, unknown>(
+      async ({ postId, profile }) => {
+        if (!postId || !profile?.id) return;
+        const client = await getClient();
+        await client.post(`/post/update-post-favorite?postId=${postId}`);
+      },
+      {
+        onSuccess: (data, variables) => {
+          const { postId, profile } = variables;
+          if (!profile) return;
+          // Optimistically update the local cache
+          queryClient.setQueryData<Post[]>(["posts"], (oldData) => {
+            if (!oldData) return [];
+
+            return oldData.map((post) => {
+              if (post._id.toString() === postId) {
+                console.log("profileId ", profile?.id);
+                console.log("post.likes ", post.likes);
+
+                const isLiked = post.likes.some(
+                  (like) => like.userId._id === profile?.id
+                );
+
+                return {
+                  ...post,
+                  likes: isLiked
+                    ? post.likes.filter(
+                        (like) => like.userId._id !== profile?.id
+                      )
+                    : [
+                        ...post.likes,
+                        {
+                          _id: generateObjectId(),
+                          userId: {
+                            _id: profile?.id,
+                            avatar: {
+                              url: profile?.avatar || "",
+                              publicId: "",
+                            },
+                            name: profile?.name,
+                            userType: profile?.userType,
+                          },
+                          createdAt: new Date().toISOString(),
+                        },
+                      ],
+                };
+              }
+              return post;
+            });
+          });
+        },
+        onError: (error) => {
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
+      }
+    );
+
   return {
     deletePostMutation,
     deleteLoading,
     updatePostMutation,
     updateLoading,
+    favoritePostMutation,
+    favoriteLoading,
   };
 };
