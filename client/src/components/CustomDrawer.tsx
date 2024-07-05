@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { getAuthState } from "src/store/auth";
-import { cancerTypes } from "./CustomPicker";
+import { cancerTypes } from "@utils/enums";
 
 const CustomDrawer: FC<DrawerContentComponentProps> = () => {
   const { profile } = useSelector(getAuthState);

@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import colors from "@utils/colors";
@@ -49,13 +49,14 @@ const SocialNavigator = () => {
 const styles = StyleSheet.create({
   tabbarStyle: {
     backgroundColor: "white",
-    height: 42,
+    height: 40,
   },
   tabbarLabelStyle: {
     color: colors.CONTRAST,
     fontSize: 12,
     fontWeight: "600",
     textTransform: "none",
+    marginTop: -8,
   },
 });
 

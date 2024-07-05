@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react";
 import React, { useState } from "react";
 import {
   View,
@@ -8,60 +8,152 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,
+  Vibration,
+  ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
-import CustomPicker, { cancerTypes } from "@components/CustomPicker";
+import CustomPicker from "@components/CustomPicker";
 import { getAuthState } from "src/store/auth";
 import InputRowContainer from "@ui/InputRowContainer";
-import { MaterialIcons } from "@expo/vector-icons";
-import { cancerTypeRibbon } from "@components/InputSections";
+
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 
+import { cancerTypeRibbon } from "@utils/enums";
+import PhotoModal from "@components/PhotoModal";
+import { ToastNotification } from "@utils/toastConfig";
+import { getClient } from "src/api/client";
+import catchAsyncError from "src/api/catchError";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Loader from "@ui/Loader";
+
 interface Props {}
+
+export interface NewPost {
+  description: string;
+  cancerType: string;
+  image: ImagePicker.ImagePickerAsset | null;
+}
 
 const NewPost: FC<Props> = (props) => {
   const { profile } = useSelector(getAuthState);
   const [pickerVisible, setPickerVisible] = useState(false);
-
-  const [newPost, setNewPost] = useState({
+  const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
+  const [addPostLoading, setAddPostLoading] = useState(false);
+  const [newPost, setNewPost] = useState<NewPost>({
     cancerType: profile?.cancerType || "other",
     description: "",
     image: null,
   });
 
-  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const handlePickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setNewPost({ ...newPost, image: result.assets[0].uri });
-    }
+  const setImage: Dispatch<
+    SetStateAction<ImagePicker.ImagePickerAsset | null>
+  > = (image) => {
+    setNewPost((prevPost) => ({
+      ...prevPost,
+      image: image as ImagePicker.ImagePickerAsset,
+    }));
   };
 
-  const handleSubmit = () => {
-    //   if (!description || !selectedCancerType || !image) {
-    //     Alert.alert("Error", "Please fill all the fields");
-    //     return;
-    //   }
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (addPostLoading) {
+          return true; // Block back button
+        }
+        return false; // Allow back button
+      };
 
-    // Reset form fields
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [addPostLoading])
+  );
+
+  const toggleModalVisible = useCallback(() => {
+    setPhotoModalVisible((prevVisible) => !prevVisible);
+    Vibration.vibrate(50);
+  }, []);
+
+  const resetFields = () => {
     setNewPost({
       cancerType: profile?.cancerType || "other",
       description: "",
       image: null,
     });
+  };
 
-    //   Alert.alert("Success", "Post added successfully!");
+  const handleAddPost = async () => {
+    if (newPost.description === "") {
+      ToastNotification({
+        type: "ModalError",
+        message: "Description is required!",
+      });
+      return;
+    } else if (newPost.description.length < 10) {
+      ToastNotification({
+        type: "ModalError",
+        message: "Description should be at least 10 characters long!",
+      });
+      return;
+    }
+    let isSuccessful = false;
+
+    try {
+      setAddPostLoading(true);
+
+      const formData = new FormData();
+
+      // Append the Body fields to the form
+      formData.append("description", newPost.description);
+      formData.append("forumType", newPost.cancerType);
+
+      if (newPost.image) {
+        formData.append("image", {
+          uri: newPost.image.uri,
+          type: newPost.image.mimeType,
+          name: "image.jpg",
+        } as any);
+      }
+
+      const client = await getClient({
+        "Content-Type": "multipart/form-data;",
+      });
+
+      const { data } = await client.post("/post/add-post", formData);
+
+      if (!data?.success) {
+        throw new Error("Failed to add the Post");
+      }
+
+      //queryClient.invalidateQueries(["schedules", "medications"]);
+
+      isSuccessful = true;
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    } finally {
+      setAddPostLoading(false);
+
+      if (isSuccessful) {
+        //handleCloseMoreOptionsPress();
+        resetFields();
+        ToastNotification({
+          message: "Post uploaded successfully!",
+        });
+      }
+    }
   };
 
   return (
@@ -69,8 +161,8 @@ const NewPost: FC<Props> = (props) => {
       <ScrollView
         contentContainerStyle={{ paddingBottom: 120 }}
         style={styles.container}
-        keyboardShouldPersistTaps="handled"
         overScrollMode="never"
+        keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.label}>New Post</Text>
         <View style={styles.userDetails}>
@@ -89,7 +181,7 @@ const NewPost: FC<Props> = (props) => {
 
         <View style={styles.titleWithError}>
           <Text style={styles.label}></Text>
-          {newPost.description.length <= 10 ? (
+          {newPost.description.length < 10 ? (
             <Animated.Text
               entering={FadeInLeft.duration(500)}
               exiting={FadeOutRight.duration(500)}
@@ -99,15 +191,43 @@ const NewPost: FC<Props> = (props) => {
             </Animated.Text>
           ) : null}
         </View>
-
         <TextInput
           placeholder="Hi everyone..."
           style={styles.input}
           value={newPost.description}
           onChangeText={(text) => setNewPost({ ...newPost, description: text })}
           multiline
+          editable={!addPostLoading}
+          keyboardType="default"
+          removeClippedSubviews={false}
         />
-        {/* <Text style={styles.label}>Forum Type</Text> */}
+
+        {/* Photo Upload Icon */}
+        <Text style={styles.rowLabel}>Photo (optional)</Text>
+        <View style={styles.photoUploadContainer}>
+          <TouchableOpacity
+            onPress={toggleModalVisible}
+            style={styles.photoUploadButton}
+          >
+            <MaterialCommunityIcons
+              name="camera-outline"
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
+          {newPost.image ? (
+            <Image
+              source={{ uri: newPost.image.uri }}
+              style={styles.photoPreview}
+            />
+          ) : (
+            <Image
+              source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+              style={styles.photoPreview}
+            />
+          )}
+        </View>
+
         <InputRowContainer
           title={"Forum Type"}
           children={
@@ -149,20 +269,37 @@ const NewPost: FC<Props> = (props) => {
               />
             </>
           }
+          style={{ backgroundColor: colors.PRIMARY_LIGHT }}
         />
 
-        <TouchableOpacity onPress={handlePickImage} style={styles.imagePicker}>
-          <Text style={styles.imagePickerText}>Pick an image</Text>
-        </TouchableOpacity>
-
-        {newPost.image && (
-          <Image source={{ uri: newPost.image }} style={styles.imagePreview} />
-        )}
-
-        <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+        <TouchableOpacity
+          onPress={handleAddPost}
+          style={[styles.submitButton, addPostLoading && styles.disabledButton]}
+          disabled={addPostLoading}
+        >
           <Text style={styles.submitButtonText}>Add Post</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <PhotoModal
+        isVisible={PhotoModalVisible}
+        toggleModalVisible={toggleModalVisible}
+        setPhoto={setImage}
+        photo={newPost.image}
+        title={"Post Image"}
+      />
+
+      {/* Loader Component */}
+      {addPostLoading && (
+        <View style={styles.loaderOverlay}>
+          <Loader
+            loaderStyle={{
+              width: 150,
+              height: 150,
+            }}
+          />
+        </View>
+      )}
     </>
   );
 };
@@ -171,7 +308,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    // backgroundColor: "#fff",
+    backgroundColor: colors.PRIMARY_LIGHT,
+  },
+  rowLabel: {
+    fontSize: 16,
+    color: "#000",
+    paddingTop: 10,
   },
   label: {
     fontSize: 18,
@@ -186,35 +328,16 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     backgroundColor: "#f9f9f9",
-    marginTop: 0,
-    marginBottom: 5,
+    marginTop: -2,
+    marginBottom: 0,
     textAlignVertical: "top",
-  },
-  imagePicker: {
-    backgroundColor: colors.ICON,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 15,
-    marginTop: 10,
-  },
-  imagePickerText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  imagePreview: {
-    alignSelf: "center",
-    width: "90%",
-    height: 150,
-    borderRadius: 8,
-    marginBottom: 20,
   },
   submitButton: {
     backgroundColor: colors.ICON,
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
+    marginTop: 10,
   },
   submitButtonText: {
     color: "#fff",
@@ -275,6 +398,57 @@ const styles = StyleSheet.create({
     color: colors.ERROR,
     paddingRight: 12,
     fontWeight: "400",
+  },
+  photoUploadContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+    justifyContent: "space-between",
+    backgroundColor: "#f9f9f9",
+    padding: 8,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
+    width: "100%",
+  },
+  photoUploadButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.LIGHT_BLUE,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  photoPreview: {
+    marginLeft: 15,
+    width: 200,
+    height: 100,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+
+  disabledButton: {
+    backgroundColor: colors.OVERLAY,
+  },
+  disabledInput: {
+    backgroundColor: colors.LIGHT_GRAY,
+  },
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1, // Ensure loader is above the overlay
+    backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20, // Match modalContent's borderRadius
   },
 });
 

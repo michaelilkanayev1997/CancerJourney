@@ -12,13 +12,15 @@ interface Props {
   toggleModalVisible: () => void;
   setPhoto: Dispatch<SetStateAction<ImagePicker.ImagePickerAsset | null>>;
   photo: ImagePicker.ImagePickerAsset | null;
+  title?: string;
 }
 
-const MedicationPhotoModal: FC<Props> = ({
+const PhotoModal: FC<Props> = ({
   isVisible,
   toggleModalVisible,
   setPhoto,
   photo,
+  title,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -141,11 +143,11 @@ const MedicationPhotoModal: FC<Props> = ({
       onCameraPress={onCameraPress}
       onGalleryPress={onGalleryPress}
       onRemovePress={onRemovePress}
-      title={"Medication Photo"}
+      title={title}
     />
   );
 };
 
 const styles = StyleSheet.create({});
 
-export default MedicationPhotoModal;
+export default PhotoModal;

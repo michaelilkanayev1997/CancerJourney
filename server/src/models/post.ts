@@ -1,5 +1,6 @@
-import { cancerTypes } from "#/utils/enums";
 import mongoose, { Schema } from "mongoose";
+
+import { cancerTypes } from "#/utils/enums";
 
 interface ILike extends Document {
   userId: mongoose.Types.ObjectId;
