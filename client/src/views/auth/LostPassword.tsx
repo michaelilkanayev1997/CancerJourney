@@ -13,6 +13,7 @@ import Animated, {
   FadeInUp,
 } from "react-native-reanimated";
 import { FormikHelpers } from "formik";
+import { useTranslation } from "react-i18next";
 
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
@@ -22,14 +23,6 @@ import { AuthStackParamList } from "src/@types/navigation";
 import client from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
-
-const lostPasswordSchema = yup.object({
-  email: yup
-    .string()
-    .trim("Email is missing!")
-    .email("Invalid email!")
-    .required("Email is required!"),
-});
 
 interface Props {}
 
@@ -44,6 +37,16 @@ const initialValues = {
 const LostPassword: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const { t } = useTranslation();
+
+  const lostPasswordSchema = yup.object({
+    email: yup
+      .string()
+      .trim(t("email-is-missing!"))
+      .email(t("invalid-email!"))
+      .required(t("email-is-required!")),
+  });
 
   const handleSubmit = async (
     values: InitialValue,
@@ -111,8 +114,9 @@ const LostPassword: FC<Props> = (props) => {
           entering={FadeInLeft.delay(200).duration(1000).springify()}
           style={styles.instructionText}
         >
-          Don’t worry! It happens, please enter the address associated with your
-          account
+          {t(
+            "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account"
+          )}
         </Animated.Text>
       </View>
 
@@ -128,7 +132,7 @@ const LostPassword: FC<Props> = (props) => {
             <AuthInputField
               name="email"
               placeholder="michael@example.com"
-              label="Enter Your Email"
+              label={t("enter-Your-Email")}
               keyboardType="email-address"
               autoCapitalize="none"
               containerStyle={styles.marginBottom}
@@ -139,7 +143,7 @@ const LostPassword: FC<Props> = (props) => {
             entering={FadeInDown.delay(400).duration(1000).springify()}
           >
             <SubmitBtn
-              title="Submit"
+              title={t("submit")}
               defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
               pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
             />
@@ -150,7 +154,7 @@ const LostPassword: FC<Props> = (props) => {
               entering={FadeInLeft.delay(600).duration(1000).springify()}
             >
               <AppLink
-                title="Sign in"
+                title={t("sign-in")}
                 onPress={() => {
                   navigation.navigate("SignIn");
                 }}
@@ -161,7 +165,7 @@ const LostPassword: FC<Props> = (props) => {
               entering={FadeInRight.delay(600).duration(1000).springify()}
             >
               <AppLink
-                title="Sign Up"
+                title={t("sign-up")}
                 onPress={() => {
                   navigation.navigate("SignUp");
                 }}

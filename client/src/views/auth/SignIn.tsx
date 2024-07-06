@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { FormikHelpers } from "formik";
+import { useTranslation } from "react-i18next";
 
 import AuthInputField from "@components/form/AuthInputField";
 import Form from "@components/form";
@@ -34,19 +35,6 @@ import AppButton from "@ui/AppButton";
 import useGoogleSignIn from "src/api/useGoogleSignIn";
 import { ToastNotification } from "@utils/toastConfig";
 import { useFadeInDown, useFadeInLeft } from "@utils/animated";
-
-const signupSchema = yup.object({
-  email: yup
-    .string()
-    .trim("Email is missing!")
-    .email("Invalid email!")
-    .required("Email is required!"),
-  password: yup
-    .string()
-    .trim("Password is missing!")
-    .min(8, "Password is too short!")
-    .required("Password is required!"),
-});
 
 interface Props {
   navigation: any;
@@ -67,6 +55,21 @@ const SignIn: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
   const dispatch = useDispatch();
   const { promptGoogleSignIn, request } = useGoogleSignIn();
+
+  const { t } = useTranslation();
+
+  const signupSchema = yup.object({
+    email: yup
+      .string()
+      .trim(t("email-is-missing!"))
+      .email(t("invalid-email!"))
+      .required(t("email-is-required!")),
+    password: yup
+      .string()
+      .trim(t("password-is-missing!"))
+      .min(8, t("password-is-too-short!"))
+      .required(t("password-is-required!")),
+  });
 
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -169,7 +172,7 @@ const SignIn: FC<Props> = (props) => {
           <Animated.View style={emailAnimatedStyle}>
             <AuthInputField
               name="email"
-              label="Email"
+              label={t("email")}
               placeholder="john@email.com"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -179,7 +182,7 @@ const SignIn: FC<Props> = (props) => {
           <Animated.View style={passwordAnimatedStyle}>
             <AuthInputField
               name="password"
-              label="Password"
+              label={t("password")}
               placeholder="********"
               autoCapitalize="none"
               secureTextEntry={secureEntry}
@@ -193,7 +196,7 @@ const SignIn: FC<Props> = (props) => {
             style={[styles.forgotPasswordLink, ForgotPasswordAnimatedStyle]}
           >
             <AppLink
-              title="Forgot Password ?"
+              title={t("forgot-password-?")}
               onPress={() => {
                 navigation.navigate("LostPassword");
               }}
@@ -202,7 +205,7 @@ const SignIn: FC<Props> = (props) => {
 
           <Animated.View style={SignupAnimatedStyle}>
             <SubmitBtn
-              title="Sign In"
+              title={t("sign-in")}
               defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
               pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
             />
@@ -210,9 +213,9 @@ const SignIn: FC<Props> = (props) => {
 
           <Animated.View style={LinkAnimatedStyle}>
             <View style={styles.linkContainer}>
-              <Text>Don't have an account ? </Text>
+              <Text> {t("don't-have-an-account-?")} </Text>
               <AppLink
-                title="Sign Up"
+                title={t("sign-up")}
                 onPress={() => {
                   navigation.navigate("SignUp");
                 }}
@@ -229,7 +232,7 @@ const SignIn: FC<Props> = (props) => {
             ]}
           >
             <AppButton
-              title="Sign in with Google"
+              title={t("sign-up-with-google")}
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
               onPress={() => request && promptGoogleSignIn()}
