@@ -8,9 +8,10 @@ import Animated, {
 
 interface Props {
   children: ReactNode;
+  pulseRate?: number;
 }
 
-const PulseAnimationContainer: FC<Props> = ({ children }) => {
+const PulseAnimationContainer: FC<Props> = ({ children, pulseRate = 1000 }) => {
   const oppacitySharedValue = useSharedValue(1);
 
   const oppacity = useAnimatedStyle(() => {
@@ -21,7 +22,7 @@ const PulseAnimationContainer: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     oppacitySharedValue.value = withRepeat(
-      withTiming(0.2, { duration: 1000 }),
+      withTiming(0.2, { duration: pulseRate }),
       -1,
       true
     );
