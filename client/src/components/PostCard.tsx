@@ -17,10 +17,14 @@ import { calculateTimeDifference } from "@utils/helper";
 import { Like, Reply, User } from "src/@types/post";
 import { getAuthState } from "src/store/auth";
 import { useSelector } from "react-redux";
-
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
-import { useQueryClient } from "react-query";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ForumStackParamList } from "src/@types/navigation";
+import PostLikesModal from "./PostLikesModal";
+import { faker } from "@faker-js/faker";
 
 interface PostProps {
   _id: string;
@@ -36,7 +40,33 @@ interface PostProps {
   onLike: () => void;
   onComment: () => void;
 }
+const DATA = [...Array(400).keys()].map((_, i) => {
+  const userId = i;
+  const userType = faker.helpers.arrayElement([
+    "patient",
+    "family",
+    "friend",
+    "professional",
+    "caregiver",
+    "other",
+  ]);
+  const avatarGender = faker.helpers.arrayElement(["men", "women"]);
+  const avatarIndex = faker.number.int({ min: 1, max: 50 });
 
+  return {
+    _id: i.toString(),
+    userId: {
+      _id: userId,
+      name: faker.person.fullName(),
+      avatar: {
+        url: `https://randomuser.me/api/portraits/thumb/${avatarGender}/${avatarIndex}.jpg`,
+        publicId: `avatar_${userId}`,
+      },
+      userType: userType,
+    },
+    createdAt: faker.date.past().toISOString(),
+  };
+});
 const PostCard: FC<PostProps> = memo(
   ({
     _id,
@@ -52,11 +82,21 @@ const PostCard: FC<PostProps> = memo(
     const { profile } = useSelector(getAuthState);
     const [showFullText, setShowFullText] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [PopupMenuVisible, setPopupMenuVisible] = useState(false);
+    const [isLikesModalVisible, setLikesModalVisible] = useState(false);
+
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
+
+    const navigation =
+      useNavigation<NativeStackNavigationProp<ForumStackParamList>>();
 
     // Check if the current post belongs to the logged-in user
     const isOwnPost = profile?.id === owner?._id.toString();
+
+    const toggleLikesPress = useCallback(() => {
+      setLikesModalVisible((prev) => !prev);
+      Vibration.vibrate(40);
+    }, [setLikesModalVisible]);
 
     const handleOptionsPress = (event: { nativeEvent: { pageY: any } }) => {
       const yPosition = event.nativeEvent.pageY;
@@ -67,7 +107,7 @@ const PostCard: FC<PostProps> = memo(
           ? windowHeight - popupHeight
           : yPosition;
 
-      setModalVisible(true);
+      setPopupMenuVisible(true);
       setPopupPosition({
         top: adjustedTop - 10,
         right: 20,
@@ -86,9 +126,9 @@ const PostCard: FC<PostProps> = memo(
     } = usePostMutations();
 
     const handleCloseMoreOptionsPress = useCallback(() => {
-      setModalVisible(false);
+      setPopupMenuVisible(false);
       Vibration.vibrate(40);
-    }, [modalVisible]);
+    }, [PopupMenuVisible]);
 
     const handleTextLayout = (event: LayoutChangeEvent) => {
       const { height } = event.nativeEvent.layout;
@@ -237,16 +277,12 @@ const PostCard: FC<PostProps> = memo(
           </View>
 
           {(likes.length !== 0 || replies.length !== 0) && (
-            <View style={styles.replyContainer}>
-              <TouchableOpacity
-              // onPress={() =>{
-              //   // item.likes.length !== 0 &&
-              //   // navigation.navigate('PostLikeCard', {
-              //   //   item: item.likes,
-              //   //   navigation: navigation,
-              //   // })
-              // }
-              >
+            <Animated.View
+              style={styles.replyContainer}
+              entering={FadeIn.duration(500)}
+              exiting={FadeOut.duration(200)}
+            >
+              <TouchableOpacity onPress={toggleLikesPress}>
                 <Text style={styles.replyText}>
                   {likes.length}{" "}
                   {likes.length > 1 || likes.length === 0
@@ -266,21 +302,31 @@ const PostCard: FC<PostProps> = memo(
                   {`${replies?.length} replies`}{" "}
                 </Text>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
           )}
         </View>
 
         <View style={styles.separator} />
 
-        <PopupMenu
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-          deleteLoading={isOwnPost && deleteLoading}
-          onUpdate={isOwnPost ? handleUpdate : undefined}
-          onReport={!isOwnPost ? handleReport : undefined}
-          onDelete={isOwnPost ? handleDelete : undefined}
-          position={popupPosition}
-        />
+        {PopupMenuVisible && (
+          <PopupMenu
+            visible={PopupMenuVisible}
+            onRequestClose={() => setPopupMenuVisible(false)}
+            deleteLoading={isOwnPost && deleteLoading}
+            onUpdate={isOwnPost ? handleUpdate : undefined}
+            onReport={!isOwnPost ? handleReport : undefined}
+            onDelete={isOwnPost ? handleDelete : undefined}
+            position={popupPosition}
+          />
+        )}
+
+        {isLikesModalVisible && (
+          <PostLikesModal
+            isLikesModalVisible={isLikesModalVisible}
+            toggleLikesPress={toggleLikesPress}
+            likes={DATA}
+          />
+        )}
       </View>
     );
   }
@@ -358,7 +404,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginHorizontal: 10,
-    marginVertical: 8,
+    marginTop: 8,
   },
   icon: {
     width: 30,

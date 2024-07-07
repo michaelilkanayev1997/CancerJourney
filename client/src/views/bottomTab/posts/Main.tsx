@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.PRIMARY_LIGHT, //inactive contrast ?
     padding: 8,
-    paddingBottom: 116,
+    paddingBottom: 125,
   },
   sectionTitle: {
     fontSize: 16,
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.PRIMARY_LIGHT,
-    padding: 10,
+    padding: 8,
     borderRadius: 5,
   },
   menuButtonText: {
