@@ -27,5 +27,18 @@
   "don't-have-an-account-?": "Нет аккаунта? ",
   "enter-Your-Email": "Введите свой email",
   "submit": "Отправить",
-  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "Не беспокойтесь! Это случается, пожалуйста, введите адрес, связанный с вашим аккаунтом"
+  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "Не беспокойтесь! Это случается, пожалуйста, введите адрес, связанный с вашим аккаунтом",
+  "active-since": "Активен с",
+  "gender": "Пол",
+  "birth-date": "Дата рождения",
+  "user-type": "Тип пользователя",
+  "cancer-type": "Тип рака",
+  "optional-you-can-add-this-later": "Необязательно - вы можете добавить это позже",
+  "diagnosis-date": "Дата диагноза",
+  "cancer-stage": "Стадия рака",
+  "country": "Страна",
+  "pick-your-location": "ваше местоположение",
+  "enter-your-name": "Введите ваше имя",
+  "male": "Мужской",
+  "female": "Женский"
 }

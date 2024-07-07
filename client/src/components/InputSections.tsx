@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import CustomPicker from "./CustomPicker";
 import InputRowContainer from "@ui/InputRowContainer";
@@ -43,11 +44,13 @@ const InputSections: FC<Props> = ({
   const [showDiagnosisDatePicker, setShowDiagnosisDatePicker] = useState(false);
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
 
+  const { t } = useTranslation();
+
   return (
     <>
       {!Registration ? (
         <InputRowContainer
-          title={"Name"}
+          title={t("name")}
           children={
             <TextInput
               style={[styles.rowInput, styles.nameInput]}
@@ -55,7 +58,7 @@ const InputSections: FC<Props> = ({
                 setNewProfile({ ...newProfile, name: text })
               }
               value={newProfile.name}
-              placeholder="Enter your name"
+              placeholder={t("enter-your-name")}
             />
           }
         />
@@ -64,7 +67,7 @@ const InputSections: FC<Props> = ({
       )}
 
       <InputRowContainer
-        title={"Gender"}
+        title={t("gender")}
         children={
           <Picker
             selectedValue={newProfile.gender}
@@ -73,14 +76,14 @@ const InputSections: FC<Props> = ({
             }
             style={styles.rowInput}
           >
-            <Picker.Item label="Male" value="Male" />
-            <Picker.Item label="Female" value="Female" />
+            <Picker.Item label={t("male")} value="Male" />
+            <Picker.Item label={t("female")} value="Female" />
           </Picker>
         }
       />
 
       <InputRowContainer
-        title={"Birth Date"}
+        title={t("birth-date")}
         children={
           <DatePicker
             setShowDateModal={setShowBirthDatePicker}
@@ -94,7 +97,7 @@ const InputSections: FC<Props> = ({
       />
 
       <InputRowContainer
-        title={"User Type"}
+        title={t("user-type")}
         children={
           <Picker
             selectedValue={newProfile.userType}
@@ -114,7 +117,7 @@ const InputSections: FC<Props> = ({
       />
 
       <InputRowContainer
-        title={"Cancer Type"}
+        title={t("cancer-type")}
         children={
           <>
             <TouchableOpacity
@@ -158,14 +161,14 @@ const InputSections: FC<Props> = ({
 
       {Registration ? (
         <Text style={styles.optionalLabel}>
-          Optional - you can add this later
+          {t("optional-you-can-add-this-later")}
         </Text>
       ) : (
         <></>
       )}
 
       <InputRowContainer
-        title={"Diagnosis Date"}
+        title={t("diagnosis-date")}
         children={
           <DatePicker
             setShowDateModal={setShowDiagnosisDatePicker}
@@ -179,7 +182,7 @@ const InputSections: FC<Props> = ({
       />
 
       <InputRowContainer
-        title={"Cancer Stage"}
+        title={t("cancer-stage")}
         children={
           <Picker
             selectedValue={newProfile.stage}
@@ -200,7 +203,7 @@ const InputSections: FC<Props> = ({
       />
 
       <InputRowContainer
-        title={"Country"}
+        title={t("country")}
         children={
           <>
             <TouchableOpacity
@@ -217,7 +220,7 @@ const InputSections: FC<Props> = ({
               >
                 {newProfile?.country.name !== ""
                   ? `${newProfile.country.name}    ${newProfile.country.flag}`
-                  : "Pick your location"}
+                  : t("pick-your-location")}
               </Text>
 
               <View style={{ marginLeft: -25 }}>
