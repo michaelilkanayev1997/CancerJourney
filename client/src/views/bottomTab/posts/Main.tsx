@@ -30,7 +30,10 @@ type Props = {};
 let pageNo = 0;
 const limit = 6;
 
-const Main = () => {
+const Main = ({ route }) => {
+  const { publicProfile } = route.params || { publicProfile: false };
+
+  console.log("publicProfile", publicProfile);
   const { data, isFetching, isLoading } = useFetchPosts();
   const queryClient = useQueryClient();
   const [hasMore, setHasMore] = useState(true);
@@ -116,37 +119,39 @@ const Main = () => {
         </View>
       ) : (
         <View style={styles.mainContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => {
-                Vibration.vibrate(50);
-                navigation.openDrawer();
-              }}
-              style={styles.menuButton}
-            >
-              <Entypo name="menu" size={24} color={colors.ICON} />
-              <Text style={styles.menuButtonText}>Forum</Text>
-            </TouchableOpacity>
+          {!publicProfile && (
+            <View style={styles.header}>
+              <TouchableOpacity
+                onPress={() => {
+                  Vibration.vibrate(50);
+                  navigation.openDrawer();
+                }}
+                style={styles.menuButton}
+              >
+                <Entypo name="menu" size={24} color={colors.ICON} />
+                <Text style={styles.menuButtonText}>Forum</Text>
+              </TouchableOpacity>
 
-            <Pressable style={styles.searchContainer}>
-              <AntDesign
-                style={styles.searchIcon}
-                name="search1"
-                size={20}
-                color="black"
-              />
-              <TextInput placeholder="Search" style={styles.searchInput} />
-            </Pressable>
+              <Pressable style={styles.searchContainer}>
+                <AntDesign
+                  style={styles.searchIcon}
+                  name="search1"
+                  size={20}
+                  color="black"
+                />
+                <TextInput placeholder="Search" style={styles.searchInput} />
+              </Pressable>
 
-            <Pressable
-              onPress={() => {
-                /* Functionality for search */
-              }}
-              style={styles.button}
-            >
-              <Ionicons name="search" size={24} color="white" />
-            </Pressable>
-          </View>
+              <Pressable
+                onPress={() => {
+                  /* Functionality for search */
+                }}
+                style={styles.button}
+              >
+                <Ionicons name="search" size={24} color="white" />
+              </Pressable>
+            </View>
+          )}
 
           <FlatList
             onEndReachedThreshold={1}

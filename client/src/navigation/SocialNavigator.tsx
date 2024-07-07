@@ -1,14 +1,33 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import colors from "@utils/colors";
 import Main from "@views/bottomTab/posts/Main";
 import CustomDrawer from "@components/CustomDrawer";
 import NewPost from "@views/bottomTab/posts/NewPost";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ForumStackParamList } from "src/@types/navigation";
+import PublicProfile from "@views/bottomTab/posts/PublicProfile";
+import PostLikes from "@views/bottomTab/posts/PostLikes";
 
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator<ForumStackParamList>();
+
+const Forum = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    >
+      <Stack.Screen name="Main" component={Main} />
+    </Stack.Navigator>
+  );
+};
 
 const SocialTabs = () => {
   return (
@@ -18,7 +37,7 @@ const SocialTabs = () => {
         tabBarLabelStyle: styles.tabbarLabelStyle,
       }}
     >
-      <Tab.Screen name="Main" component={Main} />
+      <Tab.Screen name="Forum" component={Forum} />
       <Tab.Screen name="New Post" component={NewPost} />
       <Tab.Screen name="Favorites" component={NewPost} />
     </Tab.Navigator>
@@ -42,6 +61,8 @@ const SocialNavigator = () => {
       }}
     >
       <Drawer.Screen name="SocialTabs" component={SocialTabs} />
+      <Drawer.Screen name="PostLikes" component={PostLikes} />
+      <Drawer.Screen name="PublicProfile" component={PublicProfile} />
     </Drawer.Navigator>
   );
 };

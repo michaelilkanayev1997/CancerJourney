@@ -6,6 +6,8 @@ import {
   Image,
   Modal,
   Vibration,
+  StyleProp,
+  ImageStyle,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -16,9 +18,10 @@ import PulseAnimationContainer from "@components/PulseAnimationContainer";
 interface Props {
   onButtonPress?: () => void;
   uri: string;
+  style?: StyleProp<ImageStyle>;
 }
 
-const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
+const Avatar: FC<Props> = ({ uri, onButtonPress, style }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isImageLoading, setImageIsLoading] = useState(true);
 
@@ -33,7 +36,7 @@ const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
         <View style={styles.container}>
           <Image
             source={uri ? { uri } : placeholder}
-            style={styles.dummyImage}
+            style={[styles.dummyImage, style]}
             onLoad={() => setImageIsLoading(false)} // Image loaded successfully
             onError={() => setImageIsLoading(false)} // Image failed to load
           />
@@ -44,7 +47,10 @@ const Avatar: FC<Props> = ({ uri, onButtonPress }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleModal}>
-        <Image source={uri ? { uri } : placeholder} style={styles.image} />
+        <Image
+          source={uri ? { uri } : placeholder}
+          style={[styles.image, style]}
+        />
       </TouchableOpacity>
 
       {onButtonPress && (
