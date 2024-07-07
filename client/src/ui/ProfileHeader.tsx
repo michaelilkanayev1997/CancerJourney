@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import Avatar from "./Avatar";
 import colors from "@utils/colors";
@@ -17,6 +18,8 @@ interface Props {
 
 const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
   const navigation = useNavigation<NavigationProp<ProfileStackParamList>>();
+
+  const { t } = useTranslation();
 
   const navigateToSettings = () => {
     navigation.navigate("Settings");
@@ -38,7 +41,7 @@ const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
         ) : null}
       </View>
       <Text style={styles.activeSince}>
-        Active since - {convertDateFormat(profile?.createdAt)}
+        {t("active-since")} - {convertDateFormat(profile?.createdAt)}
       </Text>
       <TouchableOpacity
         onPress={navigateToSettings}

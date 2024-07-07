@@ -27,5 +27,18 @@
   "don't-have-an-account-?": " אין לך חשבון? ",
   "enter-Your-Email": "הזן את האימייל שלך",
   "submit": "שלח",
-  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "אל תדאג! זה קורה, בבקשה הזן את הכתובת המקושרת לחשבון שלך"
+  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "אל תדאג! זה קורה, בבקשה הזן את הכתובת המקושרת לחשבון שלך",
+  "active-since": "פעיל מאז",
+  "gender": "מגדר",
+  "birth-date": "תאריך לידה",
+  "user-type": "סוג משתמש",
+  "cancer-type": "סוג סרטן",
+  "optional-you-can-add-this-later": "לא חובה - אפשר להוסיף את זה מאוחר יותר",
+  "diagnosis-date": "תאריך אבחון",
+  "cancer-stage": "שלב הסרטן",
+  "country": "מדינה",
+  "pick-your-location": "בחר את מיקומך",
+  "enter-your-name": "הזן את שמך",
+  "male": "זכר",
+  "female": "נקבה"
 }

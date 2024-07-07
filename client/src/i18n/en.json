@@ -27,5 +27,18 @@
   "don't-have-an-account-?": "Don't have an account ? ",
   "enter-Your-Email": "Enter your email",
   "submit": "Submit",
-  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "Don’t worry! It happens, please enter the address associated with your account"
+  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "Don’t worry! It happens, please enter the address associated with your account",
+  "active-since": "Active since",
+  "gender": "Gender",
+  "birth-date": "Birth Date",
+  "user-type": "User Type",
+  "cancer-type": "Cancer Type",
+  "optional-you-can-add-this-later": "Optional - you can add this later",
+  "diagnosis-date": "Diagnosis Date",
+  "cancer-stage": "Cancer Stage",
+  "country": "Country",
+  "pick-your-location": "Pick your location",
+  "enter-your-name": "Enter your name",
+  "male": "Male",
+  "female": "Female"
 }

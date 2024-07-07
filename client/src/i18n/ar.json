@@ -27,5 +27,18 @@
   "don't-have-an-account-?": " ليس لديك حساب؟",
   "enter-Your-Email": "أدخل بريدك الإلكتروني",
   "submit": "إرسال",
-  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "لا تقلق! يحدث، من فضلك أدخل العنوان المرتبط بحسابك"
+  "don’t-worry!-it-happens,-please-enter-the-address-associated-with-your-account": "لا تقلق! يحدث، من فضلك أدخل العنوان المرتبط بحسابك",
+  "active-since": "نشط منذ",
+  "gender": "الجنس",
+  "birth-date": "تاريخ الميلاد",
+  "user-type": "نوع المستخدم",
+  "cancer-type": "نوع السرطان",
+  "optional-you-can-add-this-later": "اختياري - يمكنك إضافة هذا لاحقًا",
+  "diagnosis-date": "تاريخ التشخيص",
+  "cancer-stage": "مرحلة السرطان",
+  "country": "بلد",
+  "pick-your-location": "اختر موقعك",
+  "enter-your-name": "ادخل اسمك",
+  "male": "ذكر",
+  "female": "أنثى"
 }
