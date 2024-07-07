@@ -23,7 +23,6 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ForumStackParamList } from "src/@types/navigation";
-import PostLikesModal from "./PostLikesModal";
 import { faker } from "@faker-js/faker";
 
 interface PostProps {
@@ -40,7 +39,7 @@ interface PostProps {
   onLike: () => void;
   onComment: () => void;
 }
-const DATA = [...Array(400).keys()].map((_, i) => {
+const DATA = [...Array(10).keys()].map((_, i) => {
   const userId = i;
   const userType = faker.helpers.arrayElement([
     "patient",
@@ -83,20 +82,18 @@ const PostCard: FC<PostProps> = memo(
     const [showFullText, setShowFullText] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
     const [PopupMenuVisible, setPopupMenuVisible] = useState(false);
-    const [isLikesModalVisible, setLikesModalVisible] = useState(false);
 
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
 
     const navigation =
       useNavigation<NativeStackNavigationProp<ForumStackParamList>>();
 
+    const navigateToPostLikesPage = useCallback(() => {
+      navigation.navigate("PostLikes", { likes: DATA });
+    }, []);
+
     // Check if the current post belongs to the logged-in user
     const isOwnPost = profile?.id === owner?._id.toString();
-
-    const toggleLikesPress = useCallback(() => {
-      setLikesModalVisible((prev) => !prev);
-      Vibration.vibrate(40);
-    }, [setLikesModalVisible]);
 
     const handleOptionsPress = (event: { nativeEvent: { pageY: any } }) => {
       const yPosition = event.nativeEvent.pageY;
@@ -282,7 +279,7 @@ const PostCard: FC<PostProps> = memo(
               entering={FadeIn.duration(500)}
               exiting={FadeOut.duration(200)}
             >
-              <TouchableOpacity onPress={toggleLikesPress}>
+              <TouchableOpacity onPress={navigateToPostLikesPage}>
                 <Text style={styles.replyText}>
                   {likes.length}{" "}
                   {likes.length > 1 || likes.length === 0
@@ -317,14 +314,6 @@ const PostCard: FC<PostProps> = memo(
             onReport={!isOwnPost ? handleReport : undefined}
             onDelete={isOwnPost ? handleDelete : undefined}
             position={popupPosition}
-          />
-        )}
-
-        {isLikesModalVisible && (
-          <PostLikesModal
-            isLikesModalVisible={isLikesModalVisible}
-            toggleLikesPress={toggleLikesPress}
-            likes={DATA}
           />
         )}
       </View>

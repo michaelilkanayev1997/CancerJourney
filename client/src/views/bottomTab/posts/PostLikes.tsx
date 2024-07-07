@@ -2,22 +2,22 @@ import { FC, useCallback, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
-  Modal,
   TouchableOpacity,
   SafeAreaView,
   Text,
   Image,
   Animated,
+  Vibration,
 } from "react-native";
 
 import colors from "@utils/colors";
-import { Like } from "src/@types/post";
+import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
-import PulseAnimationContainer from "./PulseAnimationContainer";
+
+import { useNavigation } from "@react-navigation/native";
+import PulseAnimationContainer from "@components/PulseAnimationContainer";
 
 interface Props {
-  isLikesModalVisible: boolean;
-  toggleLikesPress: () => void;
   likes: Like[];
 }
 
@@ -27,17 +27,20 @@ const dummyDataFetch = new Array(3).fill("");
 
 const ITEM_SIZE = 76;
 
-const PostLikesModal: FC<Props> = ({
-  isLikesModalVisible,
-  toggleLikesPress,
-  likes,
-}) => {
+const PostLikes: FC<Props> = ({ route }) => {
+  const { likes } = route.params;
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(likes.slice(0, 20));
   const isFetchingMoreRef = useRef(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  console.log(likes.length);
+  console.log(data.length);
+
+  const navigation = useNavigation();
+
   console.log("data length ", data.length);
   console.log("isFetchingMore ", isFetchingMoreRef.current);
   console.log("hasMore ", hasMore);
@@ -57,9 +60,8 @@ const PostLikesModal: FC<Props> = ({
 
     setPage(newPage);
 
-    setData((prevData) => [...prevData, ...newItems]);
-
     setTimeout(() => {
+      setData((prevData) => [...prevData, ...newItems]);
       isFetchingMoreRef.current = false;
     }, 1000);
   }, [data, hasMore, page, likes]);
@@ -126,6 +128,11 @@ const PostLikesModal: FC<Props> = ({
     console.log("Toggled follow for: ", item.userId.name);
   }, []);
 
+  const navigateToProfile = useCallback((user: User) => {
+    console.log("User: ", user);
+    navigation.navigate("PublicProfile", { user });
+  }, []);
+
   const renderItem = useCallback(
     ({ item, index }: { item: Like; index: number }) => {
       const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)];
@@ -151,7 +158,10 @@ const PostLikesModal: FC<Props> = ({
         <Animated.View
           style={[styles.listItem, { opacity, transform: [{ scale }] }]}
         >
-          <TouchableOpacity style={styles.userDetails}>
+          <TouchableOpacity
+            style={styles.userDetails}
+            onPress={() => navigateToProfile(item.userId)}
+          >
             <Image
               source={
                 item?.userId?.avatar
@@ -200,15 +210,10 @@ const PostLikesModal: FC<Props> = ({
   );
 
   return (
-    <Modal
-      visible={isLikesModalVisible}
-      transparent={false}
-      animationType="fade"
-      onRequestClose={toggleLikesPress} // Android back button
-    >
+    <>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={toggleLikesPress}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image
               source={{
                 uri: "https://cdn-icons-png.flaticon.com/512/2223/2223615.png",
@@ -261,7 +266,7 @@ const PostLikesModal: FC<Props> = ({
         <Animated.FlatList
           removeClippedSubviews={true}
           data={data}
-          windowSize={50}
+          windowSize={21}
           keyExtractor={keyExtractor}
           onEndReached={handleOnEndReached}
           onEndReachedThreshold={0.5}
@@ -277,7 +282,7 @@ const PostLikesModal: FC<Props> = ({
           renderItem={renderItem}
         />
       </SafeAreaView>
-    </Modal>
+    </>
   );
 };
 
@@ -287,6 +292,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: colors.PRIMARY,
     padding: 8,
+    paddingBottom: 76,
   },
   header: {
     padding: 12,
@@ -394,4 +400,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostLikesModal;
+export default PostLikes;
