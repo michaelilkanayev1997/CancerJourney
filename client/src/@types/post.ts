@@ -35,4 +35,5 @@ export interface Post {
   likes: Like[];
   replies: Reply[];
   createdAt: string;
+  forumType: string;
 }

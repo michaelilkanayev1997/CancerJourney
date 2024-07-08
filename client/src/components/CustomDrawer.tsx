@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -16,10 +16,19 @@ import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { getAuthState } from "src/store/auth";
-import { cancerTypes } from "@utils/enums";
+import { cancerTypeRibbon, cancerTypes } from "@utils/enums";
 
-const CustomDrawer: FC<DrawerContentComponentProps> = () => {
+const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
   const { profile } = useSelector(getAuthState);
+
+  const [focusedCancerType, setFocusedCancerType] = useState<string | null>(
+    profile?.cancerType || null
+  );
+
+  const navigateToMainWithCancerType = (cancerType: string) => {
+    props.navigation.navigate("Main", { cancerType });
+    props.navigation.closeDrawer();
+  };
 
   return (
     <View style={styles.container}>
@@ -30,9 +39,13 @@ const CustomDrawer: FC<DrawerContentComponentProps> = () => {
           resizeMode="cover"
         >
           <Image
-            source={require("@assets/CancerType/other-cancer.png")}
+            source={
+              (profile?.cancerType && cancerTypeRibbon[profile?.cancerType]) ||
+              require("@assets/CancerType/other-cancer.png")
+            }
             style={styles.profileImage}
           />
+
           <View style={styles.headerContainer}>
             <Text style={styles.headerText}>Forum Type</Text>
           </View>
@@ -43,10 +56,14 @@ const CustomDrawer: FC<DrawerContentComponentProps> = () => {
               {cancerTypes.map((type, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.drawerItem}
+                  style={[
+                    styles.drawerItem,
+                    focusedCancerType === type.value &&
+                      styles.focusedDrawerItem,
+                  ]}
                   onPress={() => {
-                    // props.navigation.navigate('Main', { cancerType: type });
-                    // props.navigation.closeDrawer();
+                    setFocusedCancerType(type.value);
+                    navigateToMainWithCancerType(type.value);
                   }}
                 >
                   <Image
@@ -156,6 +173,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.CONTRAST,
     flexShrink: 1,
+  },
+  focusedDrawerItem: {
+    backgroundColor: colors.VERY_LIGHT_BLUE,
   },
 });
 

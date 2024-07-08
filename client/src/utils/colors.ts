@@ -19,6 +19,7 @@ const RELAX = "rgb(245, 235, 226)";
 const ICON = "#43cbdd";
 const LIGHT_BLUE = "#5DADE2";
 const LIGHT_GREEN = "#E8F8F5";
+const VERY_LIGHT_BLUE = "#E3F2FD";
 
 const colors = {
   PRIMARY,
@@ -42,6 +43,7 @@ const colors = {
   ICON,
   LIGHT_BLUE,
   LIGHT_GREEN,
+  VERY_LIGHT_BLUE,
 };
 
 export default colors;

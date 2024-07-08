@@ -118,17 +118,21 @@ export const useFetchStudyImages = (UNSPLASH_URL: string) => {
   });
 };
 
-export const fetchPosts = async (limit = 6, pageNo = 0): Promise<Post[]> => {
+export const fetchPosts = async (
+  cancerType: string,
+  limit = 6,
+  pageNo = 0
+): Promise<Post[]> => {
   const client = await getClient();
   const { data } = await client.get(
-    `/post/get-posts?limit=${limit}&pageNo=${pageNo}`
+    `/post/get-posts?limit=${limit}&pageNo=${pageNo}&cancerType=${cancerType}`
   );
   return data;
 };
 
-export const useFetchPosts = () => {
-  return useQuery(["posts"], {
-    queryFn: () => fetchPosts(),
+export const useFetchPosts = (cancerType: string) => {
+  return useQuery(["posts", cancerType], {
+    queryFn: () => fetchPosts(cancerType),
     onError(err) {
       const errorMessage = catchAsyncError(err);
       ToastNotification({

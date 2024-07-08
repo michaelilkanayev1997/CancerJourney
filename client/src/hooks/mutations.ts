@@ -337,6 +337,7 @@ export const useScheduleMutations = () => {
 interface DeletePostParams {
   postId: string;
   ownerId: string;
+  cancerType: string;
   handleCloseMoreOptionsPress: () => void;
 }
 
@@ -361,18 +362,21 @@ export const usePostMutations = () => {
       },
       // Invalidate related queries on success to refresh the UI
       onSuccess: (data, variables) => {
-        const { postId } = variables;
+        const { postId, cancerType } = variables;
 
-        queryClient.setQueryData(["posts"], (oldData: Post[] | undefined) => {
-          if (!oldData) {
-            return [];
+        queryClient.setQueryData(
+          ["posts", cancerType],
+          (oldData: Post[] | undefined) => {
+            if (!oldData) {
+              return [];
+            }
+
+            // Filter out the deleted post
+            return (
+              oldData?.filter((post) => post._id.toString() !== postId) ?? []
+            );
           }
-
-          // Filter out the deleted post
-          return (
-            oldData?.filter((post) => post._id.toString() !== postId) ?? []
-          );
-        });
+        );
         // close Modal
         variables?.handleCloseMoreOptionsPress();
 
@@ -454,6 +458,7 @@ export const usePostMutations = () => {
   interface FavoritePostParams {
     postId: string;
     profile: UserProfile | null;
+    cancerType: string;
   }
 
   const { isLoading: favoriteLoading, mutate: favoritePostMutation } =
@@ -465,10 +470,10 @@ export const usePostMutations = () => {
       },
       {
         onSuccess: (data, variables) => {
-          const { postId, profile } = variables;
+          const { postId, profile, cancerType } = variables;
           if (!profile) return;
           // Optimistically update the local cache
-          queryClient.setQueryData<Post[]>(["posts"], (oldData) => {
+          queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
             if (!oldData) return [];
 
             return oldData.map((post) => {

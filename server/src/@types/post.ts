@@ -1,1 +1,5 @@
-export type paginationQuery = { pageNo: string; limit: string };
+export type postPaginationQuery = {
+  pageNo: string;
+  limit: string;
+  cancerType: string;
+};

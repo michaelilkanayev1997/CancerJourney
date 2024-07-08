@@ -24,6 +24,8 @@ import { ToastNotification } from "@utils/toastConfig";
 import PostCard from "@components/PostCard";
 import colors from "@utils/colors";
 import { DrawerParamList } from "src/@types/navigation";
+import { useSelector } from "react-redux";
+import { getAuthState } from "src/store/auth";
 
 type Props = {};
 
@@ -31,10 +33,14 @@ let pageNo = 0;
 const limit = 6;
 
 const Main = ({ route }) => {
-  const { publicProfile } = route.params || { publicProfile: false };
+  const { profile } = useSelector(getAuthState);
+  const { publicProfile, cancerType } = route.params || {
+    publicProfile: false,
+    cancerType: profile?.cancerType,
+  };
 
-  console.log("publicProfile", publicProfile);
-  const { data, isFetching, isLoading } = useFetchPosts();
+  console.log("route", publicProfile, cancerType);
+  const { data, isFetching, isLoading } = useFetchPosts(cancerType);
   const queryClient = useQueryClient();
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -51,7 +57,7 @@ const Main = ({ route }) => {
     setIsFetchingMore(true);
     try {
       pageNo += 1;
-      const posts = await fetchPosts(limit, pageNo);
+      const posts = await fetchPosts(cancerType, limit, pageNo);
       // console.log("pageNo", pageNo);
       // console.log("posts", posts);
       if (!posts || !posts.length || posts.length < limit) {
@@ -59,7 +65,7 @@ const Main = ({ route }) => {
       }
 
       const newList = [...data, ...posts];
-      queryClient.setQueryData(["posts"], newList);
+      queryClient.setQueryData(["posts", cancerType], newList);
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -73,7 +79,7 @@ const Main = ({ route }) => {
   const handleOnRefresh = useCallback(() => {
     pageNo = 0;
     setHasMore(true);
-    queryClient.invalidateQueries(["posts"]);
+    queryClient.invalidateQueries(["posts", cancerType]);
   }, [queryClient]);
 
   const renderPost = useCallback(
@@ -85,6 +91,7 @@ const Main = ({ route }) => {
         likes={item.likes}
         replies={item.replies}
         createdAt={item.createdAt}
+        forumType={item.forumType}
         onLike={() => {}}
         onComment={() => {}}
         owner={item.owner}
