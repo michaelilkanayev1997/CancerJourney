@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -13,7 +13,6 @@ import {
 import colors from "@utils/colors";
 import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
-
 import { useNavigation } from "@react-navigation/native";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
 
@@ -33,23 +32,22 @@ const PostLikes: FC<Props> = ({ route }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(likes.slice(0, 20));
-  const isFetchingMoreRef = useRef(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   console.log(likes.length);
-  console.log(data.length);
 
   const navigation = useNavigation();
 
   console.log("data length ", data.length);
-  console.log("isFetchingMore ", isFetchingMoreRef.current);
-  console.log("hasMore ", hasMore);
-  console.log("loading", loading);
+  // console.log("isFetchingMore ", isFetchingMore);
+  // console.log("hasMore ", hasMore);
+  // console.log("loading", loading);
 
   const handleOnEndReached = useCallback(() => {
-    if (data.length < 20 || isFetchingMoreRef.current || !hasMore) return;
+    if (likes.length <= 20 || isFetchingMore || !hasMore) return;
 
-    isFetchingMoreRef.current = true;
+    setIsFetchingMore(true);
 
     const newPage = page + 1;
     const newItems = likes.slice(page * 20, newPage * 20);
@@ -62,13 +60,13 @@ const PostLikes: FC<Props> = ({ route }) => {
 
     setTimeout(() => {
       setData((prevData) => [...prevData, ...newItems]);
-      isFetchingMoreRef.current = false;
+      setIsFetchingMore(false);
     }, 1000);
-  }, [data, hasMore, page, likes]);
+  }, [isFetchingMore, hasMore, page, likes]);
 
   const handleImageLoad = useCallback(() => {
     if (data.length < 20) {
-      isFetchingMoreRef.current = false;
+      setIsFetchingMore(false);
       setLoading(false);
       return;
     }
@@ -84,8 +82,8 @@ const PostLikes: FC<Props> = ({ route }) => {
   const keyExtractor = useCallback((item: any) => item._id.toString(), []);
 
   const renderFooter = useCallback(() => {
-    return isFetchingMoreRef.current ? (
-      <>
+    return isFetchingMore ? (
+      <View>
         {dummyDataFetch.map((_, index) => (
           <PulseAnimationContainer key={index} pulseRate={400}>
             <View
@@ -120,9 +118,9 @@ const PostLikes: FC<Props> = ({ route }) => {
             </View>
           </PulseAnimationContainer>
         ))}
-      </>
+      </View>
     ) : null;
-  }, [isFetchingMoreRef.current, handleImageLoad, handleImageError]);
+  }, [isFetchingMore, handleImageLoad, handleImageError]);
 
   const toggleFollow = useCallback((item: Like) => {
     console.log("Toggled follow for: ", item.userId.name);
@@ -225,7 +223,7 @@ const PostLikes: FC<Props> = ({ route }) => {
         </View>
 
         {loading && (
-          <>
+          <View style={styles.bottomTabBarPadding}>
             {dummyData.map((_, index) => (
               <PulseAnimationContainer key={index}>
                 <View
@@ -260,7 +258,7 @@ const PostLikes: FC<Props> = ({ route }) => {
                 </View>
               </PulseAnimationContainer>
             ))}
-          </>
+          </View>
         )}
 
         <Animated.FlatList
@@ -273,7 +271,11 @@ const PostLikes: FC<Props> = ({ route }) => {
           maxToRenderPerBatch={20}
           initialNumToRender={20}
           ListFooterComponent={renderFooter}
-          contentContainerStyle={{ paddingHorizontal: 4, paddingTop: 8 }}
+          contentContainerStyle={{
+            paddingHorizontal: 4,
+            paddingTop: 8,
+            paddingBottom: 76,
+          }}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
             { useNativeDriver: true }
@@ -292,7 +294,6 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: colors.PRIMARY,
     padding: 8,
-    paddingBottom: 76,
   },
   header: {
     padding: 12,
@@ -398,6 +399,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.INACTIVE_CONTRAST,
   },
+  bottomTabBarPadding: { paddingBottom: 76 },
 });
 
 export default PostLikes;
