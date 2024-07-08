@@ -1,16 +1,25 @@
 import { RequestHandler } from "express";
+import { isValidObjectId } from "mongoose";
 
-import { paginationQuery } from "#/@types/post";
-import { IReply, Posts } from "#/models/post";
+import { postPaginationQuery } from "#/@types/post";
+import { Posts } from "#/models/post";
 import User from "#/models/user";
-import { Types, isValidObjectId } from "mongoose";
 import { deleteS3Object } from "#/middleware/fileUpload";
 
 export const getPosts: RequestHandler = async (req, res) => {
-  const { limit = "10", pageNo = "0" } = req.query as paginationQuery;
+  const {
+    limit = "10",
+    pageNo = "0",
+    cancerType,
+  } = req.query as postPaginationQuery;
 
   try {
-    const data = await Posts.find()
+    const query: any = {};
+    if (cancerType) {
+      query.forumType = cancerType;
+    }
+
+    const data = await Posts.find(query)
       .skip(parseInt(limit) * parseInt(pageNo))
       .limit(parseInt(limit))
       .sort({ createdAt: -1, _id: -1 }) // Sort by createdAt and _id in descending order

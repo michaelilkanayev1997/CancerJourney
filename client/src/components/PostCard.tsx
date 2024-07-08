@@ -36,10 +36,11 @@ interface PostProps {
   owner: User;
   createdAt: string;
   replies: Reply[];
+  forumType: string;
   onLike: () => void;
   onComment: () => void;
 }
-const DATA = [...Array(10).keys()].map((_, i) => {
+const DATA = [...Array(60).keys()].map((_, i) => {
   const userId = i;
   const userType = faker.helpers.arrayElement([
     "patient",
@@ -74,6 +75,7 @@ const PostCard: FC<PostProps> = memo(
     likes,
     owner,
     createdAt,
+    forumType,
     onLike,
     onComment,
     replies,
@@ -158,6 +160,7 @@ const PostCard: FC<PostProps> = memo(
               deletePostMutation({
                 postId: _id.toString(),
                 ownerId: owner?._id,
+                cancerType: forumType,
                 handleCloseMoreOptionsPress,
               });
             },
@@ -234,6 +237,7 @@ const PostCard: FC<PostProps> = memo(
                 favoritePostMutation({
                   postId: _id.toString(),
                   profile,
+                  cancerType: forumType,
                 })
               }
             >
