@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { NewProfile } from "./InputSections";
 import { NewPost } from "@views/bottomTab/posts/NewPost";
@@ -32,6 +33,8 @@ const CustomPicker: FC<Props> = ({
   setNewProfile,
   setPickerVisible,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -62,7 +65,7 @@ const CustomPicker: FC<Props> = ({
                       source={item.imageUrl}
                       style={{ width: 25, height: 25, marginRight: 5 }}
                     />
-                    <Text style={styles.text}>{item.label}</Text>
+                    <Text style={styles.text}>{t(item.value)}</Text>
                   </TouchableOpacity>
                 )}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}

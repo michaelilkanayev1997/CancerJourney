@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import {
@@ -26,6 +27,8 @@ const Settings: FC<Props> = (props) => {
 
   const queryClient = useQueryClient();
   const { profile } = useSelector(getAuthState);
+
+  const { t } = useTranslation();
 
   const handleLoggout = async (fromAll?: boolean) => {
     dispatch(updateBusyState(true));
@@ -54,21 +57,21 @@ const Settings: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Profile Settings</Text>
+        <Text style={styles.title}>{t("profile-settings")}</Text>
       </View>
 
       <View style={styles.settingOptionsContainer}>
         <TouchableOpacity
-          onPress={() => console.log("Remove All Posts")}
+          onPress={() => console.log("remove-all-posts")}
           style={styles.buttonContainer}
         >
           <AntDesign name="delete" size={20} color={colors.CONTRAST} />
-          <Text style={styles.buttonTitle}>Remove All Posts</Text>
+          <Text style={styles.buttonTitle}>{t("remove-all-posts")}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>App Preferences</Text>
+        <Text style={styles.title}>{t("app-preferences")}</Text>
       </View>
 
       <View style={styles.settingOptionsContainer}>
@@ -77,11 +80,11 @@ const Settings: FC<Props> = (props) => {
           style={styles.buttonContainer}
         >
           <Ionicons name="language-outline" size={20} color={colors.CONTRAST} />
-          <Text style={styles.buttonTitle}>Change Language</Text>
+          <Text style={styles.buttonTitle}>{t("change-language")}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Logout</Text>
+        <Text style={styles.title}>{t("logout")}</Text>
       </View>
       <View style={styles.settingOptionsContainer}>
         <TouchableOpacity
@@ -89,14 +92,14 @@ const Settings: FC<Props> = (props) => {
           style={styles.buttonContainer}
         >
           <AntDesign name="logout" size={20} color={colors.CONTRAST} />
-          <Text style={styles.buttonTitle}>Logout From All</Text>
+          <Text style={styles.buttonTitle}>{t("logout-from-all")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleLoggout()}
           style={styles.buttonContainer}
         >
           <AntDesign name="logout" size={20} color={colors.CONTRAST} />
-          <Text style={styles.buttonTitle}>Logout</Text>
+          <Text style={styles.buttonTitle}>{t("logout")}</Text>
         </TouchableOpacity>
       </View>
       <LanguageSettingsModal

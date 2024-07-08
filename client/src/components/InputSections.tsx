@@ -106,12 +106,12 @@ const InputSections: FC<Props> = ({
             }
             style={styles.rowInput}
           >
-            <Picker.Item label="Fighter (Patient)" value="patient" />
-            <Picker.Item label="Family member" value="family" />
-            <Picker.Item label="Supporter (Friend)" value="friend" />
-            <Picker.Item label="Health care pro" value="professional" />
-            <Picker.Item label="Caregiver" value="caregiver" />
-            <Picker.Item label="Other" value="other" />
+            <Picker.Item label={t("fighter-(patient)")} value="patient" />
+            <Picker.Item label={t("family-member")} value="family" />
+            <Picker.Item label={t("supporter-(friend)")} value="friend" />
+            <Picker.Item label={t("health-care-pro")} value="professional" />
+            <Picker.Item label={t("caregiver")} value="caregiver" />
+            <Picker.Item label={t("other")} value="other" />
           </Picker>
         }
       />
@@ -132,8 +132,8 @@ const InputSections: FC<Props> = ({
                 {newProfile.cancerType !== ""
                   ? newProfile.cancerType.charAt(0).toUpperCase() +
                     newProfile.cancerType.slice(1) +
-                    " Cancer"
-                  : "Other Cancer"}
+                    t("cancer")
+                  : t("other-cancer")}
               </Text>
               <Image
                 source={
@@ -191,13 +191,13 @@ const InputSections: FC<Props> = ({
             }
             style={styles.rowInput}
           >
-            <Picker.Item label="No stage" value="no" />
-            <Picker.Item label="Stage 0" value="0" />
-            <Picker.Item label="Stage 1" value="1" />
-            <Picker.Item label="Stage 2" value="2" />
-            <Picker.Item label="Stage 3" value="3" />
-            <Picker.Item label="Stage 4" value="4" />
-            <Picker.Item label="I don't know" value="" />
+            <Picker.Item label={t("no-stage")} value="no" />
+            <Picker.Item label={t("stage-0")} value="0" />
+            <Picker.Item label={t("stage-1")} value="1" />
+            <Picker.Item label={t("stage-2")} value="2" />
+            <Picker.Item label={t("stage-3")} value="3" />
+            <Picker.Item label={t("stage-4")} value="4" />
+            <Picker.Item label={t("i-don't-know")} value="" />
           </Picker>
         }
       />
