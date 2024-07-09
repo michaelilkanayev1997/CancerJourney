@@ -15,6 +15,7 @@ import { useQueryClient } from "react-query";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { useSelector } from "react-redux";
 
 import Loader from "@ui/Loader";
 import { Post } from "src/@types/post";
@@ -24,7 +25,6 @@ import { ToastNotification } from "@utils/toastConfig";
 import PostCard from "@components/PostCard";
 import colors from "@utils/colors";
 import { DrawerParamList } from "src/@types/navigation";
-import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
 
 type Props = {};
@@ -120,10 +120,6 @@ const Main = ({ route }) => {
         <View style={styles.loader}>
           <Loader />
         </View>
-      ) : data?.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No posts available</Text>
-        </View>
       ) : (
         <View style={styles.mainContainer}>
           {!publicProfile && (
@@ -136,27 +132,14 @@ const Main = ({ route }) => {
                 style={styles.menuButton}
               >
                 <Entypo name="menu" size={24} color={colors.ICON} />
-                <Text style={styles.menuButtonText}>Forum</Text>
+                <Text style={styles.menuButtonText}>Type</Text>
               </TouchableOpacity>
 
-              <Pressable style={styles.searchContainer}>
-                <AntDesign
-                  style={styles.searchIcon}
-                  name="search1"
-                  size={20}
-                  color="black"
-                />
-                <TextInput placeholder="Search" style={styles.searchInput} />
-              </Pressable>
-
-              <Pressable
-                onPress={() => {
-                  /* Functionality for search */
-                }}
-                style={styles.button}
-              >
-                <Ionicons name="search" size={24} color="white" />
-              </Pressable>
+              <Text style={styles.sectionTitle}>
+                {cancerType.charAt(0).toUpperCase() +
+                  cancerType.slice(1) +
+                  " Cancer"}
+              </Text>
             </View>
           )}
 
@@ -176,11 +159,15 @@ const Main = ({ route }) => {
                 progressViewOffset={-15}
               />
             }
-            ListHeaderComponent={renderHeader}
             ListFooterComponent={renderFooter}
             onEndReached={handleOnEndReached}
             initialNumToRender={6}
             maxToRenderPerBatch={10}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No posts available</Text>
+              </View>
+            }
           />
         </View>
       )}
@@ -195,9 +182,11 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     gap: 4,
     backgroundColor: colors.LIGHT_GREEN,
   },
+
   profileImage: {
     width: 30,
     height: 30,
@@ -225,10 +214,13 @@ const styles = StyleSheet.create({
     paddingBottom: 125,
   },
   sectionTitle: {
-    fontSize: 16,
+    textAlign: "center",
+    color: colors.LIGHT_BLUE,
+    fontSize: 17,
     fontWeight: "bold",
-    color: colors.CONTRAST,
-    marginVertical: 4,
+    paddingRight: 15,
+    textDecorationLine: "underline",
+    maxWidth: "80%",
   },
   loaderStyle: {
     marginVertical: 0,
@@ -239,6 +231,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingTop: 100,
   },
   emptyText: {
     fontSize: 18,

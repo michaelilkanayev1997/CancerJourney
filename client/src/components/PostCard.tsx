@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ForumStackParamList } from "src/@types/navigation";
 import { faker } from "@faker-js/faker";
+import LottieView from "lottie-react-native";
 
 interface PostProps {
   _id: string;
@@ -84,7 +85,9 @@ const PostCard: FC<PostProps> = memo(
     const [showFullText, setShowFullText] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
     const [PopupMenuVisible, setPopupMenuVisible] = useState(false);
-
+    const [isProfileImageLoading, setIsProfileImageLoading] =
+      useState<boolean>(true);
+    const [isPostImageLoading, setIsPostImageLoading] = useState<boolean>(true);
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
 
     const navigation =
@@ -174,14 +177,48 @@ const PostCard: FC<PostProps> = memo(
       <View>
         <View style={styles.header}>
           <View style={styles.userDetails}>
-            <Image
-              style={styles.profileImage}
-              source={
-                owner?.avatar?.url
-                  ? { uri: owner?.avatar?.url }
-                  : require("@assets/user_profile.png")
-              }
-            />
+            <View style={styles.profileImageContainer}>
+              {isProfileImageLoading ? (
+                <View>
+                  <Animated.View
+                    entering={FadeIn}
+                    exiting={FadeOut.duration(500)}
+                  >
+                    <LottieView
+                      source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                      autoPlay
+                      loop
+                      resizeMode="cover"
+                      style={{
+                        width: "150%",
+                        height: "100%",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                  </Animated.View>
+                  <Image
+                    source={
+                      owner?.avatar?.url
+                        ? { uri: owner?.avatar?.url }
+                        : require("@assets/user_profile.png")
+                    }
+                    onLoad={() => setIsProfileImageLoading(false)} // Image loaded successfully
+                    onError={() => setIsProfileImageLoading(false)} // Image failed to load
+                  />
+                </View>
+              ) : (
+                <Image
+                  style={styles.profileImage}
+                  source={
+                    owner?.avatar?.url
+                      ? { uri: owner?.avatar?.url }
+                      : require("@assets/user_profile.png")
+                  }
+                />
+              )}
+            </View>
+
             <View style={{ flexDirection: "column", gap: 2 }}>
               <Text style={styles.userName}>{owner?.name}</Text>
               <Text
@@ -222,12 +259,43 @@ const PostCard: FC<PostProps> = memo(
         </View>
 
         {image?.url ? (
-          <Image
-            style={styles.postImage}
-            source={{
-              uri: image.url,
-            }}
-          />
+          <View style={styles.postImageContainer}>
+            {isPostImageLoading ? (
+              <View>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut.duration(500)}
+                >
+                  <LottieView
+                    source={require("@assets/Animations/ImageLoadingAnimation.json")}
+                    autoPlay
+                    loop
+                    resizeMode="cover"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignSelf: "center",
+                      justifyContent: "center",
+                    }}
+                  />
+                </Animated.View>
+                <Image
+                  source={{
+                    uri: image.url,
+                  }}
+                  onLoad={() => setIsPostImageLoading(false)} // Image loaded successfully
+                  onError={() => setIsPostImageLoading(false)} // Image failed to load
+                />
+              </View>
+            ) : (
+              <Image
+                style={styles.postImage}
+                source={{
+                  uri: image.url,
+                }}
+              />
+            )}
+          </View>
         ) : null}
 
         <View style={styles.footer}>
@@ -428,6 +496,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#0000009b",
     marginRight: 8,
+  },
+  profileImageContainer: {
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "column",
+    overflow: "hidden",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    alignSelf: "center",
+  },
+  postImageContainer: {
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "column",
+    overflow: "hidden",
+    width: "100%",
+    height: 150,
+    borderRadius: 8,
+
+    alignSelf: "center",
   },
 });
 
