@@ -141,7 +141,16 @@ const PostCard: FC<PostProps> = memo(
       setShowFullText(!showFullText);
     };
 
-    const handleUpdate = () => {};
+    const handleUpdate = () => {
+      if (!_id) return;
+
+      navigation.navigate("New Post", {
+        description,
+        image,
+        forumType,
+        update: true,
+      });
+    };
 
     const handleReport = () => {};
 

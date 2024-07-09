@@ -400,6 +400,7 @@ export const usePostMutations = () => {
   interface UpdatePostParams {
     postId: string;
     ownerId: string;
+    cancerType: string;
     formData: FormData;
     handleCloseMoreOptionsPress: () => void;
   }
@@ -414,23 +415,22 @@ export const usePostMutations = () => {
       const client = await getClient();
 
       const url = `/post/?postId=${postId}&ownerId=${ownerId}`;
-
       return client.patch(url, formData);
     },
     {
       onSuccess: (data, variables) => {
-        const { postId, ownerId, formData } = variables;
+        const { postId, cancerType, ownerId, formData } = variables;
 
         // Optimistically update the local cache
-        queryClient.setQueryData<Post[]>(["posts"], (oldData) => {
+        queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
           if (!oldData) return [];
           return oldData.map((post) => {
             if (post._id.toString() === postId) {
               return {
                 ...post,
-                description: description,
-                forumType: forumType,
-                image: image,
+                description: formData.description,
+                forumType: formData.forumType,
+                image: formData.image,
               };
             }
             return post;
