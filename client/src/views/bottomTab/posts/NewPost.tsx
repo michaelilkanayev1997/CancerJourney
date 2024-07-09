@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useCallback } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react";
 import React, { useState } from "react";
 import {
   View,
@@ -35,21 +35,38 @@ interface Props {}
 export interface NewPost {
   description: string;
   cancerType: string;
-  image: ImagePicker.ImagePickerAsset | null;
+  image: any;
 }
 
-const NewPost: FC<Props> = (props) => {
+const NewPost: FC<Props> = ({ route }) => {
   const { profile } = useSelector(getAuthState);
+  const { description, image, forumType, update } = route.params || {
+    forumType: profile?.cancerType || "other",
+    description: "",
+    image: null,
+    update: false,
+  };
+
   const [pickerVisible, setPickerVisible] = useState(false);
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
   const [addPostLoading, setAddPostLoading] = useState(false);
   const [newPost, setNewPost] = useState<NewPost>({
-    cancerType: profile?.cancerType || "other",
-    description: "",
-    image: null,
+    cancerType: forumType,
+    description: description,
+    image: image,
   });
-
+  console.log(update);
   const navigation = useNavigation();
+
+  //  Set state based on route params
+  useEffect(() => {
+    setNewPost((prevPost) => ({
+      ...prevPost,
+      description: description || "",
+      image: image || null,
+      cancerType: forumType,
+    }));
+  }, [description, image, forumType]);
 
   const setImage: Dispatch<
     SetStateAction<ImagePicker.ImagePickerAsset | null>
@@ -216,7 +233,7 @@ const NewPost: FC<Props> = (props) => {
           </TouchableOpacity>
           {newPost.image ? (
             <Image
-              source={{ uri: newPost.image.uri }}
+              source={{ uri: newPost.image.uri || newPost.image.url }}
               style={styles.photoPreview}
             />
           ) : (
@@ -271,13 +288,34 @@ const NewPost: FC<Props> = (props) => {
           style={{ backgroundColor: colors.PRIMARY_LIGHT }}
         />
 
-        <TouchableOpacity
-          onPress={handleAddPost}
-          style={[styles.submitButton, addPostLoading && styles.disabledButton]}
-          disabled={addPostLoading}
-        >
-          <Text style={styles.submitButtonText}>Add Post</Text>
-        </TouchableOpacity>
+        {update ? (
+          <>
+            <TouchableOpacity
+              // onPress={handleAddPost}
+              style={[
+                styles.submitButton,
+                addPostLoading && styles.disabledButton,
+              ]}
+              disabled={addPostLoading}
+            >
+              <Text style={styles.submitButtonText}>Update Post</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.addPostButton}>
+              <Text style={styles.addPostButtonText}>Add New Post</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity
+            onPress={handleAddPost}
+            style={[
+              styles.submitButton,
+              addPostLoading && styles.disabledButton,
+            ]}
+            disabled={addPostLoading}
+          >
+            <Text style={styles.submitButtonText}>Add Post</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
 
       <PhotoModal
@@ -448,6 +486,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20, // Match modalContent's borderRadius
+  },
+  addPostButton: {
+    backgroundColor: colors.LIGHT_BLUE,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  addPostButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textDecorationLine: "underline", // Make it look like a link
   },
 });
 
