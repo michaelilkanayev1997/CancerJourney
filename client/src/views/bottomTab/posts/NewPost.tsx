@@ -40,7 +40,7 @@ export interface NewPost {
 
 const NewPost: FC<Props> = ({ route }) => {
   const { profile } = useSelector(getAuthState);
-  const { description, image, forumType, update } = route.params || {
+  let { description, image, forumType, update } = route.params || {
     forumType: profile?.cancerType || "other",
     description: "",
     image: null,
@@ -64,9 +64,18 @@ const NewPost: FC<Props> = ({ route }) => {
       ...prevPost,
       description: description || "",
       image: image || null,
-      cancerType: forumType,
+      cancerType: profile?.cancerType || "other",
     }));
-  }, [description, image, forumType]);
+  }, [description, image, forumType, update]);
+
+  const resetPostFields = () => {
+    setNewPost({
+      description: "",
+      image: null,
+      cancerType: forumType,
+    });
+    update = false;
+  };
 
   const setImage: Dispatch<
     SetStateAction<ImagePicker.ImagePickerAsset | null>
@@ -238,7 +247,7 @@ const NewPost: FC<Props> = ({ route }) => {
             />
           ) : (
             <Image
-              source={require("@assets/Schedule/medicationPhotoPreview.jpg")}
+              source={require("@assets/newPost.png")}
               style={styles.photoPreview}
             />
           )}
@@ -300,8 +309,11 @@ const NewPost: FC<Props> = ({ route }) => {
             >
               <Text style={styles.submitButtonText}>Update Post</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.addPostButton}>
-              <Text style={styles.addPostButtonText}>Add New Post</Text>
+            <TouchableOpacity
+              style={styles.newPostButton}
+              onPress={resetPostFields}
+            >
+              <Text style={styles.newPostButtonText}>New Post</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -371,8 +383,8 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: colors.ICON,
-    padding: 15,
-    borderRadius: 8,
+    padding: 12,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
@@ -380,6 +392,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+    textDecorationLine: "underline",
   },
   rowInput: {
     flex: 2, // Take up 2/3 of the space
@@ -487,18 +500,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20, // Match modalContent's borderRadius
   },
-  addPostButton: {
+  newPostButton: {
     backgroundColor: colors.LIGHT_BLUE,
-    padding: 10,
+    padding: 12,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
   },
-  addPostButtonText: {
+  newPostButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-    textDecorationLine: "underline", // Make it look like a link
+    textDecorationLine: "underline",
   },
 });
 
