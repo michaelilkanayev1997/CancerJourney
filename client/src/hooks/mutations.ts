@@ -402,7 +402,12 @@ export const usePostMutations = () => {
     ownerId: string;
     cancerType: string;
     formData: FormData;
-    handleCloseMoreOptionsPress: () => void;
+    formDataObject: {
+      description: string;
+      forumType: string;
+      image: null;
+    };
+    resetPostFields: () => void;
   }
 
   const { isLoading: updateLoading, mutate: updatePostMutation } = useMutation<
@@ -412,15 +417,22 @@ export const usePostMutations = () => {
     unknown
   >(
     async ({ postId, ownerId, formData }) => {
-      const client = await getClient();
+      const client = await getClient({
+        "Content-Type": "multipart/form-data;",
+      });
 
       const url = `/post/?postId=${postId}&ownerId=${ownerId}`;
       return client.patch(url, formData);
     },
     {
       onSuccess: (data, variables) => {
-        const { postId, cancerType, ownerId, formData } = variables;
+        const { postId, cancerType, formDataObject } = variables;
 
+        // Extract formData values
+        const { description, forumType, image } = formDataObject;
+
+        console.log(description);
+        console.log(image);
         // Optimistically update the local cache
         queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
           if (!oldData) return [];
@@ -428,24 +440,18 @@ export const usePostMutations = () => {
             if (post._id.toString() === postId) {
               return {
                 ...post,
-                description: formData.description,
-                forumType: formData.forumType,
-                image: formData.image,
+                description: description,
+                forumType: forumType,
+                image: image ? { public_id: image.uri, url: image.uri } : null,
               };
             }
             return post;
           });
         });
 
-        variables?.handleCloseMoreOptionsPress();
-
-        ToastNotification({
-          message: `your post has been updated successfully`,
-        });
+        variables?.resetPostFields();
       },
       onError: (error, variables) => {
-        variables?.handleCloseMoreOptionsPress();
-
         const errorMessage = catchAsyncError(error);
         ToastNotification({
           type: "Error",
@@ -478,9 +484,6 @@ export const usePostMutations = () => {
 
             return oldData.map((post) => {
               if (post._id.toString() === postId) {
-                console.log("profileId ", profile?.id);
-                console.log("post.likes ", post.likes);
-
                 const isLiked = post.likes.some(
                   (like) => like.userId._id === profile?.id
                 );

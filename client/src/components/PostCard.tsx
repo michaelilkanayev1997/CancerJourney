@@ -119,13 +119,8 @@ const PostCard: FC<PostProps> = memo(
 
     const MAX_LINES = 3;
 
-    const {
-      deletePostMutation,
-      deleteLoading,
-      updatePostMutation,
-      updateLoading,
-      favoritePostMutation,
-    } = usePostMutations();
+    const { deletePostMutation, deleteLoading, favoritePostMutation } =
+      usePostMutations();
 
     const handleCloseMoreOptionsPress = useCallback(() => {
       setPopupMenuVisible(false);
@@ -134,7 +129,8 @@ const PostCard: FC<PostProps> = memo(
 
     const handleTextLayout = (event: LayoutChangeEvent) => {
       const { height } = event.nativeEvent.layout;
-      setIsTextLong(height > 52); //Threshold for 3 lines of text
+
+      setIsTextLong(height > 55); //Threshold for 3 lines of text
     };
 
     const toggleShowFullText = () => {
@@ -148,6 +144,8 @@ const PostCard: FC<PostProps> = memo(
         description,
         image,
         forumType,
+        owner,
+        postId: _id.toString(),
         update: true,
       });
     };

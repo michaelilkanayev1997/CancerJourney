@@ -39,7 +39,7 @@ const Main = ({ route }) => {
     cancerType: profile?.cancerType,
   };
 
-  console.log("route", publicProfile, cancerType);
+  // console.log("route", publicProfile, cancerType);
   const { data, isFetching, isLoading } = useFetchPosts(cancerType);
   const queryClient = useQueryClient();
   const [hasMore, setHasMore] = useState(true);
@@ -97,11 +97,7 @@ const Main = ({ route }) => {
         owner={item.owner}
       />
     ),
-    []
-  );
-
-  const renderHeader = () => (
-    <Text style={styles.sectionTitle}>Popular Posts</Text>
+    [data]
   );
 
   const renderFooter = () => {
