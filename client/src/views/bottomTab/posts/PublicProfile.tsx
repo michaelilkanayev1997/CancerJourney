@@ -9,14 +9,16 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { PublicProfileTabParamsList } from "src/@types/navigation";
-import Main from "./Main";
-import PublicProfileContainer from "@components/PublicProfileContainer";
 import { useNavigation } from "@react-navigation/native";
 
-interface Props {}
+import Main from "./Main";
+import PublicProfileContainer from "@components/PublicProfileContainer";
 
-const Tab = createMaterialTopTabNavigator<PublicProfileTabParamsList>();
+type Props = {
+  route: any;
+};
+
+const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
   const { user } = route.params;

@@ -397,16 +397,22 @@ export const usePostMutations = () => {
     }
   );
 
+  interface FormDataObject {
+    description: string;
+    forumType: string;
+    image: {
+      uri: string;
+      type: string;
+      name: string;
+    } | null;
+  }
+
   interface UpdatePostParams {
     postId: string;
     ownerId: string;
     cancerType: string;
     formData: FormData;
-    formDataObject: {
-      description: string;
-      forumType: string;
-      image: null;
-    };
+    formDataObject: FormDataObject;
     resetPostFields: () => void;
   }
 
@@ -431,23 +437,26 @@ export const usePostMutations = () => {
         // Extract formData values
         const { description, forumType, image } = formDataObject;
 
-        console.log(description);
-        console.log(image);
         // Optimistically update the local cache
-        queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
-          if (!oldData) return [];
-          return oldData.map((post) => {
-            if (post._id.toString() === postId) {
-              return {
-                ...post,
-                description: description,
-                forumType: forumType,
-                image: image ? { public_id: image.uri, url: image.uri } : null,
-              };
-            }
-            return post;
-          });
-        });
+        queryClient.setQueryData<Post[]>(
+          ["posts", cancerType],
+          (oldData: Post[] | undefined) => {
+            if (!oldData) return [];
+            return oldData.map((post) => {
+              if (post._id.toString() === postId) {
+                return {
+                  ...post,
+                  description: description,
+                  forumType: forumType,
+                  image: image
+                    ? { public_id: image.uri, url: image.uri }
+                    : null,
+                };
+              }
+              return post;
+            });
+          }
+        );
 
         variables?.resetPostFields();
       },

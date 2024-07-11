@@ -2,9 +2,10 @@ import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
 import { FC } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { User } from "src/@types/post";
 
 interface Props {
-  // profile?: PublicProfile;
+  profile?: User;
 }
 
 const PublicProfileContainer: FC<Props> = ({ profile }) => {

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,18 +7,19 @@ import {
   Text,
   Image,
   Animated,
-  Vibration,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 import colors from "@utils/colors";
 import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
-import { useNavigation } from "@react-navigation/native";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
+import { DrawerParamList } from "src/@types/navigation";
 
-interface Props {
-  likes: Like[];
-}
+type Props = {
+  route: any;
+};
 
 const dummyData = new Array(10).fill("");
 
@@ -35,10 +36,10 @@ const PostLikes: FC<Props> = ({ route }) => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+
+  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+
   console.log(likes.length);
-
-  const navigation = useNavigation();
-
   console.log("data length ", data.length);
   // console.log("isFetchingMore ", isFetchingMore);
   // console.log("hasMore ", hasMore);
@@ -59,7 +60,7 @@ const PostLikes: FC<Props> = ({ route }) => {
     setPage(newPage);
 
     setTimeout(() => {
-      setData((prevData) => [...prevData, ...newItems]);
+      setData((prevData: Like[]) => [...prevData, ...newItems]);
       setIsFetchingMore(false);
     }, 1000);
   }, [isFetchingMore, hasMore, page, likes]);

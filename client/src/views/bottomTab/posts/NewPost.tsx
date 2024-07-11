@@ -27,11 +27,13 @@ import PhotoModal from "@components/PhotoModal";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import Loader from "@ui/Loader";
 import { usePostMutations } from "src/hooks/mutations";
 
-interface Props {}
+type Props = {
+  route: any;
+};
 
 export interface NewPost {
   description: string;
@@ -72,7 +74,9 @@ const NewPost: FC<Props> = ({ route }) => {
       image: image || null,
       cancerType: forumType || profile?.cancerType || "other",
     }));
-    if (update) setUpdateForm(true);
+    if (update) {
+      setUpdateForm(true);
+    }
   }, [description, image, forumType, update]);
 
   const setImage: Dispatch<
@@ -113,7 +117,7 @@ const NewPost: FC<Props> = ({ route }) => {
       cancerType: profile?.cancerType || "other",
     });
     setUpdateForm(false);
-    update = false;
+    (route.params as any) = null;
   };
 
   const handleAddPost = async () => {
@@ -212,8 +216,8 @@ const NewPost: FC<Props> = ({ route }) => {
       console.log(newPost.image);
       if (newPost.image) {
         const image = {
-          uri: newPost.image.uri,
-          type: newPost.image.mimeType,
+          uri: newPost.image.uri || newPost.image.url,
+          type: newPost.image.mimeType || "image/jpeg",
           name: "image.jpg",
         } as any;
         formData.append("image", image);
