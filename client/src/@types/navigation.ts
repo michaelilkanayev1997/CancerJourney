@@ -63,7 +63,34 @@ export type SocialStackParamList = {
 
 export type DrawerParamList = {
   SocialTabs: undefined;
+  PostLikes: {
+    likes: {
+      _id: string;
+      userId: {
+        _id: number;
+        name: string;
+        avatar: {
+          url: string;
+          publicId: string;
+        };
+        userType: string;
+      };
+      createdAt: string;
+    }[];
+  };
   PublicProfile: { user: User };
+  "New Post": {
+    description: string;
+    image: {
+      public_id: string;
+      url: string;
+    } | null;
+    forumType: string;
+    owner: User;
+    postId: string;
+    update: boolean;
+  };
+  PostReport: { postId: string };
 };
 
 export type BottomTabParamList = {
