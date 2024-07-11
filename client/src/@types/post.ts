@@ -26,10 +26,7 @@ export interface Reply {
 
 export interface Post {
   _id: string;
-  image: {
-    public_id: string;
-    url: string;
-  };
+  image: { public_id: string; url: string } | null;
   owner: User;
   description: string;
   likes: Like[];

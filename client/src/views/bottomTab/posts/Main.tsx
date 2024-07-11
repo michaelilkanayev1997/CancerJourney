@@ -1,18 +1,15 @@
 import { useCallback, useState } from "react";
 import {
   FlatList,
-  Pressable,
   RefreshControl,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   Vibration,
   View,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { useQueryClient } from "react-query";
-import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
@@ -27,12 +24,14 @@ import colors from "@utils/colors";
 import { DrawerParamList } from "src/@types/navigation";
 import { getAuthState } from "src/store/auth";
 
-type Props = {};
+type Props = {
+  route: any;
+};
 
 let pageNo = 0;
 const limit = 6;
 
-const Main = ({ route }) => {
+const Main = ({ route }: Props) => {
   const { profile } = useSelector(getAuthState);
   const { publicProfile, cancerType } = route.params || {
     publicProfile: false,

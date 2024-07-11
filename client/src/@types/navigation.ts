@@ -1,6 +1,8 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
+
 import { IAppointment, IMedication } from "./schedule";
 import { Study } from "@components/StudyCard";
+import { User } from "./post";
 
 interface NewUserResponse {
   id: string;
@@ -61,6 +63,7 @@ export type SocialStackParamList = {
 
 export type DrawerParamList = {
   SocialTabs: undefined;
+  PublicProfile: { user: User };
 };
 
 export type BottomTabParamList = {

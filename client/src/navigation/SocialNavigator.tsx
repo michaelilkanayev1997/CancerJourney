@@ -1,19 +1,18 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { StyleSheet } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import colors from "@utils/colors";
 import Main from "@views/bottomTab/posts/Main";
 import CustomDrawer from "@components/CustomDrawer";
 import NewPost from "@views/bottomTab/posts/NewPost";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ForumStackParamList } from "src/@types/navigation";
 import PublicProfile from "@views/bottomTab/posts/PublicProfile";
 import PostLikes from "@views/bottomTab/posts/PostLikes";
 
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
-const Stack = createNativeStackNavigator<ForumStackParamList>();
+const Stack = createNativeStackNavigator();
 
 const Forum = () => {
   return (
@@ -39,7 +38,7 @@ const SocialTabs = () => {
     >
       <Tab.Screen name="Forum" component={Forum} />
       <Tab.Screen name="New Post" component={NewPost} />
-      <Tab.Screen name="Favorites" component={NewPost} />
+      <Tab.Screen name="Social Profile" component={NewPost} />
     </Tab.Navigator>
   );
 };

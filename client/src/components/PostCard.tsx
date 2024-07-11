@@ -32,7 +32,7 @@ interface PostProps {
   image: {
     public_id: string;
     url: string;
-  };
+  } | null;
   likes: Like[];
   owner: User;
   createdAt: string;
@@ -101,6 +101,7 @@ const PostCard: FC<PostProps> = memo(
     const isOwnPost = profile?.id === owner?._id.toString();
 
     const handleOptionsPress = (event: { nativeEvent: { pageY: any } }) => {
+      Vibration.vibrate(50);
       const yPosition = event.nativeEvent.pageY;
       const popupHeight = 150; // Estimated height of the popup menu
       const windowHeight = Dimensions.get("window").height;
@@ -114,7 +115,6 @@ const PostCard: FC<PostProps> = memo(
         top: adjustedTop - 10,
         right: 20,
       });
-      Vibration.vibrate(50);
     };
 
     const MAX_LINES = 3;
@@ -139,7 +139,7 @@ const PostCard: FC<PostProps> = memo(
 
     const handleUpdate = () => {
       if (!_id) return;
-
+      handleCloseMoreOptionsPress();
       navigation.navigate("New Post", {
         description,
         image,
