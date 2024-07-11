@@ -11,20 +11,20 @@ import {
   Alert,
   Dimensions,
 } from "react-native";
+import { useSelector } from "react-redux";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { faker } from "@faker-js/faker";
+import LottieView from "lottie-react-native";
 
 import colors from "../utils/colors";
 import { calculateTimeDifference } from "@utils/helper";
 import { Like, Reply, User } from "src/@types/post";
 import { getAuthState } from "src/store/auth";
-import { useSelector } from "react-redux";
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ForumStackParamList } from "src/@types/navigation";
-import { faker } from "@faker-js/faker";
-import LottieView from "lottie-react-native";
+import { DrawerParamList } from "src/@types/navigation";
 
 interface PostProps {
   _id: string;
@@ -91,7 +91,7 @@ const PostCard: FC<PostProps> = memo(
     const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
 
     const navigation =
-      useNavigation<NativeStackNavigationProp<ForumStackParamList>>();
+      useNavigation<NativeStackNavigationProp<DrawerParamList>>();
 
     const navigateToPostLikesPage = useCallback(() => {
       navigation.navigate("PostLikes", { likes: DATA });
@@ -150,7 +150,9 @@ const PostCard: FC<PostProps> = memo(
       });
     };
 
-    const handleReport = () => {};
+    const handleReport = () => {
+      navigation.navigate("PostReport", { postId: _id });
+    };
 
     // Delete button is pressed
     const handleDelete = () => {

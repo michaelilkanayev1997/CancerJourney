@@ -9,6 +9,7 @@ import CustomDrawer from "@components/CustomDrawer";
 import NewPost from "@views/bottomTab/posts/NewPost";
 import PublicProfile from "@views/bottomTab/posts/PublicProfile";
 import PostLikes from "@views/bottomTab/posts/PostLikes";
+import PostReport from "@views/bottomTab/posts/PostReport";
 
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -62,6 +63,7 @@ const SocialNavigator = () => {
       <Drawer.Screen name="SocialTabs" component={SocialTabs} />
       <Drawer.Screen name="PostLikes" component={PostLikes} />
       <Drawer.Screen name="PublicProfile" component={PublicProfile} />
+      <Drawer.Screen name="PostReport" component={PostReport} />
     </Drawer.Navigator>
   );
 };
