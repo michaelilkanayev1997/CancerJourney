@@ -16,10 +16,7 @@ interface IReply extends Document {
 
 interface IPost extends Document {
   description: string;
-  image: {
-    public_id: string;
-    url: string;
-  };
+  image: { public_id: string; url: string } | null;
   owner: mongoose.Types.ObjectId;
   likes: ILike[];
   replies: mongoose.Types.DocumentArray<IReply>;

@@ -158,6 +158,15 @@ export const updatePost: RequestHandler = async (req, res) => {
       newPost.image = { url: req.file.location, public_id: req.file.key };
 
       newPost = await newPost.save();
+    } else {
+      if (newPost.image && newPost.image.public_id) {
+        // Delete the image from AWS S3
+        await deleteS3Object(newPost.image.public_id);
+      }
+      // Set post image
+      newPost.image = null;
+
+      newPost = await newPost.save();
     }
 
     res.status(201).json(newPost);

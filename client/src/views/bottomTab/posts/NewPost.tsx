@@ -29,6 +29,7 @@ import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Loader from "@ui/Loader";
+import { usePostMutations } from "src/hooks/mutations";
 
 interface Props {}
 
@@ -40,12 +41,15 @@ export interface NewPost {
 
 const NewPost: FC<Props> = ({ route }) => {
   const { profile } = useSelector(getAuthState);
-  let { description, image, forumType, update } = route.params || {
-    forumType: profile?.cancerType || "other",
-    description: "",
-    image: null,
-    update: false,
-  };
+  let { description, image, forumType, owner, postId, update } =
+    route.params || {
+      forumType: profile?.cancerType || "other",
+      description: "",
+      image: null,
+      owner: null,
+      postId: "",
+      update: false,
+    };
 
   const [pickerVisible, setPickerVisible] = useState(false);
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
@@ -55,8 +59,10 @@ const NewPost: FC<Props> = ({ route }) => {
     description: description,
     image: image,
   });
-  console.log(update);
-  const navigation = useNavigation();
+
+  const [updateForm, setUpdateForm] = useState(false);
+
+  const { updatePostMutation } = usePostMutations();
 
   //  Set state based on route params
   useEffect(() => {
@@ -64,18 +70,10 @@ const NewPost: FC<Props> = ({ route }) => {
       ...prevPost,
       description: description || "",
       image: image || null,
-      cancerType: profile?.cancerType || "other",
+      cancerType: forumType || profile?.cancerType || "other",
     }));
+    if (update) setUpdateForm(true);
   }, [description, image, forumType, update]);
-
-  const resetPostFields = () => {
-    setNewPost({
-      description: "",
-      image: null,
-      cancerType: forumType,
-    });
-    update = false;
-  };
 
   const setImage: Dispatch<
     SetStateAction<ImagePicker.ImagePickerAsset | null>
@@ -108,12 +106,14 @@ const NewPost: FC<Props> = ({ route }) => {
     Vibration.vibrate(50);
   }, []);
 
-  const resetFields = () => {
+  const resetPostFields = () => {
     setNewPost({
-      cancerType: profile?.cancerType || "other",
       description: "",
       image: null,
+      cancerType: profile?.cancerType || "other",
     });
+    setUpdateForm(false);
+    update = false;
   };
 
   const handleAddPost = async () => {
@@ -173,9 +173,81 @@ const NewPost: FC<Props> = ({ route }) => {
 
       if (isSuccessful) {
         //handleCloseMoreOptionsPress();
-        resetFields();
+        resetPostFields();
         ToastNotification({
           message: "Post uploaded successfully!",
+        });
+      }
+    }
+  };
+
+  const handleUpdatePost = async () => {
+    if (newPost.description === "") {
+      ToastNotification({
+        type: "ModalError",
+        message: "Description is required!",
+      });
+      return;
+    } else if (newPost.description.length < 10) {
+      ToastNotification({
+        type: "ModalError",
+        message: "Description should be at least 10 characters long!",
+      });
+      return;
+    }
+    let isSuccessful = false;
+
+    try {
+      setAddPostLoading(true);
+
+      const formData = new FormData();
+      const formDataObject = { description: "", forumType: "", image: null };
+
+      // Append the Body fields to the form
+      formData.append("description", newPost.description);
+      formDataObject.description = newPost.description;
+
+      formData.append("forumType", newPost.cancerType);
+      formDataObject.forumType = newPost.cancerType;
+      console.log(newPost.image);
+      if (newPost.image) {
+        const image = {
+          uri: newPost.image.uri,
+          type: newPost.image.mimeType,
+          name: "image.jpg",
+        } as any;
+        formData.append("image", image);
+        formDataObject.image = image;
+      }
+
+      const updateResult = updatePostMutation({
+        postId,
+        ownerId: owner?._id,
+        cancerType: forumType,
+        formData,
+        formDataObject,
+        resetPostFields,
+      });
+
+      console.log(updateResult);
+
+      //queryClient.invalidateQueries(["posts", cancerType]);
+
+      isSuccessful = true;
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    } finally {
+      setAddPostLoading(false);
+
+      if (isSuccessful) {
+        //handleCloseMoreOptionsPress();
+        resetPostFields();
+        ToastNotification({
+          message: "Post updated successfully!",
         });
       }
     }
@@ -297,10 +369,10 @@ const NewPost: FC<Props> = ({ route }) => {
           style={{ backgroundColor: colors.PRIMARY_LIGHT }}
         />
 
-        {update ? (
+        {updateForm ? (
           <>
             <TouchableOpacity
-              // onPress={handleAddPost}
+              onPress={handleUpdatePost}
               style={[
                 styles.submitButton,
                 addPostLoading && styles.disabledButton,
@@ -312,6 +384,7 @@ const NewPost: FC<Props> = ({ route }) => {
             <TouchableOpacity
               style={styles.newPostButton}
               onPress={resetPostFields}
+              disabled={addPostLoading}
             >
               <Text style={styles.newPostButtonText}>New Post</Text>
             </TouchableOpacity>
