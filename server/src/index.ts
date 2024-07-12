@@ -8,6 +8,7 @@ import fileRouter from "./router/file";
 import scheduleRouter from "./router/schedule";
 import postsRouter from "./router/post";
 import postReportRouter from "./router/postReport";
+import profileRouter from "./router/profile";
 
 import { errorHandler } from "./middleware/error";
 
@@ -23,6 +24,7 @@ app.use("/file", fileRouter);
 app.use("/schedule", scheduleRouter);
 app.use("/post", postsRouter);
 app.use("/post-report", postReportRouter);
+app.use("/profile", profileRouter);
 
 app.use(errorHandler);
 
