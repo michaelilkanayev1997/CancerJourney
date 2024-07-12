@@ -25,6 +25,9 @@ const Forum = () => {
       }}
     >
       <Stack.Screen name="Main" component={Main} />
+      <Stack.Screen name="PostLikes" component={PostLikes} />
+      <Stack.Screen name="PublicProfile" component={PublicProfile} />
+      <Stack.Screen name="PostReport" component={PostReport} />
     </Stack.Navigator>
   );
 };
@@ -40,7 +43,11 @@ const SocialTabs = () => {
     >
       <Tab.Screen name="Forum" component={Forum} />
       <Tab.Screen name="New Post" component={NewPost} />
-      {/* <Tab.Screen name="Social Profile" component={PublicProfile} /> */}
+      <Tab.Screen
+        name="Social Profile"
+        component={PublicProfile}
+        initialParams={{ publicProfile: false }}
+      />
     </Tab.Navigator>
   );
 };
@@ -78,7 +85,7 @@ const SocialNavigator = () => {
       }}
     >
       <Drawer.Screen name="SocialTabs" component={SocialTabs} />
-      <Drawer.Screen name="PostPages" component={PostPages} />
+      {/* <Drawer.Screen name="PostPages" component={PostPages} /> */}
     </Drawer.Navigator>
   );
 };

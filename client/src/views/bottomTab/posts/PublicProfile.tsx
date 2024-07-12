@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import Main from "./Main";
 import PublicProfileContainer from "@components/PublicProfileContainer";
+import { useSelector } from "react-redux";
+import { getAuthState } from "src/store/auth";
 
 type Props = {
   route: any;
@@ -21,25 +23,45 @@ type Props = {
 const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
-  const { user } = route.params;
+  const { publicUser, publicProfile } = route.params || {
+    publicUser: null,
+    publicProfile: true,
+  };
+  console.log("publicUser", publicUser);
+  const { profile } = useSelector(getAuthState);
+
+  const privateUser = {
+    _id: profile?.id,
+    name: profile?.name,
+    avatar: { url: profile?.avatar, publicId: profile?.avatar },
+    userType: profile?.userType,
+  };
+
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/2223/2223615.png",
-            }}
-            style={styles.backIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Public Profile </Text>
-      </View>
+      {publicUser ? (
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/2223/2223615.png",
+              }}
+              style={styles.backIcon}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Public Profile </Text>
+        </View>
+      ) : (
+        <View style={{ paddingTop: 10 }}></View>
+      )}
 
       <View style={styles.container}>
-        <PublicProfileContainer profile={user} />
+        <PublicProfileContainer
+          profile={publicUser || privateUser}
+          publicProfile={publicProfile}
+        />
 
         <Tab.Navigator
           screenOptions={{

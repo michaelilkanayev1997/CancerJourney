@@ -72,7 +72,7 @@ export type DrawerParamList = {
       createdAt: string;
     }[];
   };
-  PublicProfile: { user: User };
+  PublicProfile: { publicUser: User };
   "New Post": {
     description: string;
     image: {

@@ -133,3 +133,14 @@ export const cancerTypes = [
     imageUrl: require("@assets/CancerType/other-cancer.png"),
   },
 ];
+
+export const userTypes = {
+  patient: "Fighter (Patient)",
+  family: "Family member",
+  friend: "Supporter (Friend)",
+  professional: "Health care pro",
+  caregiver: "Caregiver",
+  other: "Other",
+} as const;
+
+export type UserTypeKey = keyof typeof userTypes;
