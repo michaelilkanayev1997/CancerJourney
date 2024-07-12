@@ -32,6 +32,7 @@ const Forum = () => {
 const SocialTabs = () => {
   return (
     <Tab.Navigator
+      initialRouteName="Forum"
       screenOptions={{
         tabBarStyle: styles.tabbarStyle,
         tabBarLabelStyle: styles.tabbarLabelStyle,
@@ -39,8 +40,24 @@ const SocialTabs = () => {
     >
       <Tab.Screen name="Forum" component={Forum} />
       <Tab.Screen name="New Post" component={NewPost} />
-      <Tab.Screen name="Social Profile" component={NewPost} />
+      {/* <Tab.Screen name="Social Profile" component={PublicProfile} /> */}
     </Tab.Navigator>
+  );
+};
+
+const PostPages = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    >
+      <Stack.Screen name="PostLikes" component={PostLikes} />
+      <Stack.Screen name="PublicProfile" component={PublicProfile} />
+      <Stack.Screen name="PostReport" component={PostReport} />
+    </Stack.Navigator>
   );
 };
 
@@ -61,9 +78,7 @@ const SocialNavigator = () => {
       }}
     >
       <Drawer.Screen name="SocialTabs" component={SocialTabs} />
-      <Drawer.Screen name="PostLikes" component={PostLikes} />
-      <Drawer.Screen name="PublicProfile" component={PublicProfile} />
-      <Drawer.Screen name="PostReport" component={PostReport} />
+      <Drawer.Screen name="PostPages" component={PostPages} />
     </Drawer.Navigator>
   );
 };

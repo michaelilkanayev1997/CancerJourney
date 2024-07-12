@@ -94,7 +94,10 @@ const PostCard: FC<PostProps> = memo(
       useNavigation<NativeStackNavigationProp<DrawerParamList>>();
 
     const navigateToPostLikesPage = useCallback(() => {
-      navigation.navigate("PostLikes", { likes: DATA });
+      navigation.navigate("PostPages", {
+        screen: "PostLikes",
+        params: { likes: DATA },
+      });
     }, []);
 
     // Check if the current post belongs to the logged-in user

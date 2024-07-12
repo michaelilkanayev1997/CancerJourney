@@ -55,12 +55,6 @@ export type ScheduleStackParamList = {
   };
 };
 
-export type SocialStackParamList = {
-  Main: undefined;
-  Posts: undefined;
-  Favorites: undefined;
-};
-
 export type DrawerParamList = {
   SocialTabs: undefined;
   PostLikes: {
@@ -91,6 +85,20 @@ export type DrawerParamList = {
     update: boolean;
   };
   PostReport: { postId: string };
+  PostPages: NavigatorScreenParams<{
+    PostLikes: { likes: any[] };
+    PublicProfile: { user: User };
+    PostReport: { postId: string };
+  }>;
+};
+
+export type SocialStackParamList = {
+  SocialTabs: NavigatorScreenParams<{
+    Forum: undefined;
+    "New Post": undefined;
+    "Social Profile": undefined;
+  }>;
+  PostPages: undefined;
 };
 
 export type BottomTabParamList = {
@@ -99,4 +107,9 @@ export type BottomTabParamList = {
   PostScreen: NavigatorScreenParams<SocialStackParamList>;
   UploadScreen: NavigatorScreenParams<UploadStackParamList>;
   Schedule: NavigatorScreenParams<ScheduleStackParamList>;
+  SocialTabs: NavigatorScreenParams<{
+    Forum: undefined;
+    "New Post": undefined;
+    "Social Profile": undefined;
+  }>;
 };
