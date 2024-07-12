@@ -63,3 +63,41 @@ export const updateFollower: RequestHandler = async (req, res) => {
 
   res.json({ status });
 };
+
+export const getFollowers: RequestHandler = async (req, res) => {
+  const { profileId } = req.params;
+
+  // Check if profileId is a valid object id
+  if (!isValidObjectId(profileId))
+    return res.status(422).json({ error: "Invalid profile id!" });
+
+  const profile = await User.findById(profileId).populate(
+    "followers",
+    "name avatar userType"
+  );
+
+  if (!profile) {
+    return res.status(404).json({ error: "Profile not found!" });
+  }
+
+  res.json({ followers: profile.followers });
+};
+
+export const getFollowings: RequestHandler = async (req, res) => {
+  const { profileId } = req.params;
+
+  // Check if profileId is a valid object id
+  if (!isValidObjectId(profileId))
+    return res.status(422).json({ error: "Invalid profile id!" });
+
+  const profile = await User.findById(profileId).populate(
+    "followings",
+    "name avatar.url userType"
+  );
+
+  if (!profile) {
+    return res.status(404).json({ error: "Profile not found!" });
+  }
+
+  res.json({ followings: profile.followings });
+};
