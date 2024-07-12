@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import { getAuthState } from "src/store/auth";
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
 import { DrawerParamList } from "src/@types/navigation";
+import { UserTypeKey, userTypes } from "@utils/enums";
 
 interface PostProps {
   _id: string;
@@ -38,36 +39,36 @@ interface PostProps {
   createdAt: string;
   replies: Reply[];
   forumType: string;
-  onLike: () => void;
-  onComment: () => void;
 }
-const DATA = [...Array(60).keys()].map((_, i) => {
-  const userId = i;
-  const userType = faker.helpers.arrayElement([
-    "patient",
-    "family",
-    "friend",
-    "professional",
-    "caregiver",
-    "other",
-  ]);
-  const avatarGender = faker.helpers.arrayElement(["men", "women"]);
-  const avatarIndex = faker.number.int({ min: 1, max: 50 });
 
-  return {
-    _id: i.toString(),
-    userId: {
-      _id: userId,
-      name: faker.person.fullName(),
-      avatar: {
-        url: `https://randomuser.me/api/portraits/thumb/${avatarGender}/${avatarIndex}.jpg`,
-        publicId: `avatar_${userId}`,
-      },
-      userType: userType,
-    },
-    createdAt: faker.date.past().toISOString(),
-  };
-});
+// const DATA = [...Array(60).keys()].map((_, i) => {
+//   const userId = i;
+//   const userType = faker.helpers.arrayElement([
+//     "patient",
+//     "family",
+//     "friend",
+//     "professional",
+//     "caregiver",
+//     "other",
+//   ]);
+//   const avatarGender = faker.helpers.arrayElement(["men", "women"]);
+//   const avatarIndex = faker.number.int({ min: 1, max: 50 });
+
+//   return {
+//     _id: i.toString(),
+//     userId: {
+//       _id: userId,
+//       name: faker.person.fullName(),
+//       avatar: {
+//         url: `https://randomuser.me/api/portraits/thumb/${avatarGender}/${avatarIndex}.jpg`,
+//         publicId: `avatar_${userId}`,
+//       },
+//       userType: userType,
+//     },
+//     createdAt: faker.date.past().toISOString(),
+//   };
+// });
+
 const PostCard: FC<PostProps> = memo(
   ({
     _id,
@@ -77,8 +78,6 @@ const PostCard: FC<PostProps> = memo(
     owner,
     createdAt,
     forumType,
-    onLike,
-    onComment,
     replies,
   }) => {
     const { profile } = useSelector(getAuthState);
@@ -93,8 +92,15 @@ const PostCard: FC<PostProps> = memo(
     const navigation =
       useNavigation<NativeStackNavigationProp<DrawerParamList>>();
 
+    // Ensure image loading state is reset when the user Updates Post Image
+    useEffect(() => {
+      setTimeout(() => {
+        setIsPostImageLoading(false);
+      }, 1000);
+    }, [image?.url]);
+
     const navigateToPostLikesPage = useCallback(() => {
-      navigation.navigate("PostLikes", { likes: DATA });
+      navigation.navigate("PostLikes", { likes });
     }, []);
 
     // Check if the current post belongs to the logged-in user
@@ -235,7 +241,7 @@ const PostCard: FC<PostProps> = memo(
                 ellipsizeMode="tail"
                 style={styles.userType}
               >
-                {owner?.userType}
+                {userTypes[owner?.userType as UserTypeKey]}
               </Text>
             </View>
           </View>

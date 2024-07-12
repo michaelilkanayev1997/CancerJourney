@@ -128,8 +128,7 @@ const PostLikes: FC<Props> = ({ route }) => {
   }, []);
 
   const navigateToProfile = useCallback((user: User) => {
-    console.log("User: ", user);
-    navigation.navigate("PublicProfile", { user });
+    navigation.navigate("PublicProfile", { publicUser: user });
   }, []);
 
   const renderItem = useCallback(

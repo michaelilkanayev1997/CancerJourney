@@ -82,7 +82,10 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("PostScreen", {
-            screen: "Main",
+            screen: "SocialTabs",
+            params: {
+              screen: "Forum",
+            },
           })
         }
       >
@@ -99,12 +102,15 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         activeOpacity={0.6}
         onPress={() =>
           navigation.navigate("PostScreen", {
-            screen: "Posts",
+            screen: "SocialTabs",
+            params: {
+              screen: "New Post",
+            },
           })
         }
       >
         <Ionicons name="chatbox" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Social Posts</Text>
+        <Text style={styles.cardText}>New Posts</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

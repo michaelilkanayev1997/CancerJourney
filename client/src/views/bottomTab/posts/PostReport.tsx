@@ -66,7 +66,7 @@ const PostReport: FC<Props> = ({ route }) => {
       });
     } finally {
       navigation.goBack();
-
+      setSubmitLoading(false);
       if (isSuccessful) {
         setReportText("");
         ToastNotification({
@@ -98,6 +98,7 @@ const PostReport: FC<Props> = ({ route }) => {
             style={styles.textInput}
             multiline
             numberOfLines={6}
+            maxLength={1400}
             placeholder="Enter your reason..."
             value={reportText}
             onChangeText={setReportText}
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: colors.PRIMARY_LIGHT,
+    borderRadius: 8,
   },
   header: {
     padding: 12,
@@ -142,11 +144,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 16,
     borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 0.2,
+    borderColor: colors.LIGHT_GRAY,
+    overflow: "hidden",
   },
   label: {
     fontSize: 16,
@@ -160,6 +160,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     textAlignVertical: "top",
+    height: 140,
+    margin: 8,
   },
   submitButton: {
     backgroundColor: colors.LIGHT_BLUE,

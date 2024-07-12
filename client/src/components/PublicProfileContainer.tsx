@@ -1,14 +1,16 @@
 import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
+import { UserTypeKey, userTypes } from "@utils/enums";
 import { FC } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { User } from "src/@types/post";
 
 interface Props {
   profile?: User;
+  publicProfile: boolean;
 }
 
-const PublicProfileContainer: FC<Props> = ({ profile }) => {
+const PublicProfileContainer: FC<Props> = ({ profile, publicProfile }) => {
   // const followingMutation = useMutation({
   //   mutationFn: async id => toggleFollowing(id),
   //   onMutate: (id: string) => {
@@ -58,16 +60,31 @@ const PublicProfileContainer: FC<Props> = ({ profile }) => {
       />
 
       <View style={styles.profileInfoContainer}>
-        <Text style={styles.profileName}>{profile.name}</Text>
-
-        <Text style={styles.followerText}>{profile.followers} Followers</Text>
-        <Text style={styles.followerText}>{profile.followers} Followings</Text>
-
-        <Pressable onPress={() => console.log("follow")} style={styles.flexRow}>
-          <Text style={styles.profileActionLink}>
-            {false ? "Unfollow" : "Follow"}
+        <View style={styles.nameAndTypeContainer}>
+          <Text style={styles.profileName}>{profile?.name}</Text>
+          <Text style={styles.userTypeText}>
+            {userTypes[profile?.userType as UserTypeKey]}
           </Text>
-        </Pressable>
+        </View>
+
+        <Text style={styles.followerText}>
+          {profile.followers} Followers {5}
+        </Text>
+
+        <Text style={styles.followerText}>
+          {profile.followers} Followings {10}
+        </Text>
+
+        {publicProfile && (
+          <Pressable
+            onPress={() => console.log("follow")}
+            style={styles.flexRow}
+          >
+            <Text style={styles.profileActionLink}>
+              {false ? "Unfollow" : "Follow"}
+            </Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -86,6 +103,7 @@ const styles = StyleSheet.create({
     color: colors.CONTRAST,
     fontSize: 18,
     fontWeight: "700",
+    textDecorationLine: "underline",
   },
   email: {
     color: colors.CONTRAST,
@@ -109,11 +127,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 5,
   },
-  settingsBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignContent: "center",
+  userTypeText: {
+    color: colors.INFO,
+    fontSize: 13,
+    marginTop: 5,
+    paddingLeft: 8,
+  },
+  nameAndTypeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 

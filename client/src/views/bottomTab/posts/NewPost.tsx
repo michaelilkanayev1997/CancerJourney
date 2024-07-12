@@ -224,7 +224,7 @@ const NewPost: FC<Props> = ({ route }) => {
         formDataObject.image = image;
       }
 
-      const updateResult = updatePostMutation({
+      updatePostMutation({
         postId,
         ownerId: owner?._id,
         cancerType: forumType,
@@ -232,8 +232,6 @@ const NewPost: FC<Props> = ({ route }) => {
         formDataObject,
         resetPostFields,
       });
-
-      console.log(updateResult);
 
       //queryClient.invalidateQueries(["posts", cancerType]);
 
