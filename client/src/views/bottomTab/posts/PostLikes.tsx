@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 12,
+    paddingTop: 0,
     flexDirection: "row",
     alignItems: "center",
   },

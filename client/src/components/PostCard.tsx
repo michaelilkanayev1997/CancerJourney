@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { faker } from "@faker-js/faker";
 import LottieView from "lottie-react-native";
 
 import colors from "../utils/colors";
@@ -34,40 +33,12 @@ interface PostProps {
     public_id: string;
     url: string;
   } | null;
-  likes: Like[];
+  likes?: Like[];
   owner: User;
   createdAt: string;
-  replies: Reply[];
+  replies?: Reply[];
   forumType: string;
 }
-
-// const DATA = [...Array(60).keys()].map((_, i) => {
-//   const userId = i;
-//   const userType = faker.helpers.arrayElement([
-//     "patient",
-//     "family",
-//     "friend",
-//     "professional",
-//     "caregiver",
-//     "other",
-//   ]);
-//   const avatarGender = faker.helpers.arrayElement(["men", "women"]);
-//   const avatarIndex = faker.number.int({ min: 1, max: 50 });
-
-//   return {
-//     _id: i.toString(),
-//     userId: {
-//       _id: userId,
-//       name: faker.person.fullName(),
-//       avatar: {
-//         url: `https://randomuser.me/api/portraits/thumb/${avatarGender}/${avatarIndex}.jpg`,
-//         publicId: `avatar_${userId}`,
-//       },
-//       userType: userType,
-//     },
-//     createdAt: faker.date.past().toISOString(),
-//   };
-// });
 
 const PostCard: FC<PostProps> = memo(
   ({
@@ -313,82 +284,89 @@ const PostCard: FC<PostProps> = memo(
           </View>
         ) : null}
 
-        <View style={styles.footer}>
-          <View style={styles.socialActivity}>
-            <TouchableOpacity
-              onPress={() =>
-                favoritePostMutation({
-                  postId: _id.toString(),
-                  profile,
-                  cancerType: forumType,
-                })
-              }
-            >
-              <Image
-                source={{
-                  uri: likes.find((like) => like.userId?._id === profile?.id)
-                    ? "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
-                    : "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
-                }}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-            // onPress={() => {
-            //   navigation.navigate("CreateReplies", {
-            //     item: item,
-            //     navigation: navigation,
-            //     postId: postId,
-            //   });
-            // }}
-            >
-              <Image
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/512/5948/5948565.png",
-                }}
-                style={[styles.icon, styles.smallIcon, styles.marginLeft]}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/512/10863/10863770.png",
-                }}
-                style={[styles.icon, styles.mediumIcon, styles.marginLeft]}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {(likes.length !== 0 || replies.length !== 0) && (
-            <Animated.View
-              style={styles.replyContainer}
-              entering={FadeIn.duration(500)}
-              exiting={FadeOut.duration(200)}
-            >
-              <TouchableOpacity onPress={navigateToPostLikesPage}>
-                <Text style={styles.replyText}>
-                  {likes.length}{" "}
-                  {likes.length > 1 || likes.length === 0
-                    ? "likes ·"
-                    : "like ·"}
-                </Text>
-              </TouchableOpacity>
-
+        {likes && replies && (
+          <View style={styles.footer}>
+            <View style={styles.socialActivity}>
               <TouchableOpacity
-              // onPress={() =>{
-              //   // navigation.navigate('PostDetails', {
-              //   //   data: item,
-              //   // })
-              // }
+                onPress={() =>
+                  favoritePostMutation({
+                    postId: _id.toString(),
+                    profile,
+                    cancerType: forumType,
+                  })
+                }
               >
-                <Text style={styles.replyText}>
-                  {`${replies?.length} replies`}{" "}
-                </Text>
+                <Image
+                  source={{
+                    uri: likes.find((like) => like.userId?._id === profile?.id)
+                      ? "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
+                      : "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+                  }}
+                  style={styles.icon}
+                />
               </TouchableOpacity>
-            </Animated.View>
-          )}
-        </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("PostReplies", {
+                    _id,
+                    description,
+                    image,
+                    likes,
+                    owner,
+                    createdAt,
+                    forumType,
+                    replies,
+                  });
+                }}
+              >
+                <Image
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/512/5948/5948565.png",
+                  }}
+                  style={[styles.icon, styles.smallIcon, styles.marginLeft]}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Image
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/512/10863/10863770.png",
+                  }}
+                  style={[styles.icon, styles.mediumIcon, styles.marginLeft]}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {(likes.length !== 0 || replies.length !== 0) && (
+              <Animated.View
+                style={styles.replyContainer}
+                entering={FadeIn.duration(500)}
+                exiting={FadeOut.duration(200)}
+              >
+                <TouchableOpacity onPress={navigateToPostLikesPage}>
+                  <Text style={styles.replyText}>
+                    {likes.length}{" "}
+                    {likes.length > 1 || likes.length === 0
+                      ? "likes ·"
+                      : "like ·"}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                // onPress={() =>{
+                //   // navigation.navigate('PostDetails', {
+                //   //   data: item,
+                //   // })
+                // }
+                >
+                  <Text style={styles.replyText}>
+                    {`${replies?.length} replies`}{" "}
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            )}
+          </View>
+        )}
 
         <View style={styles.separator} />
 
