@@ -2,62 +2,54 @@ import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
 import { UserTypeKey, userTypes } from "@utils/enums";
 import { FC } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
 import { User } from "src/@types/post";
+import { useFollowMutations } from "src/hooks/mutations";
+import { useFetchFollowers, useFetchFollowings } from "src/hooks/query";
+import { UserProfile } from "src/store/auth";
 
 interface Props {
   profile?: User;
   publicProfile: boolean;
+  currentUser: UserProfile | null;
 }
 
-const PublicProfileContainer: FC<Props> = ({ profile, publicProfile }) => {
-  // const followingMutation = useMutation({
-  //   mutationFn: async id => toggleFollowing(id),
-  //   onMutate: (id: string) => {
-  //     queryClient.setQueryData<boolean>(
-  //       ['is-following', id],
-  //       oldData => !oldData,
-  //     );
-  //   },
-  // });
-
-  // const toggleFollowing = async (id: string) => {
-  //   try {
-  //     if (!id) return;
-
-  //     const client = await getClient();
-  //     const {data} = await client.post('/profile/update-follower/' + id);
-  //     queryClient.invalidateQueries({queryKey: ['profile', id]}); // Refresh Followerts Count
-
-  //     if (data.status === 'added') {
-  //       dispatch(
-  //         updateProfile({
-  //           ...(user as UserProfile),
-  //           followings: (user?.followings || 0) + 1,
-  //         }),
-  //       );
-  //     } else {
-  //       dispatch(
-  //         updateProfile({
-  //           ...(user as UserProfile),
-  //           followings: (user?.followings || 0) - 1,
-  //         }),
-  //       );
-  //     }
-  //   } catch (error) {
-  //     const errorMessage = catchAsyncError(error);
-  //     dispatch(updateNotification({message: errorMessage, type: 'error'}));
-  //   }
-  // };
-
+const PublicProfileContainer: FC<Props> = ({
+  profile,
+  publicProfile,
+  currentUser,
+}) => {
   if (!profile) return null;
 
+  const { data: followers, isLoading: followersLoading } = useFetchFollowers(
+    profile._id
+  );
+  const { data: followings, isLoading: followingsLoading } = useFetchFollowings(
+    profile._id
+  );
+
+  const { updateFollowMutation, updateLoading } = useFollowMutations();
+
+  const toggleFollow = () => {
+    updateFollowMutation({
+      profileId: profile._id,
+      currentUser,
+    });
+  };
+
+  const isFollowing = currentUser?.followings.includes(profile._id);
+  console.log(currentUser?.followings);
+  console.log(followings?.length);
   return (
     <View style={styles.container}>
-      <Avatar
-        uri={profile?.avatar.url || ""}
-        style={{ width: 80, height: 80 }}
-      />
+      <Avatar uri={profile?.avatar?.url} style={{ width: 80, height: 80 }} />
 
       <View style={styles.profileInfoContainer}>
         <View style={styles.nameAndTypeContainer}>
@@ -67,24 +59,33 @@ const PublicProfileContainer: FC<Props> = ({ profile, publicProfile }) => {
           </Text>
         </View>
 
-        <Text style={styles.followerText}>
-          {profile.followers} Followers {5}
-        </Text>
-
-        <Text style={styles.followerText}>
-          {profile.followers} Followings {10}
-        </Text>
-
-        {publicProfile && (
-          <Pressable
-            onPress={() => console.log("follow")}
-            style={styles.flexRow}
-          >
-            <Text style={styles.profileActionLink}>
-              {false ? "Unfollow" : "Follow"}
+        <View style={styles.rowContainer}>
+          <View>
+            <Text style={styles.followerText}>
+              Followers {followers?.length}
             </Text>
-          </Pressable>
-        )}
+            <Text style={styles.followerText}>
+              Followings {followings?.length}
+            </Text>
+          </View>
+
+          {publicProfile && currentUser?.id !== profile._id && (
+            <TouchableOpacity
+              style={styles.flexRow}
+              onPress={toggleFollow}
+              disabled={updateLoading}
+            >
+              <Text
+                style={[
+                  styles.profileActionLink,
+                  isFollowing ? styles.unfollow : styles.follow,
+                ]}
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -95,6 +96,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   profileInfoContainer: {
     paddingLeft: 10,
@@ -114,13 +119,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profileActionLink: {
-    backgroundColor: colors.INFO,
     color: colors.INACTIVE_CONTRAST,
-    paddingHorizontal: 4,
-    paddingVertical: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
     marginTop: 5,
     borderRadius: 5,
+    width: 70,
+    height: 30,
+    textAlign: "center",
+    fontWeight: "400",
   },
+  unfollow: { backgroundColor: colors.GREEN },
+  follow: { backgroundColor: colors.INFO },
   followerText: {
     color: colors.CONTRAST,
     paddingVertical: 2,
@@ -131,7 +141,7 @@ const styles = StyleSheet.create({
     color: colors.INFO,
     fontSize: 13,
     marginTop: 5,
-    paddingLeft: 8,
+    paddingLeft: "6%",
   },
   nameAndTypeContainer: {
     flexDirection: "row",

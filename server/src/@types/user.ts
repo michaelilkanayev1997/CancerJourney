@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { Schema } from "mongoose";
 
 declare global {
   namespace Express {
@@ -9,8 +10,8 @@ declare global {
         email: string;
         verified: boolean;
         avatar?: string;
-        followers: number;
-        followings: number;
+        followers: Schema.Types.ObjectId[];
+        followings: Schema.Types.ObjectId[];
         createdAt: Date;
       };
       token: string;

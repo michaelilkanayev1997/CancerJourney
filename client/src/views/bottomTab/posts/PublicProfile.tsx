@@ -23,11 +23,6 @@ type Props = {
 const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
-  const { publicUser, publicProfile } = route.params || {
-    publicUser: null,
-    publicProfile: true,
-  };
-  console.log("publicUser", publicUser);
   const { profile } = useSelector(getAuthState);
 
   const privateUser = {
@@ -37,11 +32,16 @@ const PublicProfile: FC<Props> = ({ route }) => {
     userType: profile?.userType,
   };
 
+  const { publicUser, publicProfile } = route.params || {
+    publicUser: privateUser,
+    publicProfile: true,
+  };
+
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-      {publicUser ? (
+      {publicProfile ? (
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image
@@ -61,6 +61,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
         <PublicProfileContainer
           profile={publicUser || privateUser}
           publicProfile={publicProfile}
+          currentUser={profile}
         />
 
         <Tab.Navigator
