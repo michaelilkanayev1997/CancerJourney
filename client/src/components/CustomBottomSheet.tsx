@@ -20,7 +20,7 @@ import { requestCameraPermissionsAsync } from "@utils/permissions";
 import { ToastNotification } from "@utils/toastConfig";
 import { calculateCompression } from "@utils/helper";
 
-interface Props {
+export interface Props {
   folderName: string;
 }
 
