@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 
-interface LinkButtonProps {
+export interface LinkButtonProps {
   onPress: () => void;
   iconName: string;
   buttonText: string;

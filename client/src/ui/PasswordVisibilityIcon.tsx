@@ -3,7 +3,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 
-interface Props {
+export interface Props {
   privateIcon: boolean;
 }
 

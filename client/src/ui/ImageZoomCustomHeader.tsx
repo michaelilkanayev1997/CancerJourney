@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { ImageType } from "@components/ImageCard";
 
-interface Props {
+export interface Props {
   currentIndex: number;
   toggleModalVisible: () => void;
   images: ImageType[];

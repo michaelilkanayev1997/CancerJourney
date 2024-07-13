@@ -16,7 +16,7 @@ export type IconName =
   | "file-document-edit-outline"
   | "upload-outline";
 
-interface Props {
+export interface Props {
   name: string;
   icon: IconName;
   folderLength?: FoldersLength;

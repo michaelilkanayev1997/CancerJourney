@@ -11,7 +11,7 @@ import { UserProfile } from "src/store/auth";
 import { convertDateFormat } from "@utils/helper";
 import { ProfileStackParamList } from "src/@types/navigation";
 
-interface Props {
+export interface Props {
   profile: UserProfile | null;
   toggleModalVisible: () => void;
 }
