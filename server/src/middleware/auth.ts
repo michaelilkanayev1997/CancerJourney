@@ -41,8 +41,8 @@ export const mustAuth: RequestHandler = async (req, res, next) => {
     email: user.email,
     verified: user.verified,
     avatar: user.avatar?.url,
-    followers: user.followers.length,
-    followings: user.followings.length,
+    followers: user.followers,
+    followings: user.followings,
     createdAt: user.createdAt,
 
     gender: user.gender,

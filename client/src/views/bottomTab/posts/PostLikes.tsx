@@ -16,6 +16,8 @@ import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
 import { DrawerParamList } from "src/@types/navigation";
+import { useSelector } from "react-redux";
+import { getAuthState } from "src/store/auth";
 
 type Props = {
   route: any;
@@ -29,7 +31,7 @@ const ITEM_SIZE = 76;
 
 const PostLikes: FC<Props> = ({ route }) => {
   const { likes } = route.params;
-
+  const { profile } = useSelector(getAuthState);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(likes.slice(0, 20));
@@ -128,7 +130,10 @@ const PostLikes: FC<Props> = ({ route }) => {
   }, []);
 
   const navigateToProfile = useCallback((user: User) => {
-    navigation.navigate("PublicProfile", { publicUser: user });
+    navigation.navigate("PublicProfile", {
+      publicUser: user,
+      publicProfile: true,
+    });
   }, []);
 
   const renderItem = useCallback(
@@ -184,14 +189,16 @@ const PostLikes: FC<Props> = ({ route }) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.followButton}
-            onPress={() => toggleFollow(item)}
-          >
-            <Text style={styles.followButtonText}>
-              {false ? "Following" : "Follow"}
-            </Text>
-          </TouchableOpacity>
+          {item?.userId?._id !== profile?.id && (
+            <TouchableOpacity
+              style={styles.followButton}
+              onPress={() => toggleFollow(item)}
+            >
+              <Text style={styles.followButtonText}>
+                {false ? "Following" : "Follow"}
+              </Text>
+            </TouchableOpacity>
+          )}
         </Animated.View>
       );
     },

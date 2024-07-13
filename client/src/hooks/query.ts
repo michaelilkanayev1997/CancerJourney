@@ -142,3 +142,41 @@ export const useFetchPosts = (cancerType: string) => {
     },
   });
 };
+
+export const fetchFollowers = async (profileId: string) => {
+  const client = await getClient();
+  const { data } = await client.get(`/profile/get-followers/${profileId}`);
+  return data.followers;
+};
+
+export const useFetchFollowers = (profileId: string) => {
+  return useQuery(["followers", profileId], {
+    queryFn: () => fetchFollowers(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
+export const fetchFollowings = async (profileId: string) => {
+  const client = await getClient();
+  const { data } = await client.get(`/profile/get-followings/${profileId}`);
+  return data.followings;
+};
+
+export const useFetchFollowings = (profileId: string) => {
+  return useQuery(["followings", profileId], {
+    queryFn: () => fetchFollowings(profileId),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};

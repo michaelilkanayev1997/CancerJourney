@@ -7,8 +7,8 @@ export interface UserProfile {
   email: string;
   verified: boolean;
   avatar?: string;
-  followers: number;
-  followings: number;
+  followers: string[];
+  followings: string[];
   createdAt: Date;
 
   userType: string;

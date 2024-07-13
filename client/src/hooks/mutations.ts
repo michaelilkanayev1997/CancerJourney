@@ -6,8 +6,9 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { IAppointment, IMedication } from "../../../server/src/models/schedule";
 import { Post } from "src/@types/post";
-import { UserProfile } from "src/store/auth";
+import { updateProfile, UserProfile } from "src/store/auth";
 import { generateObjectId } from "@utils/helper";
+import { useDispatch } from "react-redux";
 
 interface DeleteFileParams {
   fileId: string;
@@ -542,5 +543,100 @@ export const usePostMutations = () => {
     updateLoading,
     favoritePostMutation,
     favoriteLoading,
+  };
+};
+
+export const useFollowMutations = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  interface UpdateFollowParams {
+    profileId: string;
+    currentUser: UserProfile | null;
+  }
+
+  const { isLoading: updateLoading, mutate: updateFollowMutation } =
+    useMutation<void, Error, UpdateFollowParams>(
+      async ({ profileId }) => {
+        const client = await getClient();
+        const url = `/profile/update-follower/${profileId}`;
+        const { data } = await client.post(url);
+        return data;
+      },
+      {
+        onMutate: async (variables) => {
+          const { profileId, currentUser } = variables;
+
+          if (!currentUser) return;
+
+          // Cancel any outgoing refetches
+          await queryClient.cancelQueries(["followers", profileId]);
+          await queryClient.cancelQueries(["followings", profileId]);
+
+          // Snapshot the previous values
+          const previousFollowers = queryClient.getQueryData<string[]>([
+            "followers",
+            profileId,
+          ]);
+          const previousFollowings = queryClient.getQueryData<string[]>([
+            "followings",
+            profileId,
+          ]);
+
+          // Optimistically update the followings
+          let updatedFollowings;
+          if (currentUser.followings.includes(profileId)) {
+            updatedFollowings = currentUser.followings.filter(
+              (id) => id !== profileId
+            );
+          } else {
+            updatedFollowings = [...currentUser.followings, profileId];
+          }
+
+          dispatch(
+            updateProfile({
+              ...currentUser,
+              followings: updatedFollowings,
+            })
+          );
+
+          // Return a context with the previous values
+          return { previousFollowers, previousFollowings };
+        },
+        onError: (error, variables, context) => {
+          const { previousFollowers, previousFollowings } = context as any;
+
+          // Rollback to the previous values
+          if (previousFollowers) {
+            queryClient.setQueryData(
+              ["followers", variables.profileId],
+              previousFollowers
+            );
+          }
+          if (previousFollowings) {
+            queryClient.setQueryData(
+              ["followings", variables.profileId],
+              previousFollowings
+            );
+          }
+
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
+        onSettled: (data, error, variables) => {
+          const { profileId, currentUser } = variables;
+          // Invalidate queries to refetch data
+          queryClient.invalidateQueries(["followers", profileId]);
+          queryClient.invalidateQueries(["followings", currentUser?.id]);
+        },
+      }
+    );
+
+  return {
+    updateFollowMutation,
+    updateLoading,
   };
 };
