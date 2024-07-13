@@ -45,8 +45,7 @@ const PublicProfileContainer: FC<Props> = ({
   };
 
   const isFollowing = currentUser?.followings.includes(profile._id);
-  console.log(currentUser?.followings);
-  console.log(followings?.length);
+
   return (
     <View style={styles.container}>
       <Avatar uri={profile?.avatar?.url} style={{ width: 80, height: 80 }} />

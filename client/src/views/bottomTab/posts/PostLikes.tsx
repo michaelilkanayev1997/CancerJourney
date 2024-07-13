@@ -18,6 +18,7 @@ import PulseAnimationContainer from "@components/PulseAnimationContainer";
 import { DrawerParamList } from "src/@types/navigation";
 import { useSelector } from "react-redux";
 import { getAuthState } from "src/store/auth";
+import { useFollowMutations } from "src/hooks/mutations";
 
 type Props = {
   route: any;
@@ -38,6 +39,8 @@ const PostLikes: FC<Props> = ({ route }) => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+
+  const { updateFollowMutation, updateLoading } = useFollowMutations();
 
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
@@ -125,9 +128,15 @@ const PostLikes: FC<Props> = ({ route }) => {
     ) : null;
   }, [isFetchingMore, handleImageLoad, handleImageError]);
 
-  const toggleFollow = useCallback((item: Like) => {
-    console.log("Toggled follow for: ", item.userId.name);
-  }, []);
+  const toggleFollow = useCallback(
+    (item: Like) => {
+      updateFollowMutation({
+        profileId: item.userId._id,
+        currentUser: profile,
+      });
+    },
+    [profile]
+  );
 
   const navigateToProfile = useCallback((user: User) => {
     navigation.navigate("PublicProfile", {
@@ -138,6 +147,8 @@ const PostLikes: FC<Props> = ({ route }) => {
 
   const renderItem = useCallback(
     ({ item, index }: { item: Like; index: number }) => {
+      const isFollowing = profile?.followings.includes(item?.userId?._id);
+      console.log("isFollowing", isFollowing);
       const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)];
 
       const opacityInputRange = [
@@ -195,14 +206,14 @@ const PostLikes: FC<Props> = ({ route }) => {
               onPress={() => toggleFollow(item)}
             >
               <Text style={styles.followButtonText}>
-                {false ? "Following" : "Follow"}
+                {isFollowing ? "Unfollow" : "Follow"}
               </Text>
             </TouchableOpacity>
           )}
         </Animated.View>
       );
     },
-    [handleImageLoad, handleImageError, scrollY]
+    [handleImageLoad, handleImageError, scrollY, profile]
   );
 
   const getItemLayout = useCallback(
