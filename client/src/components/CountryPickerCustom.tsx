@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Dimensions } from "react-native";
 import { CountryItem, CountryPicker } from "react-native-country-codes-picker";
 
-interface Props {
+export interface Props {
   countryPickerVisible: boolean;
   setCountryPickerVisible: (visible: boolean) => void;
   setCountry: (country: { cca2: string; name: string; flag: string }) => void;

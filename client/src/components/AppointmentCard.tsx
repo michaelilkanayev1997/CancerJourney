@@ -14,7 +14,7 @@ import { IAppointment } from "../../../server/src/models/schedule";
 import { formatParagraph, formatText } from "@utils/helper";
 import AppointmentMoreOptionsModal from "./scheduleModal/AppointmentMoreOptionsModal";
 
-interface AppointmentCardProps {
+export interface AppointmentCardProps {
   appointment: IAppointment;
 }
 
