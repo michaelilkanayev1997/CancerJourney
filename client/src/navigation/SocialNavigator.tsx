@@ -10,6 +10,7 @@ import NewPost from "@views/bottomTab/posts/NewPost";
 import PublicProfile from "@views/bottomTab/posts/PublicProfile";
 import PostLikes from "@views/bottomTab/posts/PostLikes";
 import PostReport from "@views/bottomTab/posts/PostReport";
+import PostReplies from "@views/bottomTab/posts/PostReplies";
 
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -28,6 +29,7 @@ const Forum = () => {
       <Stack.Screen name="PostLikes" component={PostLikes} />
       <Stack.Screen name="PublicProfile" component={PublicProfile} />
       <Stack.Screen name="PostReport" component={PostReport} />
+      <Stack.Screen name="PostReplies" component={PostReplies} />
     </Stack.Navigator>
   );
 };
