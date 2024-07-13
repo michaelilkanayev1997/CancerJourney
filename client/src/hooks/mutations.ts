@@ -640,3 +640,149 @@ export const useFollowMutations = () => {
     updateLoading,
   };
 };
+
+interface DeleteReplyParams {
+  postId: string;
+  replyId: string;
+  cancerType: string;
+  handleCloseMoreOptionsPress: () => void;
+  onDeleteReply: (replyId: string) => void;
+}
+
+export const useReplyMutations = () => {
+  const queryClient = useQueryClient();
+
+  const { isLoading: deleteLoading, mutate: deleteReplyMutation } = useMutation<
+    void,
+    Error,
+    DeleteReplyParams,
+    unknown
+  >(
+    async ({ postId, replyId }) => {
+      // Construct the URL with query parameters
+      const url = `/post//reply-delete?postId=${postId}&replyId=${replyId}`;
+      const client = await getClient();
+      await client.delete(url);
+    },
+    {
+      onMutate: async (variables) => {
+        return { ...variables };
+      },
+      // Invalidate related queries on success to refresh the UI
+      onSuccess: (data, variables) => {
+        const { postId, replyId, cancerType } = variables;
+
+        queryClient.setQueryData(
+          ["posts", cancerType],
+          (oldData: Post[] | undefined) => {
+            if (!oldData) return [];
+
+            return oldData.map((post) => {
+              if (post._id.toString() === postId) {
+                return {
+                  ...post,
+                  replies: post.replies.filter(
+                    (reply) => reply._id.toString() !== replyId
+                  ),
+                };
+              }
+              return post;
+            });
+          }
+        );
+
+        //To Refresh the PostReplies Page . . .
+        variables?.onDeleteReply(replyId);
+
+        // close Modal
+        variables?.handleCloseMoreOptionsPress();
+
+        ToastNotification({
+          message: "Your reply has been deleted successfully",
+        });
+      },
+      onError: (error, variables) => {
+        // close Modal
+        variables?.handleCloseMoreOptionsPress();
+
+        const errorMessage = catchAsyncError(error);
+        ToastNotification({
+          type: "Error",
+          message: errorMessage,
+        });
+      },
+    }
+  );
+
+  interface FavoriteReplyParams {
+    postId: string;
+    profile: UserProfile | null;
+    cancerType: string;
+  }
+
+  const { isLoading: favoriteLoading, mutate: favoriteReplyMutation } =
+    useMutation<void, Error, FavoriteReplyParams, unknown>(
+      async ({ postId, profile }) => {
+        if (!postId || !profile?.id) return;
+        const client = await getClient();
+        await client.post(`/post/update-post-favorite?postId=${postId}`);
+      },
+      {
+        onSuccess: (data, variables) => {
+          const { postId, profile, cancerType } = variables;
+          if (!profile) return;
+          // Optimistically update the local cache
+          queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
+            if (!oldData) return [];
+
+            return oldData.map((post) => {
+              if (post._id.toString() === postId) {
+                const isLiked = post.likes.some(
+                  (like) => like.userId._id === profile?.id
+                );
+
+                return {
+                  ...post,
+                  likes: isLiked
+                    ? post.likes.filter(
+                        (like) => like.userId._id !== profile?.id
+                      )
+                    : [
+                        ...post.likes,
+                        {
+                          _id: generateObjectId(),
+                          userId: {
+                            _id: profile?.id,
+                            avatar: {
+                              url: profile?.avatar || "",
+                              publicId: "",
+                            },
+                            name: profile?.name,
+                            userType: profile?.userType,
+                          },
+                          createdAt: new Date().toISOString(),
+                        },
+                      ],
+                };
+              }
+              return post;
+            });
+          });
+        },
+        onError: (error) => {
+          const errorMessage = catchAsyncError(error);
+          ToastNotification({
+            type: "Error",
+            message: errorMessage,
+          });
+        },
+      }
+    );
+
+  return {
+    deleteReplyMutation,
+    deleteLoading,
+    favoriteReplyMutation,
+    favoriteLoading,
+  };
+};
