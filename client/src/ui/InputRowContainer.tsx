@@ -2,7 +2,7 @@ import colors from "@utils/colors";
 import { FC, ReactNode } from "react";
 import { View, StyleSheet, Text, ViewStyle, StyleProp } from "react-native";
 
-interface Props {
+export interface Props {
   title: string;
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
