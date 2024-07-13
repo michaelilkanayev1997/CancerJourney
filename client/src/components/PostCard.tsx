@@ -307,15 +307,13 @@ const PostCard: FC<PostProps> = memo(
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("PostReplies", {
+                  navigation.navigate("PostReplyAdd", {
                     _id,
                     description,
                     image,
-                    likes,
                     owner,
                     createdAt,
                     forumType,
-                    replies,
                   });
                 }}
               >
@@ -353,11 +351,17 @@ const PostCard: FC<PostProps> = memo(
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                // onPress={() =>{
-                //   // navigation.navigate('PostDetails', {
-                //   //   data: item,
-                //   // })
-                // }
+                  onPress={() => {
+                    navigation.navigate("PostReplies", {
+                      _id,
+                      description,
+                      image,
+                      owner,
+                      createdAt,
+                      forumType,
+                      replies,
+                    });
+                  }}
                 >
                   <Text style={styles.replyText}>
                     {`${replies?.length} replies`}{" "}
