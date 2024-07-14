@@ -1,12 +1,12 @@
 // LinkButton.test.tsx
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import LinkButton, { LinkButtonProps } from "@ui/LinkButton";
 
 describe("LinkButton component", () => {
   const mockProps: LinkButtonProps = {
     onPress: jest.fn(),
-    iconName: "example-icon",
+    iconName: "home",
     buttonText: "Example Button",
     disabled: false,
   };

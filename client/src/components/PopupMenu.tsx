@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   popup: {
     borderRadius: 8,
     borderColor: "#333",
-    borderWidth: 1,
+    borderWidth: 0.8,
     backgroundColor: "#fff",
     paddingHorizontal: 10,
     position: "absolute",

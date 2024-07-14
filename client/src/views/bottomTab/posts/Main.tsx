@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -38,7 +38,6 @@ const Main = ({ route }: Props) => {
     cancerType: profile?.cancerType,
   };
 
-  // console.log("route", publicProfile, cancerType);
   const { data, isFetching, isLoading } = useFetchPosts(cancerType);
   const queryClient = useQueryClient();
   const [hasMore, setHasMore] = useState(true);
@@ -46,9 +45,16 @@ const Main = ({ route }: Props) => {
 
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
-  // console.log(data?.length);
-  // console.log("isFetchingMore", isFetchingMore);
-  // console.log("hasMore", hasMore);
+  console.log("route", publicProfile, cancerType);
+  console.log(data?.length);
+  console.log("isFetchingMore", isFetchingMore);
+  console.log("hasMore", hasMore);
+  console.log("pageNo", pageNo);
+
+  useEffect(() => {
+    setHasMore(true);
+    pageNo = 0;
+  }, [cancerType]);
 
   const handleOnEndReached = async () => {
     if (!data || isFetchingMore || !hasMore) return;
@@ -91,8 +97,6 @@ const Main = ({ route }: Props) => {
         replies={item.replies}
         createdAt={item.createdAt}
         forumType={item.forumType}
-        onLike={() => {}}
-        onComment={() => {}}
         owner={item.owner}
       />
     ),

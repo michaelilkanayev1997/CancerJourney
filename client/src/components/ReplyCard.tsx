@@ -18,7 +18,7 @@ import {
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { Reply } from "src/@types/post";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, UserProfile } from "src/store/auth";
 import PopupMenu from "./PopupMenu";
 import { useReplyMutations } from "src/hooks/mutations";
 
@@ -26,9 +26,15 @@ interface Props {
   reply: Reply;
   post: { _id: string; forumType: string };
   onDeleteReply: (replyId: string) => void;
+  onFavoriteReply: (reply: Reply, profile: UserProfile | null) => void;
 }
 
-const ReplyCard: FC<Props> = ({ reply, post, onDeleteReply }) => {
+const ReplyCard: FC<Props> = ({
+  reply,
+  post,
+  onDeleteReply,
+  onFavoriteReply,
+}) => {
   const { profile } = useSelector(getAuthState);
   const [isProfileImageLoading, setIsProfileImageLoading] =
     useState<boolean>(true);
@@ -42,8 +48,12 @@ const ReplyCard: FC<Props> = ({ reply, post, onDeleteReply }) => {
   // Check if the current reply belongs to the  user
   const isOwnReply = profile?.id === reply.owner._id.toString();
 
-  const { deleteReplyMutation, deleteLoading, favoriteReplyMutation } =
-    useReplyMutations();
+  const {
+    deleteReplyMutation,
+    deleteLoading,
+    favoriteReplyMutation,
+    favoriteLoading,
+  } = useReplyMutations();
 
   const handleCloseMoreOptionsPress = useCallback(() => {
     setPopupMenuVisible(false);
@@ -103,6 +113,19 @@ const ReplyCard: FC<Props> = ({ reply, post, onDeleteReply }) => {
       ],
       { cancelable: false }
     );
+  };
+
+  // Like button is pressed
+  const handleReplyLike = () => {
+    if (!reply?._id) return;
+
+    favoriteReplyMutation({
+      postId: post?._id.toString(),
+      reply: reply,
+      profile: profile,
+      cancerType: post?.forumType,
+      onFavoriteReply,
+    });
   };
 
   return (
@@ -185,6 +208,45 @@ const ReplyCard: FC<Props> = ({ reply, post, onDeleteReply }) => {
         )}
       </View>
 
+      <View style={styles.footer}>
+        <View style={styles.socialActivity}>
+          <TouchableOpacity
+            onPress={handleReplyLike}
+            disabled={favoriteLoading}
+          >
+            <Image
+              source={{
+                uri: reply.likes.find(
+                  (like) => like.userId?._id === profile?.id
+                )
+                  ? "https://cdn-icons-png.flaticon.com/512/2589/2589175.png"
+                  : "https://cdn-icons-png.flaticon.com/512/2589/2589197.png",
+              }}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {reply?.likes?.length !== 0 && (
+          <Animated.View
+            style={styles.replyContainer}
+            entering={FadeIn.duration(500)}
+            exiting={FadeOut.duration(200)}
+          >
+            <TouchableOpacity
+            //  onPress={navigateToPostLikesPage}
+            >
+              <Text style={styles.replyText}>
+                {reply.likes.length}{" "}
+                {reply.likes.length > 1 || reply.likes.length === 0
+                  ? "likes "
+                  : "like "}
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+      </View>
+
       {PopupMenuVisible && (
         <PopupMenu
           visible={PopupMenuVisible}
@@ -202,7 +264,7 @@ const ReplyCard: FC<Props> = ({ reply, post, onDeleteReply }) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderColor: "#e0e0e0", // light gray border
+    borderColor: "#e0e0e0",
     borderWidth: 0.5,
     borderRadius: 12,
     padding: 5,
@@ -278,6 +340,32 @@ const styles = StyleSheet.create({
   },
   seeMoreText: {
     color: colors.PRIMARY_BTN,
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginTop: 1,
+  },
+  icon: {
+    width: 25,
+    height: 25,
+    marginHorizontal: 2,
+  },
+  replyContainer: {
+    flexDirection: "row",
+    marginRight: -10,
+  },
+  socialActivity: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  replyText: {
+    fontSize: 14,
+    color: "#0000009b",
+    marginRight: 8,
   },
 });
 
