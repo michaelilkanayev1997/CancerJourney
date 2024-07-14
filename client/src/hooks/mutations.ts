@@ -5,7 +5,7 @@ import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { IAppointment, IMedication } from "../../../server/src/models/schedule";
-import { Post } from "src/@types/post";
+import { Post, Reply } from "src/@types/post";
 import { updateProfile, UserProfile } from "src/store/auth";
 import { generateObjectId } from "@utils/helper";
 import { useDispatch } from "react-redux";
@@ -716,65 +716,104 @@ export const useReplyMutations = () => {
 
   interface FavoriteReplyParams {
     postId: string;
+    reply: Reply;
     profile: UserProfile | null;
     cancerType: string;
+    onFavoriteReply: (reply: Reply, profile: UserProfile | null) => void;
   }
 
   const { isLoading: favoriteLoading, mutate: favoriteReplyMutation } =
     useMutation<void, Error, FavoriteReplyParams, unknown>(
-      async ({ postId, profile }) => {
-        if (!postId || !profile?.id) return;
+      async ({ postId, reply }) => {
+        if (!postId || !reply._id) return;
         const client = await getClient();
-        await client.post(`/post/update-post-favorite?postId=${postId}`);
+        await client.post(
+          `/post/update-reply-favorite?postId=${postId}&replyId=${reply._id}`
+        );
       },
       {
-        onSuccess: (data, variables) => {
-          const { postId, profile, cancerType } = variables;
-          if (!profile) return;
-          // Optimistically update the local cache
-          queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
-            if (!oldData) return [];
+        onMutate: async (variables) => {
+          const { postId, reply, profile, cancerType } = variables;
 
-            return oldData.map((post) => {
-              if (post._id.toString() === postId) {
-                const isLiked = post.likes.some(
-                  (like) => like.userId._id === profile?.id
-                );
+          if (!reply._id) return;
 
-                return {
-                  ...post,
-                  likes: isLiked
-                    ? post.likes.filter(
-                        (like) => like.userId._id !== profile?.id
-                      )
-                    : [
-                        ...post.likes,
-                        {
-                          _id: generateObjectId(),
-                          userId: {
-                            _id: profile?.id,
-                            avatar: {
-                              url: profile?.avatar || "",
-                              publicId: "",
-                            },
-                            name: profile?.name,
-                            userType: profile?.userType,
-                          },
-                          createdAt: new Date().toISOString(),
-                        },
-                      ],
-                };
-              }
-              return post;
-            });
-          });
+          // Cancel any outgoing refetches
+          await queryClient.cancelQueries(["posts", cancerType]);
+
+          // Snapshot the previous values
+          const previousPosts = queryClient.getQueryData<Post[]>([
+            "posts",
+            cancerType,
+          ]);
+
+          // Optimistically update the posts
+          if (previousPosts) {
+            queryClient.setQueryData(
+              ["posts", cancerType],
+              previousPosts.map((post) => {
+                if (post._id.toString() === postId) {
+                  return {
+                    ...post,
+                    replies: post.replies.map((reply) =>
+                      reply._id.toString() === reply._id
+                        ? {
+                            ...reply,
+                            likes: reply.likes.some(
+                              (like) =>
+                                like.userId._id.toString() === profile?.id
+                            )
+                              ? reply.likes.filter(
+                                  (like) =>
+                                    like.userId._id.toString() !== profile?.id
+                                )
+                              : [
+                                  ...reply.likes,
+                                  {
+                                    _id: generateObjectId(),
+                                    userId: {
+                                      _id: profile?.id,
+                                      avatar: {
+                                        url: profile?.avatar || "",
+                                        publicId: "",
+                                      },
+                                      name: profile?.name,
+                                      userType: profile?.userType,
+                                    },
+                                    createdAt: new Date().toISOString(),
+                                  },
+                                ],
+                          }
+                        : reply
+                    ),
+                  };
+                }
+                return post;
+              })
+            );
+          }
+
+          //To Refresh the PostReplies Page . . .
+          variables?.onFavoriteReply(reply, profile);
+
+          // Return a context with the previous values
+          return { previousPosts };
         },
-        onError: (error) => {
+        onError: (error, variables, context) => {
+          if (context?.previousPosts) {
+            queryClient.setQueryData(
+              ["posts", variables.cancerType],
+              context.previousPosts
+            );
+          }
+
           const errorMessage = catchAsyncError(error);
           ToastNotification({
             type: "Error",
             message: errorMessage,
           });
+        },
+        onSettled: (data, error, variables) => {
+          queryClient.invalidateQueries(["posts", variables.cancerType]);
         },
       }
     );

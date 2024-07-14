@@ -3,6 +3,7 @@ import ReplyCard from "@components/ReplyCard";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "@ui/Loader";
 import colors from "@utils/colors";
+import { generateObjectId } from "@utils/helper";
 import { FC, useCallback, useEffect, useState } from "react";
 import {
   View,
@@ -16,6 +17,7 @@ import {
 } from "react-native";
 import { useQueryClient } from "react-query";
 import { Reply } from "src/@types/post";
+import { UserProfile } from "src/store/auth";
 
 interface Props {}
 
@@ -41,6 +43,36 @@ const PostReplies: FC<Props> = ({ route }) => {
     setReplies(initialReplies);
   }, [initialReplies]);
 
+  const handleFavoriteReply = (reply: Reply, profile: UserProfile | null) => {
+    setReplies((prevReplies) =>
+      prevReplies.map((r) =>
+        r._id === reply._id
+          ? {
+              ...r,
+              likes: r.likes.some((like) => like.userId._id === profile?.id)
+                ? r.likes.filter((like) => like.userId._id !== profile?.id)
+                : [
+                    ...r.likes,
+                    {
+                      _id: generateObjectId(),
+                      userId: {
+                        _id: profile.id,
+                        avatar: {
+                          url: profile?.avatar || "",
+                          publicId: "",
+                        },
+                        name: profile?.name,
+                        userType: profile?.userType,
+                      },
+                      createdAt: new Date().toISOString(),
+                    },
+                  ],
+            }
+          : r
+      )
+    );
+  };
+
   const renderPost = useCallback(
     ({ item }: { item: Reply }) => (
       <ReplyCard
@@ -51,6 +83,7 @@ const PostReplies: FC<Props> = ({ route }) => {
             prevReplies.filter((reply) => reply._id !== replyId)
           );
         }}
+        onFavoriteReply={handleFavoriteReply}
       />
     ),
     [replies]
