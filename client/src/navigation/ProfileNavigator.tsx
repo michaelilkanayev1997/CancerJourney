@@ -16,7 +16,15 @@ const ProfileNavigator = () => {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerTransparent: false,
+          headerShown: true,
+          title: t("profile"),
+        }}
+      />
       <Stack.Screen
         name="Settings"
         component={Settings}

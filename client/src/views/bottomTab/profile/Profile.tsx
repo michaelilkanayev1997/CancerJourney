@@ -22,6 +22,7 @@ import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import Loader from "@ui/Loader";
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 
@@ -44,6 +45,8 @@ const Profile: FC<Props> = (props) => {
   });
 
   const newProfileRef = useRef(newProfile);
+
+  const { t } = useTranslation();
 
   // Update the ref every time newProfile changes
   useEffect(() => {
@@ -105,7 +108,7 @@ const Profile: FC<Props> = (props) => {
               }}
               style={styles.saveButtonContainer}
             >
-              <Text style={styles.saveButtonText}>Save</Text>
+              <Text style={styles.saveButtonText}>{t("save")}</Text>
             </TouchableOpacity>
           </Animated.View>
         ),

@@ -9,6 +9,7 @@ import {
   ViewStyle,
   Vibration,
   Pressable,
+  I18nManager,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -120,7 +121,13 @@ const AuthInputField: FC<Props> = ({
         />
 
         {rightIcon ? (
-          <Pressable onPress={onRightIconPress} style={styles.rightIcon}>
+          <Pressable
+            onPress={onRightIconPress}
+            style={[
+              styles.rightIcon,
+              I18nManager.isRTL ? styles.rightIconRTL : styles.rightIconLTR,
+            ]}
+          >
             {rightIcon}
           </Pressable>
         ) : null}
@@ -147,9 +154,14 @@ const styles = StyleSheet.create({
     height: 45,
     position: "absolute",
     top: 0,
-    right: 0,
     justifyContent: "center",
     alignItems: "center",
+  },
+  rightIconLTR: {
+    right: 0,
+  },
+  rightIconRTL: {
+    left: 0,
   },
 });
 

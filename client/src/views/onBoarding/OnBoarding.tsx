@@ -21,6 +21,7 @@ import AppLink from "@ui/AppLink";
 import AppButton from "@ui/AppButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "src/@types/navigation";
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 
@@ -31,19 +32,25 @@ const OnBoarding: FC<Props> = (props) => {
   const scrollX = useRef(new RNAnimated.Value(0)).current;
   const slidesRef = useRef<FlatList<any>>(null);
 
+  const { t } = useTranslation();
+  const translatedSlidesData = slidesData(t);
+
   const viewableItemsChanged = useRef(({ viewableItems }: any) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
   const SkipLinkAnim = useAnimatedStyle(() => {
     // Calculate the opacity
-    const opacity = withTiming(currentIndex < slidesData.length - 1 ? 1 : 0, {
-      duration: 400,
-    });
+    const opacity = withTiming(
+      currentIndex < translatedSlidesData.length - 1 ? 1 : 0,
+      {
+        duration: 400,
+      }
+    );
 
     // Calculate the translation from the right
     const translateX = withTiming(
-      currentIndex < slidesData.length - 1 ? 0 : 10,
+      currentIndex < translatedSlidesData.length - 1 ? 0 : 10,
       { duration: 400 }
     );
 
@@ -55,14 +62,20 @@ const OnBoarding: FC<Props> = (props) => {
 
   const NextBtnAnim = useAnimatedStyle(() => {
     // Opacity transition to smoothly fade in/out
-    const opacity = withTiming(currentIndex === slidesData.length - 1 ? 1 : 0, {
-      duration: 400, // Adjust duration as needed
-    });
+    const opacity = withTiming(
+      currentIndex === translatedSlidesData.length - 1 ? 1 : 0,
+      {
+        duration: 400, // Adjust duration as needed
+      }
+    );
 
     // Scale transition for the ZoomIn effect
-    const scale = withTiming(currentIndex === slidesData.length - 1 ? 1 : 0, {
-      duration: 400,
-    });
+    const scale = withTiming(
+      currentIndex === translatedSlidesData.length - 1 ? 1 : 0,
+      {
+        duration: 400,
+      }
+    );
 
     return {
       opacity: opacity,
@@ -76,11 +89,11 @@ const OnBoarding: FC<Props> = (props) => {
         <Animated.View style={SkipLinkAnim}>
           <AppLink
             style={styles.skipButtonText}
-            active={currentIndex < slidesData.length - 1}
-            title="Skip"
+            active={currentIndex < translatedSlidesData.length - 1}
+            title={t("skip")}
             onPress={() => {
               slidesRef.current?.scrollToIndex({
-                index: slidesData.length - 1,
+                index: translatedSlidesData.length - 1,
                 animated: true,
               });
             }}
@@ -90,7 +103,7 @@ const OnBoarding: FC<Props> = (props) => {
 
       <View style={{ flex: 3 }}>
         <FlatList
-          data={slidesData}
+          data={translatedSlidesData}
           renderItem={({ item }) => <OnBoardingItem item={item} />}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -124,8 +137,8 @@ const OnBoarding: FC<Props> = (props) => {
         ]}
       >
         <AppButton
-          title="Next"
-          disabled={currentIndex < slidesData.length - 1}
+          title={t("next")}
+          disabled={currentIndex < translatedSlidesData.length - 1}
           defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
           pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
           onPress={() => {
@@ -136,7 +149,7 @@ const OnBoarding: FC<Props> = (props) => {
 
       <Animated.View entering={ZoomIn.duration(800)} style={{ flex: 0.5 }}>
         <Paginator
-          data={slidesData}
+          data={translatedSlidesData}
           scrollX={scrollX}
           isRTL={I18nManager.isRTL}
         />

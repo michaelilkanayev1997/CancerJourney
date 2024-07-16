@@ -13,12 +13,14 @@ import AppButton from "@ui/AppButton";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import colors from "@utils/colors";
 import { updateViewedOnBoardingState } from "src/store/auth";
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 
 const Welcome: FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const handleLetsGetStarted = async () => {
@@ -40,7 +42,7 @@ const Welcome: FC<Props> = (props) => {
           source={require("@assets/Icons/Logo.png")}
           style={styles.image}
         />
-        <Text style={styles.Logotitle}>Putting you in control</Text>
+        <Text style={styles.Logotitle}>{t("putting-you-in-control")}</Text>
       </Animated.View>
 
       <View style={styles.infoContainer}>
@@ -48,15 +50,13 @@ const Welcome: FC<Props> = (props) => {
           entering={FadeInDown.delay(200).duration(1000).springify()}
           style={styles.title}
         >
-          Support For Cancer Patients
+          {t("support-for-cancer-patients")}
         </Animated.Text>
         <Animated.Text
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={styles.description}
         >
-          CancerJourney simplifies cancer management, offering control over
-          care, appointments, medications, and contacts. Our goal is to ease the
-          challenges of living with cancer.
+          {t("welcome-description")}
         </Animated.Text>
       </View>
 
@@ -65,7 +65,7 @@ const Welcome: FC<Props> = (props) => {
         style={styles.button}
       >
         <AppButton
-          title="Let’s Get Started!"
+          title={t("lets-get-started")}
           defaultColor={["#12C7E0", "#0FABCD", "#0E95B7"]}
           pressedColor={["#0DA2BE", "#0FBDD5", "#12C7E0"]}
           onPress={handleLetsGetStarted}

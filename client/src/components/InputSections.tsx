@@ -130,9 +130,7 @@ const InputSections: FC<Props> = ({
                 ellipsizeMode="tail" // Add ellipsis at the end if text is too long
               >
                 {newProfile.cancerType !== ""
-                  ? newProfile.cancerType.charAt(0).toUpperCase() +
-                    newProfile.cancerType.slice(1) +
-                    t("cancer")
+                  ? t(newProfile.cancerType)
                   : t("other-cancer")}
               </Text>
               <Image
@@ -277,12 +275,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
     marginLeft: 10,
+    textAlign: "left",
   },
   countryButtonText: {
     width: "80%",
     fontSize: 16,
     color: "#000",
     marginLeft: 10,
+    textAlign: "left",
   },
   nameInput: {
     flex: 1.91,
