@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,19 +11,28 @@ import {
 } from "react-native";
 import { useQueryClient } from "react-query";
 import { Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
 
 import Loader from "@ui/Loader";
 import { Post } from "src/@types/post";
-import { fetchPosts, useFetchPosts } from "src/hooks/query";
+import {
+  fetchPopulalrPosts,
+  fetchPosts,
+  fetchPostsByReplies,
+  fetchProfilePosts,
+  useFetchPopulalrPosts,
+  useFetchPosts,
+  useFetchPostsByReplies,
+  useFetchProfilePosts,
+} from "src/hooks/query";
 import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import PostCard from "@components/PostCard";
 import colors from "@utils/colors";
 import { DrawerParamList } from "src/@types/navigation";
-import { getAuthState } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 
 type Props = {
   route: any;
@@ -32,18 +42,34 @@ let pageNo = 0;
 const limit = 6;
 
 const Main = ({ route }: Props) => {
-  const { profile } = useSelector(getAuthState);
-  const { publicProfile, cancerType } = route.params || {
-    publicProfile: false,
-    cancerType: profile?.cancerType,
-  };
-
-  const { data, isFetching, isLoading } = useFetchPosts(cancerType);
-  const queryClient = useQueryClient();
+  const { name: routeName } = useRoute();
+  const profile = useSelector(getProfile);
+  const {
+    popularPosts = false,
+    publicProfile = false,
+    cancerType = profile?.cancerType,
+    publicUserId = profile?.id,
+    postsByReplies = false,
+  } = route.params || {};
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  const queryClient = useQueryClient();
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const { data, isFetching, isLoading } =
+    publicProfile && !postsByReplies
+      ? useFetchProfilePosts(publicUserId)
+      : publicProfile && postsByReplies
+      ? useFetchPostsByReplies(publicUserId)
+      : popularPosts
+      ? useFetchPopulalrPosts()
+      : useFetchPosts(cancerType);
+
+  console.log(`[${routeName}] data--->`, data?.length);
+  console.log(`[${routeName}] publicProfile--->`, publicProfile);
+  console.log(`[${routeName}] publicUserId--->`, publicUserId);
 
   console.log("route", publicProfile, cancerType);
   console.log(data?.length);
@@ -54,7 +80,10 @@ const Main = ({ route }: Props) => {
   useEffect(() => {
     setHasMore(true);
     pageNo = 0;
-  }, [cancerType]);
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: false }); // Scrolls to the top of the ScrollView
+    }
+  }, [cancerType, publicProfile, popularPosts, postsByReplies]);
 
   const handleOnEndReached = async () => {
     if (!data || isFetchingMore || !hasMore) return;
@@ -62,7 +91,18 @@ const Main = ({ route }: Props) => {
     setIsFetchingMore(true);
     try {
       pageNo += 1;
-      const posts = await fetchPosts(cancerType, limit, pageNo);
+
+      let posts;
+      if (publicProfile && !postsByReplies) {
+        posts = await fetchProfilePosts(publicUserId, limit, pageNo);
+      } else if (publicProfile && postsByReplies) {
+        posts = await fetchPostsByReplies(publicUserId, limit, pageNo);
+      } else if (popularPosts) {
+        posts = await fetchPopulalrPosts(limit, pageNo);
+      } else {
+        posts = await fetchPosts(cancerType, limit, pageNo);
+      }
+
       // console.log("pageNo", pageNo);
       // console.log("posts", posts);
       if (!posts || !posts.length || posts.length < limit) {
@@ -70,7 +110,16 @@ const Main = ({ route }: Props) => {
       }
 
       const newList = [...data, ...posts];
-      queryClient.setQueryData(["posts", cancerType], newList);
+
+      if (publicProfile && !postsByReplies) {
+        queryClient.setQueryData(["profile-posts", publicUserId], newList);
+      } else if (publicProfile && postsByReplies) {
+        queryClient.setQueryData(["posts-by-replies", publicUserId], newList);
+      } else if (popularPosts) {
+        queryClient.setQueryData(["popular-posts"], newList);
+      } else {
+        queryClient.setQueryData(["posts", cancerType], newList);
+      }
     } catch (error) {
       const errorMessage = catchAsyncError(error);
       ToastNotification({
@@ -84,8 +133,24 @@ const Main = ({ route }: Props) => {
   const handleOnRefresh = useCallback(() => {
     pageNo = 0;
     setHasMore(true);
-    queryClient.invalidateQueries(["posts", cancerType]);
-  }, [queryClient]);
+
+    if (publicProfile && !postsByReplies) {
+      queryClient.invalidateQueries(["profile-posts", publicUserId]);
+    } else if (publicProfile && postsByReplies) {
+      queryClient.invalidateQueries(["posts-by-replies", publicUserId]);
+    } else if (popularPosts) {
+      queryClient.invalidateQueries(["popular-posts"]);
+    } else {
+      queryClient.invalidateQueries(["posts", cancerType]);
+    }
+  }, [
+    queryClient,
+    publicProfile,
+    publicUserId,
+    popularPosts,
+    cancerType,
+    postsByReplies,
+  ]);
 
   const renderPost = useCallback(
     ({ item }: { item: Post }) => (
@@ -98,6 +163,8 @@ const Main = ({ route }: Props) => {
         createdAt={item.createdAt}
         forumType={item.forumType}
         owner={item.owner}
+        publicProfile={publicProfile}
+        publicUserId={publicUserId}
       />
     ),
     [data]
@@ -176,6 +243,7 @@ const Main = ({ route }: Props) => {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: colors.PRIMARY_LIGHT,
+    flex: 1,
   },
   header: {
     padding: 10,
@@ -208,7 +276,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: colors.PRIMARY_LIGHT, //inactive contrast ?
+    backgroundColor: colors.PRIMARY_LIGHT,
     padding: 8,
     paddingBottom: 125,
   },

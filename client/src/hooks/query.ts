@@ -143,6 +143,85 @@ export const useFetchPosts = (cancerType: string) => {
   });
 };
 
+export const fetchProfilePosts = async (
+  profileId: string,
+  limit = 6,
+  pageNo = 0
+): Promise<Post[]> => {
+  const client = await getClient();
+  const { data } = await client.get(
+    `/post/get-profile-posts?limit=${limit}&pageNo=${pageNo}&profileId=${profileId}`
+  );
+
+  return data;
+};
+
+export const useFetchProfilePosts = (profileId: string | undefined) => {
+  return useQuery(["profile-posts", profileId], {
+    queryFn: () => fetchProfilePosts(profileId || ""),
+    enabled: !!profileId, // Ensures the query only runs if profileId is defined
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
+export const fetchPostsByReplies = async (
+  profileId: string,
+  limit = 6,
+  pageNo = 0
+): Promise<Post[]> => {
+  const client = await getClient();
+  const { data } = await client.get(
+    `/post/get-posts-by-replies?limit=${limit}&pageNo=${pageNo}&profileId=${profileId}`
+  );
+
+  return data;
+};
+
+export const useFetchPostsByReplies = (profileId: string | undefined) => {
+  return useQuery(["posts-by-replies", profileId], {
+    queryFn: () => fetchPostsByReplies(profileId || ""),
+    enabled: !!profileId, // Ensures the query only runs if profileId is defined
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
+export const fetchPopulalrPosts = async (
+  limit = 6,
+  pageNo = 0
+): Promise<Post[]> => {
+  const client = await getClient();
+  const { data } = await client.get(
+    `/post/get-popular-posts?limit=${30}&pageNo=${pageNo}`
+  );
+
+  return data;
+};
+
+export const useFetchPopulalrPosts = () => {
+  return useQuery(["popular-posts"], {
+    queryFn: () => fetchPopulalrPosts(),
+    onError(err) {
+      const errorMessage = catchAsyncError(err);
+      ToastNotification({
+        type: "Error",
+        message: errorMessage,
+      });
+    },
+  });
+};
+
 export const fetchFollowers = async (profileId: string) => {
   const client = await getClient();
   const { data } = await client.get(`/profile/get-followers/${profileId}`);
