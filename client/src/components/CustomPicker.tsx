@@ -48,6 +48,7 @@ const CustomPicker: FC<Props> = ({
           <TouchableWithoutFeedback>
             <View style={styles.modalView}>
               <FlatList
+                showsVerticalScrollIndicator={false}
                 data={cancerTypes}
                 keyExtractor={(item) => item.value}
                 renderItem={({ item }) => (

@@ -10,7 +10,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import { HomeStackParamList } from "src/@types/navigation";
+import { useTranslation } from "react-i18next";
 
 export interface Study {
   key?: string;
@@ -57,6 +59,8 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
 
   const imageUrlBackUp = require("@assets/cancerstudy.jpg");
 
+  const { t } = useTranslation();
+
   return (
     <Animated.View style={[styles.card, { transform: [{ translateY }] }]}>
       <TouchableOpacity
@@ -77,7 +81,7 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
             numberOfLines={2}
             ellipsizeMode="tail"
             style={styles.infoText}
-          >{`Organization: ${organization.fullName}`}</Text>
+          >{`${t("organization")}: ${organization.fullName}`}</Text>
         </View>
         <View style={styles.infoRow}>
           <Ionicons name="calendar-outline" size={16} color="#555" />
@@ -85,18 +89,19 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
             style={styles.infoText}
             numberOfLines={1}
             ellipsizeMode="tail"
-          >{`Start: ${
-            startDateStruct?.date ? startDateStruct.date : "Date not available"
+          >{`${t("start-date")}: ${
+            startDateStruct?.date
+              ? startDateStruct.date
+              : t("date-not-available")
           }`}</Text>
         </View>
         <View style={styles.infoRow}>
           <Ionicons name="calendar-outline" size={16} color="#555" />
           <Text style={styles.infoText} numberOfLines={1} ellipsizeMode="tail">
-            {" "}
-            {`Completion: ${
+            {`${t("completion-date")}: ${
               completionDateStruct?.date
                 ? completionDateStruct.date
-                : "Date not available"
+                : t("date-not-available")
             }`}
           </Text>
         </View>
@@ -106,7 +111,7 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
             style={styles.infoText}
             numberOfLines={2}
             ellipsizeMode="tail"
-          >{`Conditions: ${conditions.join(", ")}`}</Text>
+          >{`${t("conditions")}: ${conditions.join(", ")}`}</Text>
         </View>
       </TouchableOpacity>
     </Animated.View>

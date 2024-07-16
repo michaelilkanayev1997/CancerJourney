@@ -1,30 +1,26 @@
-export default [
+export default (t: (arg0: string) => any) => [
   {
     id: "1",
-    title: "Journey",
-    description:
-      "Personalize your cancer information and organize your journey.",
+    title: t("journey"),
+    description: t("journey-description"),
     image: require("./Journey.jpg"),
   },
   {
     id: "2",
-    title: "Personal Journal",
-    description:
-      "Document your experiences, appointments and questions to help you and those around you.",
+    title: t("personal-journal"),
+    description: t("personal-journal-description"),
     image: require("./Personal Journal.jpeg"),
   },
   {
     id: "3",
-    title: "Secure",
-    description:
-      "Free access and secure data retention for patients and their families.",
+    title: t("secure"),
+    description: t("secure-description"),
     image: require("./Secure.webp"),
   },
   {
     id: "4",
-    title: "Community",
-    description:
-      "Keep up to date and connect to others going through similar experiences.",
+    title: t("community"),
+    description: t("community-description"),
     image: require("./Community.webp"),
   },
 ];

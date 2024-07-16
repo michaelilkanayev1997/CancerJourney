@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import CustomPostButton from "@ui/bottomTab/CustomPostButton";
 import AnimatedIcon from "@ui/bottomTab/AnimatedIcon";
@@ -9,13 +10,14 @@ import SocialNavigator from "./SocialNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
 import HomeNavigator from "./HomeNavigator";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import { usePushNotifications } from "src/hooks/usePushNotifications";
 import RegistrationForm from "@views/RegistrationForm";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+  const { t } = useTranslation();
   const profile = useSelector(getProfile);
 
   // Register for push notifications and update token if necessary
@@ -34,7 +36,11 @@ const TabNavigator = () => {
     >
       {/* If User dont have userType show RegistrationForm */}
       {profile?.userType === "" && (
-        <Tab.Screen name="RegistrationForm" component={RegistrationForm} />
+        <Tab.Screen
+          name="RegistrationForm"
+          component={RegistrationForm}
+          options={{ title: t("registration-form") }}
+        />
       )}
 
       <Tab.Screen
@@ -42,7 +48,12 @@ const TabNavigator = () => {
         component={HomeNavigator}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <AnimatedIcon label="Home" icon="home" size={size} color={color} />
+            <AnimatedIcon
+              label={t("home")}
+              icon="home"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -50,10 +61,9 @@ const TabNavigator = () => {
         name="ProfileScreen"
         component={ProfileNavigator}
         options={{
-          title: "Personal Profile",
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
-              label="Profile"
+              label={t("profile")}
               icon="user"
               size={size}
               color={color}
@@ -91,7 +101,7 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
-              label="Upload"
+              label={t("upload")}
               icon="upload"
               size={size}
               color={color}
@@ -105,7 +115,7 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({ size, color }) => (
             <AnimatedIcon
-              label="Schedule"
+              label={t("schedule")}
               icon="calendar"
               size={size}
               color={color}

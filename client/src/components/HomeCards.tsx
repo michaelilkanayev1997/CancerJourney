@@ -7,6 +7,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import Animated, { FadeInUp } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 import { BottomTabParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
@@ -22,6 +23,8 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
 
   const oneThirdScreenWidth = screenWidth / 3.7;
 
+  const { t } = useTranslation();
+
   return (
     <>
       <TouchableOpacity
@@ -34,7 +37,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         onPress={() => navigation.navigate("UploadScreen")}
       >
         <Ionicons name="cloud-upload" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Upload Files & Images</Text>
+        <Text style={styles.cardText}>{t("upload-files-and-images")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -52,7 +55,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         }
       >
         <Ionicons name="calendar" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Manage{"\n"}Appointments</Text>
+        <Text style={styles.cardText}>{t("manage-appointments")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -70,7 +73,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         }
       >
         <Ionicons name="medkit" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Manage{"\n"}Medications</Text>
+        <Text style={styles.cardText}>{t("manage-medications")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -90,7 +93,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         }
       >
         <Ionicons name="people" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Social Forum</Text>
+        <Text style={styles.cardText}>{t("social-forum")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -110,7 +113,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         }
       >
         <Ionicons name="chatbox" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>New Posts</Text>
+        <Text style={styles.cardText}>{t("new-posts")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -127,7 +130,7 @@ const HomeCards: FC<Props> = ({ screenWidth }) => {
         }
       >
         <Ionicons name="settings" size={30} color={colors.LIGHT_BLUE} />
-        <Text style={styles.cardText}>Settings</Text>
+        <Text style={styles.cardText}>{t("settings")}</Text>
       </TouchableOpacity>
     </>
   );

@@ -67,7 +67,7 @@ const Settings: FC<Props> = (props) => {
           style={styles.buttonContainer}
         >
           <AntDesign name="delete" size={20} color={colors.CONTRAST} />
-          <Text style={styles.buttonTitle}>{t("remove-all-posts")}</Text>
+          <Text style={styles.buttonTitle}>{t("remove-all-my-posts")}</Text>
         </TouchableOpacity>
       </View>
 
