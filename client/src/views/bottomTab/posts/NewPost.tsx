@@ -17,7 +17,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import colors from "@utils/colors";
 import CustomPicker from "@components/CustomPicker";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import InputRowContainer from "@ui/InputRowContainer";
 
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
@@ -42,7 +42,7 @@ export interface NewPost {
 }
 
 const NewPost: FC<Props> = ({ route }) => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
   let { description, image, forumType, owner, postId, update } =
     route.params || {
       forumType: profile?.cancerType || "other",

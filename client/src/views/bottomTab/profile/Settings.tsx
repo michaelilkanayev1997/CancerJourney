@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import colors from "@utils/colors";
 import {
   getAuthState,
+  getProfile,
   updateBusyState,
   updateLoggedInState,
   updateProfile,
@@ -26,7 +27,7 @@ const Settings: FC<Props> = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const queryClient = useQueryClient();
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
 
   const { t } = useTranslation();
 

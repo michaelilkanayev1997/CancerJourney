@@ -27,6 +27,7 @@ interface AuthState {
   loggedIn: boolean;
   busy: boolean;
   viewedOnBoarding: boolean;
+  followings: string[];
 }
 
 const initialState: AuthState = {
@@ -34,6 +35,7 @@ const initialState: AuthState = {
   loggedIn: false,
   busy: false,
   viewedOnBoarding: false,
+  followings: [],
 };
 
 const slice = createSlice({
@@ -42,6 +44,20 @@ const slice = createSlice({
   reducers: {
     updateProfile(authState, { payload }: PayloadAction<UserProfile | null>) {
       authState.profile = payload;
+    },
+    updateFollowings(authState, { payload }: PayloadAction<string[]>) {
+      authState.followings = payload;
+    },
+    updateFollow(authState, { payload }: PayloadAction<string>) {
+      const profileId = payload;
+
+      if (authState.followings.includes(profileId)) {
+        authState.followings = authState.followings.filter(
+          (id) => id !== profileId
+        );
+      } else {
+        authState.followings = [...authState.followings, profileId];
+      }
     },
     updateLoggedInState(authState, { payload }: PayloadAction<boolean>) {
       authState.loggedIn = payload;
@@ -60,6 +76,8 @@ const slice = createSlice({
 
 export const {
   updateProfile,
+  updateFollowings,
+  updateFollow,
   updateLoggedInState,
   updateBusyState,
   updateViewedOnBoardingState,
@@ -68,6 +86,16 @@ export const {
 export const getAuthState = createSelector(
   (state: RootState) => state,
   ({ auth }) => auth
+);
+
+export const getProfile = createSelector(
+  (state: RootState) => state.auth,
+  (auth) => auth.profile
+);
+
+export const getFollowings = createSelector(
+  (state: RootState) => state.auth,
+  (auth) => auth.followings
 );
 
 export default slice.reducer;

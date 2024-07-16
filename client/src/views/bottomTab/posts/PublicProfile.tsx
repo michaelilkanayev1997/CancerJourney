@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import Main from "./Main";
 import PublicProfileContainer from "@components/PublicProfileContainer";
 import { useSelector } from "react-redux";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 
 type Props = {
   route: any;
@@ -23,7 +23,7 @@ type Props = {
 const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
 
   const privateUser = {
     _id: profile?.id,
@@ -85,7 +85,11 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 </Text>
               ),
             }}
-            initialParams={{ publicProfile: true }}
+            initialParams={{
+              publicProfile: true,
+              publicUserId: publicUser?._id || privateUser._id,
+              postsByReplies: false,
+            }}
           />
           <Tab.Screen
             name="Replays"
@@ -99,7 +103,11 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 </Text>
               ),
             }}
-            initialParams={{ publicProfile: true }}
+            initialParams={{
+              publicProfile: true,
+              publicUserId: publicUser?._id || privateUser._id,
+              postsByReplies: true,
+            }}
           />
         </Tab.Navigator>
       </View>

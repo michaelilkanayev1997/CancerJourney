@@ -13,7 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 
 import colors from "@utils/colors";
-import { getAuthState, updateProfile } from "src/store/auth";
+import { getAuthState, getProfile, updateProfile } from "src/store/auth";
 import ProfilePhotoModal from "@components/ProfilePhotoModal";
 import { useFadeInRight } from "@utils/animated";
 import ProfileHeader from "@ui/ProfileHeader";
@@ -31,7 +31,7 @@ const Profile: FC<Props> = (props) => {
   const dispatch = useDispatch();
   const [PhotoModalVisible, setPhotoModalVisible] = useState(false);
   const [keyboardIsShown, setKeyboardIsShown] = useState(false);
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
   const [newProfile, setNewProfile] = useState<NewProfile>({
     userType: profile?.userType || "Family member",
     diagnosisDate: profile?.diagnosisDate || null,
