@@ -1,19 +1,22 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
 import { UserTypeKey, userTypes } from "@utils/enums";
-import { FC } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FC, useCallback } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { DrawerParamList } from "src/@types/navigation";
 
 import { User } from "src/@types/post";
 import { useFollowMutations } from "src/hooks/mutations";
 import { useFetchFollowers, useFetchFollowings } from "src/hooks/query";
-import { UserProfile } from "src/store/auth";
+import {
+  getFollowings,
+  updateFollow,
+  updateFollowings,
+  UserProfile,
+} from "src/store/auth";
 
 interface Props {
   profile?: User;
@@ -27,6 +30,12 @@ const PublicProfileContainer: FC<Props> = ({
   currentUser,
 }) => {
   if (!profile) return null;
+  const dispatch = useDispatch();
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<DrawerParamList>>();
+
+  const followingsState = useSelector(getFollowings);
 
   const { data: followers, isLoading: followersLoading } = useFetchFollowers(
     profile._id
@@ -37,14 +46,28 @@ const PublicProfileContainer: FC<Props> = ({
 
   const { updateFollowMutation, updateLoading } = useFollowMutations();
 
-  const toggleFollow = () => {
+  const toggleFollow = useCallback(() => {
     updateFollowMutation({
       profileId: profile._id,
       currentUser,
     });
-  };
+    dispatch(updateFollow(profile._id));
+  }, [currentUser, profile._id, updateFollowMutation]);
 
-  const isFollowing = currentUser?.followings.includes(profile._id);
+  const isFollowing = followingsState.includes(profile._id);
+
+  console.log("followers--->", followers);
+  console.log("followings--->", followings);
+
+  const navigateToPostLikesPage = useCallback(
+    (followersOrFollowings: string) => {
+      navigation.navigate("PostLikes", {
+        likes: followersOrFollowings === "Followers" ? followers : followings,
+        followersOrFollowings,
+      });
+    },
+    [followers, followings, followingsState]
+  );
 
   return (
     <View style={styles.container}>
@@ -60,19 +83,27 @@ const PublicProfileContainer: FC<Props> = ({
 
         <View style={styles.rowContainer}>
           <View>
-            <Text style={styles.followerText}>
-              Followers {followers?.length}
-            </Text>
-            <Text style={styles.followerText}>
-              Followings {followings?.length}
-            </Text>
-          </View>
+            <TouchableOpacity
+              onPress={() => navigateToPostLikesPage("Followers")}
+            >
+              <Text style={styles.followerText}>
+                Followers {followers?.length}
+              </Text>
+            </TouchableOpacity>
 
+            <TouchableOpacity
+              onPress={() => navigateToPostLikesPage("Followings")}
+            >
+              <Text style={styles.followerText}>
+                Followings {followings?.length}
+              </Text>
+            </TouchableOpacity>
+          </View>
           {publicProfile && currentUser?.id !== profile._id && (
             <TouchableOpacity
               style={styles.flexRow}
               onPress={toggleFollow}
-              disabled={updateLoading}
+              disabled={updateLoading || followersLoading || followingsLoading}
             >
               <Text
                 style={[
@@ -94,7 +125,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
+    paddingHorizontal: 10,
   },
   rowContainer: {
     flexDirection: "row",
@@ -116,6 +148,7 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: "row",
     alignItems: "center",
+    paddingLeft: 20,
   },
   profileActionLink: {
     color: colors.INACTIVE_CONTRAST,
@@ -131,13 +164,14 @@ const styles = StyleSheet.create({
   unfollow: { backgroundColor: colors.GREEN },
   follow: { backgroundColor: colors.INFO },
   followerText: {
-    color: colors.CONTRAST,
+    color: colors.INFO,
     paddingVertical: 2,
     marginTop: 5,
     borderRadius: 5,
+    textDecorationLine: "underline",
   },
   userTypeText: {
-    color: colors.INFO,
+    color: colors.LIGHT_BLUE,
     fontSize: 13,
     marginTop: 5,
     paddingLeft: "6%",

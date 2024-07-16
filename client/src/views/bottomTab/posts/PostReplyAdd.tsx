@@ -21,21 +21,30 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import LottieView from "lottie-react-native";
 import { UserTypeKey, userTypes } from "@utils/enums";
 import { useSelector } from "react-redux";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import Loader from "@ui/Loader";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { useQueryClient } from "react-query";
 import { Post } from "src/@types/post";
-import { generateObjectId } from "@utils/helper";
 
 interface Props {}
 
 const PostReplyAdd: FC<Props> = ({ route }) => {
-  const { _id, description, image, owner, createdAt, forumType } =
-    route.params || null;
-  const { profile } = useSelector(getAuthState);
+  const {
+    _id,
+    description,
+    image,
+    owner,
+    createdAt,
+    forumType,
+    publicProfile,
+    publicUserId,
+    replies,
+  } = route.params || null;
+
+  const profile = useSelector(getProfile);
   const [isProfileImageLoading, setIsProfileImageLoading] =
     useState<boolean>(true);
   const [replyDescription, setReplyDescription] = useState<string>("");
@@ -48,7 +57,7 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
     setReplyDescription(text);
   }, []);
 
-  const handleAddPost = async () => {
+  const handleAddReply = async () => {
     if (!replyDescription.trim()) {
       ToastNotification({
         type: "Error",
@@ -58,6 +67,7 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
     }
 
     setSubmitLoading(true);
+    let updatedReplies;
     let isSuccessful = false;
     try {
       const client = await getClient();
@@ -72,7 +82,7 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
 
       // Construct the new reply object from the replyDescription and current user profile
       const newReply = {
-        _id: generateObjectId(), // Assign a temporary ID
+        _id: data.replyId,
         owner: {
           _id: profile?.id,
           avatar: {
@@ -87,7 +97,12 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
         createdAt: new Date().toISOString(),
       };
 
-      queryClient.setQueryData<Post[]>(["posts", forumType], (oldData) => {
+      // Optimistically update the local cache
+      const queryKey = publicProfile
+        ? ["profile-posts", publicUserId]
+        : ["posts", forumType];
+
+      queryClient.setQueryData<Post[]>(queryKey, (oldData) => {
         if (!oldData) return [];
         const updatedPosts = oldData.map((post) => {
           if (post._id === _id) {
@@ -101,6 +116,8 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
         return updatedPosts;
       });
 
+      updatedReplies = [...replies, newReply];
+
       isSuccessful = true;
     } catch (error) {
       const errorMessage = catchAsyncError(error);
@@ -109,8 +126,26 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
         message: errorMessage,
       });
     } finally {
-      navigation.goBack();
+      const queryKey = publicProfile
+        ? ["posts", forumType]
+        : ["profile-posts", publicUserId];
+
+      queryClient.invalidateQueries(queryKey); // invalidate the other queries
+
+      navigation.navigate("PostReplies", {
+        _id,
+        description,
+        image,
+        owner,
+        createdAt,
+        forumType,
+        replies: updatedReplies, // Use the updated replies
+        publicProfile,
+        publicUserId,
+      });
+
       setSubmitLoading(false);
+
       if (isSuccessful) {
         setReplyDescription("");
         ToastNotification({
@@ -151,6 +186,8 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
               owner={owner}
               createdAt={createdAt}
               forumType={forumType}
+              publicProfile={false}
+              publicUserId={""}
             />
 
             <View style={styles.userDetails}>
@@ -217,7 +254,7 @@ const PostReplyAdd: FC<Props> = ({ route }) => {
 
             <TouchableOpacity
               style={styles.submitButton}
-              onPress={handleAddPost}
+              onPress={handleAddReply}
               disabled={submitLoading}
             >
               {submitLoading ? (
