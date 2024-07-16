@@ -3,7 +3,10 @@ import { Router } from "express";
 import {
   addPost,
   addReply,
+  getPopularPosts,
   getPosts,
+  getPostsByReplies,
+  getProfilePosts,
   removeReply,
   togglePostFavorite,
   toggleReplyFavorite,
@@ -18,6 +21,9 @@ import { removePost } from "./../controllers/post";
 const router = Router();
 
 router.get("/get-posts", mustAuth, getPosts);
+router.get("/get-profile-posts", mustAuth, getProfilePosts);
+router.get("/get-posts-by-replies", mustAuth, getPostsByReplies);
+router.get("/get-popular-posts", mustAuth, getPopularPosts);
 router.post(
   "/add-post",
   mustAuth,

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 import { postPaginationQuery } from "#/@types/post";
 import { Posts } from "#/models/post";
@@ -40,7 +40,127 @@ export const getPosts: RequestHandler = async (req, res) => {
     res.json(data);
   } catch (error) {
     return res.status(500).json({
-      error: "An error occurred while adding the appointment",
+      error: "An error occurred while getting the posts",
+    });
+  }
+};
+
+export const getProfilePosts: RequestHandler = async (req, res) => {
+  const {
+    limit = "10",
+    pageNo = "0",
+    profileId,
+  } = req.query as postPaginationQuery;
+
+  try {
+    const query: any = {};
+    if (profileId) {
+      query.owner = profileId;
+    }
+
+    const data = await Posts.find(query)
+      .skip(parseInt(limit) * parseInt(pageNo))
+      .limit(parseInt(limit))
+      .sort({ createdAt: -1, _id: -1 }) // Sort by createdAt and _id in descending order
+      .populate("owner", "name avatar userType") // Populate the owner field with name and profileImage
+      .populate({
+        path: "likes.userId",
+        select: "name userType avatar",
+      }) // Populate likes userId with name and profileImage
+      .populate({
+        path: "replies.owner",
+        select: "name userType avatar",
+      }) // Populate replies owner with name and profileImage
+      .populate({
+        path: "replies.likes.userId",
+        select: "name userType avatar",
+      }); // Populate replies likes userId with name and profileImage
+
+    res.json(data);
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while getting the profile posts",
+    });
+  }
+};
+
+export const getPostsByReplies: RequestHandler = async (req, res) => {
+  const {
+    limit = "10",
+    pageNo = "0",
+    profileId,
+  } = req.query as postPaginationQuery;
+
+  try {
+    const query: any = {};
+
+    if (profileId) {
+      query["replies.owner"] = profileId;
+    }
+
+    const data = await Posts.find(query)
+      .skip(parseInt(limit) * parseInt(pageNo))
+      .limit(parseInt(limit))
+      .sort({ createdAt: -1, _id: -1 }) // Sort by createdAt and _id in descending order
+      .populate("owner", "name avatar userType") // Populate the owner field with name and profileImage
+      .populate({
+        path: "likes.userId",
+        select: "name userType avatar",
+      }) // Populate likes userId with name and profileImage
+      .populate({
+        path: "replies.owner",
+        select: "name userType avatar",
+      }) // Populate replies owner with name and profileImage
+      .populate({
+        path: "replies.likes.userId",
+        select: "name userType avatar",
+      }); // Populate replies likes userId with name and profileImage
+
+    res.json(data);
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while getting the posts by replies",
+    });
+  }
+};
+
+export const getPopularPosts: RequestHandler = async (req, res) => {
+  const { limit = "10", pageNo = "0" } = req.query as postPaginationQuery;
+
+  try {
+    const data = await Posts.find()
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .skip(parseInt(limit) * parseInt(pageNo))
+      .limit(parseInt(limit))
+      .populate("owner", "name avatar userType") // Populate the owner field with name, avatar, and userType
+      .populate({
+        path: "likes.userId",
+        select: "name avatar userType",
+      }) // Populate likes userId with name, avatar, and userType
+      .populate({
+        path: "replies.owner",
+        select: "name avatar userType",
+      }) // Populate replies owner with name, avatar, and userType
+      .populate({
+        path: "replies.likes.userId",
+        select: "name avatar userType",
+      }); // Populate replies likes userId with name, avatar, and userType
+
+    const sortedData = data
+      .map((post) => ({
+        ...post.toObject(),
+        totalEngagement: post.likes.length + post.replies.length,
+      }))
+      .sort((a, b) => b.totalEngagement - a.totalEngagement)
+      .slice(
+        parseInt(pageNo) * parseInt(limit),
+        (parseInt(pageNo) + 1) * parseInt(limit)
+      );
+
+    res.json(sortedData);
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while getting the popular posts",
     });
   }
 };
@@ -244,7 +364,8 @@ export const addReply: RequestHandler = async (req, res) => {
     // Accessing the request body
     const { description } = req.body;
 
-    const newReply: any = {
+    const newReply = {
+      _id: new mongoose.Types.ObjectId(),
       owner: user.id,
       description,
       likes: [],
@@ -253,7 +374,7 @@ export const addReply: RequestHandler = async (req, res) => {
 
     await Posts.updateOne({ _id: postId }, { $push: { replies: newReply } });
 
-    res.json({ success: true });
+    res.json({ success: true, replyId: newReply._id });
   } catch (error) {
     return res.status(500).json({
       error: "An error occurred while adding the reply",
@@ -333,7 +454,7 @@ export const toggleReplyFavorite: RequestHandler = async (req, res) => {
         },
       },
     });
-    console.log(alreadyLiked);
+
     if (alreadyLiked) {
       // Remove the like
       await Posts.updateOne(
