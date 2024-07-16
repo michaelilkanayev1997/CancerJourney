@@ -16,9 +16,15 @@ import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
 import { DrawerParamList } from "src/@types/navigation";
-import { useSelector } from "react-redux";
-import { getAuthState } from "src/store/auth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAuthState,
+  getFollowings,
+  getProfile,
+  updateFollow,
+} from "src/store/auth";
 import { useFollowMutations } from "src/hooks/mutations";
+import { UserTypeKey, userTypes } from "@utils/enums";
 
 type Props = {
   route: any;
@@ -31,34 +37,62 @@ const dummyDataFetch = new Array(3).fill("");
 const ITEM_SIZE = 76;
 
 const PostLikes: FC<Props> = ({ route }) => {
-  const { likes } = route.params;
-  const { profile } = useSelector(getAuthState);
+  const {
+    likes,
+    replyLikes = false,
+    followersOrFollowings = "",
+  } = route.params || {};
+  const profile = useSelector(getProfile);
+  const followingsState = useSelector(getFollowings);
+
+  const dispatch = useDispatch();
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(likes.slice(0, 20));
+  const [data, setData] = useState(likes?.slice(0, 20));
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
-  const { updateFollowMutation, updateLoading } = useFollowMutations();
+  console.log("likes-->", likes);
+
+  const { updateFollowMutation } = useFollowMutations();
 
   const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
 
-  console.log(likes.length);
-  console.log("data length ", data.length);
+  // console.log(likes.length);
+  // console.log("data length ", data.length);
   // console.log("isFetchingMore ", isFetchingMore);
   // console.log("hasMore ", hasMore);
   // console.log("loading", loading);
 
+  const toggleFollow = useCallback(
+    (item: Like) => {
+      updateFollowMutation({
+        profileId: item?.userId?._id,
+        currentUser: profile,
+      });
+      dispatch(updateFollow(item.userId._id));
+    },
+    [dispatch, profile, updateFollowMutation]
+  );
+
+  const navigateToProfile = useCallback((user: User) => {
+    navigation.navigate("PublicProfile", {
+      publicUser: user,
+      publicProfile: true,
+    });
+  }, []);
+
   const handleOnEndReached = useCallback(() => {
-    if (likes.length <= 20 || isFetchingMore || !hasMore) return;
+    if (likes?.length <= 20 || isFetchingMore || !hasMore) return;
 
     setIsFetchingMore(true);
 
     const newPage = page + 1;
-    const newItems = likes.slice(page * 20, newPage * 20);
+    const newItems = likes?.slice(page * 20, newPage * 20);
 
-    if (newItems.length < 20) {
+    if (newItems?.length < 20) {
       setHasMore(false);
     }
 
@@ -71,14 +105,14 @@ const PostLikes: FC<Props> = ({ route }) => {
   }, [isFetchingMore, hasMore, page, likes]);
 
   const handleImageLoad = useCallback(() => {
-    if (data.length < 20) {
+    if (data?.length < 20) {
       setIsFetchingMore(false);
       setLoading(false);
       return;
     }
     setTimeout(() => {
       setLoading(false); // Image loaded successfully
-    }, data.length);
+    }, data?.length);
   }, []);
 
   const handleImageError = useCallback(() => {
@@ -128,26 +162,10 @@ const PostLikes: FC<Props> = ({ route }) => {
     ) : null;
   }, [isFetchingMore, handleImageLoad, handleImageError]);
 
-  const toggleFollow = useCallback(
-    (item: Like) => {
-      updateFollowMutation({
-        profileId: item.userId._id,
-        currentUser: profile,
-      });
-    },
-    [profile]
-  );
-
-  const navigateToProfile = useCallback((user: User) => {
-    navigation.navigate("PublicProfile", {
-      publicUser: user,
-      publicProfile: true,
-    });
-  }, []);
-
   const renderItem = useCallback(
     ({ item, index }: { item: Like; index: number }) => {
-      const isFollowing = profile?.followings.includes(item?.userId?._id);
+      const isFollowing = followingsState.includes(item?.userId?._id);
+      console.log(followingsState);
       console.log("isFollowing", isFollowing);
       const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)];
 
@@ -194,8 +212,13 @@ const PostLikes: FC<Props> = ({ route }) => {
                   {item?.userId.name && item.userId.name}
                 </Text>
               </View>
-              <Text style={styles.userUserType}>
-                {item?.userId.userType && item.userId.userType}
+
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.userType}
+              >
+                {userTypes[item?.userId.userType as UserTypeKey]}
               </Text>
             </View>
           </TouchableOpacity>
@@ -213,7 +236,14 @@ const PostLikes: FC<Props> = ({ route }) => {
         </Animated.View>
       );
     },
-    [handleImageLoad, handleImageError, scrollY, profile]
+    [
+      handleImageLoad,
+      handleImageError,
+      scrollY,
+      profile,
+      followingsState,
+      likes,
+    ]
   );
 
   const getItemLayout = useCallback(
@@ -237,7 +267,13 @@ const PostLikes: FC<Props> = ({ route }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Likes</Text>
+          <Text style={styles.headerTitle}>
+            {followersOrFollowings !== ""
+              ? followersOrFollowings
+              : replyLikes
+              ? "Reply Likes"
+              : "Post Likes"}
+          </Text>
         </View>
 
         {loading && (
@@ -373,9 +409,11 @@ const styles = StyleSheet.create({
     height: 15,
     marginLeft: 4,
   },
-  userUserType: {
-    fontSize: 16,
-    color: "#000000ba",
+  userType: {
+    width: 150,
+    color: "gray",
+    fontSize: 14,
+    fontWeight: "400",
   },
   followButton: {
     borderRadius: 8,

@@ -22,7 +22,7 @@ type Props = {
 };
 
 const PostReport: FC<Props> = ({ route }) => {
-  const { postId } = route.params;
+  const { postId, replyId = undefined } = route.params || {};
   const [reportText, setReportText] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
 
@@ -48,13 +48,26 @@ const PostReport: FC<Props> = ({ route }) => {
     try {
       const client = await getClient();
 
-      const { data } = await client.post("/post-report/add-post-report", {
-        description: reportText,
-        postId,
-      });
+      let data;
 
-      if (!data?.success) {
-        throw new Error("Failed to add the Post Report");
+      if (replyId) {
+        //Post for a reply report
+        data = await client.post("/reply-report/add-reply-report", {
+          description: reportText,
+          postId,
+          replyId,
+        });
+      } else {
+        //Post for a post report
+        data = await client.post("/post-report/add-post-report", {
+          description: reportText,
+          postId,
+        });
+      }
+      console.log(data?.data);
+
+      if (!data?.data?.success) {
+        throw new Error("Failed to add the Report");
       }
 
       isSuccessful = true;
@@ -88,12 +101,16 @@ const PostReport: FC<Props> = ({ route }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Post Report </Text>
+        <Text style={styles.headerTitle}>
+          {replyId ? "Reply Report" : "Post Report"}
+        </Text>
       </View>
 
       <ScrollView style={styles.container}>
         <View style={styles.form}>
-          <Text style={styles.label}>Why are you reporting this post?</Text>
+          <Text style={styles.label}>
+            Why are you reporting this {replyId ? "reply" : "post"}?
+          </Text>
           <TextInput
             style={styles.textInput}
             multiline

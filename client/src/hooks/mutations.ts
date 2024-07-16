@@ -6,7 +6,7 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { IAppointment, IMedication } from "../../../server/src/models/schedule";
 import { Post, Reply } from "src/@types/post";
-import { updateProfile, UserProfile } from "src/store/auth";
+import { updateFollowings, updateProfile, UserProfile } from "src/store/auth";
 import { generateObjectId } from "@utils/helper";
 import { useDispatch } from "react-redux";
 
@@ -475,6 +475,8 @@ export const usePostMutations = () => {
     postId: string;
     profile: UserProfile | null;
     cancerType: string;
+    publicProfile: boolean;
+    publicUserId: string;
   }
 
   const { isLoading: favoriteLoading, mutate: favoritePostMutation } =
@@ -486,10 +488,16 @@ export const usePostMutations = () => {
       },
       {
         onSuccess: (data, variables) => {
-          const { postId, profile, cancerType } = variables;
+          const { postId, profile, cancerType, publicProfile, publicUserId } =
+            variables;
           if (!profile) return;
+
           // Optimistically update the local cache
-          queryClient.setQueryData<Post[]>(["posts", cancerType], (oldData) => {
+          const queryKey = publicProfile
+            ? ["profile-posts", publicUserId]
+            : ["posts", cancerType];
+
+          queryClient.setQueryData<Post[]>(queryKey, (oldData) => {
             if (!oldData) return [];
 
             return oldData.map((post) => {
@@ -548,7 +556,6 @@ export const usePostMutations = () => {
 
 export const useFollowMutations = () => {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
   interface UpdateFollowParams {
     profileId: string;
@@ -565,61 +572,15 @@ export const useFollowMutations = () => {
       },
       {
         onMutate: async (variables) => {
-          const { profileId, currentUser } = variables;
+          const { profileId } = variables;
 
-          if (!currentUser) return;
+          if (!profileId) return;
 
           // Cancel any outgoing refetches
           await queryClient.cancelQueries(["followers", profileId]);
           await queryClient.cancelQueries(["followings", profileId]);
-
-          // Snapshot the previous values
-          const previousFollowers = queryClient.getQueryData<string[]>([
-            "followers",
-            profileId,
-          ]);
-          const previousFollowings = queryClient.getQueryData<string[]>([
-            "followings",
-            profileId,
-          ]);
-
-          // Optimistically update the followings
-          let updatedFollowings;
-          if (currentUser.followings.includes(profileId)) {
-            updatedFollowings = currentUser.followings.filter(
-              (id) => id !== profileId
-            );
-          } else {
-            updatedFollowings = [...currentUser.followings, profileId];
-          }
-
-          dispatch(
-            updateProfile({
-              ...currentUser,
-              followings: updatedFollowings,
-            })
-          );
-
-          // Return a context with the previous values
-          return { previousFollowers, previousFollowings };
         },
         onError: (error, variables, context) => {
-          const { previousFollowers, previousFollowings } = context as any;
-
-          // Rollback to the previous values
-          if (previousFollowers) {
-            queryClient.setQueryData(
-              ["followers", variables.profileId],
-              previousFollowers
-            );
-          }
-          if (previousFollowings) {
-            queryClient.setQueryData(
-              ["followings", variables.profileId],
-              previousFollowings
-            );
-          }
-
           const errorMessage = catchAsyncError(error);
           ToastNotification({
             type: "Error",
@@ -647,6 +608,8 @@ interface DeleteReplyParams {
   cancerType: string;
   handleCloseMoreOptionsPress: () => void;
   onDeleteReply: (replyId: string) => void;
+  publicProfile: boolean;
+  publicUserId: string;
 }
 
 export const useReplyMutations = () => {
@@ -670,26 +633,28 @@ export const useReplyMutations = () => {
       },
       // Invalidate related queries on success to refresh the UI
       onSuccess: (data, variables) => {
-        const { postId, replyId, cancerType } = variables;
+        const { postId, replyId, cancerType, publicProfile, publicUserId } =
+          variables;
 
-        queryClient.setQueryData(
-          ["posts", cancerType],
-          (oldData: Post[] | undefined) => {
-            if (!oldData) return [];
+        const queryKey = publicProfile
+          ? ["profile-posts", publicUserId]
+          : ["posts", cancerType];
 
-            return oldData.map((post) => {
-              if (post._id.toString() === postId) {
-                return {
-                  ...post,
-                  replies: post.replies.filter(
-                    (reply) => reply._id.toString() !== replyId
-                  ),
-                };
-              }
-              return post;
-            });
-          }
-        );
+        queryClient.setQueryData(queryKey, (oldData: Post[] | undefined) => {
+          if (!oldData) return [];
+
+          return oldData.map((post) => {
+            if (post._id.toString() === postId) {
+              return {
+                ...post,
+                replies: post.replies.filter(
+                  (reply) => reply._id.toString() !== replyId
+                ),
+              };
+            }
+            return post;
+          });
+        });
 
         //To Refresh the PostReplies Page . . .
         variables?.onDeleteReply(replyId);
@@ -711,6 +676,11 @@ export const useReplyMutations = () => {
           message: errorMessage,
         });
       },
+      onSettled(data, error, variables, context) {
+        const { cancerType, publicUserId } = variables;
+        queryClient.invalidateQueries(["posts", cancerType]);
+        queryClient.invalidateQueries(["profile-posts", publicUserId]);
+      },
     }
   );
 
@@ -720,6 +690,8 @@ export const useReplyMutations = () => {
     profile: UserProfile | null;
     cancerType: string;
     onFavoriteReply: (reply: Reply, profile: UserProfile | null) => void;
+    publicProfile: boolean;
+    publicUserId: string;
   }
 
   const { isLoading: favoriteLoading, mutate: favoriteReplyMutation } =
@@ -733,23 +705,32 @@ export const useReplyMutations = () => {
       },
       {
         onMutate: async (variables) => {
-          const { postId, reply, profile, cancerType } = variables;
+          const {
+            postId,
+            reply,
+            profile,
+            cancerType,
+            publicProfile,
+            publicUserId,
+          } = variables;
 
           if (!reply._id) return;
 
           // Cancel any outgoing refetches
           await queryClient.cancelQueries(["posts", cancerType]);
+          await queryClient.cancelQueries(["profile-posts", publicUserId]);
+
+          const queryKey = publicProfile
+            ? ["profile-posts", publicUserId]
+            : ["posts", cancerType];
 
           // Snapshot the previous values
-          const previousPosts = queryClient.getQueryData<Post[]>([
-            "posts",
-            cancerType,
-          ]);
+          const previousPosts = queryClient.getQueryData<Post[]>(queryKey);
 
           // Optimistically update the posts
           if (previousPosts) {
             queryClient.setQueryData(
-              ["posts", cancerType],
+              queryKey,
               previousPosts.map((post) => {
                 if (post._id.toString() === postId) {
                   return {
@@ -792,9 +773,6 @@ export const useReplyMutations = () => {
             );
           }
 
-          //To Refresh the PostReplies Page . . .
-          variables?.onFavoriteReply(reply, profile);
-
           // Return a context with the previous values
           return { previousPosts };
         },
@@ -812,8 +790,15 @@ export const useReplyMutations = () => {
             message: errorMessage,
           });
         },
+        onSuccess: (success, variables, context) => {
+          const { reply, profile } = variables;
+          //To Refresh the PostReplies Page . . .
+          variables?.onFavoriteReply(reply, profile);
+        },
         onSettled: (data, error, variables) => {
-          queryClient.invalidateQueries(["posts", variables.cancerType]);
+          const { cancerType, publicUserId } = variables;
+          queryClient.invalidateQueries(["posts", cancerType]);
+          queryClient.invalidateQueries(["profile-posts", publicUserId]);
         },
       }
     );

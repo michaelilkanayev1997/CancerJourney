@@ -30,6 +30,8 @@ const PostReplies: FC<Props> = ({ route }) => {
     createdAt,
     forumType,
     replies: initialReplies,
+    publicProfile,
+    publicUserId,
   } = route.params || {};
 
   const [replies, setReplies] = useState<Reply[]>(initialReplies);
@@ -73,7 +75,7 @@ const PostReplies: FC<Props> = ({ route }) => {
     );
   };
 
-  const renderPost = useCallback(
+  const renderReply = useCallback(
     ({ item }: { item: Reply }) => (
       <ReplyCard
         reply={item}
@@ -84,6 +86,8 @@ const PostReplies: FC<Props> = ({ route }) => {
           );
         }}
         onFavoriteReply={handleFavoriteReply}
+        publicProfile={publicProfile}
+        publicUserId={publicUserId}
       />
     ),
     [replies]
@@ -93,10 +97,39 @@ const PostReplies: FC<Props> = ({ route }) => {
 
   const handleOnRefresh = useCallback(() => {
     setIsLoading(true);
-    queryClient.invalidateQueries(["posts", forumType]);
+
+    if (publicProfile) {
+      console.log("profile-posts");
+      queryClient.invalidateQueries(["profile-posts", publicUserId]);
+    } else {
+      console.log("posts");
+      queryClient.invalidateQueries(["posts", forumType]);
+    }
 
     setIsLoading(false);
-  }, [queryClient, forumType]);
+  }, [queryClient, forumType, publicUserId]);
+
+  const renderAddReplyButton = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("PostReplyAdd", {
+            _id,
+            description,
+            image,
+            owner,
+            createdAt,
+            forumType,
+            publicProfile,
+            publicUserId,
+            replies,
+          });
+        }}
+      >
+        <Text style={styles.linkText}>Add Reply</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,6 +152,8 @@ const PostReplies: FC<Props> = ({ route }) => {
         owner={owner}
         createdAt={createdAt}
         forumType={forumType}
+        publicProfile={false}
+        publicUserId={""}
       />
 
       <FlatList
@@ -126,7 +161,7 @@ const PostReplies: FC<Props> = ({ route }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[styles.flatListContainer]}
         data={replies}
-        renderItem={renderPost}
+        renderItem={renderReply}
         keyExtractor={keyExtractor}
         refreshControl={
           <RefreshControl
@@ -137,7 +172,7 @@ const PostReplies: FC<Props> = ({ route }) => {
             progressViewOffset={-15}
           />
         }
-        // ListFooterComponent={renderFooter}
+        ListFooterComponent={renderAddReplyButton}
         // onEndReached={handleOnEndReached}
         initialNumToRender={12}
         maxToRenderPerBatch={12}
@@ -202,10 +237,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     paddingTop: 100,
+    paddingBottom: "25%",
   },
   emptyText: {
     fontSize: 18,
     color: colors.CONTRAST,
+  },
+  linkText: {
+    color: colors.LIGHT_BLUE,
+    fontSize: 16,
+    fontWeight: "600",
+    textDecorationLine: "underline",
+    textAlign: "center",
+    marginVertical: 10,
   },
 });
 
