@@ -1,5 +1,6 @@
 export type postPaginationQuery = {
   pageNo: string;
   limit: string;
-  cancerType: string;
+  cancerType?: string;
+  profileId?: string;
 };
