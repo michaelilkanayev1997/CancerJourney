@@ -9,14 +9,14 @@ import SocialNavigator from "./SocialNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import ScheduleNavigator from "./ScheduleNavigator";
 import HomeNavigator from "./HomeNavigator";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import { usePushNotifications } from "src/hooks/usePushNotifications";
 import RegistrationForm from "@views/RegistrationForm";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
 
   // Register for push notifications and update token if necessary
   usePushNotifications(profile?.expoPushToken || "", profile?.id || null);

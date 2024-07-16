@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import LinkButton from "@ui/LinkButton";
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const ExportAndSendEmail: FC<Props> = ({ item }) => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
   const [mailIsAvailable, setMailIsAvailable] = useState<boolean>(false);
   const [downloadProgress, setDownloadProgress] = useState<number>(0);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);

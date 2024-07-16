@@ -15,18 +15,32 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import { cancerTypeRibbon, cancerTypes } from "@utils/enums";
 
 const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
 
   const [focusedCancerType, setFocusedCancerType] = useState<string | null>(
     profile?.cancerType || null
   );
 
   const navigateToMainWithCancerType = (cancerType: string) => {
-    props.navigation.navigate("Main", { cancerType });
+    props.navigation.navigate("Main", {
+      cancerType,
+      publicProfile: false,
+      publicUserId: "",
+    });
+    props.navigation.closeDrawer();
+  };
+
+  const navigateToMainWithPopularPosts = () => {
+    props.navigation.navigate("Main", {
+      popularPosts: true,
+      cancerType: "",
+      publicProfile: false,
+      publicUserId: "",
+    });
     props.navigation.closeDrawer();
   };
 
@@ -81,16 +95,28 @@ const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
         </View>
       </>
       <View style={styles.footerContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
+        <TouchableOpacity
+          onPress={() => {
+            setFocusedCancerType(null);
+            navigateToMainWithPopularPosts();
+          }}
+          style={styles.footerButton}
+        >
           <View style={styles.footerButtonContent}>
             <MaterialIcons name="trending-up" size={22} color="black" />
             <Text style={styles.footerButtonText}>Popular Posts</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={styles.footerButton}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("Settings");
+            props.navigation.closeDrawer();
+          }}
+          style={styles.footerButton}
+        >
           <View style={styles.footerButtonContent}>
-            <Ionicons name="exit-outline" size={22} color="black" />
-            <Text style={styles.footerButtonText}>Sign Out</Text>
+            <Ionicons name="settings-outline" size={22} color="black" />
+            <Text style={styles.footerButtonText}>Settings</Text>
           </View>
         </TouchableOpacity>
       </View>

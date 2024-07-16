@@ -18,15 +18,20 @@ import {
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { Reply } from "src/@types/post";
-import { getAuthState, UserProfile } from "src/store/auth";
+import { getAuthState, getProfile, UserProfile } from "src/store/auth";
 import PopupMenu from "./PopupMenu";
 import { useReplyMutations } from "src/hooks/mutations";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DrawerParamList } from "src/@types/navigation";
 
 interface Props {
   reply: Reply;
   post: { _id: string; forumType: string };
   onDeleteReply: (replyId: string) => void;
   onFavoriteReply: (reply: Reply, profile: UserProfile | null) => void;
+  publicProfile: boolean;
+  publicUserId: string;
 }
 
 const ReplyCard: FC<Props> = ({
@@ -34,14 +39,19 @@ const ReplyCard: FC<Props> = ({
   post,
   onDeleteReply,
   onFavoriteReply,
+  publicProfile,
+  publicUserId,
 }) => {
-  const { profile } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
   const [isProfileImageLoading, setIsProfileImageLoading] =
     useState<boolean>(true);
   const [showFullText, setShowFullText] = useState(false);
   const [isTextLong, setIsTextLong] = useState(false);
   const [PopupMenuVisible, setPopupMenuVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, right: 0 });
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<DrawerParamList>>();
 
   const MAX_LINES = 3;
 
@@ -107,6 +117,8 @@ const ReplyCard: FC<Props> = ({
               cancerType: post?.forumType,
               handleCloseMoreOptionsPress,
               onDeleteReply,
+              publicProfile,
+              publicUserId,
             });
           },
         },
@@ -125,8 +137,19 @@ const ReplyCard: FC<Props> = ({
       profile: profile,
       cancerType: post?.forumType,
       onFavoriteReply,
+      publicProfile,
+      publicUserId,
     });
   };
+
+  const handleReport = () => {
+    handleCloseMoreOptionsPress();
+    navigation.navigate("PostReport", { postId: post._id, replyId: reply._id });
+  };
+
+  const navigateToPostLikesPage = useCallback(() => {
+    navigation.navigate("PostLikes", { likes: reply?.likes, replyLikes: true });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -233,9 +256,7 @@ const ReplyCard: FC<Props> = ({
             entering={FadeIn.duration(500)}
             exiting={FadeOut.duration(200)}
           >
-            <TouchableOpacity
-            //  onPress={navigateToPostLikesPage}
-            >
+            <TouchableOpacity onPress={navigateToPostLikesPage}>
               <Text style={styles.replyText}>
                 {reply.likes.length}{" "}
                 {reply.likes.length > 1 || reply.likes.length === 0
@@ -253,7 +274,7 @@ const ReplyCard: FC<Props> = ({
           onRequestClose={() => setPopupMenuVisible(false)}
           deleteLoading={isOwnReply && deleteLoading}
           onUpdate={undefined}
-          // onReport={!isOwnReply ? handleReport : undefined}
+          onReport={!isOwnReply ? handleReport : undefined}
           onDelete={isOwnReply ? handleDelete : undefined}
           position={popupPosition}
         />

@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message";
 import {
   getAuthState,
   updateBusyState,
+  updateFollowings,
   updateLoggedInState,
   updateProfile,
   updateViewedOnBoardingState,
@@ -61,6 +62,7 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
           });
 
           dispatch(updateProfile(data.profile));
+          dispatch(updateFollowings(data.profile.followings));
           dispatch(updateLoggedInState(true));
           console.log("my auth : ", data);
         }

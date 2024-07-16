@@ -20,7 +20,7 @@ import LottieView from "lottie-react-native";
 import colors from "../utils/colors";
 import { calculateTimeDifference } from "@utils/helper";
 import { Like, Reply, User } from "src/@types/post";
-import { getAuthState } from "src/store/auth";
+import { getAuthState, getProfile } from "src/store/auth";
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
 import { DrawerParamList } from "src/@types/navigation";
@@ -38,6 +38,8 @@ interface PostProps {
   createdAt: string;
   replies?: Reply[];
   forumType: string;
+  publicProfile: boolean;
+  publicUserId: string;
 }
 
 const PostCard: FC<PostProps> = memo(
@@ -50,8 +52,10 @@ const PostCard: FC<PostProps> = memo(
     createdAt,
     forumType,
     replies,
+    publicProfile,
+    publicUserId,
   }) => {
-    const { profile } = useSelector(getAuthState);
+    const profile = useSelector(getProfile);
     const [showFullText, setShowFullText] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
     const [PopupMenuVisible, setPopupMenuVisible] = useState(false);
@@ -72,7 +76,7 @@ const PostCard: FC<PostProps> = memo(
 
     const navigateToPostLikesPage = useCallback(() => {
       navigation.navigate("PostLikes", { likes });
-    }, []);
+    }, [likes]);
 
     // Check if the current post belongs to the logged-in user
     const isOwnPost = profile?.id === owner?._id.toString();
@@ -128,6 +132,7 @@ const PostCard: FC<PostProps> = memo(
     };
 
     const handleReport = () => {
+      handleCloseMoreOptionsPress();
       navigation.navigate("PostReport", { postId: _id });
     };
 
@@ -158,6 +163,13 @@ const PostCard: FC<PostProps> = memo(
         { cancelable: false }
       );
     };
+
+    const navigateToProfile = useCallback(() => {
+      navigation.navigate("PublicProfile", {
+        publicUser: owner,
+        publicProfile: true,
+      });
+    }, []);
 
     return (
       <View>
@@ -194,19 +206,23 @@ const PostCard: FC<PostProps> = memo(
                   />
                 </View>
               ) : (
-                <Image
-                  style={styles.profileImage}
-                  source={
-                    owner?.avatar?.url
-                      ? { uri: owner?.avatar?.url }
-                      : require("@assets/user_profile.png")
-                  }
-                />
+                <TouchableOpacity onPress={() => navigateToProfile()}>
+                  <Image
+                    style={styles.profileImage}
+                    source={
+                      owner?.avatar?.url
+                        ? { uri: owner?.avatar?.url }
+                        : require("@assets/user_profile.png")
+                    }
+                  />
+                </TouchableOpacity>
               )}
             </View>
 
             <View style={{ flexDirection: "column", gap: 2 }}>
-              <Text style={styles.userName}>{owner?.name}</Text>
+              <TouchableOpacity onPress={() => navigateToProfile()}>
+                <Text style={styles.userName}>{owner?.name}</Text>
+              </TouchableOpacity>
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -293,6 +309,8 @@ const PostCard: FC<PostProps> = memo(
                     postId: _id.toString(),
                     profile,
                     cancerType: forumType,
+                    publicProfile,
+                    publicUserId,
                   })
                 }
               >
@@ -314,6 +332,9 @@ const PostCard: FC<PostProps> = memo(
                     owner,
                     createdAt,
                     forumType,
+                    publicProfile,
+                    publicUserId,
+                    replies,
                   });
                 }}
               >
@@ -360,6 +381,8 @@ const PostCard: FC<PostProps> = memo(
                       createdAt,
                       forumType,
                       replies,
+                      publicProfile,
+                      publicUserId,
                     });
                   }}
                 >
@@ -410,6 +433,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 15,
     fontWeight: "600",
+    textDecorationLine: "underline",
   },
   userType: {
     width: 200,
@@ -520,7 +544,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 150,
     borderRadius: 8,
-
     alignSelf: "center",
   },
 });
