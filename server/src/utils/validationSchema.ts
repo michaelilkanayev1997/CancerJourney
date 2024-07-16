@@ -200,3 +200,30 @@ export const PostReportSchema = yup.object().shape({
     })
     .required("Invalid postId!"),
 });
+
+export const ReplyReportSchema = yup.object().shape({
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(15, "Description must be at least 15 character long"),
+  postId: yup
+    .string()
+    .transform(function (value) {
+      if (this.isType(value) && isValidObjectId(value)) {
+        return value;
+      }
+
+      return "";
+    })
+    .required("Invalid postId!"),
+  replyId: yup
+    .string()
+    .transform(function (value) {
+      if (this.isType(value) && isValidObjectId(value)) {
+        return value;
+      }
+
+      return "";
+    })
+    .required("Invalid replyId!"),
+});
