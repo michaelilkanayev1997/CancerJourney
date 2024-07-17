@@ -12,7 +12,6 @@ import ScheduleNavigator from "./ScheduleNavigator";
 import HomeNavigator from "./HomeNavigator";
 import { getProfile } from "src/store/auth";
 import { usePushNotifications } from "src/hooks/usePushNotifications";
-import RegistrationForm from "@views/RegistrationForm";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,15 +33,6 @@ const TabNavigator = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
-      {/* If User dont have userType show RegistrationForm */}
-      {profile?.userType === "" && (
-        <Tab.Screen
-          name="RegistrationForm"
-          component={RegistrationForm}
-          options={{ title: t("registration-form") }}
-        />
-      )}
-
       <Tab.Screen
         name="HomeScreen"
         component={HomeNavigator}

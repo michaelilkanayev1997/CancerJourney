@@ -1,14 +1,21 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import LostPassword from "@views/auth/LostPassword";
 import SignIn from "@views/auth/SignIn";
 import SignUp from "@views/auth/SignUp";
 import Verification from "@views/auth/Verification";
+import RegistrationForm from "@views/RegistrationForm";
 import { AuthStackParamList } from "src/@types/navigation";
+import { getProfile } from "src/store/auth";
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthNavigator = () => {
+  const { t } = useTranslation();
+  const profile = useSelector(getProfile);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -17,6 +24,14 @@ const AuthNavigator = () => {
         animation: "slide_from_right",
       }}
     >
+      {/* If User dont have userType show RegistrationForm */}
+      {profile?.userType === "" && profile && (
+        <Stack.Screen
+          name="RegistrationForm"
+          component={RegistrationForm}
+          options={{ title: t("registration-form") }}
+        />
+      )}
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="LostPassword" component={LostPassword} />

@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 
 import {
   getAuthState,
+  getProfile,
   updateBusyState,
   updateFollowings,
   updateLoggedInState,
@@ -40,6 +41,7 @@ const AppTheme = {
 
 const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
   const { loggedIn, busy, viewedOnBoarding } = useSelector(getAuthState);
+  const profile = useSelector(getProfile);
 
   const dispatch = useDispatch();
 
@@ -83,7 +85,7 @@ const AppNavigator: FC<Props> = ({ setSafeAreaColor }) => {
           <View style={styles.loaderContainer}>
             <Loader />
           </View>
-        ) : loggedIn ? (
+        ) : loggedIn && profile?.userType !== "" ? (
           <TabNavigator />
         ) : !viewedOnBoarding ? (
           <OnboardingNavigator setSafeAreaColor={setSafeAreaColor} />
