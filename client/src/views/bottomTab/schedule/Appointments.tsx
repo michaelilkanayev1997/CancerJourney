@@ -9,17 +9,18 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 import AppointmentCard from "@components/AppointmentCard";
 import colors from "@utils/colors";
 import { useFetchSchedules } from "src/hooks/query";
 import Loader from "@ui/Loader";
-
 import AppointmentMoreOptionsModal from "@components/scheduleModal/AppointmentMoreOptionsModal";
 import { ScheduleStackParamList } from "src/@types/navigation";
 import { IAppointment } from "src/@types/schedule";
 
 const Appointments = () => {
+  const { t } = useTranslation();
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
   const [selectedAppointment, setSelectedAppointment] = useState<
     IAppointment | undefined
@@ -64,7 +65,7 @@ const Appointments = () => {
         </TouchableOpacity>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
-            Appointments
+            {t("appointments")}
           </Text>
           {appointments.length > 0 ? (
             appointments.map((appointment) => (
@@ -76,7 +77,7 @@ const Appointments = () => {
           ) : (
             <View style={styles.noAppointmentsContainer}>
               <Text style={styles.noAppointmentsText}>
-                No Appointments Available
+                {t("no-appointments-available")}
               </Text>
             </View>
           )}

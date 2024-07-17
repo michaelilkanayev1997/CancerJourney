@@ -10,19 +10,14 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { useDispatch, useSelector } from "react-redux";
 
 import colors from "@utils/colors";
 import { Like, User } from "src/@types/post";
 import placeholder from "@assets/user_profile.png";
 import PulseAnimationContainer from "@components/PulseAnimationContainer";
 import { DrawerParamList } from "src/@types/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAuthState,
-  getFollowings,
-  getProfile,
-  updateFollow,
-} from "src/store/auth";
+import { getFollowings, getProfile, updateFollow } from "src/store/auth";
 import { useFollowMutations } from "src/hooks/mutations";
 import { UserTypeKey, userTypes } from "@utils/enums";
 

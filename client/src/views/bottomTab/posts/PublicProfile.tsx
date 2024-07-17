@@ -10,11 +10,11 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 import Main from "./Main";
 import PublicProfileContainer from "@components/PublicProfileContainer";
-import { useSelector } from "react-redux";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 
 type Props = {
   route: any;

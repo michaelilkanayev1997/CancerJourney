@@ -1,13 +1,16 @@
 import colors from "@utils/colors";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Text } from "react-native";
 
 interface Props {}
 
 const NoFilesDisplay: FC<Props> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.noFilesContainer}>
-      <Text style={styles.noFilesText}>No files to display</Text>
+      <Text style={styles.noFilesText}>{t("no-files-to-display")}</Text>
     </View>
   );
 };

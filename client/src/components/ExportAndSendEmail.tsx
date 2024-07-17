@@ -13,10 +13,11 @@ import ProgressBar from "react-native-progress/Bar";
 import * as Sharing from "expo-sharing";
 import { FileSystemDownloadResult } from "expo-file-system";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import LinkButton from "@ui/LinkButton";
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const ExportAndSendEmail: FC<Props> = ({ item }) => {
+  const { t } = useTranslation();
   const profile = useSelector(getProfile);
   const [mailIsAvailable, setMailIsAvailable] = useState<boolean>(false);
   const [downloadProgress, setDownloadProgress] = useState<number>(0);
@@ -87,7 +89,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       const fileName = `${item.title}.${extension}`; // Extract filename from URL
       fileUri = `${FileSystem.documentDirectory}${fileName}`; // Local URI to download the file to
     } else {
-      Alert.alert("Error", "Could not attach file.");
+      Alert.alert(t("error"), t("could-not-attach-file"));
       return;
     }
 
@@ -103,7 +105,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       const downloadResult = await downloadResumable.downloadAsync();
 
       if (!downloadResult) {
-        Alert.alert("Error", "Could not Download file.");
+        Alert.alert(t("error"), "Could not Download file.");
         return;
       }
 
@@ -111,7 +113,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       return downloadResult;
     } catch (error) {
       console.error("An error occurred:", error);
-      Alert.alert("Error", "Failed to send email.");
+      Alert.alert(t("error"), t("failed-to-send-email"));
       return null;
     }
   };
@@ -120,15 +122,11 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
     setBusy(true);
     Vibration.vibrate(50);
     if (!mailIsAvailable) {
-      Alert.alert(
-        "Set Up Email Account",
-        "To send an email, please ensure you have a default email account set up. You can do this in your device's settings under 'Accounts' or 'Mail'.",
-        [
-          {
-            text: "OK",
-          },
-        ]
-      );
+      Alert.alert(t("set-up-email-account"), t("send-email-instructions"), [
+        {
+          text: t("ok"),
+        },
+      ]);
       return;
     }
 
@@ -137,7 +135,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       const downloadResult = await downloadFile();
 
       if (!downloadResult) {
-        Alert.alert("Download Error", "Failed to download the file.");
+        Alert.alert(t("download-error"), t("failed-to-download-file"));
         return;
       }
 
@@ -179,10 +177,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       }, 350);
     } else {
       // Sharing is not available, show an alert
-      Alert.alert(
-        "Unable to Export",
-        "Exporting is not available on your device."
-      );
+      Alert.alert(t("unable-to-export"), t("exporting-not-available"));
       setBusy(false);
     }
   };
@@ -195,7 +190,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       const downloadResult = await downloadFile(); // Download the file
 
       if (!downloadResult) {
-        Alert.alert("Download Error", "Failed to download the file.");
+        Alert.alert(t("download-error"), t("failed-to-download-file"));
         setBusy(false);
         return;
       }
@@ -210,10 +205,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
           // Check if the directoryUri contains 'externalstorage'
           if (!permissions.directoryUri.includes("externalstorage")) {
             // Inform the user to select a different directory
-            Alert.alert(
-              "Access Denied",
-              "Due to privacy restrictions. Please choose a different directory, preferably in your device's external storage, where the app has permission to save files."
-            );
+            Alert.alert(t("access-denied"), t("choose-different-directory"));
             setBusy(false);
             return; // Exit the function as we do not proceed with saving
           }
@@ -249,10 +241,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       }, 350);
     } else {
       // Sharing is not available, show an alert
-      Alert.alert(
-        "Unable to Export",
-        "Exporting is not available on your device."
-      );
+      Alert.alert(t("unable-to-export"), t("exporting-not-available"));
       setBusy(false);
     }
   };
@@ -264,7 +253,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
         <LinkButton
           onPress={exportAndShare}
           iconName="share-outline"
-          buttonText="Export/Share"
+          buttonText={t("export-share")}
           disabled={busy}
         />
       ) : (
@@ -272,13 +261,13 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
           <LinkButton
             onPress={androidExportFile}
             iconName="download-outline"
-            buttonText="Export"
+            buttonText={t("export")}
             disabled={busy}
           />
           <LinkButton
             onPress={exportAndShare}
             iconName="share-outline"
-            buttonText="Share"
+            buttonText={t("share")}
             disabled={busy}
           />
         </>
@@ -286,7 +275,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
       <LinkButton
         onPress={sendEmail}
         iconName="email-outline"
-        buttonText="Send Email"
+        buttonText={t("send-email")}
         disabled={busy}
       />
     </>
@@ -308,7 +297,7 @@ const ExportAndSendEmail: FC<Props> = ({ item }) => {
         />
 
         <Text style={styles.progressText}>
-          Progress: {downloadProgress === -1 ? "100" : downloadProgress}%
+          {t("progress")} {downloadProgress === -1 ? "100" : downloadProgress}%
         </Text>
       </View>
     </>

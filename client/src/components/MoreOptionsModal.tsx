@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import { ImageType } from "./ImageCard";
@@ -30,6 +31,7 @@ const MoreOptionsModal: FC<Props> = ({
   setOptionModalVisible,
   folderName,
 }) => {
+  const { t } = useTranslation();
   const [title, setTitle] = useState<string>(item.title);
   const [description, setDescription] = useState<string>(
     item.description || ""
@@ -127,14 +129,14 @@ const MoreOptionsModal: FC<Props> = ({
           </View>
 
           <View style={styles.titleWithError}>
-            <Text style={styles.label}>Title</Text>
+            <Text style={styles.label}>{t("title")}</Text>
             {title.length === 0 ? (
               <Animated.Text
                 entering={FadeInLeft.duration(500)}
                 exiting={FadeOutRight.duration(500)}
                 style={styles.errorMessage}
               >
-                Title is Required !
+                {t("title-required")}
               </Animated.Text>
             ) : null}
           </View>
@@ -142,15 +144,15 @@ const MoreOptionsModal: FC<Props> = ({
             style={styles.input}
             onChangeText={handleNameChange}
             value={title}
-            placeholder="Enter Name here"
+            placeholder={t("enter-title-here")}
           />
 
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>{t("description-placeholder")}</Text>
           <TextInput
             style={[styles.input, styles.descriptionInput]}
             onChangeText={handleDescriptionChange}
             value={description}
-            placeholder="Enter description here"
+            placeholder={t("enter-description-here")}
             multiline
           />
 
@@ -163,7 +165,7 @@ const MoreOptionsModal: FC<Props> = ({
               style={[styles.modalActionButton]}
             >
               <MaterialCommunityIcons name="delete" size={20} color="#FF5C5C" />
-              <Text style={styles.actionButtonText}>Delete</Text>
+              <Text style={styles.actionButtonText}>{t("delete")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               disabled={deleteLoading || updateLoading}
@@ -171,7 +173,7 @@ const MoreOptionsModal: FC<Props> = ({
               style={styles.modalActionButton}
             >
               <MaterialCommunityIcons name="update" size={20} color="#4A90E2" />
-              <Text style={styles.actionButtonText}>Update</Text>
+              <Text style={styles.actionButtonText}>{t("update")}</Text>
             </TouchableOpacity>
           </View>
         </View>

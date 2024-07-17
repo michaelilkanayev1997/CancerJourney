@@ -12,6 +12,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import AppButton from "@ui/AppButton";
@@ -25,10 +26,12 @@ export interface Props {
 }
 
 const screenHeight = Dimensions.get("window").height;
+
 const bottomSheetHeight = screenHeight * 0.56; // 56% of the screen height
 
 const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
   ({ folderName }, ref) => {
+    const { t } = useTranslation();
     const snapPoints = useMemo(() => [bottomSheetHeight], [bottomSheetHeight]);
     const navigation =
       useNavigation<NativeStackNavigationProp<UploadStackParamList>>();
@@ -106,8 +109,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         if (file.size !== undefined && file.size > 3000000) {
           ToastNotification({
             type: "Info",
-            message:
-              "The file you selected is larger than 3MB. Please choose a file that is smaller than 3MB.",
+            message: t("file-too-large"),
           });
 
           return;
@@ -147,7 +149,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         console.error("Error picking document:", error);
         ToastNotification({
           type: "Error",
-          message: "An error occurred while selecting the file.",
+          message: t("error-selecting-file"),
         });
       }
     };
@@ -162,14 +164,12 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
         backgroundStyle={{ backgroundColor: colors.PRIMARY }}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <Text style={styles.sheetTitle}>Upload File</Text>
-          <Text style={styles.sheetSubtitle}>
-            How would you like to proceed?
-          </Text>
+          <Text style={styles.sheetTitle}>{t("upload-file")}</Text>
+          <Text style={styles.sheetSubtitle}>{t("how-to-proceed")}</Text>
 
           <View style={styles.buttonContainer}>
             <AppButton
-              title="Take a Photo"
+              title={t("take-photo")}
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
               onPress={takeImage}
@@ -183,7 +183,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
               }
             />
             <AppButton
-              title="Choose From Phone"
+              title={t("choose-from-phone")}
               pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
               defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
               onPress={pickDocument}
@@ -197,7 +197,7 @@ const CustomBottomSheet = forwardRef<BottomSheetMethods, Props>(
               }
             />
             <AppButton
-              title="Cancel"
+              title={t("cancel")}
               pressedColor={["#D32F2F", "#C62828", "#B71C1C"]}
               defaultColor={["#EF9A9A", "#E57373", "#EF5350"]}
               onPress={handleCanecl}

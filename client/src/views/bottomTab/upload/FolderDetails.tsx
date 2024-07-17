@@ -26,7 +26,7 @@ type FolderDetailsProps = NativeStackScreenProps<
 >;
 
 const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
-  const { folderName } = route.params;
+  const { folderName, name } = route.params;
   const [numColumns, setNumColumns] = useState<number>(2);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<
@@ -37,7 +37,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
   const {
     data: folderFiles = [], // Default to an empty array if data is undefined
     isLoading,
-  } = useFetchFolderFiles(folderName);
+  } = useFetchFolderFiles(name);
 
   const toggleModalVisible = useCallback(() => {
     setModalVisible((prevVisible) => !prevVisible);
@@ -104,7 +104,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
             setSelectedImageIndex={setSelectedImageIndex}
             setModalVisible={toggleModalVisible}
             numColumns={numColumns}
-            folderName={folderName}
+            folderName={name}
           />
         )}
         keyExtractor={(item) => item._id}
@@ -132,7 +132,7 @@ const FolderDetails: FC<FolderDetailsProps> = ({ route, navigation }) => {
         <NoFilesDisplay />
       )}
 
-      <CustomBottomSheet ref={bottomSheetModalRef} folderName={folderName} />
+      <CustomBottomSheet ref={bottomSheetModalRef} folderName={name} />
     </View>
   );
 };

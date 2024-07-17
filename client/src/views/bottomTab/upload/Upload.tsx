@@ -13,25 +13,42 @@ import Animated, {
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 
 import { FolderList, Folder, IconName } from "@ui/Folder";
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
 import { useFetchFoldersLength } from "src/hooks/query";
 
-const folders: Array<{ name: string; icon: IconName; key: string }> = [
-  { name: "Blood Tests", icon: "blood-bag", key: "1" },
-  { name: "Treatments", icon: "hospital-box", key: "2" },
-  { name: "Medications", icon: "pill", key: "3" },
-  { name: "Reports", icon: "file-document-edit-outline", key: "4" },
-  { name: "Scans", icon: "file-image", key: "5" },
-  { name: "Appointments", icon: "calendar-clock", key: "6" },
-  { name: "Other", icon: "upload-outline", key: "7" },
+const folders: Array<{
+  tName: string;
+  name: string;
+  icon: IconName;
+  key: string;
+}> = [
+  { tName: "blood-tests", name: "Blood Tests", icon: "blood-bag", key: "1" },
+  { tName: "treatments", name: "Treatments", icon: "hospital-box", key: "2" },
+  { tName: "medications", name: "Medications", icon: "pill", key: "3" },
+  {
+    tName: "reports",
+    name: "Reports",
+    icon: "file-document-edit-outline",
+    key: "4",
+  },
+  { tName: "scans", name: "Scans", icon: "file-image", key: "5" },
+  {
+    tName: "appointments",
+    name: "Appointments",
+    icon: "calendar-clock",
+    key: "6",
+  },
+  { tName: "other", name: "Other", icon: "upload-outline", key: "7" },
 ];
 
 interface Props {}
 
 const Upload: FC<Props> = (props) => {
+  const { t } = useTranslation();
   const { data: folderLength, isLoading } = useFetchFoldersLength();
 
   const scale = useSharedValue(0.5); // Start from a smaller scale
@@ -96,12 +113,14 @@ const Upload: FC<Props> = (props) => {
           numColumns === 2 ? (
             <Folder
               folderLength={folderLength}
+              tName={t(item.tName)}
               name={item.name}
               icon={item.icon}
             />
           ) : (
             <FolderList
               folderLength={folderLength}
+              tName={t(item.tName)}
               name={item.name}
               icon={item.icon}
             />
