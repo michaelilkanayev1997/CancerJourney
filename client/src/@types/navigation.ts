@@ -37,6 +37,7 @@ export type UploadStackParamList = {
   FolderGrid?: undefined;
   FolderDetails: {
     folderName: string;
+    name: string;
     toggleLayout?: boolean;
   };
   FilePreview: {

@@ -5,8 +5,9 @@ import {
   Image,
   useWindowDimensions,
   ImageSourcePropType,
+  Text,
 } from "react-native";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 import colors from "@utils/colors";
 
@@ -23,29 +24,19 @@ const OnBoardingItem: FC<Props> = ({ item }) => {
   const { width } = useWindowDimensions();
 
   return (
-    <View style={[styles.container, { width }]}>
-      <Animated.View
-        style={styles.imageContainer}
-        entering={FadeInUp.delay(200).duration(1000)}
-      >
+    <Animated.View
+      entering={FadeIn.delay(200).duration(1200)}
+      style={[styles.container, { width }]}
+    >
+      <View style={styles.imageContainer}>
         <Image source={item.image} style={styles.image} />
-      </Animated.View>
+      </View>
 
       <View style={styles.infoContainer}>
-        <Animated.Text
-          entering={FadeInDown.delay(200).duration(1200).springify()}
-          style={styles.title}
-        >
-          {item.title}
-        </Animated.Text>
-        <Animated.Text
-          entering={FadeInDown.delay(600).duration(1200).springify()}
-          style={styles.description}
-        >
-          {item.description}
-        </Animated.Text>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -54,10 +45,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   imageContainer: {
     width: "70%",
-    height: undefined,
     aspectRatio: 1,
     borderRadius: 50,
     overflow: "hidden",
