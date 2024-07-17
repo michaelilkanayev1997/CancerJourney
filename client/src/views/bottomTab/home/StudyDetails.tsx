@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import { Study } from "@components/StudyCard";
-import { useTranslation } from "react-i18next";
 
 interface StudyDetailsRouteParams {
   study: Study;

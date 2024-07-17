@@ -8,6 +8,8 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
+import { RouteProp, useRoute } from "@react-navigation/native";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
@@ -15,10 +17,10 @@ import { useFetchSchedules } from "src/hooks/query";
 import MedicationCard from "@components/MedicationCard";
 import MedicationMoreOptionsModal from "@components/scheduleModal/MedicationMoreOptionsModal";
 import { IMedication } from "src/@types/schedule";
-import { RouteProp, useRoute } from "@react-navigation/native";
 import { ScheduleStackParamList } from "src/@types/navigation";
 
 const Medications = () => {
+  const { t } = useTranslation();
   const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
   const [selectedAppointment, setSelectedAppointment] = useState<
     IMedication | undefined
@@ -63,7 +65,7 @@ const Medications = () => {
         </TouchableOpacity>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.header} numberOfLines={1} ellipsizeMode="tail">
-            Medications
+            {t("medications")}
           </Text>
           {medications.length > 0 ? (
             medications.map((medication) => (
@@ -75,7 +77,7 @@ const Medications = () => {
           ) : (
             <View style={styles.noMedicationsContainer}>
               <Text style={styles.noMedicationsText}>
-                No Medications Available
+                {t("no-medications-available")}
               </Text>
             </View>
           )}

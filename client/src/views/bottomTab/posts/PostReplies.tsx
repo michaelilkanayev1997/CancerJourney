@@ -1,10 +1,7 @@
+import { FC, useCallback, useEffect, useState } from "react";
 import PostCard from "@components/PostCard";
 import ReplyCard from "@components/ReplyCard";
 import { useNavigation } from "@react-navigation/native";
-import Loader from "@ui/Loader";
-import colors from "@utils/colors";
-import { generateObjectId } from "@utils/helper";
-import { FC, useCallback, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -16,6 +13,9 @@ import {
   RefreshControl,
 } from "react-native";
 import { useQueryClient } from "react-query";
+
+import colors from "@utils/colors";
+import { generateObjectId } from "@utils/helper";
 import { Reply } from "src/@types/post";
 import { UserProfile } from "src/store/auth";
 

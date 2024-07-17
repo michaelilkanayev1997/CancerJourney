@@ -4,10 +4,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 
 import colors from "@utils/colors";
 import {
-  getAuthState,
   getProfile,
   updateBusyState,
   updateLoggedInState,
@@ -17,7 +17,6 @@ import { Keys, removeFromAsyncStorage } from "@utils/asyncStorage";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { ToastNotification } from "@utils/toastConfig";
-import { useQueryClient } from "react-query";
 import LanguageSettingsModal from "@components/LanguageSettingsModal";
 
 interface Props {}

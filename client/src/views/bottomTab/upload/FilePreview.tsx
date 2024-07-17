@@ -12,6 +12,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "react-query";
 import LottieView from "lottie-react-native";
+import { useTranslation } from "react-i18next";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import AppButton from "@ui/AppButton";
@@ -28,6 +29,7 @@ type FilePreviewRouteType = NativeStackScreenProps<
 >;
 
 const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const { fileUri, fileType, folderName } = route.params;
   const scrollViewRef = useRef<ScrollView>(null);
@@ -63,13 +65,13 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
     if (title.length === 0) {
       ToastNotification({
         type: "Info",
-        message: "Title is required !",
+        message: t("title-required"),
       });
       return;
     } else if (!fileUri) {
       ToastNotification({
         type: "Info",
-        message: "File is required !",
+        message: t("file-required"),
       });
       return;
     }
@@ -99,7 +101,7 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
 
       ToastNotification({
         type: "Success",
-        message: "File uploaded successfully!",
+        message: t("file-upload-success"),
       });
     } catch (error) {
       const errorMessage = catchAsyncError(error);
@@ -182,27 +184,27 @@ const FilePreview: FC<FilePreviewRouteType> = ({ route }) => {
                 toggleModalVisible();
               }}
             >
-              Open PDF
+              {t("open-pdf")}
             </Text>
           </>
         )}
 
         <TextInput
           style={styles.input}
-          placeholder="Title*"
+          placeholder={t("title-placeholder")}
           value={title}
           onChangeText={setTitle}
         />
         <TextInput
           style={[styles.input, styles.descriptionInput]}
-          placeholder="Description"
+          placeholder={t("description-placeholder")}
           value={description}
           onChangeText={setDescription}
           multiline
         />
 
         <AppButton
-          title="Save"
+          title={t("save")}
           busy={isLoading}
           pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
           defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}

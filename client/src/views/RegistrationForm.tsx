@@ -1,8 +1,9 @@
 import { FC, useState } from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { useDispatch } from "react-redux";
 import { Feather } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 import InputSections, { NewProfile } from "@components/InputSections";
 import AppButton from "@ui/AppButton";
@@ -14,6 +15,7 @@ import { updateProfile } from "src/store/auth";
 interface Props {}
 
 const RegistrationForm: FC<Props> = (props) => {
+  const { t } = useTranslation();
   const [newProfile, setNewProfile] = useState<NewProfile>({
     gender: "Male",
     birthDate: null,
@@ -55,7 +57,7 @@ const RegistrationForm: FC<Props> = (props) => {
         entering={FadeInRight.duration(1000)}
         style={styles.header}
       >
-        Registration
+        {t("registration")}
       </Animated.Text>
 
       <ScrollView
@@ -76,7 +78,7 @@ const RegistrationForm: FC<Props> = (props) => {
         style={styles.button}
       >
         <AppButton
-          title="Register"
+          title={t("register")}
           pressedColor={["#4285F4", "#3578E5", "#2A6ACF"]}
           defaultColor={["#4A90E2", "#4285F4", "#5B9EF4"]}
           onPress={handleSubmit}

@@ -14,19 +14,19 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import LottieView from "lottie-react-native";
+import { useSelector } from "react-redux";
+import { useQueryClient } from "react-query";
 
 import colors from "@utils/colors";
 import PostCard from "@components/PostCard";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import LottieView from "lottie-react-native";
 import { UserTypeKey, userTypes } from "@utils/enums";
-import { useSelector } from "react-redux";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import Loader from "@ui/Loader";
 import { ToastNotification } from "@utils/toastConfig";
 import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
-import { useQueryClient } from "react-query";
 import { Post } from "src/@types/post";
 
 interface Props {}

@@ -1,5 +1,11 @@
-import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react";
-import React, { useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -14,20 +20,18 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useSelector } from "react-redux";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
+import { useFocusEffect } from "@react-navigation/native";
 
 import colors from "@utils/colors";
 import CustomPicker from "@components/CustomPicker";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import InputRowContainer from "@ui/InputRowContainer";
-
-import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
-
 import { cancerTypeRibbon } from "@utils/enums";
 import PhotoModal from "@components/PhotoModal";
 import { ToastNotification } from "@utils/toastConfig";
 import { getClient } from "src/api/client";
 import catchAsyncError from "src/api/catchError";
-import { useFocusEffect } from "@react-navigation/native";
 import Loader from "@ui/Loader";
 import { usePostMutations } from "src/hooks/mutations";
 

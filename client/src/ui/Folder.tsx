@@ -2,6 +2,7 @@ import { FC } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 import { UploadStackParamList } from "src/@types/navigation";
 import colors from "@utils/colors";
@@ -18,44 +19,55 @@ export type IconName =
 
 export interface Props {
   name: string;
+  tName: string;
   icon: IconName;
   folderLength?: FoldersLength;
 }
 
-export const Folder: FC<Props> = ({ folderLength, name, icon }) => {
+export const Folder: FC<Props> = ({ folderLength, name, tName, icon }) => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<UploadStackParamList>>();
 
   return (
     <TouchableOpacity
       style={styles.folder}
-      onPress={() => navigation.navigate("FolderDetails", { folderName: name })}
+      onPress={() =>
+        navigation.navigate("FolderDetails", { folderName: tName, name })
+      }
     >
       <MaterialCommunityIcons name={icon} size={50} color={colors.LIGHT_BLUE} />
-      <Text style={styles.folderText}>{name}</Text>
+      <Text style={styles.folderText}>{tName}</Text>
       <View style={styles.fileInfoContainer}>
         <MaterialCommunityIcons name="file-outline" size={16} color="#003366" />
         <Text style={styles.fileInfoText}>
-          {folderLength ? `${folderLength[name]} Files` : `0 Files`}
+          {folderLength
+            ? `${folderLength[name]} ${t("files")}`
+            : `0 ${t("files")}`}
         </Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export const FolderList: FC<Props> = ({ folderLength, name, icon }) => {
+export const FolderList: FC<Props> = ({ folderLength, name, tName, icon }) => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<UploadStackParamList>>();
 
   return (
     <TouchableOpacity
       style={styles.folderList}
-      onPress={() => navigation.navigate("FolderDetails", { folderName: name })}
+      onPress={() =>
+        navigation.navigate("FolderDetails", { folderName: tName, name })
+      }
     >
       <MaterialCommunityIcons name={icon} size={30} color="#003366" />
       <View style={styles.centerContainer}>
-        <Text style={styles.folderListText}>{name}</Text>
+        <Text style={styles.folderListText}>{tName}</Text>
       </View>
       <Text style={styles.fileInfoText}>
-        {folderLength ? `${folderLength[name]} Files` : `0 Files`}
+        {folderLength
+          ? `${folderLength[name]} ${t("files")}`
+          : `0 ${t("files")}`}
       </Text>
     </TouchableOpacity>
   );
