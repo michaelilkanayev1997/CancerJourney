@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import colors from "@utils/colors";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -24,6 +25,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
   const profile = useSelector(getProfile);
+  const navigation = useNavigation();
 
   const privateUser = {
     _id: profile?.id,
@@ -36,8 +38,6 @@ const PublicProfile: FC<Props> = ({ route }) => {
     publicUser: privateUser,
     publicProfile: true,
   };
-
-  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,6 +71,14 @@ const PublicProfile: FC<Props> = ({ route }) => {
             tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
             tabBarPressColor: colors.INACTIVE_CONTRAST, // Remove ripple effect
             tabBarPressOpacity: 0.8, // Adjust the opacity as needed
+            lazy: true, // Enable lazy rendering
+            lazyPreloadDistance: 1, // Preload one adjacent screen
+            lazyPlaceholder: () => (
+              <View style={styles.lazyPlaceholder}>
+                <ActivityIndicator size="large" color={colors.ICON} />
+              </View>
+            ),
+            //swipeEnabled: false,
           }}
         >
           <Tab.Screen
@@ -85,6 +93,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 </Text>
               ),
             }}
+            navigationKey={publicUser?._id}
             initialParams={{
               publicProfile: true,
               publicUserId: publicUser?._id || privateUser._id,
@@ -103,6 +112,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 </Text>
               ),
             }}
+            navigationKey={publicUser?._id}
             initialParams={{
               publicProfile: true,
               publicUserId: publicUser?._id || privateUser._id,
@@ -156,6 +166,11 @@ const styles = StyleSheet.create({
   },
   tabLabelFocused: {
     color: colors.ICON,
+  },
+  lazyPlaceholder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

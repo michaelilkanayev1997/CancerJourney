@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -43,6 +43,14 @@ const SocialTabs = () => {
       screenOptions={{
         tabBarStyle: styles.tabbarStyle,
         tabBarLabelStyle: styles.tabbarLabelStyle,
+        lazy: true, // Enable lazy rendering
+        lazyPreloadDistance: 1, // Preload one adjacent screen
+        lazyPlaceholder: () => (
+          <View style={styles.lazyPlaceholder}>
+            <ActivityIndicator size="large" color={colors.ICON} />
+          </View>
+        ),
+        swipeEnabled: false,
       }}
     >
       <Tab.Screen name="Forum" component={Forum} />
@@ -88,6 +96,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textTransform: "none",
     marginTop: -8,
+  },
+  lazyPlaceholder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

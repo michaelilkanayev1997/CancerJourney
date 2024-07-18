@@ -56,8 +56,8 @@ const PublicProfileContainer: FC<Props> = ({
 
   const isFollowing = followingsState.includes(profile._id);
 
-  console.log("followers--->", followers);
-  console.log("followings--->", followings);
+  // console.log("followers--->", followers);
+  // console.log("followings--->", followings);
 
   const navigateToPostLikesPage = useCallback(
     (followersOrFollowings: string) => {

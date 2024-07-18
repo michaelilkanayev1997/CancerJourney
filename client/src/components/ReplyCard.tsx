@@ -1,6 +1,3 @@
-import colors from "@utils/colors";
-import { UserTypeKey, userTypes } from "@utils/enums";
-import { calculateTimeDifference } from "@utils/helper";
 import LottieView from "lottie-react-native";
 import { FC, useCallback, useState } from "react";
 import {
@@ -18,11 +15,15 @@ import {
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { Reply } from "src/@types/post";
-import { getAuthState, getProfile, UserProfile } from "src/store/auth";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+
+import colors from "@utils/colors";
+import { UserTypeKey, userTypes } from "@utils/enums";
+import { calculateTimeDifference } from "@utils/helper";
+import { getProfile, UserProfile } from "src/store/auth";
 import PopupMenu from "./PopupMenu";
 import { useReplyMutations } from "src/hooks/mutations";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DrawerParamList } from "src/@types/navigation";
 
 interface Props {
@@ -151,6 +152,13 @@ const ReplyCard: FC<Props> = ({
     navigation.navigate("PostLikes", { likes: reply?.likes, replyLikes: true });
   }, []);
 
+  const navigateToProfile = useCallback(() => {
+    navigation.navigate("PublicProfile", {
+      publicUser: reply.owner,
+      publicProfile: true,
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.userDetails}>
@@ -182,14 +190,16 @@ const ReplyCard: FC<Props> = ({
               />
             </View>
           ) : (
-            <Image
-              style={styles.profileImage}
-              source={
-                reply?.owner?.avatar?.url
-                  ? { uri: reply?.owner?.avatar?.url }
-                  : require("@assets/user_profile.png")
-              }
-            />
+            <TouchableOpacity onPress={() => navigateToProfile()}>
+              <Image
+                style={styles.profileImage}
+                source={
+                  reply?.owner?.avatar?.url
+                    ? { uri: reply?.owner?.avatar?.url }
+                    : require("@assets/user_profile.png")
+                }
+              />
+            </TouchableOpacity>
           )}
         </View>
 
@@ -200,7 +210,9 @@ const ReplyCard: FC<Props> = ({
             justifyContent: "flex-start",
           }}
         >
-          <Text style={styles.userName}>{reply?.owner?.name}</Text>
+          <TouchableOpacity onPress={() => navigateToProfile()}>
+            <Text style={styles.userName}>{reply?.owner?.name}</Text>
+          </TouchableOpacity>
           <Text numberOfLines={1} ellipsizeMode="tail" style={styles.userType}>
             {userTypes[reply?.owner?.userType as UserTypeKey]}
           </Text>

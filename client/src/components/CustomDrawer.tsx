@@ -15,7 +15,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
 import colors from "@utils/colors";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import { cancerTypeRibbon, cancerTypes } from "@utils/enums";
 
 const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {

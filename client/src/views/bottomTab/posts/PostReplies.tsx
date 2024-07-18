@@ -99,10 +99,8 @@ const PostReplies: FC<Props> = ({ route }) => {
     setIsLoading(true);
 
     if (publicProfile) {
-      console.log("profile-posts");
       queryClient.invalidateQueries(["profile-posts", publicUserId]);
     } else {
-      console.log("posts");
       queryClient.invalidateQueries(["posts", forumType]);
     }
 

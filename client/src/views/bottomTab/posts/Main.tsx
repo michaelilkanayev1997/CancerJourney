@@ -11,7 +11,11 @@ import {
 } from "react-native";
 import { useQueryClient } from "react-query";
 import { Entypo } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
 
@@ -44,13 +48,23 @@ const limit = 6;
 const Main = ({ route }: Props) => {
   const { name: routeName } = useRoute();
   const profile = useSelector(getProfile);
+
+  const [params, setParams] = useState(route.params || {});
+
+  useFocusEffect(
+    useCallback(() => {
+      setParams(route.params);
+    }, [route.params])
+  );
+
   const {
     popularPosts = false,
     publicProfile = false,
     cancerType = profile?.cancerType,
     publicUserId = profile?.id,
     postsByReplies = false,
-  } = route.params || {};
+  } = params || {};
+
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
@@ -67,15 +81,15 @@ const Main = ({ route }: Props) => {
       ? useFetchPopulalrPosts()
       : useFetchPosts(cancerType);
 
-  console.log(`[${routeName}] data--->`, data?.length);
-  console.log(`[${routeName}] publicProfile--->`, publicProfile);
-  console.log(`[${routeName}] publicUserId--->`, publicUserId);
+  // console.log(`[${routeName}] data--->`, data?.length);
+  // console.log(`[${routeName}] publicProfile--->`, publicProfile);
+  // console.log(`[${routeName}] publicUserId--->`, publicUserId);
 
-  console.log("route", publicProfile, cancerType);
-  console.log(data?.length);
-  console.log("isFetchingMore", isFetchingMore);
-  console.log("hasMore", hasMore);
-  console.log("pageNo", pageNo);
+  // console.log("route", publicProfile, cancerType);
+  // console.log(data?.length);
+  // console.log("isFetchingMore", isFetchingMore);
+  // console.log("hasMore", hasMore);
+  // console.log("pageNo", pageNo);
 
   useEffect(() => {
     setHasMore(true);
