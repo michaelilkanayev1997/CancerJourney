@@ -217,7 +217,7 @@ const NewPost: FC<Props> = ({ route }) => {
 
       formData.append("forumType", newPost.cancerType);
       formDataObject.forumType = newPost.cancerType;
-      console.log(newPost.image);
+
       if (newPost.image) {
         const image = {
           uri: newPost.image.uri || newPost.image.url,

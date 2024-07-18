@@ -64,7 +64,6 @@ const PostReport: FC<Props> = ({ route }) => {
           postId,
         });
       }
-      console.log(data?.data);
 
       if (!data?.data?.success) {
         throw new Error("Failed to add the Report");

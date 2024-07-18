@@ -49,7 +49,7 @@ const PostLikes: FC<Props> = ({ route }) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
-  console.log("likes-->", likes);
+  // console.log("likes-->", likes);
 
   const { updateFollowMutation } = useFollowMutations();
 
@@ -160,8 +160,8 @@ const PostLikes: FC<Props> = ({ route }) => {
   const renderItem = useCallback(
     ({ item, index }: { item: Like; index: number }) => {
       const isFollowing = followingsState.includes(item?.userId?._id);
-      console.log(followingsState);
-      console.log("isFollowing", isFollowing);
+      // console.log(followingsState);
+      // console.log("isFollowing", isFollowing);
       const inputRange = [-1, 0, ITEM_SIZE * index, ITEM_SIZE * (index + 2)];
 
       const opacityInputRange = [
