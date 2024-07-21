@@ -1,5 +1,3 @@
-import React from "react";
-import { render } from "@testing-library/react-native";
 import CustomDrawer from "../../client/src/components/CustomDrawer";
 import { Provider } from "react-redux";
 import store from "src/store";

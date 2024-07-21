@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import ImageUpload from "../../client/src/components/ImageUpload"; // Adjust the path as necessary
 

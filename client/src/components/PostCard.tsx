@@ -111,7 +111,7 @@ const PostCard: FC<PostProps> = memo(
     const handleTextLayout = (event: LayoutChangeEvent) => {
       const { height } = event.nativeEvent.layout;
 
-      setIsTextLong(height > 55); //Threshold for 3 lines of text
+      setIsTextLong(height > 54); //Threshold for 3 lines of text
     };
 
     const toggleShowFullText = () => {

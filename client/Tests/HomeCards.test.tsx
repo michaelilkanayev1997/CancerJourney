@@ -17,23 +17,23 @@ describe("<HomeCards />", () => {
 
   it("renders without crashing", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    expect(getByText("Upload Files & Images")).toBeTruthy();
-    expect(getByText("Manage\nAppointments")).toBeTruthy();
-    expect(getByText("Manage\nMedications")).toBeTruthy();
-    expect(getByText("Social Forum")).toBeTruthy();
-    expect(getByText("New Posts")).toBeTruthy();
-    expect(getByText("Settings")).toBeTruthy();
+    expect(getByText("upload-files-and-images")).toBeTruthy();
+    expect(getByText("manage-appointments")).toBeTruthy();
+    expect(getByText("manage-medications")).toBeTruthy();
+    expect(getByText("social-forum")).toBeTruthy();
+    expect(getByText("new-posts")).toBeTruthy();
+    expect(getByText("settings")).toBeTruthy();
   });
 
   it("navigates to UploadScreen on Upload button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("Upload Files & Images"));
+    fireEvent.press(getByText("upload-files-and-images"));
     expect(mockNavigate).toHaveBeenCalledWith("UploadScreen");
   });
 
   it("navigates to Appointments on Manage Appointments button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("Manage\nAppointments"));
+    fireEvent.press(getByText("manage-appointments"));
     expect(mockNavigate).toHaveBeenCalledWith("Schedule", {
       screen: "Appointments",
       params: { appointment: undefined },
@@ -42,7 +42,7 @@ describe("<HomeCards />", () => {
 
   it("navigates to Medications on Manage Medications button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("Manage\nMedications"));
+    fireEvent.press(getByText("manage-medications"));
     expect(mockNavigate).toHaveBeenCalledWith("Schedule", {
       screen: "Medications",
       params: { medication: undefined },
@@ -51,7 +51,7 @@ describe("<HomeCards />", () => {
 
   it("navigates to Social Forum on Social Forum button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("Social Forum"));
+    fireEvent.press(getByText("social-forum"));
     expect(mockNavigate).toHaveBeenCalledWith("PostScreen", {
       screen: "SocialTabs",
       params: {
@@ -62,7 +62,7 @@ describe("<HomeCards />", () => {
 
   it("navigates to New Post on New Posts button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("New Posts"));
+    fireEvent.press(getByText("new-posts"));
     expect(mockNavigate).toHaveBeenCalledWith("PostScreen", {
       screen: "SocialTabs",
       params: {
@@ -73,7 +73,7 @@ describe("<HomeCards />", () => {
 
   it("navigates to Settings on Settings button press", () => {
     const { getByText } = render(<HomeCards screenWidth={400} />);
-    fireEvent.press(getByText("Settings"));
+    fireEvent.press(getByText("settings"));
     expect(mockNavigate).toHaveBeenCalledWith("HomeScreen", {
       screen: "Settings",
     });

@@ -1,7 +1,5 @@
 import { render, fireEvent } from "@testing-library/react-native";
-import React from "react";
-import AppButton from "@ui/AppButton"; // Adjust the path accordingly
-import colors from "@utils/colors";
+import AppButton from "@ui/AppButton";
 
 describe("<AppButton />", () => {
   const mockOnPress = jest.fn();
@@ -50,7 +48,7 @@ describe("<AppButton />", () => {
   });
 
   it("changes colors on press", () => {
-    const { getByText, getByTestId } = render(<AppButton {...defaultProps} />);
+    const { getByText } = render(<AppButton {...defaultProps} />);
     const button = getByText("Click Me");
   });
 });

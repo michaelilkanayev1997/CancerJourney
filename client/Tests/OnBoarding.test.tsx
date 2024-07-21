@@ -25,7 +25,7 @@ describe("<OnBoarding />", () => {
 
   it("always renders a component", () => {
     const { getByText } = render(<MockedOnBoarding />);
-    expect(getByText("Next")).toBeTruthy(); // Assuming 'Next' button is present
+    expect(getByText("next")).toBeTruthy();
   });
   test("Placeholder test for arithmetic", () => {
     // Placeholder test for basic arithmetic operation
@@ -63,7 +63,7 @@ describe("<OnBoarding />", () => {
 
   it("renders the skip button", () => {
     const { getByText } = render(<MockedOnBoarding />);
-    expect(getByText("Skip")).toBeTruthy(); // Assuming 'Skip' button is present
+    expect(getByText("skip")).toBeTruthy(); // Assuming 'Skip' button is present
   });
   test("Placeholder test 1", () => {
     // This test will always pass

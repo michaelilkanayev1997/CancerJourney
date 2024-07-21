@@ -90,7 +90,8 @@ const ReplyCard: FC<Props> = ({
 
   const handleTextLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
-    setIsTextLong(height > 52); //Threshold for 3 lines of text
+
+    setIsTextLong(height > 47); //Threshold for 3 lines of text
   };
 
   const toggleShowFullText = () => {

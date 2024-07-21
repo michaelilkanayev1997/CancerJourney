@@ -15,7 +15,8 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 const AuthNavigator = () => {
   const { t } = useTranslation();
   const profile = useSelector(getProfile);
-
+  console.log(profile);
+  console.log(profile?.userType === "");
   return (
     <Stack.Navigator
       screenOptions={{
@@ -24,6 +25,14 @@ const AuthNavigator = () => {
         animation: "slide_from_right",
       }}
     >
+      {!profile && (
+        <>
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="LostPassword" component={LostPassword} />
+          <Stack.Screen name="Verification" component={Verification} />
+        </>
+      )}
       {/* If User dont have userType show RegistrationForm */}
       {profile?.userType === "" && profile && (
         <Stack.Screen
@@ -32,10 +41,6 @@ const AuthNavigator = () => {
           options={{ title: t("registration-form") }}
         />
       )}
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="SignIn" component={SignIn} />
-      <Stack.Screen name="LostPassword" component={LostPassword} />
-      <Stack.Screen name="Verification" component={Verification} />
     </Stack.Navigator>
   );
 };

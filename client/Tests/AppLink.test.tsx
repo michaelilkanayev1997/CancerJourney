@@ -1,6 +1,5 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import AppLink from "@ui/AppLink"; // Adjust import path as per your project structure
+import AppLink from "@ui/AppLink";
 
 describe("<AppLink />", () => {
   const mockOnPress = jest.fn();
