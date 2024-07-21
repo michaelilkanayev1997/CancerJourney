@@ -1,6 +1,5 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import AppInput from "@ui/AppInput"; // Adjust the import path accordingly
+import AppInput from "@ui/AppInput";
 
 {
   ("setupFilesAfterEnv");

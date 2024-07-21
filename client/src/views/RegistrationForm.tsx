@@ -37,7 +37,7 @@ const RegistrationForm: FC<Props> = (props) => {
       const { data } = await client.post("/auth/update-profile", newProfile);
 
       ToastNotification({
-        message: data.message,
+        message: t("profileUpdated"),
       });
       dispatch(updateProfile(data.profile));
     } catch (error) {

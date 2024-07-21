@@ -1,7 +1,3 @@
-import React from "react";
-import { render } from "@testing-library/react-native";
-import CustomImageZoomViewer from "../../client/src/components/CustomImageZoomViewer";
-
 const mockToggleModalVisible = jest.fn();
 const mockImages = [
   { uri: "http://example.com/image1.jpg", type: "image" },

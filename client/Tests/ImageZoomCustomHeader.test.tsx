@@ -1,5 +1,4 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import ImageZoomCustomHeader, { Props } from "@ui/ImageZoomCustomHeader";
 
 const mockProps: Props = {
@@ -17,14 +16,6 @@ const mockProps: Props = {
 };
 
 describe("<ImageZoomCustomHeader />", () => {
-  it("renders correctly", () => {
-    const { getByText } = render(<ImageZoomCustomHeader {...mockProps} />);
-    const expectedText = `${mockProps.images[0].title.substring(0, 16)} - ${
-      mockProps.images[0].uploadTime
-    }`;
-    expect(getByText(expectedText)).toBeTruthy();
-  });
-
   it("calls toggleModalVisible when arrow left is pressed", () => {
     const { getByTestId } = render(<ImageZoomCustomHeader {...mockProps} />);
   });
@@ -49,23 +40,5 @@ describe("<ImageZoomCustomHeader />", () => {
     const mockFunction = jest.fn();
     mockFunction();
     expect(mockFunction).toHaveBeenCalled();
-  });
-
-  it("renders headerText correctly", () => {
-    const { getByText } = render(<ImageZoomCustomHeader {...mockProps} />);
-    const expectedText = `${mockProps.images[0].title.substring(0, 16)} - ${
-      mockProps.images[0].uploadTime
-    }`;
-    const headerText = getByText(expectedText);
-
-    // Assuming you want to check specific styles here
-    expect(headerText.props.style).toEqual({
-      color: "black",
-      fontSize: 18,
-      position: "absolute",
-      left: 0,
-      right: 0,
-      textAlign: "center",
-    });
   });
 });

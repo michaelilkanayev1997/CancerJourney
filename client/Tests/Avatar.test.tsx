@@ -1,5 +1,4 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import Avatar from "@ui/Avatar"; // Adjust import path as per your project structure
 
 describe("<Avatar />", () => {

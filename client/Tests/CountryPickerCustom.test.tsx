@@ -1,8 +1,6 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import CountryPickerCustom, {
-  Props,
-} from "../../client/src/components/CountryPickerCustom"; // Adjust the import path as per your setup
+import { render } from "@testing-library/react-native";
+import CountryPickerCustom from "../../client/src/components/CountryPickerCustom";
 
 // Mock CountryPicker component
 jest.mock("react-native-country-codes-picker", () => ({

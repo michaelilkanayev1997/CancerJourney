@@ -156,5 +156,12 @@
   "set-up-email-account": "Set Up Email Account",
   "send-email-instructions": "To send an email, please ensure you have a default email account set up. You can do this in your device's settings under 'Accounts' or 'Mail'.",
   "ok": "OK",
-  "progress": "Progress"
+  "progress": "Progress",
+  "enterOtp": "Please enter the 4-digit code sent to",
+  "verify": "Verify",
+  "didntReceiveEmail": "Didn’t receive the email?",
+  "resendOtp": "Resend OTP",
+  "inSeconds": "in {{count}} second(s)",
+  "mailVerified": "Your mail is verified!",
+  "profileUpdated": "Profile updated successfully!"
 }

@@ -46,6 +46,7 @@ describe("<DaySelector />", () => {
     const { getByText } = renderComponent();
     expect(getByText("Monday")).toBeTruthy();
   });
+
   it("correctly styles unselected day button", () => {
     const { getByText } = renderComponent([]);
     const button = getByText("Tuesday");

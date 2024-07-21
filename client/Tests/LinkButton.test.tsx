@@ -18,7 +18,5 @@ describe("LinkButton component", () => {
 
     // Verify button text and icon are rendered
     expect(queryByText("Example Button")).not.toBeNull();
-
-    const iconElement = queryByTestId("button-icon");
   });
 });

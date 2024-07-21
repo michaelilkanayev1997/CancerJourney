@@ -26,12 +26,14 @@ import catchAsyncError from "src/api/catchError";
 import { ToastNotification } from "@utils/toastConfig";
 import { Keys, saveToAsyncStorage } from "@utils/asyncStorage";
 import { updateLoggedInState, updateProfile } from "src/store/auth";
+import { useTranslation } from "react-i18next";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Verification">;
 
 const otpFields = new Array(4).fill("");
 
 const Verification: FC<Props> = ({ route }) => {
+  const { t } = useTranslation();
   const [otp, setOtp] = useState([...otpFields]);
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -68,13 +70,13 @@ const Verification: FC<Props> = ({ route }) => {
     if (!isValidOtp) return;
     setSubmitting(true); // Activate busy for loader
     try {
-      const { data } = await client.post("/auth/verify-email", {
+      await client.post("/auth/verify-email", {
         userId: userInfo.id,
         token: otp.join(""),
       });
 
       ToastNotification({
-        message: data.message, // Your mail is verified!
+        message: t("mailVerified"),
       });
 
       const email = userInfo.email;
@@ -174,13 +176,12 @@ const Verification: FC<Props> = ({ route }) => {
           style={styles.instructionText}
           entering={FadeInLeft.delay(200).duration(1000).springify()}
         >
-          Please enter the 4-digit code sent to{" "}
-          <Text style={styles.boldText}>{userInfo.email}</Text>
+          {t("enterOtp")} <Text style={styles.boldText}>{userInfo.email}</Text>
         </Animated.Text>
       </View>
 
       <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { flexDirection: "row-reverse" }]}>
           {otpFields.map((_, index) => {
             return (
               <Animated.View
@@ -209,7 +210,7 @@ const Verification: FC<Props> = ({ route }) => {
         entering={FadeInDown.delay(400).duration(1000).springify()}
       >
         <AppButton
-          title="Verify"
+          title={t("verify")}
           onPress={handleSubmit}
           busy={submitting}
           icon={
@@ -229,10 +230,10 @@ const Verification: FC<Props> = ({ route }) => {
         entering={FadeInLeft.delay(600).duration(1000).springify()}
         style={styles.linkContainer}
       >
-        <Text>Didn’t receive the email ? </Text>
+        <Text>{t("didntReceiveEmail")} </Text>
         <AppLink
           active={canSendNewOtpRequest}
-          title="Resend OTP"
+          title={t("resendOtp")}
           onPress={requestForOTP}
         />
       </Animated.View>
@@ -240,7 +241,7 @@ const Verification: FC<Props> = ({ route }) => {
         <Animated.Text
           entering={FadeInLeft.delay(600).duration(1000).springify()}
         >
-          in {coundDown} second(s)
+          {t("inSeconds", { count: coundDown })}
         </Animated.Text>
       ) : null}
     </ScrollView>

@@ -1,17 +1,16 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import NoFilesDisplay from "@ui/NoFilesDisplay"; // Adjust the import path as needed
-import colors from "@utils/colors"; // Adjust the import path as needed
+import NoFilesDisplay from "@ui/NoFilesDisplay";
 
 describe("<NoFilesDisplay />", () => {
   it("renders correctly", () => {
     const { getByText } = render(<NoFilesDisplay />);
-    expect(getByText("No files to display")).toBeTruthy();
+    expect(getByText("no-files-to-display")).toBeTruthy();
   });
 
   it("applies correct styles to noFilesContainer", () => {
     const { getByText } = render(<NoFilesDisplay />);
-    const container = getByText("No files to display").parent;
+    const container = getByText("no-files-to-display").parent;
 
     expect(container).toBeDefined();
 
@@ -47,7 +46,7 @@ describe("<NoFilesDisplay />", () => {
 
   it("applies correct styles to noFilesText", () => {
     const { getByText } = render(<NoFilesDisplay />);
-    const textElement = getByText("No files to display");
+    const textElement = getByText("no-files-to-display");
 
     const textStyle = textElement.props.style;
 

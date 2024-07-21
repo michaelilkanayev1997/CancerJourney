@@ -1,6 +1,4 @@
-import React from "react";
-import { render } from "@testing-library/react-native";
-import CustomBottomSheet from "../../client/src/components/CustomBottomSheet"; // Adjust the import based on your structure
+import CustomBottomSheet from "../../client/src/components/CustomBottomSheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createRef } from "react";
 

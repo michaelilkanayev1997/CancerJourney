@@ -1,13 +1,4 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import CustomPicker from "../../client/src/components/CustomPicker"; // Adjust the import based on your structure
-import { cancerTypes } from "@utils/enums";
-import { NewProfile } from "@components/InputSections";
 import { Dimensions } from "react-native";
-
-const mockSetNewProfile = jest.fn();
-const mockSetPickerVisible = jest.fn();
-const mockNewProfile = { cancerType: "" };
 
 describe("<CustomPicker />", () => {
   it("always returns true", () => {
