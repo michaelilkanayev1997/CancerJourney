@@ -14,21 +14,6 @@
 
 **If you are living with cancer, we are here to support you. CancerJourney aims to be a useful resource for patients, providing the help they need to manage their condition and improve their quality of life. Help is always on hand with CancerJourney.**
 
-</div>
-
-## Features
-
-- **Timely Alerts**: Never miss an appointment or medication dose with our reminder system.
-- **Organize Treatments**: Keep track of your treatment plans and schedules in one place.
-- **Emotional Support**: Access resources and support to help you cope emotionally.
-- **Communication**: Easily communicate with your healthcare professionals.
-- **Expert Information**: Get information specific to your type of cancer.
-
-## Video Showcase
-
-[Watch a Video Demonstration of the App](https://www.youtube.com/watch?v=8gUwShozOik&list=LL&index=6&t=1s)
-
----
 
 ## Technologies Used and Features
 
@@ -48,5 +33,23 @@
 | Unsplash API                  | Image resources                 |
 | Jest                          | Testing                         |
 | Aggregation                   | Efficient data handling         |
+
+</div>
+
+## Features
+
+- **Timely Alerts**: Never miss an appointment or medication dose with our reminder system.
+- **Organize Treatments**: Keep track of your treatment plans and schedules in one place.
+- **Emotional Support**: Access resources and support to help you cope emotionally.
+- **Communication**: Easily communicate with your healthcare professionals.
+- **Expert Information**: Get information specific to your type of cancer.
+
+## Video Showcase
+
+[Watch a Video Demonstration of the App](https://www.youtube.com/watch?v=8gUwShozOik&list=LL&index=6&t=1s)
+
+
+
+
 
 
