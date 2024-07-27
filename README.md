@@ -31,6 +31,7 @@
 | React Query                   | Data fetching                   |
 | Mailtrap                      | Email testing                   |
 | Unsplash API                  | Image resources                 |
+| ClinicalTrials API            | Studies API	Clinical trial data |
 | Jest                          | Testing                         |
 | Aggregation                   | Efficient data handling         |
 
