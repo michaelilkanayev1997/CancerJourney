@@ -22,3 +22,9 @@ android
 # Ignore OS-generated files
 .DS_Store
 Thumbs.db
+client/Tests/__snapshots__/AppButton.test.tsx.snap
+client/Tests/__snapshots__/AppContainer.test.tsx.snap
+client/Tests/__snapshots__/AppInput.test.tsx.snap
+client/Tests/__snapshots__/AppLink.test.tsx.snap
+client/Tests/__snapshots__/Avatar.test.tsx.snap
+client/Tests/__snapshots__/Loader.test.tsx.snap

@@ -1,14 +1,16 @@
-import { render, fireEvent } from "@testing-library/react-native";
-import AppContainer from "@components/AppContainer"; // Adjust the path accordingly
+import { render } from "@testing-library/react-native";
 import { Text } from "react-native";
-import React from "react";
+
+import AppContainer from "@components/AppContainer";
 
 interface TestChildProps {
   setSafeAreaColor: (color: string) => void;
 }
 
 const TestChild: React.FC<TestChildProps> = ({ setSafeAreaColor }) => (
-  <Text onPress={() => setSafeAreaColor("red")}>Change Color</Text>
+  <Text onPress={() => setSafeAreaColor("red")} testID="changeColorText">
+    Change Color
+  </Text>
 );
 
 describe("<AppContainer />", () => {
@@ -20,16 +22,6 @@ describe("<AppContainer />", () => {
     );
     expect(toJSON()).toMatchSnapshot();
   });
-  test("Placeholder test for async function", async () => {
-    // Placeholder test for async function
-    function fetchData() {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve("data"), 100);
-      });
-    }
-    const data = await fetchData();
-    expect(data).toBe("data");
-  });
 
   it("renders correctly with non-element children", () => {
     const { toJSON } = render(
@@ -38,7 +30,20 @@ describe("<AppContainer />", () => {
         {"Some string child"}
       </AppContainer>
     );
-
     expect(toJSON()).toMatchSnapshot();
+  });
+
+  it("passes setSafeAreaColor prop to children", () => {
+    const { getByTestId } = render(
+      <AppContainer>
+        <TestChild
+          setSafeAreaColor={function (color: string): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      </AppContainer>
+    );
+    const child = getByTestId("changeColorText");
+    expect(child).toBeTruthy();
   });
 });

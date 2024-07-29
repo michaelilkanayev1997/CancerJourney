@@ -40,15 +40,9 @@ const AppButton: FC<Props> = ({
 
   return (
     <LinearGradient
-      colors={
-        isPressed
-          ? pressedColor // Pressed State Gradient
-          : defaultColor // Default State Gradient
-      }
-      style={{
-        borderRadius: borderRadius || 5,
-        width: "90%",
-      }}
+      colors={isPressed ? pressedColor : defaultColor}
+      style={{ borderRadius: borderRadius || 5, width: "90%" }}
+      testID="button-gradient"
     >
       <Pressable
         disabled={busy || disabled}
@@ -59,7 +53,6 @@ const AppButton: FC<Props> = ({
       >
         <View style={styles.btnContainer}>
           {icon && !busy ? icon : null}
-
           {!busy ? <Text style={styles.title}>{title}</Text> : <Loader />}
         </View>
       </Pressable>
