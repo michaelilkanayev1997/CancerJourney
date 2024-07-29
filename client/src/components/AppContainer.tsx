@@ -25,8 +25,8 @@ const AppContainer: FC<Props> = ({ children }) => {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: safeAreaColor }]}
+      testID="app-container"
     >
-      {/* Clone each child to inject the handleColorChange method as a prop */}
       {Children.map(children, (child) => {
         if (isValidElement<SafeAreaColorChangeable>(child)) {
           return cloneElement(child as ReactElement<SafeAreaColorChangeable>, {

@@ -37,6 +37,7 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false, // React already safes from xss
   },
+  react: { useSuspense: false },
 });
 
 // Update the app's RTL layout based on the selected language
