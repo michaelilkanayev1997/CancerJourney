@@ -1,7 +1,7 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import HomeCards from "../../client/src/components/HomeCards"; // Adjust the path as necessary
 import { useNavigation } from "@react-navigation/native";
+import { render, fireEvent } from "@testing-library/react-native";
+
+import HomeCards from "../../client/src/components/HomeCards";
 
 // Mock the useNavigation hook
 jest.mock("@react-navigation/native", () => ({

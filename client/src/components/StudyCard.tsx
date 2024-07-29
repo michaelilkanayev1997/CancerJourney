@@ -10,9 +10,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 
 import { HomeStackParamList } from "src/@types/navigation";
-import { useTranslation } from "react-i18next";
 
 export interface Study {
   key?: string;
@@ -68,6 +68,7 @@ const StudyCard: FC<Props> = ({ study, translateY, imageUrl }) => {
       >
         <View style={styles.imageView}>
           <Image
+            testID="study-image"
             source={imageUrl ? { uri: imageUrl } : imageUrlBackUp}
             style={styles.image}
           />

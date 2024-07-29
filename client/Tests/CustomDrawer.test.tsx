@@ -1,7 +1,8 @@
-import CustomDrawer from "../../client/src/components/CustomDrawer";
 import { Provider } from "react-redux";
-import store from "src/store";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
+
+import store from "src/store";
+import CustomDrawer from "../../client/src/components/CustomDrawer";
 
 const MockedCustomDrawer = (
   props: React.JSX.IntrinsicAttributes & DrawerContentComponentProps

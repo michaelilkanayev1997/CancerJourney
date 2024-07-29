@@ -1,6 +1,7 @@
 import { render, fireEvent } from "@testing-library/react-native";
-import AppButton from "@ui/AppButton";
 import { View } from "react-native";
+
+import AppButton from "@ui/AppButton";
 
 describe("<AppButton />", () => {
   const mockOnPress = jest.fn();

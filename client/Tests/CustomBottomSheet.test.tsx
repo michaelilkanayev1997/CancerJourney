@@ -1,6 +1,7 @@
-import CustomBottomSheet from "../../client/src/components/CustomBottomSheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createRef } from "react";
+
+import CustomBottomSheet from "../../client/src/components/CustomBottomSheet";
 
 const MockedCustomBottomSheet = ({ folderName }: { folderName: string }) => {
   const ref = createRef();

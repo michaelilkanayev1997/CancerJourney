@@ -75,7 +75,7 @@ describe("<NoFilesDisplay />", () => {
       marginTop: 0,
       fontSize: 18,
       fontWeight: "bold",
-      color: "#5DADE2", // Replace with the actual value of colors.LIGHT_BLUE
+      color: "#5DADE2",
     });
   });
 });

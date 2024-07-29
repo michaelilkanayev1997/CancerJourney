@@ -1,7 +1,7 @@
-import React from "react";
-import { render } from "@testing-library/react-native";
-import OnBoarding from "@views/onBoarding/OnBoarding"; // Adjust the import based on your structure
 import { NavigationContainer } from "@react-navigation/native";
+import { render } from "@testing-library/react-native";
+
+import OnBoarding from "@views/onBoarding/OnBoarding";
 
 const MockedOnBoarding = () => (
   <NavigationContainer>

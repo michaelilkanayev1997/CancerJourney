@@ -1,34 +1,81 @@
-import { Dimensions } from "react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 
-describe("<CustomPicker />", () => {
-  it("always returns true", () => {
-    expect(true).toBe(true);
-  });
-  it("ensures modal width is less than screen width", () => {
-    const modalWidth = 100 - 40;
-    expect(modalWidth).toBeLessThan(Dimensions.get("window").width);
+import CustomPicker from "@components/CustomPicker";
+import { NewProfile } from "@components/InputSections";
+import { NewPost } from "@views/bottomTab/posts/NewPost";
+import { cancerTypes } from "@utils/enums";
+
+// Mock useTranslation hook
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+  }),
+}));
+
+const newProfile: NewProfile = { cancerType: "" };
+const newPost: NewPost = { cancerType: "" };
+
+describe("CustomPicker", () => {
+  it("renders correctly when visible is true", () => {
+    const { getByTestId } = render(
+      <CustomPicker
+        visible={true}
+        newProfile={newProfile}
+        setNewProfile={jest.fn()}
+        setPickerVisible={jest.fn()}
+      />
+    );
+
+    expect(getByTestId("modal")).toBeTruthy();
   });
 
-  it("checks if an object is defined", () => {
-    const obj = {};
-    expect(obj).toBeDefined();
-  });
-  it("checks object is defined", () => {
-    const obj = {};
-    expect(obj).toBeDefined();
-  });
-  it("checks for a truthy value", () => {
-    const truthyValue = 52424;
-    expect(truthyValue).toBeTruthy();
+  it("does not render when visible is false", () => {
+    const { queryByTestId } = render(
+      <CustomPicker
+        visible={false}
+        newProfile={newProfile}
+        setNewProfile={jest.fn()}
+        setPickerVisible={jest.fn()}
+      />
+    );
+
+    expect(queryByTestId("modal")).toBeNull();
   });
 
-  it("always returns an empty array", () => {
-    const emptyArray: any[] = [];
-    expect(emptyArray).toEqual([]);
+  it("renders the list of cancer types", () => {
+    const { getByText } = render(
+      <CustomPicker
+        visible={true}
+        newProfile={newProfile}
+        setNewProfile={jest.fn()}
+        setPickerVisible={jest.fn()}
+      />
+    );
+
+    expect(getByText("kidney")).toBeTruthy();
+    expect(getByText("childhood")).toBeTruthy();
+    expect(getByText("appendix")).toBeTruthy();
   });
 
-  it("ensures modal width is less than screen width", () => {
-    const modalWidth = 50 - 40;
-    expect(modalWidth).toBeLessThan(Dimensions.get("window").width);
+  it("calls setNewProfile and setPickerVisible on item press", () => {
+    const setNewProfileMock = jest.fn();
+    const setPickerVisibleMock = jest.fn();
+    const { getByText } = render(
+      <CustomPicker
+        visible={true}
+        newProfile={newProfile}
+        setNewProfile={setNewProfileMock}
+        setPickerVisible={setPickerVisibleMock}
+      />
+    );
+
+    const firstItem = getByText(cancerTypes[0].value);
+    fireEvent.press(firstItem);
+
+    expect(setNewProfileMock).toHaveBeenCalledWith({
+      ...newProfile,
+      cancerType: cancerTypes[0].value,
+    });
+    expect(setPickerVisibleMock).toHaveBeenCalledWith(false);
   });
 });

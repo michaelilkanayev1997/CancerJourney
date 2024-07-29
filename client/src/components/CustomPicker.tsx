@@ -42,6 +42,7 @@ const CustomPicker: FC<Props> = ({
       transparent={true}
       statusBarTranslucent={true}
       onRequestClose={() => setPickerVisible(false)} // Android back button
+      testID="modal"
     >
       <TouchableWithoutFeedback onPress={() => setPickerVisible(false)}>
         <View style={styles.centeredView}>
@@ -61,6 +62,7 @@ const CustomPicker: FC<Props> = ({
                       });
                       setPickerVisible(false);
                     }}
+                    testID={`item-${item.value}`}
                   >
                     <Image
                       source={item.imageUrl}
