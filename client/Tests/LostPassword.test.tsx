@@ -1,6 +1,6 @@
-import React from "react";
-import { fireEvent, render, waitFor, act } from "@testing-library/react-native";
-import LostPassword from "@views/auth/LostPassword"; // Adjust the path as per your project structure
+import { fireEvent, render, act } from "@testing-library/react-native";
+
+import LostPassword from "@views/auth/LostPassword";
 
 // Mock dependencies
 jest.mock("@react-navigation/native", () => ({

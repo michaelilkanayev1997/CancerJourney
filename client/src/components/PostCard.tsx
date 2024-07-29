@@ -20,7 +20,7 @@ import LottieView from "lottie-react-native";
 import colors from "../utils/colors";
 import { calculateTimeDifference } from "@utils/helper";
 import { Like, Reply, User } from "src/@types/post";
-import { getAuthState, getProfile } from "src/store/auth";
+import { getProfile } from "src/store/auth";
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
 import { DrawerParamList } from "src/@types/navigation";

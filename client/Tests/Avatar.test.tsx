@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react-native";
-import Avatar from "@ui/Avatar"; // Adjust import path as per your project structure
+
+import Avatar from "@ui/Avatar";
 
 describe("<Avatar />", () => {
   const defaultProps = {

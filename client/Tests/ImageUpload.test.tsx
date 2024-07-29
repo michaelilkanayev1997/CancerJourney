@@ -1,5 +1,6 @@
 import { render, fireEvent } from "@testing-library/react-native";
-import ImageUpload from "../../client/src/components/ImageUpload"; // Adjust the path as necessary
+
+import ImageUpload from "../../client/src/components/ImageUpload";
 
 describe("<ImageUpload />", () => {
   const mockHandleModalClose = jest.fn();

@@ -1,6 +1,6 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import DaySelector from "../../client/src/components/DaySelector"; // Adjust the import based on your structure
+
+import DaySelector from "../../client/src/components/DaySelector";
 
 const mockSetSelectedDays = jest.fn();
 

@@ -1,7 +1,7 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import OTPField from "@ui/OTPField"; // Adjust the import path as needed
-import colors from "@utils/colors"; // Make sure this path is correct
+
+import OTPField from "@ui/OTPField";
+import colors from "@utils/colors";
 
 describe("<OTPField />", () => {
   it("renders correctly", () => {
