@@ -26,10 +26,10 @@ const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
   };
 
   return (
-    <View style={styles.profileHeader}>
+    <View style={styles.profileHeader} testID="avatar">
       <Avatar onButtonPress={toggleModalVisible} uri={profile?.avatar || ""} />
       <Text style={styles.profileName}>{profile?.name}</Text>
-      <View style={styles.row}>
+      <View style={styles.row} testID="verified-icon">
         <Text style={styles.profileEmail}>{profile?.email}</Text>
         {profile?.verified ? (
           <MaterialCommunityIcons
@@ -46,6 +46,7 @@ const ProfileHeader: FC<Props> = ({ profile, toggleModalVisible }) => {
       <TouchableOpacity
         onPress={navigateToSettings}
         style={styles.settingsIcon}
+        testID="settings-icon"
       >
         <Feather name="settings" size={24} color={colors.LIGHT_BLUE} />
       </TouchableOpacity>
