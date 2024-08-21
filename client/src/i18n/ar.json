@@ -219,5 +219,25 @@
   "followers": "المتابعون",
   "followings": "المتابَعون",
   "unfollow": "إلغاء المتابعة",
-  "follow": "متابعة"
+  "follow": "متابعة",
+  "description-required": "الوصف مطلوب!",
+  "add-post": "إضافة منشور",
+  "update-post": "تحديث المنشور",
+  "new-post-button": "منشور جديد",
+  "post-uploaded-success": "تم تحميل المنشور بنجاح!",
+  "post-updated-success": "تم تحديث المنشور بنجاح!",
+  "description-required-toast": "الوصف مطلوب!",
+  "description-length-toast": "يجب أن يكون الوصف 10 أحرف على الأقل!",
+  "see-more": "عرض المزيد",
+  "see-less": "عرض أقل",
+  "like": "إعجاب",
+  "likes": "إعجابات",
+  "replies": "الردود",
+  "time": {
+    "seconds": "ث",
+    "minutes": " د",
+    "hours": "س",
+    "yesterday": "أمس",
+    "days": "أيام"
+  }
 }
