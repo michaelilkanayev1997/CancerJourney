@@ -18,6 +18,7 @@ import {
 } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import Loader from "@ui/Loader";
 import { Post } from "src/@types/post";
@@ -46,6 +47,7 @@ let pageNo = 0;
 const limit = 6;
 
 const Main = ({ route }: Props) => {
+  const { t } = useTranslation();
   const { name: routeName } = useRoute();
   const profile = useSelector(getProfile);
 
@@ -212,13 +214,11 @@ const Main = ({ route }: Props) => {
                 style={styles.menuButton}
               >
                 <Entypo name="menu" size={24} color={colors.ICON} />
-                <Text style={styles.menuButtonText}>Type</Text>
+                <Text style={styles.menuButtonText}>{t("type")}</Text>
               </TouchableOpacity>
 
               <Text style={styles.sectionTitle}>
-                {cancerType.charAt(0).toUpperCase() +
-                  cancerType.slice(1) +
-                  " Cancer"}
+                {cancerType !== "" ? t(cancerType) : t("other-cancer")}
               </Text>
             </View>
           )}
@@ -245,7 +245,7 @@ const Main = ({ route }: Props) => {
             maxToRenderPerBatch={10}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No posts available</Text>
+                <Text style={styles.emptyText}>{t("no-posts-available")}</Text>
               </View>
             }
           />
@@ -254,6 +254,7 @@ const Main = ({ route }: Props) => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: colors.PRIMARY_LIGHT,

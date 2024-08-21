@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface CancerTypeRibbon {
   [key: string]: number; // Use `number` since `require()` returns a number for local assets
 }
@@ -144,3 +146,16 @@ export const userTypes = {
 } as const;
 
 export type UserTypeKey = keyof typeof userTypes;
+
+export const useTranslatedUserTypes = () => {
+  const { t } = useTranslation();
+
+  return {
+    patient: t("fighter-(patient)"),
+    family: t("family-member"),
+    friend: t("supporter-(friend)"),
+    professional: t("health-care-pro"),
+    caregiver: t("caregiver"),
+    other: t("other"),
+  } as const;
+};

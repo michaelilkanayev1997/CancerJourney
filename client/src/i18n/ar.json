@@ -205,5 +205,19 @@
   "wednesday": "الأربعاء",
   "thursday": "الخميس",
   "friday": "الجمعة",
-  "saturday": "السبت"
+  "saturday": "السبت",
+  "type": "النوع",
+  "no-posts-available": "لا توجد منشورات متاحة",
+  "forum": "المنتدى",
+  "new-post": "منشور جديد",
+  "social-profile": "الملف الشخصي",
+  "forum-type": "نوع المنتدى",
+  "popular-posts": "المنشورات الشائعة",
+  "public-profile": " الملف الشخصي العام",
+  "uploads": "التحميلات",
+  "replays": "الردود",
+  "followers": "المتابعون",
+  "followings": "المتابَعون",
+  "unfollow": "إلغاء المتابعة",
+  "follow": "متابعة"
 }

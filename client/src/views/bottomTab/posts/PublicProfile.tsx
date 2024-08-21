@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import colors from "@utils/colors";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
   View,
   StyleSheet,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import Main from "./Main";
 import PublicProfileContainer from "@components/PublicProfileContainer";
@@ -24,6 +25,7 @@ type Props = {
 const Tab = createMaterialTopTabNavigator();
 
 const PublicProfile: FC<Props> = ({ route }) => {
+  const { t } = useTranslation();
   const profile = useSelector(getProfile);
   const navigation = useNavigation();
 
@@ -51,7 +53,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Public Profile </Text>
+          <Text style={styles.headerTitle}>{t("public-profile")}</Text>
         </View>
       ) : (
         <View style={{ paddingTop: 10 }}></View>
@@ -89,7 +91,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 <Text
                   style={focused ? styles.tabLabelFocused : styles.tabLabel}
                 >
-                  Uploads
+                  {t("uploads")}
                 </Text>
               ),
             }}
@@ -108,7 +110,7 @@ const PublicProfile: FC<Props> = ({ route }) => {
                 <Text
                   style={focused ? styles.tabLabelFocused : styles.tabLabel}
                 >
-                  Replays
+                  {t("replays")}
                 </Text>
               ),
             }}
