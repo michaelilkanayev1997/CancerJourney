@@ -146,15 +146,15 @@ const PostCard: FC<PostProps> = memo(
       if (!_id) return;
 
       Alert.alert(
-        "Confirm Deletion",
-        "Are you sure you want to delete this post?",
+        t("confirmDeletion"), // "Confirm Deletion"
+        t("confirmDeletionMessage"), // "Are you sure you want to delete this post?"
         [
           {
-            text: "Cancel",
+            text: t("cancel"), // "Cancel"
             style: "cancel",
           },
           {
-            text: "Delete",
+            text: t("delete"), // "Delete"
             onPress: () => {
               deletePostMutation({
                 postId: _id.toString(),
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
-    marginLeft: I18nManager.isRTL ? "-5%" : "-10%",
+    marginLeft: I18nManager.isRTL ? "-2%" : "-10%",
   },
   durationText: {
     color: "#000000b6",

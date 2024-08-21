@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import Loader from "@ui/Loader";
 
@@ -30,6 +31,8 @@ const PopupMenu: FC<Props> = ({
   onDelete,
   position,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       transparent
@@ -52,7 +55,7 @@ const PopupMenu: FC<Props> = ({
                     color="#4caf50"
                     style={styles.icon}
                   />
-                  <Text style={styles.optionText}>Update</Text>
+                  <Text style={styles.optionText}>{t("update")}</Text>
                 </TouchableOpacity>
               )}
 
@@ -64,7 +67,7 @@ const PopupMenu: FC<Props> = ({
                     color="#ff9800"
                     style={styles.icon}
                   />
-                  <Text style={styles.optionText}>Report</Text>
+                  <Text style={styles.optionText}>{t("report")}</Text>
                 </TouchableOpacity>
               )}
 
@@ -76,7 +79,7 @@ const PopupMenu: FC<Props> = ({
                     color="#f44336"
                     style={styles.icon}
                   />
-                  <Text style={styles.optionText}>Delete</Text>
+                  <Text style={styles.optionText}>{t("delete")}</Text>
                 </TouchableOpacity>
               )}
 

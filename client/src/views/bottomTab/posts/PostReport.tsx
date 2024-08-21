@@ -10,6 +10,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import { ToastNotification } from "@utils/toastConfig";
@@ -22,6 +23,8 @@ type Props = {
 };
 
 const PostReport: FC<Props> = ({ route }) => {
+  const { t } = useTranslation();
+
   const { postId, replyId = undefined } = route.params || {};
   const [reportText, setReportText] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -32,13 +35,13 @@ const PostReport: FC<Props> = ({ route }) => {
     if (!reportText.trim()) {
       ToastNotification({
         type: "Error",
-        message: "Please enter a report before submitting.",
+        message: t("please_enter_report"),
       });
       return;
     } else if (reportText.trim().length < 15) {
       ToastNotification({
         type: "Error",
-        message: "Your report is too short. Please describe the issue better.",
+        message: t("report_too_short"),
       });
       return;
     }
@@ -66,7 +69,7 @@ const PostReport: FC<Props> = ({ route }) => {
       }
 
       if (!data?.data?.success) {
-        throw new Error("Failed to add the Report");
+        throw new Error(t("failed_report"));
       }
 
       isSuccessful = true;
@@ -83,7 +86,7 @@ const PostReport: FC<Props> = ({ route }) => {
         setReportText("");
         ToastNotification({
           type: "Success",
-          message: "Thank you! Your report has been successfully submitted.",
+          message: t("report_successful"),
         });
       }
     }
@@ -101,21 +104,21 @@ const PostReport: FC<Props> = ({ route }) => {
           />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
-          {replyId ? "Reply Report" : "Post Report"}
+          {replyId ? t("reply_report") : t("post_report")}
         </Text>
       </View>
 
       <ScrollView style={styles.container}>
         <View style={styles.form}>
           <Text style={styles.label}>
-            Why are you reporting this {replyId ? "reply" : "post"}?
+            {replyId ? t("why_reporting_reply") : t("why_reporting_post")}
           </Text>
           <TextInput
             style={styles.textInput}
             multiline
             numberOfLines={6}
             maxLength={1400}
-            placeholder="Enter your reason..."
+            placeholder={t("enter_reason")}
             value={reportText}
             onChangeText={setReportText}
           />
@@ -129,7 +132,7 @@ const PostReport: FC<Props> = ({ route }) => {
                 <Loader loaderStyle={{ height: 100, width: 100 }} />
               </View>
             ) : (
-              <Text style={styles.submitButtonText}>Submit Report</Text>
+              <Text style={styles.submitButtonText}> {t("submit_report")}</Text>
             )}
           </TouchableOpacity>
         </View>
