@@ -30,6 +30,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Picker } from "@react-native-picker/picker";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 import { useScheduleMutations } from "src/hooks/mutations";
 import { ToastNotification, toastConfig } from "@utils/toastConfig";
@@ -57,12 +58,14 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
   addMedicationModal = false,
   openFromNotification = false,
 }) => {
+  const { t } = useTranslation();
+
   const [name, setName] = useState<string>(item?.name || "");
   const [frequency, setFrequency] = useState<string>(
-    item?.frequency || "As needed"
+    item?.frequency || t("as-needed")
   );
   const [timesPerDay, setTimesPerDay] = useState<string>(
-    item?.timesPerDay || "Once a day"
+    item?.timesPerDay || t("once-a-day")
   );
   const [specificDays, setSpecificDays] = useState<string[]>(
     item?.specificDays || []
@@ -124,8 +127,8 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   const resetFields = () => {
     handleNameChange("");
-    setFrequency("As needed");
-    setTimesPerDay("Once a day");
+    setFrequency(t("as-needed"));
+    setTimesPerDay(t("once-a-day"));
     setSpecificDays([]);
     handlePrescriberChange("");
     handleNotesChange("");
@@ -134,7 +137,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
   useEffect(() => {
     if (frequency === "As needed") {
-      setTimesPerDay("Once a day");
+      setTimesPerDay(t("once-a-day"));
       setSpecificDays([]);
     }
   }, [frequency]);
@@ -161,7 +164,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     } else if (frequency === "Specific days" && specificDays.length === 0) {
       ToastNotification({
         type: "ModalError",
-        message: "Please select specific days!",
+        message: t("select-specific-days"),
       });
       return;
     } else if (!item) return;
@@ -190,7 +193,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
     } else if (frequency === "Specific days" && specificDays.length === 0) {
       ToastNotification({
         type: "ModalError",
-        message: "Please select specific days!",
+        message: t("select-specific-days"),
       });
       return;
     }
@@ -244,7 +247,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
         handleCloseMoreOptionsPress();
         resetFields();
         ToastNotification({
-          message: "Medication uploaded successfully!",
+          message: t("medication-uploaded-success"),
         });
       }
     }
@@ -303,7 +306,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                           color={colors.LIGHT_BLUE}
                         />
                         <Text style={styles.appointmentText}>
-                          Medication Details
+                          {t("medication-details")}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -319,14 +322,14 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                     </View>
 
                     <View style={styles.titleWithError}>
-                      <Text style={styles.label}>Name and strength</Text>
+                      <Text style={styles.label}>{t("name-strength")}</Text>
                       {name.length === 0 ? (
                         <Animated.Text
                           entering={FadeInLeft.duration(500)}
                           exiting={FadeOutRight.duration(500)}
                           style={styles.errorMessage}
                         >
-                          Name is Required!
+                          {t("required")}
                         </Animated.Text>
                       ) : null}
                     </View>
@@ -334,11 +337,11 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                       style={styles.input}
                       onChangeText={handleNameChange}
                       value={name}
-                      placeholder="Enter Name and strength here"
+                      placeholder={t("enter-name-here")}
                       maxLength={40}
                     />
 
-                    <Text style={styles.label}>Frequency (optional)</Text>
+                    <Text style={styles.label}>{t("frequency-optional")}</Text>
                     <View style={styles.pickerContainer}>
                       <Picker
                         selectedValue={frequency}
@@ -347,10 +350,10 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                         }
                         style={styles.picker}
                       >
-                        <Picker.Item label="As needed" value="As needed" />
-                        <Picker.Item label="Every day" value="Every day" />
+                        <Picker.Item label={t("as-needed")} value="As needed" />
+                        <Picker.Item label={t("every-day")} value="Every day" />
                         <Picker.Item
-                          label="Specific days"
+                          label={t("specific-days")}
                           value="Specific days"
                         />
                       </Picker>
@@ -364,7 +367,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                           entering={FadeInUp.duration(600)}
                           style={styles.label}
                         >
-                          Times Per Day
+                          {t("times-per-day")}
                         </Animated.Text>
 
                         <Animated.View
@@ -379,27 +382,27 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                             style={styles.picker}
                           >
                             <Picker.Item
-                              label="Once a day"
+                              label={t("once-a-day")}
                               value="Once a day"
                             />
                             <Picker.Item
-                              label="2 times a day"
+                              label={t("2-times-a-day")}
                               value="2 times a day"
                             />
                             <Picker.Item
-                              label="3 times a day"
+                              label={t("3-times-a-day")}
                               value="3 times a day"
                             />
                             <Picker.Item
-                              label="4 times a day"
+                              label={t("4-times-a-day")}
                               value="4 times a day"
                             />
                             <Picker.Item
-                              label="5 times a day"
+                              label={t("5-times-a-day")}
                               value="5 times a day"
                             />
                             <Picker.Item
-                              label="6 times a day"
+                              label={t("6-times-a-day")}
                               value="6 times a day"
                             />
                           </Picker>
@@ -415,7 +418,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                             entering={FadeInUp.duration(500)}
                             style={styles.label}
                           >
-                            Specific Days
+                            {t("specific-days")}
                           </Animated.Text>
                           {specificDays.length === 0 ? (
                             <Animated.Text
@@ -423,7 +426,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                               exiting={FadeOutRight.duration(500)}
                               style={styles.errorMessage}
                             >
-                              Required!
+                              {t("required")}
                             </Animated.Text>
                           ) : null}
                         </View>
@@ -439,7 +442,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
 
                     {addMedicationModal ? (
                       <>
-                        <Text style={styles.label}>Photo (optional)</Text>
+                        <Text style={styles.label}>{t("photo-optional")}</Text>
                         <View style={styles.photoUploadContainer}>
                           <TouchableOpacity
                             onPress={toggleModalVisible}
@@ -466,7 +469,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                       </>
                     ) : null}
 
-                    <Text style={styles.label}>Prescriber (optional)</Text>
+                    <Text style={styles.label}>{t("prescriber-optional")}</Text>
                     <TextInput
                       style={styles.input}
                       onChangeText={handlePrescriberChange}
@@ -475,7 +478,7 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                       maxLength={30}
                     />
 
-                    <Text style={styles.label}>Notes (optional)</Text>
+                    <Text style={styles.label}>{t("notes-optional")}</Text>
                     <TextInput
                       style={[styles.input, styles.descriptionInput]}
                       onChangeText={handleNotesChange}
@@ -496,7 +499,9 @@ const MedicationMoreOptionsModal: FC<MedicationMoreOptionsProps> = ({
                             size={20}
                             color={colors.LIGHT_BLUE}
                           />
-                          <Text style={styles.actionButtonText}>Add</Text>
+                          <Text style={styles.actionButtonText}>
+                            {t("add")}
+                          </Text>
                         </TouchableOpacity>
                       </View>
                     ) : (

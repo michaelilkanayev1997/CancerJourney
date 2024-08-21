@@ -1,16 +1,17 @@
 import colors from "@utils/colors";
 import { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
 const daysOfWeek = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
 
 interface Props {
@@ -19,6 +20,8 @@ interface Props {
 }
 
 const DaySelector: React.FC<Props> = ({ selectedDays, setSelectedDays }) => {
+  const { t } = useTranslation();
+
   const toggleDay = (day: any) => {
     if (selectedDays.includes(day)) {
       setSelectedDays(
@@ -29,10 +32,12 @@ const DaySelector: React.FC<Props> = ({ selectedDays, setSelectedDays }) => {
     }
   };
 
+  const translatedDaysOfWeek = daysOfWeek.map((day) => t(day.toLowerCase()));
+
   return (
     <Animated.View entering={FadeInUp.duration(500)} style={styles.container}>
       <View style={styles.overlay}>
-        {daysOfWeek.map((day) => (
+        {daysOfWeek.map((day, index) => (
           <TouchableOpacity
             key={day}
             style={[
@@ -41,7 +46,7 @@ const DaySelector: React.FC<Props> = ({ selectedDays, setSelectedDays }) => {
             ]}
             onPress={() => toggleDay(day)}
           >
-            <Text style={styles.dayText}>{day}</Text>
+            <Text style={styles.dayText}>{translatedDaysOfWeek[index]}</Text>
           </TouchableOpacity>
         ))}
       </View>

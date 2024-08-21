@@ -24,6 +24,7 @@ import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 import { Picker } from "@react-native-picker/picker";
 import { useQueryClient } from "react-query";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
@@ -50,12 +51,14 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
   addAppointmentModal = false,
   openFromNotification = false,
 }) => {
+  const { t } = useTranslation();
+
   const [title, setTitle] = useState<string>(item?.title || "");
   const [location, setLocation] = useState<string>(item?.location || "");
   const [date, setDate] = useState<Date | string>(item?.date || "");
   const [notes, setNotes] = useState<string>(item?.notes || "");
   const [reminder, setReminder] = useState<string>(
-    item?.reminder || "No Reminder"
+    item?.reminder || t("no-reminder")
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [addAppointmentLoading, setAddAppointmentLoading] = useState(false);
@@ -106,7 +109,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
     handleLocationChange("");
     setDate("");
     handleNotesChange("");
-    setReminder("No Reminder");
+    setReminder(t("no-reminder"));
   };
 
   // Delete button is pressed
@@ -142,14 +145,14 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
     if (title === "" || location === "" || date.toString() === "") {
       ToastNotification({
         type: "ModalError",
-        message: "Please enter all required fields!",
+        message: t("enter-all-required-fields"),
       });
       return;
     }
     if (location.length < 3) {
       ToastNotification({
         type: "ModalError",
-        message: "Location has to be at least 3 characters!",
+        message: t("location-min-chars"),
       });
       return;
     }
@@ -186,7 +189,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
         handleCloseMoreOptionsPress();
         resetFields();
         ToastNotification({
-          message: "Appointment uploaded successfully!",
+          message: t("appointment-uploaded-success"),
         });
       }
     }
@@ -244,7 +247,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                         color={colors.LIGHT_BLUE}
                       />
                       <Text style={styles.appointmentText}>
-                        Appointment Details
+                        {t("appointment-details")}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -260,14 +263,14 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                   </View>
 
                   <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Title</Text>
+                    <Text style={styles.label}>{t("title")}</Text>
                     {title.length === 0 ? (
                       <Animated.Text
                         entering={FadeInLeft.duration(500)}
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Required!
+                        {t("required")}
                       </Animated.Text>
                     ) : null}
                   </View>
@@ -275,19 +278,19 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     style={styles.input}
                     onChangeText={handleTitleChange}
                     value={title}
-                    placeholder="Enter Title here"
+                    placeholder={t("enter-title-here")}
                     maxLength={40}
                   />
 
                   <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Location</Text>
+                    <Text style={styles.label}>{t("location")}</Text>
                     {location.length === 0 ? (
                       <Animated.Text
                         entering={FadeInLeft.duration(500)}
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Required!
+                        {t("required")}
                       </Animated.Text>
                     ) : null}
                   </View>
@@ -295,19 +298,19 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     style={styles.input}
                     onChangeText={handleLocationChange}
                     value={location}
-                    placeholder="Enter Location here"
+                    placeholder={t("enter-location-here")}
                     maxLength={30}
                   />
 
                   <View style={styles.titleWithError}>
-                    <Text style={styles.label}>Date and Time</Text>
+                    <Text style={styles.label}>{t("date-time")}</Text>
                     {date.toString().length === 0 ? (
                       <Animated.Text
                         entering={FadeInLeft.duration(500)}
                         exiting={FadeOutRight.duration(500)}
                         style={styles.errorMessage}
                       >
-                        Required!
+                        {t("required")}
                       </Animated.Text>
                     ) : null}
                   </View>
@@ -320,16 +323,16 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                     style={styles.input}
                   />
 
-                  <Text style={styles.label}>Notes (optional)</Text>
+                  <Text style={styles.label}>{t("notes-optional")}</Text>
                   <TextInput
                     style={[styles.input, styles.descriptionInput]}
                     onChangeText={handleNotesChange}
                     value={notes}
-                    placeholder="Enter Notes here"
+                    placeholder={t("enter-notes-here")}
                     multiline
                   />
 
-                  <Text style={styles.label}>Reminder (optional)</Text>
+                  <Text style={styles.label}>{t("reminder-optional")}</Text>
                   <View style={styles.pickerContainer}>
                     <Picker
                       selectedValue={reminder}
@@ -338,17 +341,20 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                       }
                       style={styles.picker}
                     >
-                      <Picker.Item label="No Reminder" value="No Reminder" />
                       <Picker.Item
-                        label="1 hour before"
+                        label={t("no-reminder")}
+                        value="No Reminder"
+                      />
+                      <Picker.Item
+                        label={t("1-hour-before")}
                         value="1 hour before"
                       />
                       <Picker.Item
-                        label="2 hours before"
+                        label={t("2-hours-before")}
                         value="2 hours before"
                       />
                       <Picker.Item
-                        label="The day before"
+                        label={t("day-before")}
                         value="The day before"
                       />
                     </Picker>
@@ -366,7 +372,7 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                           size={20}
                           color={colors.LIGHT_BLUE}
                         />
-                        <Text style={styles.actionButtonText}>Add</Text>
+                        <Text style={styles.actionButtonText}>{t("add")}</Text>
                       </TouchableOpacity>
                     </View>
                   ) : (
@@ -381,7 +387,9 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                           size={20}
                           color="#FF5C5C"
                         />
-                        <Text style={styles.actionButtonText}>Delete</Text>
+                        <Text style={styles.actionButtonText}>
+                          {t("delete")}
+                        </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         disabled={deleteLoading || updateLoading}
@@ -393,7 +401,9 @@ const AppointmentMoreOptionsModal: FC<AppointmentMoreOptionsProps> = ({
                           size={20}
                           color="#4A90E2"
                         />
-                        <Text style={styles.actionButtonText}>Update</Text>
+                        <Text style={styles.actionButtonText}>
+                          {t("update")}
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   )}
