@@ -219,5 +219,25 @@
   "followers": "Подписчики",
   "followings": "Подписки",
   "unfollow": "Отписаться",
-  "follow": "Подписаться"
+  "follow": "Подписаться",
+  "description-required": "Описание обязательно!",
+  "add-post": "Добавить пост",
+  "update-post": "Обновить пост",
+  "new-post-button": "Новый пост",
+  "post-uploaded-success": "Пост успешно загружен!",
+  "post-updated-success": "Пост успешно обновлен!",
+  "description-required-toast": "Описание обязательно!",
+  "description-length-toast": "Описание должно содержать не менее 10 символов!",
+  "see-more": "Показать больше",
+  "see-less": "Показать меньше",
+  "like": "лайк",
+  "likes": "лайки",
+  "replies": "ответы",
+  "time": {
+    "seconds": "сек",
+    "minutes": " мин",
+    "hours": "ч",
+    "yesterday": "Вчера",
+    "days": "дней"
+  }
 }

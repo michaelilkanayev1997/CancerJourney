@@ -1,5 +1,6 @@
 import * as Updates from "expo-updates";
 import { ObjectId } from "bson";
+import { useTranslation } from "react-i18next";
 
 // Calculate the compression level
 export const calculateCompression = (size: number) => {
@@ -52,6 +53,7 @@ export const formatText = (text: string, length: number) =>
 
 // Function to calculate the time difference
 export const calculateTimeDifference = (date: string) => {
+  const { t } = useTranslation();
   const now = new Date();
   const diffInMs = now.getTime() - new Date(date).getTime();
 
@@ -69,7 +71,7 @@ export const calculateTimeDifference = (date: string) => {
   } else if (diffInDays === 1) {
     return "Yesterday";
   } else {
-    return diffInDays + " days";
+    return diffInDays + " " + t("time.days");
   }
 };
 

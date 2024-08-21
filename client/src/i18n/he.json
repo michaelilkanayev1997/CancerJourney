@@ -219,5 +219,25 @@
   "followers": "עוקבים",
   "followings": "נעקבים",
   "unfollow": "בטל עוקב",
-  "follow": "עקוב"
+  "follow": "עקוב",
+  "description-required": "תיאור נדרש!",
+  "add-post": "הוסף פוסט",
+  "update-post": "עדכן פוסט",
+  "new-post-button": "פוסט חדש",
+  "post-uploaded-success": "הפוסט הועלה בהצלחה!",
+  "post-updated-success": "הפוסט עודכן בהצלחה!",
+  "description-required-toast": "נדרש תיאור!",
+  "description-length-toast": "התיאור צריך להיות באורך של לפחות 10 תווים!",
+  "see-more": "ראה עוד",
+  "see-less": "ראה פחות",
+  "like": "לייק",
+  "likes": "לייקים",
+  "replies": "תגובות",
+  "time": {
+    "seconds": "שנ'",
+    "minutes": " דק'",
+    "hours": "ש'",
+    "yesterday": "אתמול",
+    "days": "ימים"
+  }
 }

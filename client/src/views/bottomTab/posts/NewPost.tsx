@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 import { useFocusEffect } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import CustomPicker from "@components/CustomPicker";
@@ -46,6 +47,7 @@ export interface NewPost {
 }
 
 const NewPost: FC<Props> = ({ route }) => {
+  const { t } = useTranslation();
   const profile = useSelector(getProfile);
   let { description, image, forumType, owner, postId, update } =
     route.params || {
@@ -128,13 +130,13 @@ const NewPost: FC<Props> = ({ route }) => {
     if (newPost.description === "") {
       ToastNotification({
         type: "ModalError",
-        message: "Description is required!",
+        message: t("description-required-toast"),
       });
       return;
     } else if (newPost.description.length < 10) {
       ToastNotification({
         type: "ModalError",
-        message: "Description should be at least 10 characters long!",
+        message: t("description-length-toast"),
       });
       return;
     }
@@ -183,7 +185,7 @@ const NewPost: FC<Props> = ({ route }) => {
         //handleCloseMoreOptionsPress();
         resetPostFields();
         ToastNotification({
-          message: "Post uploaded successfully!",
+          message: t("post-uploaded-success"),
         });
       }
     }
@@ -193,13 +195,13 @@ const NewPost: FC<Props> = ({ route }) => {
     if (newPost.description === "") {
       ToastNotification({
         type: "ModalError",
-        message: "Description is required!",
+        message: t("description-required-toast"),
       });
       return;
     } else if (newPost.description.length < 10) {
       ToastNotification({
         type: "ModalError",
-        message: "Description should be at least 10 characters long!",
+        message: t("description-length-toast"),
       });
       return;
     }
@@ -253,7 +255,7 @@ const NewPost: FC<Props> = ({ route }) => {
         //handleCloseMoreOptionsPress();
         resetPostFields();
         ToastNotification({
-          message: "Post updated successfully!",
+          message: t("post-updated-success"),
         });
       }
     }
@@ -267,7 +269,7 @@ const NewPost: FC<Props> = ({ route }) => {
         overScrollMode="never"
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.label}>New Post</Text>
+        <Text style={styles.label}>{t("new-post")}</Text>
         <View style={styles.userDetails}>
           <Image
             style={styles.profileImage}
@@ -290,7 +292,7 @@ const NewPost: FC<Props> = ({ route }) => {
               exiting={FadeOutRight.duration(500)}
               style={styles.errorMessage}
             >
-              Description is Required!
+              {t("description-required")}
             </Animated.Text>
           ) : null}
         </View>
@@ -306,7 +308,7 @@ const NewPost: FC<Props> = ({ route }) => {
         />
 
         {/* Photo Upload Icon */}
-        <Text style={styles.rowLabel}>Photo (optional)</Text>
+        <Text style={styles.rowLabel}>{t("photo-optional")}</Text>
         <View style={styles.photoUploadContainer}>
           <TouchableOpacity
             onPress={toggleModalVisible}
@@ -332,7 +334,7 @@ const NewPost: FC<Props> = ({ route }) => {
         </View>
 
         <InputRowContainer
-          title={"Forum Type"}
+          title={t("forum-type")}
           children={
             <>
               <TouchableOpacity
@@ -345,10 +347,8 @@ const NewPost: FC<Props> = ({ route }) => {
                   ellipsizeMode="tail" // Add ellipsis at the end if text is too long
                 >
                   {newPost.cancerType !== ""
-                    ? newPost.cancerType.charAt(0).toUpperCase() +
-                      newPost.cancerType.slice(1) +
-                      " Cancer"
-                    : "Other Cancer"}
+                    ? t(newPost.cancerType)
+                    : t("other-cancer")}
                 </Text>
                 <Image
                   source={
@@ -385,14 +385,16 @@ const NewPost: FC<Props> = ({ route }) => {
               ]}
               disabled={addPostLoading}
             >
-              <Text style={styles.submitButtonText}>Update Post</Text>
+              <Text style={styles.submitButtonText}>{t("update-post")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.newPostButton}
               onPress={resetPostFields}
               disabled={addPostLoading}
             >
-              <Text style={styles.newPostButtonText}>New Post</Text>
+              <Text style={styles.newPostButtonText}>
+                {t("new-post-button")}
+              </Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -404,7 +406,7 @@ const NewPost: FC<Props> = ({ route }) => {
             ]}
             disabled={addPostLoading}
           >
-            <Text style={styles.submitButtonText}>Add Post</Text>
+            <Text style={styles.submitButtonText}>{t("add-post")}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

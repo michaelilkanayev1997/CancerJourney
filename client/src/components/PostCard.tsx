@@ -10,12 +10,14 @@ import {
   Vibration,
   Alert,
   Dimensions,
+  I18nManager,
 } from "react-native";
 import { useSelector } from "react-redux";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
+import { useTranslation } from "react-i18next";
 
 import colors from "../utils/colors";
 import { calculateTimeDifference } from "@utils/helper";
@@ -24,7 +26,7 @@ import { getProfile } from "src/store/auth";
 import { usePostMutations } from "src/hooks/mutations";
 import PopupMenu from "./PopupMenu";
 import { DrawerParamList } from "src/@types/navigation";
-import { UserTypeKey, userTypes } from "@utils/enums";
+import { UserTypeKey, useTranslatedUserTypes } from "@utils/enums";
 
 interface PostProps {
   _id: string;
@@ -55,6 +57,9 @@ const PostCard: FC<PostProps> = memo(
     publicProfile,
     publicUserId,
   }) => {
+    const { t } = useTranslation();
+    const userTypes = useTranslatedUserTypes();
+
     const profile = useSelector(getProfile);
     const [showFullText, setShowFullText] = useState(false);
     const [isTextLong, setIsTextLong] = useState(false);
@@ -254,7 +259,7 @@ const PostCard: FC<PostProps> = memo(
           {isTextLong && (
             <Pressable onPress={toggleShowFullText}>
               <Text style={styles.seeMoreText}>
-                {showFullText ? "See less" : "See more"}
+                {showFullText ? t("see-less") : t("see-more")}
               </Text>
             </Pressable>
           )}
@@ -366,8 +371,8 @@ const PostCard: FC<PostProps> = memo(
                   <Text style={styles.replyText}>
                     {likes.length}{" "}
                     {likes.length > 1 || likes.length === 0
-                      ? "likes ·"
-                      : "like ·"}
+                      ? `${t("likes")} ·`
+                      : `${t("like")} ·`}
                   </Text>
                 </TouchableOpacity>
 
@@ -387,7 +392,7 @@ const PostCard: FC<PostProps> = memo(
                   }}
                 >
                   <Text style={styles.replyText}>
-                    {`${replies?.length} replies`}{" "}
+                    {`${replies?.length} ${t("replies")}`}
                   </Text>
                 </TouchableOpacity>
               </Animated.View>
@@ -434,21 +439,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     textDecorationLine: "underline",
+    textAlign: I18nManager.isRTL ? "left" : "left",
   },
   userType: {
     width: 200,
     color: "gray",
     fontSize: 15,
     fontWeight: "400",
+    textAlign: I18nManager.isRTL ? "left" : "left",
   },
   TimeAndOptions: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
-    marginLeft: "-10%",
+    marginLeft: I18nManager.isRTL ? "-5%" : "-10%",
   },
   durationText: {
     color: "#000000b6",
+    marginRight: I18nManager.isRTL ? "10%" : 0,
   },
   ellipsisText: {
     color: "#000",

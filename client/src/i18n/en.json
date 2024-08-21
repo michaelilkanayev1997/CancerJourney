@@ -219,5 +219,25 @@
   "followers": "Followers",
   "followings": "Followings",
   "unfollow": "Unfollow",
-  "follow": "Follow"
+  "follow": "Follow",
+  "description-required": "Description is Required!",
+  "add-post": "Add Post",
+  "update-post": "Update Post",
+  "new-post-button": "New Post",
+  "post-uploaded-success": "Post uploaded successfully!",
+  "post-updated-success": "Post updated successfully!",
+  "description-required-toast": "Description is required!",
+  "description-length-toast": "Description should be at least 10 characters long!",
+  "see-more": "See more",
+  "see-less": "See less",
+  "like": "like",
+  "likes": "likes",
+  "replies": "replies",
+  "time": {
+    "seconds": "s",
+    "minutes": " min",
+    "hours": "h",
+    "yesterday": "Yesterday",
+    "days": "days"
+  }
 }
