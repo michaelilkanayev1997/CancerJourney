@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import Main from "@views/bottomTab/posts/Main";
@@ -37,6 +38,7 @@ const Forum = () => {
 };
 
 const SocialTabs = () => {
+  const { t } = useTranslation();
   return (
     <Tab.Navigator
       initialRouteName="Forum"
@@ -53,12 +55,27 @@ const SocialTabs = () => {
         swipeEnabled: false,
       }}
     >
-      <Tab.Screen name="Forum" component={Forum} />
-      <Tab.Screen name="New Post" component={NewPost} />
+      <Tab.Screen
+        name="Forum"
+        component={Forum}
+        options={{
+          tabBarLabel: t("forum"),
+        }}
+      />
+      <Tab.Screen
+        name="New Post"
+        component={NewPost}
+        options={{
+          tabBarLabel: t("new-post"),
+        }}
+      />
       <Tab.Screen
         name="Social Profile"
         component={PublicProfile}
         initialParams={{ publicProfile: false }}
+        options={{
+          tabBarLabel: t("social-profile"),
+        }}
       />
     </Tab.Navigator>
   );

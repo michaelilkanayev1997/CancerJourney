@@ -2,8 +2,9 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Avatar from "@ui/Avatar";
 import colors from "@utils/colors";
-import { UserTypeKey, userTypes } from "@utils/enums";
+import { UserTypeKey, useTranslatedUserTypes } from "@utils/enums";
 import { FC, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { DrawerParamList } from "src/@types/navigation";
@@ -11,12 +12,7 @@ import { DrawerParamList } from "src/@types/navigation";
 import { User } from "src/@types/post";
 import { useFollowMutations } from "src/hooks/mutations";
 import { useFetchFollowers, useFetchFollowings } from "src/hooks/query";
-import {
-  getFollowings,
-  updateFollow,
-  updateFollowings,
-  UserProfile,
-} from "src/store/auth";
+import { getFollowings, updateFollow, UserProfile } from "src/store/auth";
 
 interface Props {
   profile?: User;
@@ -30,6 +26,10 @@ const PublicProfileContainer: FC<Props> = ({
   currentUser,
 }) => {
   if (!profile) return null;
+
+  const { t } = useTranslation();
+  const userTypes = useTranslatedUserTypes();
+
   const dispatch = useDispatch();
 
   const navigation =
@@ -87,7 +87,7 @@ const PublicProfileContainer: FC<Props> = ({
               onPress={() => navigateToPostLikesPage("Followers")}
             >
               <Text style={styles.followerText}>
-                Followers {followers?.length}
+                {t("followers")} {followers?.length}
               </Text>
             </TouchableOpacity>
 
@@ -95,7 +95,7 @@ const PublicProfileContainer: FC<Props> = ({
               onPress={() => navigateToPostLikesPage("Followings")}
             >
               <Text style={styles.followerText}>
-                Followings {followings?.length}
+                {t("followings")} {followings?.length}
               </Text>
             </TouchableOpacity>
           </View>
@@ -111,7 +111,7 @@ const PublicProfileContainer: FC<Props> = ({
                   isFollowing ? styles.unfollow : styles.follow,
                 ]}
               >
-                {isFollowing ? "Unfollow" : "Follow"}
+                {isFollowing ? t("unfollow") : t("follow")}
               </Text>
             </TouchableOpacity>
           )}
@@ -175,11 +175,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 5,
     paddingLeft: "6%",
+    marginLeft: 8,
   },
   nameAndTypeContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 

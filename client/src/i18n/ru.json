@@ -205,5 +205,19 @@
   "wednesday": "Среда",
   "thursday": "Четверг",
   "friday": "Пятница",
-  "saturday": "Суббота"
+  "saturday": "Суббота",
+  "type": "Тип",
+  "no-posts-available": "Нет доступных постов",
+  "forum": "Форум",
+  "new-post": "Новый пост",
+  "social-profile": "Социальный профиль",
+  "forum-type": "Тип форума",
+  "popular-posts": "Популярные посты",
+  "public-profile": "Публичный профиль ",
+  "uploads": "Загрузки",
+  "replays": "Ответы",
+  "followers": "Подписчики",
+  "followings": "Подписки",
+  "unfollow": "Отписаться",
+  "follow": "Подписаться"
 }

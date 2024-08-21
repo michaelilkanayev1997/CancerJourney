@@ -13,12 +13,14 @@ import {
 } from "@react-navigation/drawer";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import { getProfile } from "src/store/auth";
 import { cancerTypeRibbon, cancerTypes } from "@utils/enums";
 
 const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
+  const { t } = useTranslation();
   const profile = useSelector(getProfile);
 
   const [focusedCancerType, setFocusedCancerType] = useState<string | null>(
@@ -61,7 +63,7 @@ const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
           />
 
           <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Forum Type</Text>
+            <Text style={styles.headerText}>{t("forum-type")}</Text>
           </View>
         </ImageBackground>
         <View style={styles.drawerItemListContainer}>
@@ -87,7 +89,7 @@ const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
                     }
                     style={{ width: 25, height: 25, marginRight: 10 }}
                   />
-                  <Text style={styles.drawerItemLabel}>{type.label}</Text>
+                  <Text style={styles.drawerItemLabel}>{t(type.value)}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -104,7 +106,7 @@ const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
         >
           <View style={styles.footerButtonContent}>
             <MaterialIcons name="trending-up" size={22} color="black" />
-            <Text style={styles.footerButtonText}>Popular Posts</Text>
+            <Text style={styles.footerButtonText}>{t("popular-posts")}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -116,7 +118,7 @@ const CustomDrawer: FC<DrawerContentComponentProps> = (props) => {
         >
           <View style={styles.footerButtonContent}>
             <Ionicons name="settings-outline" size={22} color="black" />
-            <Text style={styles.footerButtonText}>Settings</Text>
+            <Text style={styles.footerButtonText}>{t("settings")}</Text>
           </View>
         </TouchableOpacity>
       </View>
