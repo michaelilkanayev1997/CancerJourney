@@ -163,5 +163,21 @@
   "resendOtp": "שלח OTP מחדש",
   "inSeconds": "בעוד {{count}} שנייה",
   "mailVerified": "האימייל שלך אומת!",
-  "profileUpdated": "הפרופיל עודכן בהצלחה!"
+  "profileUpdated": "הפרופיל עודכן בהצלחה!",
+  "appointment-details": "פרטי הפגישה",
+  "location": "מיקום",
+  "date-time": "תאריך ושעה",
+  "notes-optional": "הערות (אופציונלי)",
+  "reminder-optional": "תזכורת (אופציונלי)",
+  "add": "הוסף",
+  "required": "חובה!",
+  "no-reminder": "ללא תזכורת",
+  "1-hour-before": "שעה לפני",
+  "2-hours-before": "שעתיים לפני",
+  "day-before": "יום לפני",
+  "enter-location-here": "הכנס מיקום כאן",
+  "enter-notes-here": "הכנס הערות כאן",
+  "appointment-uploaded-success": "הפגישה הועלתה בהצלחה!",
+  "enter-all-required-fields": "אנא הכנס את כל השדות הדרושים!",
+  "location-min-chars": "המיקום חייב להיות לפחות 3 תווים!"
 }

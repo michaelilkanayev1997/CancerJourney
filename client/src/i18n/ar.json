@@ -163,5 +163,21 @@
   "resendOtp": "إعادة إرسال OTP",
   "inSeconds": "في {{count}} ثانية",
   "mailVerified": "تم التحقق من بريدك الإلكتروني!",
-  "profileUpdated": "تم تحديث الملف الشخصي بنجاح!"
+  "profileUpdated": "تم تحديث الملف الشخصي بنجاح!",
+  "appointment-details": "تفاصيل الموعد",
+  "location": "الموقع",
+  "date-time": "التاريخ والوقت",
+  "notes-optional": "ملاحظات (اختياري)",
+  "reminder-optional": "تذكير (اختياري)",
+  "add": "أضف",
+  "required": "مطلوب!",
+  "no-reminder": "بدون تذكير",
+  "1-hour-before": "ساعة قبل",
+  "2-hours-before": "ساعتين قبل",
+  "day-before": "اليوم السابق",
+  "enter-location-here": "أدخل الموقع هنا",
+  "enter-notes-here": "أدخل الملاحظات هنا",
+  "appointment-uploaded-success": "تم رفع الموعد بنجاح!",
+  "enter-all-required-fields": "يرجى إدخال جميع الحقول المطلوبة!",
+  "location-min-chars": "يجب أن يحتوي الموقع على 3 أحرف على الأقل!"
 }

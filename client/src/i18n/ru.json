@@ -163,5 +163,21 @@
   "resendOtp": "Отправить OTP повторно",
   "inSeconds": "через {{count}} секунд(ы)",
   "mailVerified": "Ваш адрес электронной почты подтвержден!",
-  "profileUpdated": "Профиль успешно обновлен!"
+  "profileUpdated": "Профиль успешно обновлен!",
+  "appointment-details": "Детали встречи",
+  "location": "Местоположение",
+  "date-time": "Дата и время",
+  "notes-optional": "Заметки (необязательно)",
+  "reminder-optional": "Напоминание (необязательно)",
+  "add": "Добавить",
+  "required": "Обязательно!",
+  "no-reminder": "Без напоминания",
+  "1-hour-before": "За 1 час",
+  "2-hours-before": "За 2 часа",
+  "day-before": "За день",
+  "enter-location-here": "Введите местоположение здесь",
+  "enter-notes-here": "Введите заметки здесь",
+  "appointment-uploaded-success": "Встреча успешно добавлена!",
+  "enter-all-required-fields": "Пожалуйста, заполните все обязательные поля!",
+  "location-min-chars": "Местоположение должно содержать не менее 3 символов!"
 }

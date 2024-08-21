@@ -163,5 +163,21 @@
   "resendOtp": "Resend OTP",
   "inSeconds": "in {{count}} second(s)",
   "mailVerified": "Your mail is verified!",
-  "profileUpdated": "Profile updated successfully!"
+  "profileUpdated": "Profile updated successfully!",
+  "appointment-details": "Appointment Details",
+  "location": "Location",
+  "date-time": "Date and Time",
+  "notes-optional": "Notes (optional)",
+  "reminder-optional": "Reminder (optional)",
+  "add": "Add",
+  "required": "Required!",
+  "no-reminder": "No Reminder",
+  "1-hour-before": "1 hour before",
+  "2-hours-before": "2 hours before",
+  "day-before": "The day before",
+  "enter-location-here": "Enter Location here",
+  "enter-notes-here": "Enter Notes here",
+  "appointment-uploaded-success": "Appointment uploaded successfully!",
+  "enter-all-required-fields": "Please enter all required fields!",
+  "location-min-chars": "Location has to be at least 3 characters!"
 }
