@@ -24,6 +24,7 @@ import Animated, { FadeInLeft, FadeOutRight } from "react-native-reanimated";
 import { Picker } from "@react-native-picker/picker";
 import { useQueryClient } from "react-query";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 import colors from "@utils/colors";
 import Loader from "@ui/Loader";
@@ -34,7 +35,6 @@ import catchAsyncError from "src/api/catchError";
 import { getClient } from "src/api/client";
 import { styles } from "./MoreOptionsModalStyles";
 import { IAppointment } from "src/@types/schedule";
-import { useTranslation } from "react-i18next";
 
 interface AppointmentMoreOptionsProps {
   item?: IAppointment;
