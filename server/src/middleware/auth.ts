@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { JwtPayload, verify } from "jsonwebtoken";
 
 import PasswordResetToken from "#/models/passwordResetToken";
-import { JWT_SECRET } from "#/utils/variables";
+import { JWT_SECRET } from "../utils/variables";
 import User from "#/models/user";
 
 export const isValidPassResetToken: RequestHandler = async (req, res, next) => {

@@ -7,7 +7,7 @@ import {
   MAILTRAP_USER,
   SIGN_IN_URL,
   VERIFICATION_EMAIL,
-} from "#/utils/variables";
+} from "../utils/variables";
 import { generateTemplate } from "#/mail/template";
 
 const generateMailTransporter = () => {
