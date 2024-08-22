@@ -1,14 +1,13 @@
 import { FC, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 
 import colors from "@utils/colors";
 import {
-  getProfile,
   updateBusyState,
   updateLoggedInState,
   updateProfile,
@@ -26,7 +25,6 @@ const Settings: FC<Props> = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const queryClient = useQueryClient();
-  const profile = useSelector(getProfile);
 
   const { t } = useTranslation();
 
@@ -54,6 +52,24 @@ const Settings: FC<Props> = (props) => {
     dispatch(updateBusyState(false));
   };
 
+  const handleRemoveAllUserPosts = async () => {
+    const url = `/post/delete-all-posts`;
+    const client = await getClient();
+    const { data } = await client.delete(url);
+
+    if (data.success) {
+      ToastNotification({
+        type: "Success",
+        message: t("allPostsDeletedMessage"),
+      });
+    } else {
+      ToastNotification({
+        type: "Error",
+        message: "error deleting all user posts",
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -62,7 +78,7 @@ const Settings: FC<Props> = (props) => {
 
       <View style={styles.settingOptionsContainer}>
         <TouchableOpacity
-          onPress={() => console.log("remove-all-posts")}
+          onPress={handleRemoveAllUserPosts}
           style={styles.buttonContainer}
         >
           <AntDesign name="delete" size={20} color={colors.CONTRAST} />

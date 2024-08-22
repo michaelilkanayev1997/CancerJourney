@@ -50,7 +50,7 @@
     <img src="https://img.youtube.com/vi/8gUwShozOik/maxresdefault.jpg" alt="Video Demo" style="width:80%; border:1px solid #ccc;">
 </a>
 
-## App Screenshots
+## App Screens
 
 <img src="Screenshots/Picture1.png" width="80%" alt="App Screenshot 1" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture2.png" width="80%" alt="App Screenshot 2" style="margin-top:20px; border:1px solid #ccc;">
@@ -60,9 +60,6 @@
 <img src="Screenshots/Picture8.png" width="80%" alt="App Screenshot 8" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture9.png" width="80%" alt="App Screenshot 9" style="margin-top:20px; border:1px solid #ccc;">
 <div style="display: flex; justify-content: space-around; gap: 10px;">
-
   <img src="Screenshots/Picture6.png" width="39%" alt="App Screenshot 6" style="margin-top:20px; border:1px solid #ccc;">
-
   <img src="Screenshots/Picture7.png" width="39%" alt="App Screenshot 7" style="margin-top:20px; border:1px solid #ccc;">
-
 </div>

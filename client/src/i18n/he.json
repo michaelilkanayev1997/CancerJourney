@@ -246,6 +246,7 @@
   "report": "דווח",
   "confirmDeletion": "אישור מחיקה",
   "confirmDeletionMessage": "האם אתה בטוח שברצונך למחוק את הפוסט הזה?",
+  "allPostsDeletedMessage": "כל הפוסטים שלך נמחקו!",
   "time": {
     "seconds": "שנ'",
     "minutes": " דק'",

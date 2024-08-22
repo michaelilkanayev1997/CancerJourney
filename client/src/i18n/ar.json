@@ -246,6 +246,7 @@
   "report": "إبلاغ",
   "confirmDeletion": "تأكيد الحذف",
   "confirmDeletionMessage": "هل أنت متأكد أنك تريد حذف هذا المنشور؟",
+  "allPostsDeletedMessage": "تم حذف جميع منشوراتك!",
   "time": {
     "seconds": "ث",
     "minutes": " د",
