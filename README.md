@@ -57,7 +57,12 @@
 <img src="Screenshots/Picture3.png" width="80%" alt="App Screenshot 3" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture4.png" width="80%" alt="App Screenshot 4" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture5.png" width="80%" alt="App Screenshot 5" style="margin-top:20px; border:1px solid #ccc;">
-<img src="Screenshots/Picture6.png" width="80%" alt="App Screenshot 6" style="margin-top:20px; border:1px solid #ccc;">
-<img src="Screenshots/Picture7.png" width="80%" alt="App Screenshot 7" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture8.png" width="80%" alt="App Screenshot 8" style="margin-top:20px; border:1px solid #ccc;">
 <img src="Screenshots/Picture9.png" width="80%" alt="App Screenshot 9" style="margin-top:20px; border:1px solid #ccc;">
+<div style="display: flex; justify-content: space-around; gap: 10px;">
+
+  <img src="Screenshots/Picture6.png" width="39%" alt="App Screenshot 6" style="margin-top:20px; border:1px solid #ccc;">
+
+  <img src="Screenshots/Picture7.png" width="39%" alt="App Screenshot 7" style="margin-top:20px; border:1px solid #ccc;">
+
+</div>
