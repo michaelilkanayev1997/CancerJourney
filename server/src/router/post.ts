@@ -7,6 +7,7 @@ import {
   getPosts,
   getPostsByReplies,
   getProfilePosts,
+  removeAllUserPosts,
   removeReply,
   togglePostFavorite,
   toggleReplyFavorite,
@@ -32,6 +33,7 @@ router.post(
   addPost
 );
 router.delete("/post-delete", mustAuth, removePost);
+router.delete("/delete-all-posts", mustAuth, removeAllUserPosts);
 router.patch(
   "/",
   mustAuth,

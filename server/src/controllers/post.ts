@@ -484,3 +484,34 @@ export const toggleReplyFavorite: RequestHandler = async (req, res) => {
     });
   }
 };
+
+export const removeAllUserPosts: RequestHandler = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) throw new Error("Something went wrong, user not found!");
+
+    // Find all posts by the user
+    const posts = await Posts.find({ owner: user.id });
+
+    if (posts.length === 0) {
+      return res.status(404).json({ error: "No posts found for this user!" });
+    }
+
+    // Loop through each post and delete associated image if exists
+    for (const post of posts) {
+      if (post.image && post.image.public_id) {
+        // Delete the photo from AWS S3
+        await deleteS3Object(post.image.public_id);
+      }
+    }
+
+    // Remove all posts by the user
+    await Posts.deleteMany({ owner: user.id });
+
+    res.json({ success: true });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred while deleting all user Posts",
+    });
+  }
+};

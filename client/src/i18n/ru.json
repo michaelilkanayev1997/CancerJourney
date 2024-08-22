@@ -246,6 +246,7 @@
   "report": "Пожаловаться",
   "confirmDeletion": "Подтвердить удаление",
   "confirmDeletionMessage": "Вы уверены, что хотите удалить этот пост?",
+  "allPostsDeletedMessage": "Все ваши сообщения были удалены!",
   "time": {
     "seconds": "сек",
     "minutes": " мин",
