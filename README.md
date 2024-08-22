@@ -47,9 +47,15 @@
 
 ## Video Showcase
 
-[Watch a Video Demonstration of the App](https://www.youtube.com/watch?v=8gUwShozOik&list=LL&index=6&t=1s)
+<a href="https://www.youtube.com/watch?v=8gUwShozOik&list=LL&index=6&t=1s" target="_blank">
+    <img src="https://img.youtube.com/vi/8gUwShozOik/maxresdefault.jpg" alt="Video Demo" style="width:80%; border:1px solid #ccc;">
+</a>
 
+## App Screenshots
 
+<img src="Screenshots/screenshot1.png" width="80%" alt="App Screenshot 1" style="margin-top:20px; border:1px solid #ccc;">
+<img src="Screenshots/screenshot2.png" width="80%" alt="App Screenshot 2" style="margin-top:20px; border:1px solid #ccc;">
+<img src="Screenshots/screenshot3.png" width="80%" alt="App Screenshot 3" style="margin-top:20px; border:1px solid #ccc;">
 
 
 
