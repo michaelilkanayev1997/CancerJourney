@@ -21,7 +21,7 @@ import { removePost } from "./../controllers/post";
 
 const router = Router();
 
-router.get("/test", (req: Request, res: Response) => {
+router.get("/test", (req, res) => {
   res.json({ message: "Test route is working!" });
 });
 
