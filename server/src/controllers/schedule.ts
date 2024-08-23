@@ -1,14 +1,14 @@
 import { RequestHandler } from "express";
 import mongoose from "mongoose";
 
-import User from "#/models/user";
-import { deleteS3Object } from "#/middleware/fileUpload";
+import User from "../models/user";
+import { deleteS3Object } from "../middleware/fileUpload";
 import {
   appointmentNotification,
   cancelScheduledNotification,
   medicationNotification,
-} from "#/utils/notification";
-import { Schedule } from "#/models/Schedule";
+} from "../utils/notification";
+import { Schedule } from "../models/Schedule";
 
 export const addAppointment: RequestHandler = async (req, res) => {
   try {

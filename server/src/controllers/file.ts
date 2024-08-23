@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 
-import { deleteS3Object, generateSignedUrl } from "#/middleware/fileUpload";
-import { Files, IFile } from "#/models/files";
-import User from "#/models/user";
-import { sanitizeFolderName } from "#/utils/helper";
+import { deleteS3Object, generateSignedUrl } from "../middleware/fileUpload";
+import { Files, IFile } from "../models/files";
+import User from "../models/user";
+import { sanitizeFolderName } from "../utils/helper";
 
 export const fileUpload: RequestHandler = async (req, res) => {
   try {

@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
-import { PostReport } from "#/models/postReport";
-import User from "#/models/user";
+import { PostReport } from "../models/postReport";
+import User from "../models/user";
 
 export const addPostReport: RequestHandler = async (req, res) => {
   try {

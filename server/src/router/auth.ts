@@ -15,16 +15,16 @@ import {
   updatePushToken,
   verifyEmail,
 } from "../controllers/auth";
-import { validate } from "#/middleware/validator";
+import { validate } from "../middleware/validator";
 import {
   CreateUserSchema,
   SignInValidationSchema,
   TokenAndIdValidation,
   UpdatePasswordSchema,
   ProfileUpdateSchema,
-} from "#/utils/validationSchema";
-import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
-import { profileImageUpload } from "#/middleware/fileUpload";
+} from "../utils/validationSchema";
+import { isValidPassResetToken, mustAuth } from "../middleware/auth";
+import { profileImageUpload } from "../middleware/fileUpload";
 
 const router = Router();
 

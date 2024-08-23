@@ -4,8 +4,8 @@ import {
   getFollowers,
   getFollowings,
   updateFollower,
-} from "#/controllers/profile";
-import { mustAuth } from "#/middleware/auth";
+} from "../controllers/profile";
+import { mustAuth } from "../middleware/auth";
 
 const router = Router();
 
