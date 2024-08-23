@@ -14,7 +14,7 @@ import {
   updateProfile,
   updatePushToken,
   verifyEmail,
-} from "#/controllers/auth";
+} from "../controllers/auth";
 import { validate } from "#/middleware/validator";
 import {
   CreateUserSchema,
