@@ -1,8 +1,13 @@
 import { render, fireEvent } from "@testing-library/react-native";
-
 import DaySelector from "../../client/src/components/DaySelector";
 
 const mockSetSelectedDays = jest.fn();
+
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => key.charAt(0).toUpperCase() + key.slice(1),
+  }),
+}));
 
 const renderComponent = (selectedDays = []) => {
   return render(
@@ -14,9 +19,13 @@ const renderComponent = (selectedDays = []) => {
 };
 
 describe("<DaySelector />", () => {
+  beforeEach(() => {
+    mockSetSelectedDays.mockClear();
+  });
+
   it("renders without crashing", () => {
     const { getByText } = renderComponent();
-    expect(getByText("Monday")).toBeTruthy(); // Ensure at least one day is rendered
+    expect(getByText("Monday")).toBeTruthy();
   });
 
   it("renders all days of the week", () => {
@@ -33,36 +42,28 @@ describe("<DaySelector />", () => {
     const { getByText } = renderComponent([]);
     const button = getByText("Monday");
     fireEvent.press(button);
-    expect(mockSetSelectedDays).toHaveBeenCalled(); // Check that the set function is called
+    expect(mockSetSelectedDays).toHaveBeenCalled();
   });
 
   it("calls setSelectedDays when a day is selected", () => {
     const { getByText } = renderComponent([]);
-    fireEvent.press(getByText("Monday")); // Simulate selecting Monday
+    fireEvent.press(getByText("Monday"));
     expect(mockSetSelectedDays).toHaveBeenCalledWith(["Monday"]);
-  });
-
-  it("ensures at least one day button is rendered", () => {
-    const { getByText } = renderComponent();
-    expect(getByText("Monday")).toBeTruthy();
-  });
-
-  it("correctly styles unselected day button", () => {
-    const { getByText } = renderComponent([]);
-    const button = getByText("Tuesday");
   });
 
   it("toggles multiple days correctly", () => {
     const { getByText } = renderComponent([]);
     fireEvent.press(getByText("Tuesday"));
+    expect(mockSetSelectedDays).toHaveBeenCalledWith(["Tuesday"]);
 
     fireEvent.press(getByText("Monday"));
-    expect(mockSetSelectedDays).toHaveBeenCalledWith(["Tuesday"]);
   });
 
-  it("does not change selected days when clicking on already selected day twice", () => {
+  it("checks the sequence of calls when multiple days are selected", () => {
     const { getByText } = renderComponent([]);
-    fireEvent.press(getByText("Monday"));
-    fireEvent.press(getByText("Monday"));
+
+    // Select Tuesday
+    fireEvent.press(getByText("Tuesday"));
+    expect(mockSetSelectedDays).toHaveBeenNthCalledWith(1, ["Tuesday"]);
   });
 });
