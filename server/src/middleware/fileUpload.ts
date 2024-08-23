@@ -12,7 +12,7 @@ import {
   S3_REGION,
   S3_SECRET_KEY,
 } from "../utils/variables";
-import { sanitizeFolderName } from "#/utils/helper";
+import { sanitizeFolderName } from "../utils/helper";
 
 const s3 = new S3Client({
   credentials: {

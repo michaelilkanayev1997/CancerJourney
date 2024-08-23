@@ -8,18 +8,18 @@ import {
   UpdatePasswordRequest,
   UserIdRequest,
   VerifyEmailRequest,
-} from "#/@types/user";
-import User from "#/models/user";
-import { generateToken, verifyGoogleToken } from "#/utils/helper";
+} from "../@types/user";
+import User from "../models/user";
+import { generateToken, verifyGoogleToken } from "../utils/helper";
 import {
   sendForgetPasswordLink,
   sendPassResetSuccessEmail,
   sendVerificationMail,
-} from "#/utils/mail";
-import EmailVerificationToken from "#/models/emailVerificationToken";
-import PasswordResetToken from "#/models/passwordResetToken";
+} from "../utils/mail";
+import EmailVerificationToken from "../models/emailVerificationToken";
+import PasswordResetToken from "../models/passwordResetToken";
 import { JWT_SECRET, PASSWORD_RESET_LINK } from "../utils/variables";
-import { deleteS3Object } from "#/middleware/fileUpload";
+import { deleteS3Object } from "../middleware/fileUpload";
 
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;

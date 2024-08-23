@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { Expo } from "expo-server-sdk";
 
-import { UserDocument } from "#/models/user";
+import { UserDocument } from "../models/user";
 import { timesPerDayToHours } from "./helper";
 import { IAppointment, IMedication } from "#/models/Schedule";
 

@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
 import mongoose, { isValidObjectId } from "mongoose";
 
-import { postPaginationQuery } from "#/@types/post";
-import { Posts } from "#/models/post";
-import User from "#/models/user";
-import { deleteS3Object } from "#/middleware/fileUpload";
+import { postPaginationQuery } from "../@types/post";
+import { Posts } from "../models/post";
+import User from "../models/user";
+import { deleteS3Object } from "../middleware/fileUpload";
 
 export const getPosts: RequestHandler = async (req, res) => {
   const {

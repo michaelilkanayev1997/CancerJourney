@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import mongoose, { isValidObjectId } from "mongoose";
 
-import User from "#/models/user";
+import User from "../models/user";
 
 export const updateFollower: RequestHandler = async (req, res) => {
   const { profileId } = req.params;

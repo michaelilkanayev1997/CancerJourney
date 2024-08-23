@@ -1,16 +1,16 @@
 import { Router } from "express";
 
-import { mustAuth } from "#/middleware/auth";
-import { folderFileUpload } from "#/middleware/fileUpload";
+import { mustAuth } from "../middleware/auth";
+import { folderFileUpload } from "../middleware/fileUpload";
 import {
   fileRemove,
   fileUpload,
   getFolderFiles,
   getFolderLength,
   updateFile,
-} from "#/controllers/file";
-import { validate } from "#/middleware/validator";
-import { FileTitleAndDescSchema } from "#/utils/validationSchema";
+} from "../controllers/file";
+import { validate } from "../middleware/validator";
+import { FileTitleAndDescSchema } from "../utils/validationSchema";
 
 const router = Router();
 

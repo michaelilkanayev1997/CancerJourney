@@ -1,17 +1,17 @@
 import { Router } from "express";
 
-import { mustAuth } from "#/middleware/auth";
-import { validate } from "#/middleware/validator";
+import { mustAuth } from "../middleware/auth";
+import { validate } from "../middleware/validator";
 import {
   addAppointment,
   addMedication,
   getSchedule,
   scheduleRemove,
   updateSchedule,
-} from "#/controllers/schedule";
-import { AppointmentSchema, MedicationSchema } from "#/utils/validationSchema";
-import { medicationPhotoUpload } from "#/middleware/fileUpload";
-import { parseSpecificDaysAndDate } from "#/middleware/schedule";
+} from "../controllers/schedule";
+import { AppointmentSchema, MedicationSchema } from "../utils/validationSchema";
+import { medicationPhotoUpload } from "../middleware/fileUpload";
+import { parseSpecificDaysAndDate } from "../middleware/schedule";
 
 const router = Router();
 

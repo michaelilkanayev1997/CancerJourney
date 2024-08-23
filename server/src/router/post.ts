@@ -12,11 +12,11 @@ import {
   togglePostFavorite,
   toggleReplyFavorite,
   updatePost,
-} from "#/controllers/post";
-import { mustAuth } from "#/middleware/auth";
-import { validate } from "#/middleware/validator";
-import { PostSchema, replyValidationSchema } from "#/utils/validationSchema";
-import { postImageUpload } from "#/middleware/fileUpload";
+} from "../controllers/post";
+import { mustAuth } from "../middleware/auth";
+import { validate } from "../middleware/validator";
+import { PostSchema, replyValidationSchema } from "../utils/validationSchema";
+import { postImageUpload } from "../middleware/fileUpload";
 import { removePost } from "./../controllers/post";
 
 const router = Router();
