@@ -11,7 +11,6 @@ import postsRouter from "./router/post";
 import postReportRouter from "./router/postReport";
 import replyReportRouter from "./router/replyReport";
 import profileRouter from "./router/profile";
-
 import { errorHandler } from "./middleware/error";
 
 const app = express();
