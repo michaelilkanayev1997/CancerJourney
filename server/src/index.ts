@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import "express-async-errors";
 import "./db";
+import cors from "cors";
 
 import authRouter from "./router/auth";
 import fileRouter from "./router/file";
@@ -14,6 +15,15 @@ import profileRouter from "./router/profile";
 import { errorHandler } from "./middleware/error";
 
 const app = express();
+
+// Enable CORS for all origins or specify allowed origins
+app.use(
+  cors({
+    origin: "*", // Use '*' to allow all origins or specify the client's URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // register middleware
 app.use(express.json());
